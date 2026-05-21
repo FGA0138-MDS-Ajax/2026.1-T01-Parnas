@@ -16,3 +16,4 @@ dist/
 # Sistema
 .DS_Store
 *.log
+.idea/
