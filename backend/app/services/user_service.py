@@ -1,4 +1,4 @@
-from datetime import datetime
+import bcrypt
 from app.models.user import User
 from app.config import db
 from app.utils.validators import is_valid_password, is_valid_birth_date
@@ -19,4 +19,20 @@ def register_user(data):
     existing_user = User.query.filter_by(email=email).first()
     if existing_user:
         return {"erro": "Este e-mail já está cadastrado"}, 409
-    return {"mensagem": "Deu bom"}, 200
+
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+    new_user = User(
+        name=name,
+        email=email,
+        password=hashed_password,
+        birth_date=birth_date_str
+    )
+
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+        return {"mensagem": "Conta criada com sucesso."}, 201
+    except Exception as e:
+        db.session.rollback()
+        return {"erro": "Ocorreu um erro interno ao tentar salvar o usuário."}, 500
