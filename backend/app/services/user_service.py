@@ -13,12 +13,6 @@ def register_user(data):
     cpf = data.get('cpf') 
     password = data.get('password')
     birth_date_str = data.get('birth_date')
-
-    if not is_valid_password(password):
-        return {"erro": "A senha não atende aos requisitos mínimos de segurança."}, 400
-
-    if not is_valid_birth_date(birth_date_str):
-        return {"erro": "A data de nascimento é inválida ou o usuário é menor de 16 anos"}, 400
     
     if find_user_by_email(email):
         return {"erro": "Este e-mail já está cadastrado"}, 409
