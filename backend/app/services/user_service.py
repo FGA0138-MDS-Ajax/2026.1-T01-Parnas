@@ -2,6 +2,9 @@ import bcrypt
 from app.models.user import User
 from app.config import db
 from app.utils.validators import is_valid_password, is_valid_birth_date
+import jwt
+import datetime
+import os
 
 
 def register_user(data):
@@ -36,7 +39,19 @@ def register_user(data):
     try:
         db.session.add(new_user)
         db.session.commit()
-        return {"mensagem": "Conta criada com sucesso."}, 201
+
+        playload = {
+            'user_id': new_user.id,
+            'expiration_date': datetime.datetime.utcnow() + datetime.timedelta(hours=24),
+        }
+
+        secret_key = os.getenv('JWT_SECRET_KEY', 'chave-fallback-parnas-local')
+        token = jwt.encode(playload, secret_key, algorithm='HS256')
+
+        return {"mensagem": "Conta criada com sucesso.",
+                "token": token
+                }, 201
+
     except Exception as e:
         db.session.rollback()
         return {"erro": "Ocorreu um erro interno ao tentar salvar o usuário."}, 500
