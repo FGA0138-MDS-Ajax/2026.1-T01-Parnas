@@ -29,6 +29,11 @@ def is_valid_birth_date(birth_date_str):
         if birth_date > today:
             return False
 
+        idade = today.year - birth_date.year-((today.month, today.day) < (birth_date.month, birth_date.day))
+
+        if idade < 16:
+            return False
+
         return True
-    except: ValueError
-    return False
+    except ValueError:
+        return False
