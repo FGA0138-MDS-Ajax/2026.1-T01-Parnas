@@ -17,6 +17,8 @@ def create_app():
 
     # Importação do modelo para o Flask-Migrate registrar a tabela
     from app.models.user import User
+    from app.models.company import Company
+    from app.models.user_company import UserCompany
 
     # Força a criação das tabelas automaticamente (essencial para o SQLite de teste)
     with app.app_context():
@@ -29,5 +31,9 @@ def create_app():
     # Centralização da ativação dos módulos de rotas de usuários
     from app.routes.user_routes import user_bp
     app.register_blueprint(user_bp, url_prefix='/api')  # Mudei para /api para não dar conflito de rota com /auth
+
+    # Centralização da ativação dos módulos de rotas de empresas
+    from app.routes.company_routes import company_bp
+    app.register_blueprint(company_bp, url_prefix="/api/companies")
 
     return app
