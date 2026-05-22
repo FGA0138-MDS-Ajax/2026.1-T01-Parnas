@@ -1,10 +1,8 @@
 import bcrypt
+from flask_jwt_extended import create_access_token
 from app.models.user import User
 from app.config import db
-from app.utils.validators import is_valid_password, is_valid_birth_date
-import jwt
-import datetime
-import os
+from datetime import datetime
 
 
 def register_user(data):
@@ -12,7 +10,7 @@ def register_user(data):
     email = data.get('email')
     cpf = data.get('cpf') 
     password = data.get('password')
-    birth_date_str = data.get('birth_date')
+    birth_date = datetime.strptime(data.get('birth_date'),'%Y-%m-%d').date()
     
     if find_user_by_email(email):
         return {"erro": "Este e-mail já está cadastrado"}, 409
@@ -27,20 +25,15 @@ def register_user(data):
         email=email,
         cpf=cpf,
         password_hash=hashed_password,
-        birth_date=birth_date_str
+        birth_date=birth_date,
+        register_date=datetime.utcnow()
     )
 
     try:
         db.session.add(new_user)
         db.session.commit()
 
-        playload = {
-            'user_id': new_user.id,
-            'expiration_date': datetime.datetime.utcnow() + datetime.timedelta(hours=24),
-        }
-
-        secret_key = os.getenv('JWT_SECRET_KEY', 'chave-fallback-parnas-local')
-        token = jwt.encode(playload, secret_key, algorithm='HS256')
+        token = create_access_token(identity=str(new_user.user_id))
 
         return {"mensagem": "Conta criada com sucesso.",
                 "token": token
