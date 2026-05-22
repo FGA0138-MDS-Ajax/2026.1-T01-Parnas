@@ -1,0 +1,15 @@
+from datetime import datetime
+from app.config import db
+
+class Company(db.Model):
+    __tablename__ = 'company'
+
+    company_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(150), nullable=False)
+    cnpj = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(150), unique=True, nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    register_date = db.Column(db.Date, nullable=False, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Company {self.name}>'

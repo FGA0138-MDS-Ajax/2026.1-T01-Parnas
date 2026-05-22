@@ -22,8 +22,12 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-    # Registra o Blueprint de autenticação (seu "balcão" de login)
+    # Registra o Blueprint de autenticação (Login/Logout)
     from app.routes.auth_routes import auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
+
+    # Centralização da ativação dos módulos de rotas de usuários
+    from app.routes.user_routes import user_bp
+    app.register_blueprint(user_bp, url_prefix='/api')  # Mudei para /api para não dar conflito de rota com /auth
 
     return app
