@@ -7,6 +7,7 @@ class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True,autoincrement=True)
     name = db.Column(db.String(120),nullable=False)
     email = db.Column(db.String(150),unique=True,nullable=False)
+    cpf = db.Column(db.String(11), unique=True, nullable=False) 
     password_hash = db.Column(db.String(300),nullable=False)
     birth_date = db.Column(db.Date,nullable=False)
     register_date = db.Column(db.Date,nullable=False)

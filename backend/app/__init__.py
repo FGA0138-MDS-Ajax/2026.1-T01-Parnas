@@ -15,4 +15,8 @@ def create_app():
     # Importação correta do modelo em inglês para o Flask-Migrate registrar a tabela
     from app.models.user import User
 
+    #Centralização da ativação dos módulos de rotas do projeto
+    from app.routes.user_routes import user_bp
+    app.register_blueprint(user_bp, url_prefix='/auth')
+
     return app
