@@ -10,11 +10,11 @@ class UserRegistrationSchema(Schema):
     birth_date = fields.Str(required=True, error_messages={"required": "A data de nascimento é obrigatória"})
 
     @validates('password')
-    def validate_password(self, value):
+    def validate_password(self, value,**kwargs):
         if not is_valid_password(value):
             raise ValidationError("A senha não atende aos requisitos mínimos de segurança.")
 
     @validates('birth_date')
-    def validate_birth_date(self, value):
+    def validate_birth_date(self, value,**kwargs):
         if not is_valid_birth_date(value):
             raise ValidationError("A data de nascimento é invalida ou o usuário é menor de 16 anos.")
