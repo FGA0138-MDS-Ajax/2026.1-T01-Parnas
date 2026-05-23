@@ -4,6 +4,7 @@ __pycache__/
 .env
 venv/
 *.egg-info/
+*.db
 
 # Migrations (opcional, alguns times sobem)
 # migrations/versions/
