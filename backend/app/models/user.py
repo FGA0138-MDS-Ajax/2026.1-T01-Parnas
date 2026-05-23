@@ -15,4 +15,4 @@ class User(db.Model):
     companies = db.relationship('Company', secondary=user_company, back_populates='users')
 
     def __repr__(self):
-        return f'<User {self.name}>'
+        return f'<User {self.name}>'    
