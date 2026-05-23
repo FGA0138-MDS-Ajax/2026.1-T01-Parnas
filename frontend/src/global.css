@@ -3,7 +3,7 @@
 :root {
   --azul: #0F4C81;
   --verde: #03906C;
-  --gradiente-fundo: linear-gradient(135deg, var(--azul) 0%, var(--verde) 100%);
+  --gradiente-fundo: linear-gradient(165deg, var(--azul) 20%, var(--verde) 100%);
 
   --branco: #FFFFFF;
   --fundo-card: #FFFFFF;
