@@ -6,7 +6,6 @@ import jwt
 import datetime
 import os
 
-
 def register_user(data):
     name = data.get('name')
     email = data.get('email')
