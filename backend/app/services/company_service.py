@@ -1,5 +1,5 @@
 from app.models.company import Company
-from app.models.user_company import UserCompany
+from app.models.user_company_association import user_company
 from app.config import db
 import re
 
@@ -25,7 +25,7 @@ def register_company(user_id, data):
           db.session.add(new_company)
           db.session.flush()
 
-          user_company = UserCompany(
+          user_company = user_company(
                user_id=user_id,
                company_id=new_company.company_id,
                role='admin'

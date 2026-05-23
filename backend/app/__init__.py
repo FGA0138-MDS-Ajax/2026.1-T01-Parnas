@@ -18,7 +18,7 @@ def create_app():
     # Importação do modelo para o Flask-Migrate registrar a tabela
     from app.models.user import User
     from app.models.company import Company
-    from app.models.user_company import UserCompany
+    from app.models.user_company_association import user_company
 
     # Força a criação das tabelas automaticamente (essencial para o SQLite de teste)
     with app.app_context():
