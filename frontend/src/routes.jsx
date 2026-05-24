@@ -1,12 +1,20 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import useAuth from './hooks/useAuth';
+import Login from './pages/Login/Login';
 import CadastroEmpresa from './pages/CadastroEmpresa/CadastroEmpresa';
+
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+};
 
 export const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<div style={{ padding: '20px', color: 'white' }}><h1>Home temporária do CREDIFAB 🚀</h1><p>Vá para <a href="/cadastro-empresa">/cadastro-empresa</a> para ver a tela de cadastro de empresa.</p></div>} />
-        <Route path="/cadastro-empresa" element={<CadastroEmpresa />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/cadastro-empresa" element={<ProtectedRoute><CadastroEmpresa /></ProtectedRoute>} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
   );
