@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useEmpresa } from '../../context/EmpresaContext';
 import './CadastroEmpresa.css';
 
 const CadastroEmpresa = () => {
@@ -12,28 +13,49 @@ const CadastroEmpresa = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
+  const { setIdEmpresaLogada } = useEmpresa();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-const handleSubmit = (e) => {
-  e.preventDefault();
-  setError('');
-  setSuccess(false);
+  const handleSubmit = (eventoFormulario) => {
+    eventoFormulario.preventDefault();
+    setError('');
+    setSuccess(false);
 
-  const cnpjLimpo = formData.cnpj.replace(/\D/g, '');
+    const cnpjApenasNumeros = formData.cnpj.replace(/\D/g, '');
 
-  const ehValido = cnpjLimpo === '45845023000138' || cnpjLimpo.length === 14;
+    const quantidadeDigitosCnpjValido = 14;
+    const cnpjPossuiFormatoValido = cnpjApenasNumeros === '45845023000138' || cnpjApenasNumeros.length === quantidadeDigitosCnpjValido;
 
-  if (!ehValido) {
-    setError('CNPJ inválido. Por favor, verifique os números.');
-    return;
-  }
+    if (!cnpjPossuiFormatoValido) {
+      setError('CNPJ inválido. Por favor, verifique os números.');
+      return;
+    }
 
-  setSuccess(true);
-  setFormData({ nome: '', cnpj: '', email: '', telefone: '' });
-};
+    // SIMULAÇÃO DO CONTRATO DE INTEGRAÇÃO COM POST /api/companies/register
+    const corpoRequisicaoParaBackend = {
+      name: formData.nome,
+      cnpj: cnpjApenasNumeros,
+      email: formData.email,
+      phone: formData.telefone
+    };
+
+    // GERANDO ID IDENTIFICADOR SIMULADO DO BANCO DE DADOS
+    const idEmpresaGeradoPeloBancoSimulado = Math.floor(Math.random() * 5000) + 1;
+
+    // SALVANDO ID NO CONTEXTO GLOBAL
+    setIdEmpresaLogada(idEmpresaGeradoPeloBancoSimulado);
+
+    setSuccess(true);
+    setFormData({ nome: '', cnpj: '', email: '', telefone: '' });
+
+    // Registros limpos no console para auditoria/teste
+    console.log('[MOCK API] Dados preparados para o contrato da API:', corpoRequisicaoParaBackend);
+    console.log('[MOCK CONTEXTO] ID salvo globalmente:', idEmpresaGeradoPeloBancoSimulado);
+  };
 
   return (
     <div className="container-cadastro">
