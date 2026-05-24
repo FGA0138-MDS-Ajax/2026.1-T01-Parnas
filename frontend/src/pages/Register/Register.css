@@ -1,0 +1,125 @@
+.register-container {
+  width: 100%;
+  min-height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.register-card {
+  width: 950px;
+  min-height: 520px;
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.register-sidebar {
+  flex: 1;
+  background: var(--gradiente-fundo);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--branco);
+  padding: 40px;
+  text-align: center;
+}
+
+.register-logo {
+    font-size: 4rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+
+.register-subtitle {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.register-form-content {
+  flex: 1;
+  padding: 40px 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+.register-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 25px;
+  color: var(--texto-principal);
+}
+
+.register-header h2 {
+  font-size: 2rem;
+  color: #1f1f1f;
+  font-weight: 700;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.register-row {
+  display: flex;
+  gap: 20px;
+}
+
+.register-input-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.register-input-group label {
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #333;
+}
+
+.register-input-group input {
+  height: 42px;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  padding: 0 14px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: 0.2s;
+}
+
+.register-input-group input:focus {
+  border-color: #0f4c81;
+
+  box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1);
+}
+
+.register-button {
+  margin-top: 10px;
+  height: 45px;
+  border: none;
+  border-radius: 8px;
+  background: #0f4c81;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.register-button:hover {
+  background: #0c3d68;
+}
+
+.register-error {
+  color: #d62828;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
