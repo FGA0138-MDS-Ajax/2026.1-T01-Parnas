@@ -25,12 +25,11 @@ def register_company(user_id, data):
           db.session.add(new_company)
           db.session.flush()
 
-          user_company = user_company(
+          UserCompany = user_company.insert().values(
                user_id=user_id,
                company_id=new_company.company_id,
-               role='admin'
           )
-          db.session.add(user_company)
+          db.session.execute(UserCompany)
           db.session.commit()
 
           return {"mensagem": "Empresa cadastrada com sucesso",
