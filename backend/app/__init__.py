@@ -19,6 +19,7 @@ def create_app():
     from app.models.user import User
     from app.models.company import Company
     from app.models.user_company_association import user_company
+    from app.models.category import Category
 
     # Força a criação das tabelas automaticamente (essencial para o SQLite de teste)
     with app.app_context():
