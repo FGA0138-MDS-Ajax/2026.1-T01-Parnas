@@ -1,14 +1,35 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import useAuth from './hooks/useAuth';
+import Login from './pages/Login/Login';
 import CadastroEmpresa from './pages/CadastroEmpresa/CadastroEmpresa';
+import { EsqueciSenha } from './pages/EsqueciSenha/EsqueciSenha';
+import { RedefinirSenha } from './pages/RedefinirSenha/RedefinirSenha';
 import Register from './pages/Register/Register';
+
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+};
 
 export const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<div style={{ padding: '20px', color: 'white' }}><h1>Home temporária do CREDIFAB 🚀</h1><p>Vá para <a href="/cadastro-empresa">/cadastro-empresa</a> para ver a tela de cadastro de empresa.</p><p>Vá para{' '}<a href="/register">/register</a> para ver a tela de registro.</p></div>}/>
-        <Route path="/cadastro-empresa" element={<CadastroEmpresa />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} /> {/* Rota pública do cadastro da Júlia */}
+        <Route path="/esqueci-senha" element={<EsqueciSenha />} />
+        <Route path="/redefinir-senha" element={<RedefinirSenha />} />
+
+        <Route
+          path="/cadastro-empresa"
+          element={
+            <ProtectedRoute>
+              <CadastroEmpresa />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

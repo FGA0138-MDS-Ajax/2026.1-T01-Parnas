@@ -1,0 +1,244 @@
+/* ── Card principal ── */
+.login-card {
+  width: 400px;
+  max-width: calc(100vw - 40px);
+  background-color: var(--fundo-card);
+  border-radius: var(--arredondamento-card);
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+/* ── Cabeçalho com gradiente ── */
+.login-header {
+  background: var(--gradiente-fundo);
+  padding: 36px 30px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.login-logo-icon {
+  width: 62px;
+  height: 62px;
+  background-color: var(--branco);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.login-brand {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--branco);
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.login-brand-sub {
+  font-size: 0.83rem;
+  color: var(--branco);
+  opacity: 0.9;
+}
+
+/* ── Corpo do formulário ── */
+.login-body {
+  background-color: var(--fundo-card);
+  padding: 30px 32px 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-title {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--texto-principal);
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.login-subtitle {
+  font-size: 0.83rem;
+  color: var(--texto-placeholder);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* ── Erro ── */
+.msg-error {
+  color: var(--erro);
+  font-size: 0.83rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+/* ── Campos ── */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+  margin-bottom: 5px;
+}
+
+.input-icon-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 0px;
+  border: 0px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
+  transition: var(--transicao-suave);
+}
+
+.input-icon-wrapper:focus-within {
+  border-color: var(--azul);
+  box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1);
+}
+
+.input-icon {
+  color: var(--texto-placeholder);
+  flex-shrink: 0;
+  display: block;
+}
+
+.input-icon-wrapper input {
+  flex: 1;
+  padding: 9px 0;
+  border: none;
+  outline: none;
+  font-size: 0.88rem;
+  color: var(--texto-principal);
+  background: transparent;
+}
+
+.input-icon-wrapper input::placeholder {
+  color: var(--texto-placeholder);
+}
+
+/* ── Linha lembrar-me / esqueceu a senha ── */
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.remember-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.83rem;
+  color: var(--texto-principal);
+  cursor: pointer;
+}
+
+.remember-label input[type='checkbox'] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--azul);
+  cursor: pointer;
+}
+
+.forgot-link {
+  font-size: 0.83rem;
+  color: var(--azul);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transicao-suave);
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+/* ── Botão Entrar ── */
+.btn-submit {
+  padding: 12px;
+  background-color: var(--azul);
+  color: var(--branco);
+  border: none;
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-submit:hover {
+  background-color: #0c3d68;
+}
+
+/* ── Divisor "ou" ── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+  font-size: 0.83rem;
+  color: var(--texto-placeholder);
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--borda-input);
+}
+
+/* ── Botão Conta Demo ── */
+.btn-demo {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--branco);
+  color: var(--texto-principal);
+  border: 1.5px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-demo:hover {
+  border-color: var(--azul);
+  color: var(--azul);
+}
+
+/* ── Rodapé ── */
+.login-register {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--texto-placeholder);
+  margin-top: 18px;
+  white-space: nowrap;
+}
+
+.register-link {
+  color: var(--verde);
+  text-decoration: none;
+  font-weight: 600;
+  transition: var(--transicao-suave);
+}
+
+.register-link:hover {
+  text-decoration: underline;
+}
+
+.login-footer-text {
+  text-align: center;
+  font-size: 0.73rem;
+  color: var(--texto-placeholder);
+  margin-top: 16px;
+  opacity: 0.8;
+}
