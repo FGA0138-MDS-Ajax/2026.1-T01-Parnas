@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.services.category_service import add_category
+from app.services.category_service import add_category, get_categories
 from app.schemas.category_schema import CategoryAddSchema
 from marshmallow import ValidationError
 
@@ -18,4 +18,16 @@ def add_category_route():
         return jsonify({"erros_de_validacao": err.messages}), 400
     
     answer, status_code = add_category(user_id, data)
+    return jsonify(answer), status_code
+
+@category_bp.route("", methods=["GET"])
+@jwt_required()
+def get_categories_route():
+    user_id = int(get_jwt_identity())
+    try:
+        data = category_schema.load(request.get_json())
+    except ValidationError as err:
+        return jsonify({"erros_de_validacao": err.messages}), 400
+    
+    answer, status_code = get_categories(user_id, data)
     return jsonify(answer), status_code
