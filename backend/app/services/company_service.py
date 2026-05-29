@@ -41,3 +41,7 @@ def register_company(user_id, data):
         db.session.rollback()
         print(f"Erro ao cadastrar empresa: {str(e)}")
         return {"erro": f"Ocorreu um erro interno ao tentar cadastrar a empresa: {str(e)}"}, 500
+     
+def delete_company(user_id, cnpj):
+     cnpj_clean = re.sub(r'\D', '', cnpj)
+     # Boa sorte :D
