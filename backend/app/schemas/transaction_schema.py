@@ -13,7 +13,7 @@ class TransactionSchema(Schema):
     @validates('amount')
     def validate_amount(self, value):
         if value <= 0:
-            raise ValidationError("O valor da transção deve ser estritamente positivo.")
+            raise ValidationError("O valor da transação deve ser estritamente positivo.")
 
     @validates('date')
     def validate_date(self, value):

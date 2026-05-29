@@ -10,7 +10,7 @@ def create_transaction(data, current_user_id):
     ).first()
 
     if not category:
-        return {"erro": "A categoria informada não existe ou não pertence a esta empresa."}
+        return {"erro": "A categoria informada não existe ou não pertence a esta empresa."}, 400
 
     new_transaction = Transaction(
         description=data['description'],
