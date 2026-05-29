@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
-from app.services.user_service import register_user
+from flask_jwt_extended import get_jwt_identity, jwt_required
+from app.services.user_service import delete_user, register_user
 from app.schemas.user_schema import UserRegistrationSchema
 from marshmallow import ValidationError
 from flask import render_template
@@ -27,3 +28,12 @@ def register():
 @user_bp.route('/register-page')
 def register_page():
     return render_template('register.html')
+
+@user_bp.route("/delete", methods=["DELETE"])
+@jwt_required()
+def delete():
+    user_id = int(get_jwt_identity())
+
+    answer, status_code = delete_user(user_id)
+    
+    return jsonify(answer), status_code

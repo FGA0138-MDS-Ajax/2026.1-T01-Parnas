@@ -1,5 +1,6 @@
 import bcrypt
 from flask_jwt_extended import create_access_token
+from app.models.company import Company
 from app.models.user import User
 from app.config import db
 from datetime import datetime
@@ -40,7 +41,7 @@ def register_user(data):
 
     except Exception as e:
         db.session.rollback()
-        return {"erro": "Ocorreu um erro interno ao tentar salvar o usuário."}, 500
+        return {"erro": f"Ocorreu um erro interno ao tentar salvar o usuário. message: {str(e)}"}, 500
     
 def find_user_by_cpf(cpf: str):
     if not cpf:
@@ -51,3 +52,7 @@ def find_user_by_email(email: str):
     if not email:
         return None
     return db.session.query(User).filter(User.email == email).first()
+
+def delete_user(user_id):
+    User = db.session.query(User).filter(User.user_id == user_id).first()
+    # Deus tenha piedade de quem escrever essa função
