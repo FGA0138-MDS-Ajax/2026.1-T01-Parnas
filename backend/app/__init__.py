@@ -37,4 +37,7 @@ def create_app():
     from app.routes.company_routes import company_bp
     app.register_blueprint(company_bp, url_prefix="/api/companies")
 
+    from app.routes.category_routes import category_bp
+    app.register_blueprint(category_bp, url_prefix="/api/categories")
+
     return app
