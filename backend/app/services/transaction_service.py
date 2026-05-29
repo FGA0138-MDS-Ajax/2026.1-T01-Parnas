@@ -1,6 +1,5 @@
 from app.config import db
-from app.models import category
-from app.models. transaction import Transaction
+from app.models.transaction import Transaction
 from app.models.category import Category
 
 def create_transaction(data, current_user_id):
