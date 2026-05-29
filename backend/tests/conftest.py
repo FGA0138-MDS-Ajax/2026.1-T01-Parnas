@@ -87,23 +87,25 @@ def clean_db(app):
 def test_user(app_context, clean_db):
     """
     Cria um usuário de teste e o persiste no BD.
-
+    
     Returns:
         User: Usuário criado com:
             - email: 'teste@email.com'
             - user_id: Gerado automaticamente
     """
+    from datetime import date
     hashed_password = bcrypt.hashpw('Senha@123'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-
+    
     user = User(
         email='teste@email.com',
         password_hash=hashed_password,
-        full_name='Usuário Teste',
-        birth_date='2000-01-01'
+        name='Usuário Teste',
+        cpf='12345678901',
+        birth_date=date(2000, 1, 1)
     )
     db.session.add(user)
     db.session.commit()
-
+    
     return user
 
 

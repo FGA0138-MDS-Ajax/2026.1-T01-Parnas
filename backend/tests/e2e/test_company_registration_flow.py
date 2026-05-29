@@ -41,6 +41,7 @@ class TestCompanyRegistrationFlow:
         """
 
         # Setup: Criar usuário
+        from datetime import date
         email = 'user@test.com'
         password = 'Senha@123'
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -48,8 +49,9 @@ class TestCompanyRegistrationFlow:
         user = User(
             email=email,
             password_hash=hashed_password,
-            full_name='Test User',
-            birth_date='2000-01-01'
+            name='Test User',
+            cpf='12345678901',
+            birth_date=date(2000, 1, 1)
         )
         from app.config import db
         db.session.add(user)
@@ -111,6 +113,7 @@ class TestCompanyRegistrationFlow:
         """
 
         # Setup: Usuário
+        from datetime import date
         email = 'user@test.com'
         password = 'Senha@123'
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -118,8 +121,9 @@ class TestCompanyRegistrationFlow:
         user = User(
             email=email,
             password_hash=hashed_password,
-            full_name='Test User',
-            birth_date='2000-01-01'
+            name='Test User',
+            cpf='12345678901',
+            birth_date=date(2000, 1, 1)
         )
         from app.config import db
         db.session.add(user)
@@ -186,6 +190,7 @@ class TestCompanyRegistrationFlow:
         """
 
         from app.config import db
+        from datetime import date
 
         # Setup: Criar 2 usuários
         email_a = 'user_a@test.com'
@@ -196,14 +201,16 @@ class TestCompanyRegistrationFlow:
         user_a = User(
             email=email_a,
             password_hash=hashed_password,
-            full_name='User A',
-            birth_date='2000-01-01'
+            name='User A',
+            cpf='12345678901',
+            birth_date=date(2000, 1, 1)
         )
         user_b = User(
             email=email_b,
             password_hash=hashed_password,
-            full_name='User B',
-            birth_date='2000-01-01'
+            name='User B',
+            cpf='12345678902',
+            birth_date=date(2000, 1, 1)
         )
         db.session.add(user_a)
         db.session.add(user_b)
@@ -291,6 +298,7 @@ class TestCompanyRegistrationErrorRecovery:
         """
 
         from app.config import db
+        from datetime import date
 
         # Setup: Usuário
         email = 'user@test.com'
@@ -300,8 +308,9 @@ class TestCompanyRegistrationErrorRecovery:
         user = User(
             email=email,
             password_hash=hashed_password,
-            full_name='Test User',
-            birth_date='2000-01-01'
+            name='Test User',
+            cpf='12345678901',
+            birth_date=date(2000, 1, 1)
         )
         db.session.add(user)
         db.session.commit()
@@ -365,6 +374,7 @@ class TestCompanyRegistrationErrorRecovery:
         """
 
         from app.config import db
+        from datetime import date
 
         # Setup: Usuário
         email = 'user@test.com'
@@ -374,8 +384,9 @@ class TestCompanyRegistrationErrorRecovery:
         user = User(
             email=email,
             password_hash=hashed_password,
-            full_name='Test User',
-            birth_date='2000-01-01'
+            name='Test User',
+            cpf='12345678901',
+            birth_date=date(2000, 1, 1)
         )
         db.session.add(user)
         db.session.commit()

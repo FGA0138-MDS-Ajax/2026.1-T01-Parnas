@@ -220,13 +220,14 @@ class TestRegisterCompanyMultipleUsers:
         """
         
         # Criar 2 usuários
+        from datetime import date
         import bcrypt
         hashed_pwd = bcrypt.hashpw('Senha@123'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         
         user1 = User(email='user1@test.com', password_hash=hashed_pwd, 
-                    full_name='User 1', birth_date='2000-01-01')
+                    name='User 1', cpf='12345678901', birth_date=date(2000, 1, 1))
         user2 = User(email='user2@test.com', password_hash=hashed_pwd, 
-                    full_name='User 2', birth_date='2000-01-01')
+                    name='User 2', cpf='12345678902', birth_date=date(2000, 1, 1))
         
         db.session.add(user1)
         db.session.add(user2)
