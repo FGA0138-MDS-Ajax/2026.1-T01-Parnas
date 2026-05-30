@@ -15,30 +15,33 @@ def create_app():
     migrate.init_app(app, db)
     jwt.init_app(app)
 
-    # Importação do modelo para o Flask-Migrate registrar a tabela
+    # Importação de TODOS os modelos para o Flask-Migrate registrar as tabelas
     from app.models.user import User
     from app.models.company import Company
     from app.models.user_company_association import user_company
+    from app.models.category import Category
     from app.models.transaction import Transaction
 
     # Força a criação das tabelas automaticamente (essencial para o SQLite de teste)
     with app.app_context():
         db.create_all()
 
-    # Registra o Blueprint de autenticação (Login/Logout)
+    # 1. Registro do Blueprint de autenticação (Login/Logout)
     from app.routes.auth_routes import auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
 
-    # Registra o Blueprint de transações
-    from app.routes.transaction_routes import transaction_bp
-    app.register_blueprint(transaction_bp, url_prefix='/transacoes')
-
-    # Centralização da ativação dos módulos de rotas de usuários
+    # 2. Centralização das rotas da API restrita com prefixo único (/api)
     from app.routes.user_routes import user_bp
-    app.register_blueprint(user_bp, url_prefix='/api')  # Mudei para /api para não dar conflito de rota com /auth
+    app.register_blueprint(user_bp, url_prefix='/api')
 
-    # Centralização da ativação dos módulos de rotas de empresas
     from app.routes.company_routes import company_bp
     app.register_blueprint(company_bp, url_prefix="/api/companies")
+
+    from app.routes.category_routes import category_bp
+    app.register_blueprint(category_bp, url_prefix="/api/categories")
+
+    # Registro ÚNICO de transações (Removeu a duplicação antiga que causava erro)
+    from app.routes.transaction_routes import transaction_bp
+    app.register_blueprint(transaction_bp, url_prefix="/api/transactions")
 
     return app
