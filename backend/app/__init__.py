@@ -38,8 +38,16 @@ def create_app():
     from app.routes.company_routes import company_bp
     app.register_blueprint(company_bp, url_prefix="/api/companies")
 
-    #Centralização da ativação de rotas de transações
+    # Centralização da ativação dos módulos de rotas de empresas
+    from app.routes.company_routes import company_bp
+    app.register_blueprint(company_bp, url_prefix="/api/companies")
+
+    # Centralização da ativação de rotas de transações
     from app.routes.transaction_routes import transaction_bp
     app.register_blueprint(transaction_bp, url_prefix="/api/transactions")
+
+    # Centralização da ativação de rotas de categorias
+    from app.routes.category_routes import category_bp
+    app.register_blueprint(category_bp, url_prefix="/api/categories")
 
     return app

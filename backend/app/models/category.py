@@ -16,8 +16,8 @@ class Category(db.Model):
         UniqueConstraint('name', 'company_id', name='_name_company_uc'),
     )
 
-    company = db.relationship('Company')
-    transactions = db.relationship('Transaction', back_populates='category')
+    company = db.relationship('Company', back_populates='categories')
+    transactions = db.relationship('Transaction', back_populates='category', lazy=True)
 
     def __repr__(self):
         return f'<Category {self.name} - {self.type}>'
