@@ -17,6 +17,7 @@ class Category(db.Model):
     )
 
     company = db.relationship('Company', back_populates='categories')
+    transactions = db.relationship('Transaction', back_populates='category', lazy=True)
 
     def __repr__(self):
         return f'<Category {self.name} - {self.type}>'
