@@ -13,6 +13,7 @@ class Company(db.Model):
     register_date = db.Column(db.Date, nullable=False, default=date.today)
     
     users = db.relationship('User', secondary=user_company, back_populates='companies')
+    categories = db.relationship('Category', back_populates='company', lazy=True)
     transactions = db.relationship('Transaction', back_populates='company')
 
     def __repr__(self):
