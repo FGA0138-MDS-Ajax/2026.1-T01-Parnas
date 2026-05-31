@@ -8,6 +8,8 @@ import Register from './pages/Register/Register';
 import LayoutBase from './components/Layout/LayoutBase';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Transacoes from './pages/Transacoes/Transacoes';
+import Configuracoes from './pages/Configuracoes/Configuracoes';
+import Historico from './pages/Historico/Historico';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -36,6 +38,8 @@ export const AppRoutes = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/cadastro-empresa" element={<CadastroEmpresa />} />
           <Route path="/transacoes" element={<Transacoes />} />
+          <Route path="/configuracoes" element={<Configuracoes />} />
+          <Route path="/historico" element={<Historico />} />
         </Route>
       </Routes>
     </BrowserRouter>
