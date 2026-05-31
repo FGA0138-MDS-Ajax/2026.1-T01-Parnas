@@ -4,6 +4,7 @@ import Login from './pages/Login/Login';
 import CadastroEmpresa from './pages/CadastroEmpresa/CadastroEmpresa';
 import { EsqueciSenha } from './pages/EsqueciSenha/EsqueciSenha';
 import { RedefinirSenha } from './pages/RedefinirSenha/RedefinirSenha';
+import Categorias from './pages/Categorias/Categorias';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -19,7 +20,7 @@ export const AppRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/esqueci-senha" element={<EsqueciSenha />} />
         <Route path="/redefinir-senha" element={<RedefinirSenha />} />
-          
+        <Route path="/categorias" element={<Categorias />} />
         <Route 
           path="/cadastro-empresa" 
           element={
