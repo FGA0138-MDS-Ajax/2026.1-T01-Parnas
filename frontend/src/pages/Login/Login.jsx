@@ -107,7 +107,7 @@ const Login = () => {
               />
               <span>Lembrar-me</span>
             </label>
-            <Link to="/recuperacao-senha" className="forgot-link">Esqueceu a senha?</Link>
+            <Link to="/esqueci-senha" className="forgot-link">Esqueceu a senha?</Link>
           </div>
 
           <button type="submit" className="btn-submit">Entrar</button>
@@ -122,7 +122,7 @@ const Login = () => {
 
         <p className="login-register">
           Não tem uma conta?{' '}
-          <Link to="/cadastro" className="register-link">Cadastre-se gratuitamente</Link>
+          <Link to="/Register" className="register-link">Cadastre-se gratuitamente</Link>
         </p>
 
         <p className="login-footer-text">
