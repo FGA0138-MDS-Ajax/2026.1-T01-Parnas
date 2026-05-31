@@ -19,7 +19,6 @@ def create_app():
     from app.models.user import User
     from app.models.company import Company
     from app.models.user_company_association import user_company
-    from app.models.category import Category
     from app.models.transaction import Transaction
 
     # Força a criação das tabelas automaticamente (essencial para o SQLite de teste)
@@ -29,6 +28,10 @@ def create_app():
     # Registra o Blueprint de autenticação (Login/Logout)
     from app.routes.auth_routes import auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
+
+    # Registra o Blueprint de transações
+    from app.routes.transaction_routes import transaction_bp
+    app.register_blueprint(transaction_bp, url_prefix='/transacoes')
 
     # Centralização da ativação dos módulos de rotas de usuários
     from app.routes.user_routes import user_bp

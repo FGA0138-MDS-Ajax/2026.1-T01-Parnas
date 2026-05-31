@@ -1,39 +1,22 @@
-.container-cadastro {
+.cadastro-empresa-pagina {
+  width: 100%;
+  min-height: calc(100vh - 140px);
   display: flex;
-  background-color: var(--branco);
-  width: 900px;
-  min-height: 500px;
-  border-radius: var(--arredondamento-card);
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-}
-
-.sidebar-brand {
-  flex: 1;
-  background: var(--gradiente-fundo);
-  display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: var(--branco);
-  padding: 40px;
-  text-align: center;
 }
 
-.brand-logo {
-  font-size: 4rem;
-  font-weight: 800;
-  letter-spacing: 1px;
-  margin-bottom: 5px;
-}
-
-.brand-subtitle {
-  font-size: 0.9rem;
-  opacity: 0.9;
+.container-cadastro {
+  background-color: var(--branco);
+  max-width: 550px;
+  width: 100%;
+  border-radius: var(--arredondamento-card);
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  border: 2px solid var(--borda-input);
 }
 
 .form-content {
-  flex: 1.3;
   padding: 40px;
   display: flex;
   flex-direction: column;
@@ -51,6 +34,7 @@
 .form-header h2 {
   font-size: 1.5rem;
   font-weight: 700;
+  color: var(--azul);
 }
 
 .form-grid {
