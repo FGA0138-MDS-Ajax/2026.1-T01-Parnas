@@ -1,0 +1,112 @@
+.dashboard-container {
+  width: 100%;
+  font-family: var(--fonte-poppins);
+}
+
+.dashboard-header {
+  margin-bottom: 35px;
+}
+
+.dashboard-header h2 {
+  margin: 0;
+  font-size: 28px;
+  color: var(--texto-principal);
+  font-weight: 600;
+}
+
+.dashboard-header p {
+  margin: 6px 0 0 0;
+  color: var(--texto-placeholder);
+  font-size: 15px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.dashboard-card {
+  background-color: var(--fundo-card);
+  border-radius: var(--arredondamento-card);
+  padding: 28px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--borda-input);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 220px;
+}
+
+.dashboard-card-title {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.title-empresa {
+  color: var(--azul);
+}
+
+.title-config {
+  color: var(--verde);
+}
+
+.dashboard-card-text {
+  margin: 0;
+  color: var(--texto-principal);
+  opacity: 0.8;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.dashboard-card-button {
+  margin-top: 20px;
+  color: var(--branco);
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--arredondamento-input-botao);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--fonte-poppins);
+  align-self: flex-start;
+  transition: var(--transicao-suave);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.btn-empresa {
+  background-color: var(--azul);
+}
+
+.btn-empresa:hover {
+  opacity: 0.9;
+}
+
+.btn-config {
+  background-color: var(--verde);
+}
+
+.btn-config:hover {
+  opacity: 0.9;
+}
+
+/* Card de Transações Financeiras */
+.title-transacoes {
+  color: #1a7a46;
+}
+
+.btn-transacoes {
+  background-color: #1a7a46;
+  color: #ffffff;
+  border: none;
+  border-radius: var(--arredondamento-input-botao);
+  padding: 10px 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-transacoes:hover {
+  background-color: #145c35;
+}

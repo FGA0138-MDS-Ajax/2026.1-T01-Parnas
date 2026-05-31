@@ -1,0 +1,811 @@
+/* Página transações */
+
+.transacoes-pagina {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.transacoes-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 28px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.transacoes-titulo {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--azul);
+  margin: 0 0 4px;
+}
+
+.transacoes-subtitulo {
+  font-size: 0.9rem;
+  color: var(--texto-placeholder);
+  margin: 0;
+}
+
+/* Botão nova transação */
+
+.btn-nova-transacao {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: var(--azul);
+  color: var(--branco);
+  border: none;
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+  white-space: nowrap;
+}
+
+.btn-nova-transacao:hover {
+  background-color: #0c3d68;
+}
+
+.btn-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+/* Cards de resumo */
+
+.resumo-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.resumo-card {
+  background-color: var(--branco);
+  border: 2px solid var(--borda-input);
+  border-radius: var(--arredondamento-card);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: var(--transicao-suave);
+}
+
+.resumo-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--texto-placeholder);
+}
+
+.resumo-valor {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.resumo-card--receita {
+  border-left: 4px solid var(--verde);
+}
+
+.resumo-card--receita .resumo-valor {
+  color: var(--verde);
+}
+
+.resumo-card--despesa {
+  border-left: 4px solid var(--erro);
+}
+
+.resumo-card--despesa .resumo-valor {
+  color: var(--erro);
+}
+
+.resumo-card--saldo {
+  border-left: 4px solid var(--azul);
+}
+
+.resumo-card--saldo.positivo .resumo-valor {
+  color: var(--verde);
+}
+
+.resumo-card--saldo.negativo .resumo-valor {
+  color: var(--erro);
+}
+
+/* Barra de filtros */
+
+.filtros-barra {
+  display: flex;
+  gap: 24px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  background-color: var(--branco);
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-card);
+}
+
+.filtros-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filtro-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.filtro-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.filtro-tab {
+  padding: 7px 16px;
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
+  background: transparent;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--texto-principal);
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.filtro-tab:hover {
+  background-color: #f0f4f8;
+}
+
+.filtro-tab.ativo {
+  background-color: var(--azul);
+  color: var(--branco);
+  border-color: var(--azul);
+}
+
+.filtro-select {
+  padding: 7px 14px;
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.85rem;
+  color: var(--texto-principal);
+  background-color: var(--branco);
+  min-width: 200px;
+  outline: none;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.filtro-select:focus {
+  border-color: var(--azul);
+  box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1);
+}
+
+/* Lista / tabela de transações */
+
+.transacoes-lista-container {
+  background-color: var(--branco);
+  border: 2px solid var(--borda-input);
+  border-radius: var(--arredondamento-card);
+  overflow: hidden;
+}
+
+.transacoes-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.transacoes-tabela thead tr {
+  background-color: #f5f7fa;
+  border-bottom: 2px solid var(--borda-input);
+}
+
+.transacoes-tabela th {
+  padding: 13px 16px;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--texto-placeholder);
+  white-space: nowrap;
+}
+
+.transacoes-tabela tbody tr {
+  border-bottom: 1px solid var(--borda-input);
+  transition: background-color 0.15s ease;
+}
+
+.transacoes-tabela tbody tr:last-child {
+  border-bottom: none;
+}
+
+.transacoes-tabela tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.transacoes-tabela td {
+  padding: 14px 16px;
+  color: var(--texto-principal);
+  vertical-align: middle;
+}
+
+.col-descricao {
+  max-width: 260px;
+}
+
+.descricao-texto {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.col-data {
+  white-space: nowrap;
+  color: var(--texto-placeholder);
+  font-size: 0.85rem;
+}
+
+.col-valor {
+  text-align: right;
+  font-weight: 700;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.col-acoes {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Badges */
+
+.badge-categoria {
+  display: inline-block;
+  padding: 3px 10px;
+  background-color: #eef2f7;
+  color: #4a6080;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-tipo {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.badge-tipo--receita {
+  background-color: #e8f7ef;
+  color: #1a7a46;
+}
+
+.badge-tipo--despesa {
+  background-color: #fdecea;
+  color: #c0392b;
+}
+
+/* Valores coloridos */
+
+.valor--receita {
+  color: var(--verde);
+}
+
+.valor--despesa {
+  color: var(--erro);
+}
+
+/* Botões de ação (editar / excluir) */
+
+.btn-acao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--borda-input);
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: var(--transicao-suave);
+  margin-left: 6px;
+}
+
+.btn-editar {
+  color: var(--azul);
+}
+
+.btn-editar:hover {
+  background-color: #e8f0f8;
+  border-color: var(--azul);
+}
+
+.btn-excluir {
+  color: var(--erro);
+}
+
+.btn-excluir:hover {
+  background-color: #fdecea;
+  border-color: var(--erro);
+}
+
+/* Estados (carregando / erro / vazio) */
+
+.estado-carregando,
+.estado-erro,
+.estado-vazio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  text-align: center;
+  color: var(--texto-placeholder);
+  gap: 12px;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #e8edf2;
+  border-top-color: var(--azul);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.estado-erro p {
+  color: var(--erro);
+  font-weight: 600;
+}
+
+.btn-tentar-novamente {
+  padding: 8px 20px;
+  background-color: var(--azul);
+  color: var(--branco);
+  border: none;
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-tentar-novamente:hover {
+  background-color: #0c3d68;
+}
+
+.vazio-icone {
+  font-size: 2.5rem;
+}
+
+.vazio-titulo {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+  margin: 0;
+}
+
+.vazio-descricao {
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.btn-nova-transacao-vazio {
+  margin-top: 8px;
+  padding: 10px 22px;
+  background-color: var(--azul);
+  color: var(--branco);
+  border: none;
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-nova-transacao-vazio:hover {
+  background-color: #0c3d68;
+}
+
+/* Modal */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(10, 25, 47, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-container {
+  background-color: var(--branco);
+  border-radius: var(--arredondamento-card);
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--borda-input);
+}
+
+.modal-titulo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--azul);
+  margin: 0;
+}
+
+.modal-fechar {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--texto-placeholder);
+  font-size: 1rem;
+  border-radius: 6px;
+  transition: var(--transicao-suave);
+}
+
+.modal-fechar:hover {
+  background-color: #f0f4f8;
+  color: var(--texto-principal);
+}
+
+.modal-corpo {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.modal-rodape {
+  padding: 16px 24px;
+  border-top: 1px solid var(--borda-input);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Tipo toggle (receita / despesa) */
+
+.tipo-toggle {
+  display: flex;
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
+  overflow: hidden;
+}
+
+.tipo-btn {
+  flex: 1;
+  padding: 9px 16px;
+  border: none;
+  background: transparent;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+  color: var(--texto-placeholder);
+}
+
+.tipo-btn--receita.ativo {
+  background-color: #e8f7ef;
+  color: #1a7a46;
+}
+
+.tipo-btn--despesa.ativo {
+  background-color: #fdecea;
+  color: #c0392b;
+}
+
+.tipo-btn:not(.ativo):hover {
+  background-color: #f5f7fa;
+}
+
+/* Formulário modal (reusa estilos base) */
+
+.input-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+  margin-bottom: 6px;
+}
+
+.input-group input,
+.input-group select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.9rem;
+  outline: none;
+  transition: var(--transicao-suave);
+  color: var(--texto-principal);
+  background-color: var(--branco);
+  box-sizing: border-box;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  border-color: var(--azul);
+  box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1);
+}
+
+.input-group input.input-erro,
+.input-group select.input-erro {
+  border-color: var(--erro);
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.08);
+}
+
+.msg-campo-erro {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.78rem;
+  color: var(--erro);
+  font-weight: 600;
+}
+
+.msg-campo-aviso {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.78rem;
+  color: #b8860b;
+  font-weight: 600;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Botões do modal */
+
+.btn-cancelar {
+  padding: 10px 20px;
+  background-color: transparent;
+  color: var(--texto-principal);
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-cancelar:hover:not(:disabled) {
+  background-color: #f0f4f8;
+}
+
+.btn-cancelar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-submit {
+  padding: 10px 22px;
+  background-color: var(--azul);
+  color: var(--branco);
+  border: none;
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-submit:hover:not(:disabled) {
+  background-color: #0c3d68;
+}
+
+.btn-submit:disabled {
+  background-color: var(--texto-placeholder);
+  cursor: not-allowed;
+}
+
+/* Modal de confirmação de exclusão */
+
+.modal-container--confirmacao {
+  max-width: 400px;
+  text-align: center;
+  padding: 36px 32px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.confirmacao-icone {
+  font-size: 2.2rem;
+  color: #e67e22;
+  margin-bottom: 4px;
+}
+
+.confirmacao-titulo {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--texto-principal);
+  margin: 0;
+}
+
+.confirmacao-descricao {
+  font-size: 0.9rem;
+  color: var(--texto-placeholder);
+  margin: 0;
+}
+
+.confirmacao-detalhe {
+  width: 100%;
+  background-color: #f5f7fa;
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.confirmacao-detalhe strong {
+  font-size: 0.88rem;
+  color: var(--texto-principal);
+  text-align: left;
+}
+
+.confirmacao-valor {
+  font-size: 0.95rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.confirmacao-aviso {
+  font-size: 0.82rem;
+  color: var(--texto-placeholder);
+  margin: 0;
+}
+
+.confirmacao-acoes {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-excluir-confirmar {
+  padding: 10px 22px;
+  background-color: var(--erro);
+  color: var(--branco);
+  border: none;
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-excluir-confirmar:hover {
+  background-color: #a93226;
+}
+
+/* Responsivo */
+
+@media (max-width: 640px) {
+  .transacoes-pagina {
+    padding: 20px 16px;
+  }
+
+  .transacoes-cabecalho {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-nova-transacao {
+    justify-content: center;
+  }
+
+  .resumo-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .filtros-barra {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filtro-select {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .transacoes-tabela thead {
+    display: none;
+  }
+
+  .transacoes-tabela,
+  .transacoes-tabela tbody,
+  .transacoes-tabela tr,
+  .transacoes-tabela td {
+    display: block;
+    width: 100%;
+  }
+
+  .transacoes-tabela tr {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--borda-input);
+    position: relative;
+  }
+
+  .transacoes-tabela td {
+    padding: 2px 0;
+    border: none;
+  }
+
+  .col-descricao {
+    max-width: 100%;
+  }
+
+  .col-acoes {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    text-align: right;
+  }
+
+  .col-valor {
+    text-align: left;
+    font-size: 1rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
