@@ -1,13 +1,14 @@
-/* Página transações */
+/* estrutura da pagina */
 
-.transacoes-pagina {
+.transacoes-container {
   width: 100%;
   max-width: 1100px;
   margin: 0 auto;
   padding: 32px 24px;
+  font-family: var(--fonte-poppins);
 }
 
-.transacoes-cabecalho {
+.transacoes-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -16,24 +17,25 @@
   flex-wrap: wrap;
 }
 
-.transacoes-titulo {
+.transacoes-header h2 {
   font-size: 1.6rem;
   font-weight: 700;
   color: var(--azul);
   margin: 0 0 4px;
 }
 
-.transacoes-subtitulo {
+.transacoes-header p {
   font-size: 0.9rem;
   color: var(--texto-placeholder);
   margin: 0;
 }
 
-/* Botão nova transação */
+/* botao nova transacao */
 
 .btn-nova-transacao {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   padding: 10px 20px;
   background-color: var(--azul);
@@ -45,27 +47,34 @@
   cursor: pointer;
   transition: var(--transicao-suave);
   white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .btn-nova-transacao:hover {
   background-color: #0c3d68;
+  transform: translateY(-1px);
+}
+
+.btn-nova-transacao:active {
+  transform: translateY(0);
 }
 
 .btn-icon {
   font-size: 1.2rem;
   line-height: 1;
+  display: inline-block;
 }
 
-/* Cards de resumo */
+/* cards de resumo totais */
 
-.resumo-cards {
+.transacoes-totais {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
   margin-bottom: 28px;
 }
 
-.resumo-card {
+.total-card {
   background-color: var(--branco);
   border: 2px solid var(--borda-input);
   border-radius: var(--arredondamento-card);
@@ -76,7 +85,7 @@
   transition: var(--transicao-suave);
 }
 
-.resumo-label {
+.total-label {
   font-size: 0.8rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -84,46 +93,46 @@
   color: var(--texto-placeholder);
 }
 
-.resumo-valor {
+.total-valor {
   font-size: 1.4rem;
   font-weight: 700;
 }
 
-.resumo-card--receita {
+.total-receita {
   border-left: 4px solid var(--verde);
 }
 
-.resumo-card--receita .resumo-valor {
+.total-receita .total-valor {
   color: var(--verde);
 }
 
-.resumo-card--despesa {
+.total-despesa {
   border-left: 4px solid var(--erro);
 }
 
-.resumo-card--despesa .resumo-valor {
+.total-despesa .total-valor {
   color: var(--erro);
 }
 
-.resumo-card--saldo {
-  border-left: 4px solid var(--azul);
+.saldo-positivo {
+  border-left: 4px solid var(--verde);
 }
 
-.resumo-card--saldo.positivo .resumo-valor {
+.saldo-positivo .total-valor {
   color: var(--verde);
 }
 
-.resumo-card--saldo.negativo .resumo-valor {
+.saldo-negativo {
+  border-left: 4px solid var(--erro);
+}
+
+.saldo-negativo .total-valor {
   color: var(--erro);
 }
 
-/* Barra de filtros */
+/* barra de filtros */
 
-.filtros-barra {
-  display: flex;
-  gap: 24px;
-  align-items: flex-end;
-  flex-wrap: wrap;
+.transacoes-filtros {
   margin-bottom: 20px;
   padding: 16px 20px;
   background-color: var(--branco);
@@ -131,13 +140,21 @@
   border-radius: var(--arredondamento-card);
 }
 
-.filtros-grupo {
+.filtros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.filtro-group {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.filtro-label {
+.filtro-group label {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--texto-principal);
@@ -145,58 +162,80 @@
   letter-spacing: 0.04em;
 }
 
-.filtro-tabs {
-  display: flex;
-  gap: 4px;
-}
-
-.filtro-tab {
-  padding: 7px 16px;
-  border: 1px solid var(--borda-input);
-  border-radius: var(--arredondamento-input-botao);
-  background: transparent;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--texto-principal);
-  cursor: pointer;
-  transition: var(--transicao-suave);
-}
-
-.filtro-tab:hover {
-  background-color: #f0f4f8;
-}
-
-.filtro-tab.ativo {
-  background-color: var(--azul);
-  color: var(--branco);
-  border-color: var(--azul);
-}
-
-.filtro-select {
-  padding: 7px 14px;
+.filtro-group input,
+.filtro-group select {
+  padding: 8px 12px;
   border: 1px solid var(--borda-input);
   border-radius: var(--arredondamento-input-botao);
   font-size: 0.85rem;
   color: var(--texto-principal);
   background-color: var(--branco);
-  min-width: 200px;
   outline: none;
-  cursor: pointer;
   transition: var(--transicao-suave);
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.filtro-select:focus {
+.filtro-group input:focus,
+.filtro-group select:focus {
   border-color: var(--azul);
   box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1);
 }
 
-/* Lista / tabela de transações */
+.filtros-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  width: 100%;
+}
 
-.transacoes-lista-container {
+.btn-limpar {
+  background: transparent;
+  border: 1px solid var(--borda-input);
+  color: var(--texto-placeholder);
+  padding: 9px 20px;
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-limpar:hover {
+  border-color: var(--texto-placeholder);
+  color: var(--texto-principal);
+}
+
+.btn-aplicar {
+  background-color: var(--azul);
+  border: none;
+  color: var(--branco);
+  padding: 9px 20px;
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-aplicar:hover {
+  opacity: 0.9;
+}
+
+/* tabela e listagem de transacoes */
+
+.transacoes-tabela-wrapper {
   background-color: var(--branco);
   border: 2px solid var(--borda-input);
   border-radius: var(--arredondamento-card);
   overflow: hidden;
+}
+
+.tabela-info {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--borda-input);
+  font-size: 0.85rem;
+  color: var(--texto-placeholder);
 }
 
 .transacoes-tabela {
@@ -240,50 +279,9 @@
   vertical-align: middle;
 }
 
-.col-descricao {
-  max-width: 260px;
-}
+/* badges e cores de valores */
 
-.descricao-texto {
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-weight: 500;
-}
-
-.col-data {
-  white-space: nowrap;
-  color: var(--texto-placeholder);
-  font-size: 0.85rem;
-}
-
-.col-valor {
-  text-align: right;
-  font-weight: 700;
-  font-size: 0.95rem;
-  white-space: nowrap;
-}
-
-.col-acoes {
-  text-align: right;
-  white-space: nowrap;
-}
-
-/* Badges */
-
-.badge-categoria {
-  display: inline-block;
-  padding: 3px 10px;
-  background-color: #eef2f7;
-  color: #4a6080;
-  border-radius: 20px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.badge-tipo {
+.badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -293,239 +291,70 @@
   font-weight: 700;
 }
 
-.badge-tipo--receita {
+.badge-receita {
   background-color: #e8f7ef;
   color: #1a7a46;
 }
 
-.badge-tipo--despesa {
+.badge-despesa {
   background-color: #fdecea;
   color: #c0392b;
 }
 
-/* Valores coloridos */
-
-.valor--receita {
+.valor-receita {
   color: var(--verde);
+  font-weight: 700;
+  text-align: right;
 }
 
-.valor--despesa {
+.valor-despesa {
   color: var(--erro);
+  font-weight: 700;
+  text-align: right;
 }
 
-/* Botões de ação (editar / excluir) */
+/* botoes de acao na tabela */
 
 .btn-acao {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--borda-input);
-  border-radius: 6px;
-  background: transparent;
-  cursor: pointer;
-  font-size: 1rem;
+  color: var(--texto-placeholder);
   transition: var(--transicao-suave);
-  margin-left: 6px;
-}
-
-.btn-editar {
-  color: var(--azul);
 }
 
 .btn-editar:hover {
-  background-color: #e8f0f8;
-  border-color: var(--azul);
-}
-
-.btn-excluir {
-  color: var(--erro);
+  color: var(--azul) !important;
 }
 
 .btn-excluir:hover {
-  background-color: #fdecea;
-  border-color: var(--erro);
+  color: var(--erro) !important;
 }
 
-/* Estados (carregando / erro / vazio) */
+/* estado vazio */
 
-.estado-carregando,
-.estado-erro,
-.estado-vazio {
+.transacoes-vazio {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 60px 24px;
   text-align: center;
   color: var(--texto-placeholder);
-  gap: 12px;
+  font-size: 0.95rem;
 }
 
-.spinner {
-  width: 36px;
-  height: 36px;
-  border: 3px solid #e8edf2;
-  border-top-color: var(--azul);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
+/* formulario e componentes internos do modal nova transacao */
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.estado-erro p {
-  color: var(--erro);
-  font-weight: 600;
-}
-
-.btn-tentar-novamente {
-  padding: 8px 20px;
-  background-color: var(--azul);
-  color: var(--branco);
-  border: none;
-  border-radius: var(--arredondamento-input-botao);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transicao-suave);
-}
-
-.btn-tentar-novamente:hover {
-  background-color: #0c3d68;
-}
-
-.vazio-icone {
-  font-size: 2.5rem;
-}
-
-.vazio-titulo {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--texto-principal);
-  margin: 0;
-}
-
-.vazio-descricao {
-  font-size: 0.88rem;
-  margin: 0;
-}
-
-.btn-nova-transacao-vazio {
-  margin-top: 8px;
-  padding: 10px 22px;
-  background-color: var(--azul);
-  color: var(--branco);
-  border: none;
-  border-radius: var(--arredondamento-input-botao);
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transicao-suave);
-}
-
-.btn-nova-transacao-vazio:hover {
-  background-color: #0c3d68;
-}
-
-/* Modal */
-
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(10, 25, 47, 0.55);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 16px;
-  animation: fadeIn 0.15s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.modal-container {
-  background-color: var(--branco);
-  border-radius: var(--arredondamento-card);
-  width: 100%;
-  max-width: 520px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-  overflow: hidden;
-  animation: slideUp 0.2s ease;
-}
-
-@keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-.modal-cabecalho {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--borda-input);
-}
-
-.modal-titulo {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--azul);
-  margin: 0;
-}
-
-.modal-fechar {
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  color: var(--texto-placeholder);
-  font-size: 1rem;
-  border-radius: 6px;
-  transition: var(--transicao-suave);
-}
-
-.modal-fechar:hover {
-  background-color: #f0f4f8;
-  color: var(--texto-principal);
-}
-
-.modal-corpo {
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.modal-rodape {
-  padding: 16px 24px;
-  border-top: 1px solid var(--borda-input);
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
-
-/* Tipo toggle (receita / despesa) */
-
+/* tipo toggle receita despesa */
 .tipo-toggle {
   display: flex;
   border: 1px solid var(--borda-input);
   border-radius: var(--arredondamento-input-botao);
   overflow: hidden;
+  background-color: #f8fafc;
+  padding: 2px;
 }
 
 .tipo-btn {
   flex: 1;
-  padding: 9px 16px;
+  padding: 10px 16px;
   border: none;
   background: transparent;
   font-size: 0.88rem;
@@ -533,6 +362,7 @@
   cursor: pointer;
   transition: var(--transicao-suave);
   color: var(--texto-placeholder);
+  border-radius: calc(var(--arredondamento-input-botao) - 2px);
 }
 
 .tipo-btn--receita.ativo {
@@ -546,17 +376,25 @@
 }
 
 .tipo-btn:not(.ativo):hover {
-  background-color: #f5f7fa;
+  background-color: #eef2f6;
+  color: var(--texto-principal);
 }
 
-/* Formulário modal (reusa estilos base) */
+/* Grupos de campos e inputs do form */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
 
 .input-group label {
   display: block;
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--texto-principal);
-  margin-bottom: 6px;
+  text-align: left;
 }
 
 .input-group input,
@@ -566,6 +404,7 @@
   border: 1px solid var(--borda-input);
   border-radius: var(--arredondamento-input-botao);
   font-size: 0.9rem;
+  font-family: var(--fonte-poppins);
   outline: none;
   transition: var(--transicao-suave);
   color: var(--texto-principal);
@@ -587,6 +426,7 @@
 
 .msg-campo-erro {
   display: block;
+  text-align: left;
   margin-top: 5px;
   font-size: 0.78rem;
   color: var(--erro);
@@ -595,6 +435,7 @@
 
 .msg-campo-aviso {
   display: block;
+  text-align: left;
   margin-top: 5px;
   font-size: 0.78rem;
   color: #b8860b;
@@ -605,10 +446,10 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+  width: 100%;
 }
 
-/* Botões do modal */
-
+/* Botões de ação do formulário (Rodapé) */
 .btn-cancelar {
   padding: 10px 20px;
   background-color: transparent;
@@ -617,12 +458,14 @@
   border-radius: var(--arredondamento-input-botao);
   font-size: 0.9rem;
   font-weight: 600;
+  font-family: var(--fonte-poppins);
   cursor: pointer;
   transition: var(--transicao-suave);
 }
 
 .btn-cancelar:hover:not(:disabled) {
   background-color: #f0f4f8;
+  border-color: var(--texto-placeholder);
 }
 
 .btn-cancelar:disabled {
@@ -638,6 +481,7 @@
   border-radius: var(--arredondamento-input-botao);
   font-size: 0.9rem;
   font-weight: 600;
+  font-family: var(--fonte-poppins);
   cursor: pointer;
   transition: var(--transicao-suave);
 }
@@ -650,100 +494,146 @@
   background-color: var(--texto-placeholder);
   cursor: not-allowed;
 }
+/* posicionamento e fundo escuro do modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+  animation: fadeIn 0.15s ease;
+}
 
-/* Modal de confirmação de exclusão */
-
-.modal-container--confirmacao {
-  max-width: 400px;
-  text-align: center;
-  padding: 36px 32px 28px;
+/* container do modal com fundo branco e sombra */
+.modal-container {
+  background-color: var(--branco, #ffffff);
+  border-radius: var(--arredondamento-card, 12px);
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 12px;
+  animation: slideUp 0.2s ease;
 }
 
-.confirmacao-icone {
-  font-size: 2.2rem;
-  color: #e67e22;
-  margin-bottom: 4px;
-}
-
-.confirmacao-titulo {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--texto-principal);
-  margin: 0;
-}
-
-.confirmacao-descricao {
-  font-size: 0.9rem;
-  color: var(--texto-placeholder);
-  margin: 0;
-}
-
-.confirmacao-detalhe {
-  width: 100%;
-  background-color: #f5f7fa;
-  border: 1px solid var(--borda-input);
-  border-radius: var(--arredondamento-input-botao);
-  padding: 12px 16px;
+/* cabecalho do modal alinhando titulo e fechar */
+.modal-cabecalho {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--borda-input, #e2e8f0);
 }
 
-.confirmacao-detalhe strong {
-  font-size: 0.88rem;
-  color: var(--texto-principal);
-  text-align: left;
-}
-
-.confirmacao-valor {
-  font-size: 0.95rem;
+.modal-titulo {
+  font-size: 1.2rem;
   font-weight: 700;
-  white-space: nowrap;
-}
-
-.confirmacao-aviso {
-  font-size: 0.82rem;
-  color: var(--texto-placeholder);
+  color: var(--azul, #0f4c81);
   margin: 0;
 }
 
-.confirmacao-acoes {
+.modal-fechar {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--texto-placeholder, #94a3b8);
+  cursor: pointer;
+  transition: var(--transicao-suave, 0.2s);
   display: flex;
-  gap: 12px;
-  margin-top: 8px;
-  width: 100%;
+  align-items: center;
   justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
 }
 
-.btn-excluir-confirmar {
-  padding: 10px 22px;
-  background-color: var(--erro);
-  color: var(--branco);
-  border: none;
+.modal-fechar:hover {
+  background-color: #f1f5f9;
+  color: var(--texto-principal, #334155);
+}
+
+/* corpo do modal envolvendo o formulario */
+.modal-corpo {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* rodape do modal alinhando os botoes de acao */
+.modal-rodape {
+  padding: 16px 24px;
+  border-top: 1px solid var(--borda-input, #e2e8f0);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  background-color: #f8fafc;
+}
+
+/* animacoes para suavizar a abertura */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+/* paginacao e responsividade */
+
+.transacoes-paginacao {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.btn-pagina {
+  background-color: var(--branco);
+  border: 1px solid var(--borda-input);
+  color: var(--texto-principal);
+  width: 36px;
+  height: 36px;
   border-radius: var(--arredondamento-input-botao);
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: 14px;
   cursor: pointer;
   transition: var(--transicao-suave);
 }
 
-.btn-excluir-confirmar:hover {
-  background-color: #a93226;
+.btn-pagina:hover:not(:disabled) {
+  border-color: var(--azul);
+  color: var(--azul);
 }
 
-/* Responsivo */
+.btn-pagina:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-pagina-ativa {
+  background-color: var(--azul);
+  border-color: var(--azul);
+  color: var(--branco);
+  font-weight: 600;
+}
+
+.btn-pagina-nav {
+  width: auto;
+  padding: 0 16px;
+}
 
 @media (max-width: 640px) {
-  .transacoes-pagina {
+  .transacoes-container {
     padding: 20px 16px;
   }
 
-  .transacoes-cabecalho {
+  .transacoes-header {
     flex-direction: column;
     align-items: stretch;
   }
@@ -752,18 +642,8 @@
     justify-content: center;
   }
 
-  .resumo-cards {
+  .transacoes-totais {
     grid-template-columns: 1fr;
-  }
-
-  .filtros-barra {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .filtro-select {
-    min-width: unset;
-    width: 100%;
   }
 
   .transacoes-tabela thead {
@@ -785,12 +665,8 @@
   }
 
   .transacoes-tabela td {
-    padding: 2px 0;
+    padding: 4px 0;
     border: none;
-  }
-
-  .col-descricao {
-    max-width: 100%;
   }
 
   .col-acoes {
@@ -800,9 +676,8 @@
     text-align: right;
   }
 
-  .col-valor {
+  .valor-receita, .valor-despesa {
     text-align: left;
-    font-size: 1rem;
   }
 
   .form-row {

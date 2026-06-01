@@ -1,97 +1,45 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useEmpresa } from '../../context/EmpresaContext';
-import ModalTransacao from './ModalTransacao';
-import ConfirmacaoExclusao from './ConfirmacaoExclusao';
-import './Transacoes.css';
-
-const CATEGORIAS_MOCK = [
-  { id: 1, nome: 'Vendas', tipo: 'receita' },
-  { id: 2, nome: 'Serviços Prestados', tipo: 'receita' },
-  { id: 3, nome: 'Investimentos', tipo: 'receita' },
-  { id: 4, nome: 'Aluguel', tipo: 'despesa' },
-  { id: 5, nome: 'Folha de Pagamento', tipo: 'despesa' },
-  { id: 6, nome: 'Fornecedores', tipo: 'despesa' },
-  { id: 7, nome: 'Marketing', tipo: 'despesa' },
-  { id: 8, nome: 'Utilidades', tipo: 'despesa' },
-];
-
-const TRANSACOES_MOCK = [
-  {
-    id: 1,
-    descricao: 'Venda de produtos - Lote #001',
-    valor: 4500.0,
-    tipo: 'receita',
-    data: '2025-05-10',
-    categoriaId: 1,
-    categoriaNome: 'Vendas',
-  },
-  {
-    id: 2,
-    descricao: 'Pagamento de aluguel escritório',
-    valor: 2200.0,
-    tipo: 'despesa',
-    data: '2025-05-05',
-    categoriaId: 4,
-    categoriaNome: 'Aluguel',
-  },
-  {
-    id: 3,
-    descricao: 'Consultoria técnica - Cliente B',
-    valor: 1800.0,
-    tipo: 'receita',
-    data: '2025-05-12',
-    categoriaId: 2,
-    categoriaNome: 'Serviços Prestados',
-  },
-];
+import React, { useState } from 'react';
+import useTransacoes from '../../hooks/useTransacoes';
+import ModalTransacao from './ModalTransacao'; // Agora estão na mesma pasta!
+import ConfirmacaoExclusao from './ConfirmacaoExclusao'; // Agora estão na mesma pasta!
+import './Transacoes.css'; // Nome do CSS atualizado
 
 const formatarMoeda = (valor) =>
-  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
+  valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-const formatarData = (dataISO) => {
-  if (!dataISO) return '';
-  const [ano, mes, dia] = dataISO.split('-');
+const formatarData = (dataStr) => {
+  if (!dataStr) return '';
+  const [ano, mes, dia] = dataStr.split('-');
   return `${dia}/${mes}/${ano}`;
 };
 
-const Transacoes = () => {
-  const { idEmpresaLogada } = useEmpresa();
-
-  const [transacoes, setTransacoes] = useState([]);
-  const [categorias, setCategorias] = useState([]);
-  const [carregando, setCarregando] = useState(true);
-  const [erro, setErro] = useState('');
+const Transacoes = () => { // Nome do componente alterado
+  const {
+    filtros,
+    transacoes,
+    totais,
+    paginaAtual,
+    totalPaginas,
+    totalTransacoes,
+    categorias,
+    handleFiltroChange,
+    aplicarFiltros,
+    limparFiltros,
+    mudarPagina,
+    salvarTransacao, 
+    excluirTransacao 
+  } = useTransacoes();
 
   const [modalAberto, setModalAberto] = useState(false);
   const [transacaoParaEditar, setTransacaoParaEditar] = useState(null);
   const [confirmacaoAberta, setConfirmacaoAberta] = useState(false);
   const [transacaoParaExcluir, setTransacaoParaExcluir] = useState(null);
 
-  const [filtroTipo, setFiltroTipo] = useState('todos');
-  const [filtroCategoria, setFiltroCategoria] = useState('');
-
-  const carregarDados = useCallback(async () => {
-    setCarregando(true);
-    setErro('');
-    try {
-      // Simulação de chamada à API:
-      // const [resTransacoes, resCategorias] = await Promise.all([
-      //   fetch(`/api/transacoes?empresaId=${idEmpresaLogada}`),
-      //   fetch(`/api/categorias?empresaId=${idEmpresaLogada}`)
-      // ]);
-      await new Promise((resolve) => setTimeout(resolve, 600));
-      setTransacoes(TRANSACOES_MOCK);
-      setCategorias(CATEGORIAS_MOCK);
-    } catch {
-      setErro('Não foi possível carregar as transações. Tente novamente.');
-    } finally {
-      setCarregando(false);
-    }
-  }, [idEmpresaLogada]);
-
-  useEffect(() => {
-    carregarDados();
-  }, [carregarDados]);
+  const categoriesMapeadas = categorias.map((cat, index) => ({
+    id: index + 1,
+    nome: cat,
+    tipo: ''
+  }));
 
   const abrirModalNova = () => {
     setTransacaoParaEditar(null);
@@ -108,22 +56,9 @@ const Transacoes = () => {
     setTransacaoParaEditar(null);
   };
 
-  const salvarTransacao = async (dadosFormulario) => {
-    // POST /transacoes ou PUT /transacoes/:id
-    if (transacaoParaEditar) {
-      const atualizada = {
-        ...transacaoParaEditar,
-        ...dadosFormulario,
-        categoriaNome: categorias.find((c) => c.id === Number(dadosFormulario.categoriaId))?.nome || '',
-      };
-      setTransacoes((prev) => prev.map((t) => (t.id === atualizada.id ? atualizada : t)));
-    } else {
-      const nova = {
-        id: Date.now(),
-        ...dadosFormulario,
-        categoriaNome: categorias.find((c) => c.id === Number(dadosFormulario.categoriaId))?.nome || '',
-      };
-      setTransacoes((prev) => [nova, ...prev]);
+  const handleSalvar = async (dadosFormulario) => {
+    if (typeof salvarTransacao === 'function') {
+      await salvarTransacao(dadosFormulario, transacaoParaEditar?.id);
     }
     fecharModal();
   };
@@ -134,8 +69,9 @@ const Transacoes = () => {
   };
 
   const confirmarExclusao = async () => {
-    // DELETE /transacoes/:id
-    setTransacoes((prev) => prev.filter((t) => t.id !== transacaoParaExcluir.id));
+    if (typeof excluirTransacao === 'function') {
+      await excluirTransacao(transacaoParaExcluir.id);
+    }
     setConfirmacaoAberta(false);
     setTransacaoParaExcluir(null);
   };
@@ -145,28 +81,13 @@ const Transacoes = () => {
     setTransacaoParaExcluir(null);
   };
 
-  const transacoesFiltradas = transacoes.filter((t) => {
-    const passaTipo = filtroTipo === 'todos' || t.tipo === filtroTipo;
-    const passaCategoria = !filtroCategoria || t.categoriaId === Number(filtroCategoria);
-    return passaTipo && passaCategoria;
-  });
-
-  const totalReceitas = transacoesFiltradas
-    .filter((t) => t.tipo === 'receita')
-    .reduce((acc, t) => acc + t.valor, 0);
-
-  const totalDespesas = transacoesFiltradas
-    .filter((t) => t.tipo === 'despesa')
-    .reduce((acc, t) => acc + t.valor, 0);
-
-  const saldo = totalReceitas - totalDespesas;
-
   return (
-    <div className="transacoes-pagina">
-      <div className="transacoes-cabecalho">
+    <div className="transacoes-container"> {/* Classe base atualizada */}
+
+      <div className="transacoes-header">
         <div>
-          <h2 className="transacoes-titulo">Transações Financeiras</h2>
-          <p className="transacoes-subtitulo">Gerencie entradas e saídas da sua empresa</p>
+          <h2>Transações Financeiras</h2> {/* Título mais limpo e direto */}
+          <p>Cadastre, consulte e filtre as movimentações financeiras da sua empresa.</p>
         </div>
         <button className="btn-nova-transacao" onClick={abrirModalNova}>
           <span className="btn-icon">+</span>
@@ -174,128 +95,113 @@ const Transacoes = () => {
         </button>
       </div>
 
-      <div className="resumo-cards">
-        <div className="resumo-card resumo-card--receita">
-          <span className="resumo-label">Total de Receitas</span>
-          <span className="resumo-valor">{formatarMoeda(totalReceitas)}</span>
+      <div className="transacoes-totais">
+        <div className="total-card total-receita">
+          <span className="total-label">Total de Receitas</span>
+          <span className="total-valor">{formatarMoeda(totais.totalReceitas || 0)}</span>
         </div>
-        <div className="resumo-card resumo-card--despesa">
-          <span className="resumo-label">Total de Despesas</span>
-          <span className="resumo-valor">{formatarMoeda(totalDespesas)}</span>
+        <div className="total-card total-despesa">
+          <span className="total-label">Total de Despesas</span>
+          <span className="total-valor">{formatarMoeda(totais.totalDespesas || 0)}</span>
         </div>
-        <div className={`resumo-card resumo-card--saldo ${saldo >= 0 ? 'positivo' : 'negativo'}`}>
-          <span className="resumo-label">Saldo do Período</span>
-          <span className="resumo-valor">{formatarMoeda(saldo)}</span>
-        </div>
-      </div>
-
-      <div className="filtros-barra">
-        <div className="filtros-grupo">
-          <label className="filtro-label">Tipo</label>
-          <div className="filtro-tabs">
-            {['todos', 'receita', 'despesa'].map((tipo) => (
-              <button
-                key={tipo}
-                className={`filtro-tab ${filtroTipo === tipo ? 'ativo' : ''}`}
-                onClick={() => setFiltroTipo(tipo)}
-              >
-                {tipo === 'todos' ? 'Todos' : tipo === 'receita' ? 'Receitas' : 'Despesas'}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="filtros-grupo">
-          <label className="filtro-label" htmlFor="filtro-categoria">
-            Categoria
-          </label>
-          <select
-            id="filtro-categoria"
-            className="filtro-select"
-            value={filtroCategoria}
-            onChange={(e) => setFiltroCategoria(e.target.value)}
-          >
-            <option value="">Todas as categorias</option>
-            {categorias.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.nome}
-              </option>
-            ))}
-          </select>
+        <div className={`total-card ${(totais.saldo || 0) >= 0 ? 'saldo-positivo' : 'saldo-negativo'}`}>
+          <span className="total-label">Saldo</span>
+          <span className="total-valor">{formatarMoeda(totais.saldo || 0)}</span>
         </div>
       </div>
 
-      <div className="transacoes-lista-container">
-        {carregando ? (
-          <div className="estado-carregando">
-            <div className="spinner" />
-            <p>Carregando transações...</p>
+      <div className="transacoes-filtros">
+        <div className="filtros-grid">
+          <div className="filtro-group">
+            <label>Data inicial</label>
+            <input type="date" name="dataInicio" value={filtros.dataInicio} onChange={handleFiltroChange} />
           </div>
-        ) : erro ? (
-          <div className="estado-erro">
-            <p>{erro}</p>
-            <button className="btn-tentar-novamente" onClick={carregarDados}>
-              Tentar novamente
-            </button>
+          <div className="filtro-group">
+            <label>Data final</label>
+            <input type="date" name="dataFim" value={filtros.dataFim} onChange={handleFiltroChange} />
           </div>
-        ) : transacoesFiltradas.length === 0 ? (
-          <div className="estado-vazio">
-            <div className="vazio-icone">💼</div>
-            <p className="vazio-titulo">Nenhuma transação encontrada</p>
-            <p className="vazio-descricao">
-              {filtroTipo !== 'todos' || filtroCategoria
-                ? 'Nenhuma transação corresponde aos filtros selecionados.'
-                : 'Comece registrando sua primeira transação financeira.'}
-            </p>
-            {filtroTipo === 'todos' && !filtroCategoria && (
-              <button className="btn-nova-transacao-vazio" onClick={abrirModalNova}>
-                Registrar primeira transação
-              </button>
-            )}
+          <div className="filtro-group">
+            <label>Tipo</label>
+            <select name="tipo" value={filtros.tipo} onChange={handleFiltroChange}>
+              <option value="">Todos</option>
+              <option value="receita">Receita</option>
+              <option value="despesa">Despesa</option>
+            </select>
+          </div>
+          <div className="filtro-group">
+            <label>Categoria</label>
+            <select name="categoria" value={filtros.categoria} onChange={handleFiltroChange}>
+              <option value="">Todas</option>
+              {categorias.map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+          </div>
+          <div className="filtro-group">
+            <label>Valor mínimo (R$)</label>
+            <input type="number" name="valorMin" placeholder="0,00" value={filtros.valorMin} onChange={handleFiltroChange} min="0" />
+          </div>
+          <div className="filtro-group">
+            <label>Valor máximo (R$)</label>
+            <input type="number" name="valorMax" placeholder="0,00" value={filtros.valorMax} onChange={handleFiltroChange} min="0" />
+          </div>
+        </div>
+        <div className="filtros-acoes">
+          <button className="btn-limpar" onClick={limparFiltros}>Limpar filtros</button>
+          <button className="btn-aplicar" onClick={aplicarFiltros}>Aplicar filtros</button>
+        </div>
+      </div>
+
+      <div className="transacoes-tabela-wrapper">
+        <div className="tabela-info">
+          <span>{totalTransacoes} transação(ões) encontrada(s)</span>
+        </div>
+
+        {transacoes.length === 0 ? (
+          <div className="transacoes-vazio">
+            <p>Nenhuma transação encontrada com os filtros aplicados.</p>
           </div>
         ) : (
           <table className="transacoes-tabela">
             <thead>
               <tr>
+                <th>Data</th>
                 <th>Descrição</th>
                 <th>Categoria</th>
-                <th>Data</th>
                 <th>Tipo</th>
-                <th className="col-valor">Valor</th>
-                <th className="col-acoes">Ações</th>
+                <th>Valor</th>
+                <th className="col-acoes" style={{ textAlign: 'center' }}>Ações</th>
               </tr>
             </thead>
             <tbody>
-              {transacoesFiltradas.map((transacao) => (
-                <tr key={transacao.id} className="transacao-linha">
-                  <td className="col-descricao">
-                    <span className="descricao-texto">{transacao.descricao}</span>
-                  </td>
+              {transacoes.map((t) => (
+                <tr key={t.id}>
+                  <td>{formatarData(t.data)}</td>
+                  <td>{t.descricao}</td>
+                  <td>{t.categoria || t.categoriaNome}</td>
                   <td>
-                    <span className="badge-categoria">{transacao.categoriaNome}</span>
-                  </td>
-                  <td className="col-data">{formatarData(transacao.data)}</td>
-                  <td>
-                    <span className={`badge-tipo badge-tipo--${transacao.tipo}`}>
-                      {transacao.tipo === 'receita' ? '↑ Receita' : '↓ Despesa'}
+                    <span className={`badge badge-${t.tipo}`}>
+                      {t.tipo === 'receita' ? '↑ Receita' : '↓ Despesa'}
                     </span>
                   </td>
-                  <td className={`col-valor valor--${transacao.tipo}`}>
-                    {transacao.tipo === 'despesa' ? '- ' : '+ '}
-                    {formatarMoeda(transacao.valor)}
+                  <td className={`valor-${t.tipo}`}>
+                    {t.tipo === 'despesa' ? '- ' : '+ '}
+                    {formatarMoeda(t.valor)}
                   </td>
-                  <td className="col-acoes">
+                  <td className="col-acoes" style={{ textAlign: 'center' }}>
                     <button
                       className="btn-acao btn-editar"
-                      onClick={() => abrirModalEditar(transacao)}
+                      onClick={() => abrirModalEditar(t)}
                       title="Editar transação"
+                      style={{ marginRight: '8px', background: 'none', border: 'none', cursor: 'pointer' }}
                     >
                       ✎
                     </button>
                     <button
                       className="btn-acao btn-excluir"
-                      onClick={() => abrirConfirmacaoExclusao(transacao)}
+                      onClick={() => abrirConfirmacaoExclusao(t)}
                       title="Excluir transação"
+                      style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                     >
                       ✕
                     </button>
@@ -307,11 +213,31 @@ const Transacoes = () => {
         )}
       </div>
 
+      {totalPaginas > 1 && (
+        <div className="transacoes-paginacao">
+          <button className="btn-pagina btn-pagina-nav" onClick={() => mudarPagina(paginaAtual - 1)} disabled={paginaAtual === 1}>
+            Anterior
+          </button>
+          {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((pagina) => (
+            <button
+              key={pagina}
+              className={`btn-pagina ${pagina === paginaAtual ? 'btn-pagina-ativa' : ''}`}
+              onClick={() => mudarPagina(pagina)}
+            >
+              {pagina}
+            </button>
+          ))}
+          <button className="btn-pagina btn-pagina-nav" onClick={() => mudarPagina(paginaAtual + 1)} disabled={paginaAtual === totalPaginas}>
+            Próxima
+          </button>
+        </div>
+      )}
+
       {modalAberto && (
         <ModalTransacao
           transacaoParaEditar={transacaoParaEditar}
-          categorias={categorias}
-          onSalvar={salvarTransacao}
+          categorias={categoriesMapeadas}
+          onSalvar={handleSalvar}
           onFechar={fecharModal}
         />
       )}
@@ -323,8 +249,9 @@ const Transacoes = () => {
           onCancelar={cancelarExclusao}
         />
       )}
+
     </div>
   );
 };
 
-export default Transacoes;
+export default Transacoes; // Exportação atualizada

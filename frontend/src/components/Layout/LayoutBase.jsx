@@ -26,7 +26,7 @@ const LayoutBase = () => {
 
         <nav className="layout-nav">
           <Link to="/dashboard" className="nav-link">Dashboard</Link>
-          <Link to="/historico" className="nav-link">Histórico</Link>
+      
         </nav>
 
         <button

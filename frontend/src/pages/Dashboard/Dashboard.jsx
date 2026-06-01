@@ -30,7 +30,7 @@ const Dashboard = () => {
           </button>
         </div>
 
-        {/* NOVO CARD — Transações Financeiras */}
+        {/*Transações Financeiras */}
         <div className="dashboard-card">
           <div>
             <h3 className="dashboard-card-title title-transacoes">Transações Financeiras</h3>
