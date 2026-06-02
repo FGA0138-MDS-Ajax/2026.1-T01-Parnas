@@ -1,17 +1,24 @@
+from datetime import date, datetime
 from app.config import db
-from datetime import datetime
 
 class Transaction(db.Model):
     __tablename__ = 'transaction'
 
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False) # Representa a empresa/gestor
-    type = db.Column(db.String(50), nullable=False) # 'receita' ou 'despesa'
-    category = db.Column(db.String(100))
-    amount = db.Column(db.Float, nullable=False)
-    date = db.Column(db.Date, nullable=False, default=datetime.utcnow)
+    transaction_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    description = db.Column(db.String(255), nullable=False)
+    amount = db.Column(db.Numeric(10, 2), nullable=False)
+    date = db.Column(db.Date, nullable=False, default=date.today)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # Índice em data e user_id para otimizar buscas
-    __table_args__ = (
-        db.Index('idx_transaction_date_user', 'date', 'user_id'),
-    )
+    # Foreign Keys com CASCADE
+    company_id = db.Column(db.Integer, db.ForeignKey('company.company_id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.category_id', ondelete='RESTRICT'), nullable=False)
+
+    company = db.relationship('Company', back_populates='transactions')
+    user = db.relationship('User', back_populates='transactions')
+    category = db.relationship('Category', back_populates='transactions')
+
+    def __repr__(self):
+        return f'<Transaction {self.description} - {self.amount}>'
+

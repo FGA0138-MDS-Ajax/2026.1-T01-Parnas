@@ -1,5 +1,6 @@
 from marshmallow import Schema, fields, validates, ValidationError
 from app.utils.validators import is_valid_password, is_valid_birth_date
+from validate_docbr import CPF
 
 class UserRegistrationSchema(Schema):
     name = fields.Str(required=True, error_messages={"required": "Nome é obrigatório."})
@@ -18,3 +19,9 @@ class UserRegistrationSchema(Schema):
     def validate_birth_date(self, value,**kwargs):
         if not is_valid_birth_date(value):
             raise ValidationError("A data de nascimento é invalida ou o usuário é menor de 16 anos.")
+
+    @validates('cpf')
+    def validate_cpf_format(self, value, **kwargs):
+        cpf_validator = CPF()
+        if not cpf_validator.validate(value):
+            raise ValidationError("CPF inválido")

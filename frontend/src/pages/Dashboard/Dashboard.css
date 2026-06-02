@@ -90,3 +90,23 @@
 .btn-config:hover {
   opacity: 0.9;
 }
+
+/* Card de Transações Financeiras */
+.title-transacoes {
+  color: #1a7a46;
+}
+
+.btn-transacoes {
+  background-color: #1a7a46;
+  color: #ffffff;
+  border: none;
+  border-radius: var(--arredondamento-input-botao);
+  padding: 10px 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-transacoes:hover {
+  background-color: #145c35;
+}
