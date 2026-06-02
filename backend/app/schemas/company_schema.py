@@ -9,7 +9,6 @@ class CompanyRegistrationSchema(Schema):
      )
     cnpj = fields.String(
         required=True,
-        validate=validate.Length(min=14, max=20),
         error_messages={"required": "CNPJ é obrigatório"}
     )
     email = fields.Email(
@@ -21,7 +20,17 @@ class CompanyRegistrationSchema(Schema):
         validate=validate.Length(min=8, max=20),
         error_messages={"required": "Telefone é obrigatório","validator_failed": "Telefone deve ter entre 8 e 20 caracteres"}
     )
-    
+    @validates('cnpj')
+    def validate_cnpj_format(self, value, **kwargs):
+        cnpj_validator = CNPJ()
+        if not cnpj_validator.validate(value):
+            raise ValidationError("CNPJ inválido")
+
+class CompanyDeleteSchema(Schema):
+    cnpj = fields.String(
+        required=True,
+        error_messages={"required": "CNPJ é obrigatório"}
+    )
     @validates('cnpj')
     def validate_cnpj_format(self, value, **kwargs):
         cnpj_validator = CNPJ()

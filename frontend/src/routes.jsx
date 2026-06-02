@@ -5,6 +5,11 @@ import CadastroEmpresa from './pages/CadastroEmpresa/CadastroEmpresa';
 import { EsqueciSenha } from './pages/EsqueciSenha/EsqueciSenha';
 import { RedefinirSenha } from './pages/RedefinirSenha/RedefinirSenha';
 import Categorias from './pages/Categorias/Categorias';
+import Register from './pages/Register/Register';
+import LayoutBase from './components/Layout/LayoutBase';
+import Dashboard from './pages/Dashboard/Dashboard';
+import Transacoes from './pages/Transacoes/Transacoes';
+import Configuracoes from './pages/Configuracoes/Configuracoes';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -15,20 +20,27 @@ export const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Rotas Públicas */}
         <Route path="/" element={<Navigate to="/login" replace />} />
-       
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/esqueci-senha" element={<EsqueciSenha />} />
         <Route path="/redefinir-senha" element={<RedefinirSenha />} />
-        <Route path="/categorias" element={<Categorias />} />
-        <Route 
-          path="/cadastro-empresa" 
+
+        {/* Rotas Privadas */}
+        <Route
           element={
             <ProtectedRoute>
-              <CadastroEmpresa />
+              <LayoutBase />
             </ProtectedRoute>
-          } 
-        />
+          }
+        >
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/cadastro-empresa" element={<CadastroEmpresa />} />
+          <Route path="/categorias" element={<Categorias />} />
+          <Route path="/transacoes" element={<Transacoes />} />
+          <Route path="/configuracoes" element={<Configuracoes />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
