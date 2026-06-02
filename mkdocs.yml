@@ -1,9 +1,71 @@
-site_name: Documentação
-
-nav:
-  - Instruções mkdocs: "index.md"
-  - Atas de Reunião:
-    - Ata 1: "atas-reuniao/ata-reuniao-1.md"
-
+site_name: Documentação Parnas
+site_url: https://mydomain.org/parnas
+repo_url: https://github.com/FGA0138-MDS-Ajax/2026.1-T01-Parnas
+repo_name: CREDIFAB
+plugins:
+  - search
+  
 theme:
   name: material
+  language: pt-BR
+  features:
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.instant.progress
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.path
+    - navigation.indexes
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - search.share
+    - navigation.footer
+
+  logo: assets/images/favicon.png
+  
+  icon: 
+    top: material/arrow-up-thin
+    previous: material/arrow-left
+    next: material/arrow-right
+    repo: material/github
+
+  font:
+    text: Playfair Display
+    code: Lora
+
+  palette:
+    #Paleta para modo automático
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/set-right
+        name: Alternar para Modo Claro
+
+    #Paleta para modo claro
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/set-all
+        name: Alternar para Modo Escuro
+
+    #Paleta para modo escuro
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/set-none
+        name: Alternar para Preferência do Sistema
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/FGA0138-MDS-Ajax/2026.1-T01-Parnas
+  homepage: https://mydomain.org/parnas
+
+extra_javascript:
+  - javascripts/shortcuts.js
+
+extra_css:
+  - stylesheets/extra.css
+

@@ -1,0 +1,20 @@
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #2c3e50;
+  --md-primary-fg-color--light: #34495e;
+  --md-primary-fg-color--dark: #1a252f;
+  --md-accent-fg-color: #e74c3c;
+  --md-typeset-a-color: #e74c3c;     
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #1a252f;         
+  --md-primary-fg-color--light: #2c3e50;
+  --md-primary-fg-color--dark: #0f161c;
+  --md-accent-fg-color: #f39c12;            
+  --md-typeset-a-color: #f39c12;        
+}
+
+.md-grid {
+  max-width: 1440px; 
+}
+
