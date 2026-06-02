@@ -1,0 +1,102 @@
+.cadastro-empresa-pagina {
+  width: 100%;
+  min-height: calc(100vh - 140px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container-cadastro {
+  background-color: var(--branco);
+  max-width: 550px;
+  width: 100%;
+  border-radius: var(--arredondamento-card);
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  border: 2px solid var(--borda-input);
+}
+
+.form-content {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 25px;
+  color: var(--texto-principal);
+}
+
+.form-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--azul);
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+  margin-bottom: 6px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.9rem;
+  outline: none;
+  transition: var(--transicao-suave);
+}
+
+.input-group input:focus {
+  border-color: var(--azul);
+  box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1);
+}
+
+.btn-submit {
+  margin-top: 10px;
+  padding: 12px;
+  background-color: var(--azul);
+  color: var(--branco);
+  border: none;
+  border-radius: var(--arredondamento-input-botao);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-submit:hover {
+  background-color: #0c3d68;
+}
+
+.btn-submit:disabled {
+  background-color: var(--texto-placeholder);
+  cursor: not-allowed;
+}
+
+.msg-error {
+  color: var(--erro);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.msg-success {
+  color: var(--verde);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
