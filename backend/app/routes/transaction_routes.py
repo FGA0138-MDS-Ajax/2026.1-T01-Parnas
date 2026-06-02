@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.schemas.transaction_schema import TransactionSchema
 from marshmallow import ValidationError
 from app.services.transaction_service import (
-    TransactionService, # Para o método get_history do histórico
+    get_history_filtered, # Para o método get_history do histórico
     create_transaction,
     update_transaction,
     delete_transaction
@@ -41,7 +41,7 @@ def get_transactions():
     }
 
     # Chama a service de histórico que veio da branch 7
-    resultado, status_code = TransactionService.get_history(current_user_id, page, per_page, filtros)
+    resultado, status_code = get_history_filtered(current_user_id, page, per_page, filtros)
 
     return jsonify(resultado), status_code
 
