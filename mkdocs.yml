@@ -1,5 +1,5 @@
 site_name: Documentação Parnas
-site_url: https://mydomain.org/parnas
+site_url:  https://fga0138-mds-ajax.github.io/2026.1-T01-Parnas/
 repo_url: https://github.com/FGA0138-MDS-Ajax/2026.1-T01-Parnas
 repo_name: CREDIFAB
 plugins:
@@ -59,9 +59,9 @@ theme:
 
 extra:
   social:
-    - icon: fontawesome/brands/github
+    - icon: material/github
       link: https://github.com/FGA0138-MDS-Ajax/2026.1-T01-Parnas
-  homepage: https://mydomain.org/parnas
+  homepage:  https://fga0138-mds-ajax.github.io/2026.1-T01-Parnas/
 
 extra_javascript:
   - javascripts/shortcuts.js
