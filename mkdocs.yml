@@ -25,11 +25,8 @@ theme:
     - search.share
     - navigation.footer
 
-  logo: assets/images/favicon.ico
-  favicon: assets/images/favicon.ico
-  
+  logo: assets/images/favicon.png
   icon:
-    logo:
     top: material/arrow-up-thin
     previous: material/arrow-left
     next: material/arrow-right
