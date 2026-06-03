@@ -1,0 +1,30 @@
+{#
+  Template do hero da home.
+  Estende o tema Material e injeta o "hero" logo após a barra de tabs,
+  MANTENDO o conteúdo do index.md renderizado abaixo (o bloco content NÃO é
+  esvaziado de propósito).
+#}
+{% extends "main.html" %}
+
+{% block tabs %}
+  {{ super() }}
+  <section class="cf-hero">
+    <div class="md-grid md-typeset">
+      <div class="cf-hero__content">
+        <h1>CrediFab</h1>
+        <p>
+          Governança financeira e preparação para o acesso ao crédito
+          de micro e pequenas empresas.
+        </p>
+        <div class="cf-hero__actions">
+          <a href="{{ 'produto/' | url }}" class="md-button md-button--primary">
+            Conhecer o produto
+          </a>
+          <a href="{{ 'qualidade/' | url }}" class="md-button">
+            Documentação de qualidade
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

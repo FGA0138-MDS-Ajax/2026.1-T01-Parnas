@@ -1,12 +1,13 @@
-site_name: Documentação Parnas
+site_name: Grupo Parnas
 site_url:  https://fga0138-mds-ajax.github.io/2026.1-T01-Parnas/
 repo_url: https://github.com/FGA0138-MDS-Ajax/2026.1-T01-Parnas
-repo_name: CREDIFAB
+repo_name: 2026.1-T01-Parnas
 plugins:
   - search
-  
+
 theme:
   name: material
+  custom_dir: overrides
   language: pt-BR
   features:
     - navigation.instant
@@ -24,9 +25,11 @@ theme:
     - search.share
     - navigation.footer
 
-  logo: assets/images/favicon.png
+  logo: assets/images/favicon.ico
+  favicon: assets/images/favicon.ico
   
-  icon: 
+  icon:
+    logo:
     top: material/arrow-up-thin
     previous: material/arrow-left
     next: material/arrow-right
@@ -56,6 +59,53 @@ theme:
       toggle:
         icon: material/set-none
         name: Alternar para Preferência do Sistema
+
+nav:
+  - Home: index.md
+  - O Grupo:
+    - sobre/index.md
+    - A Disciplina: sobre/disciplina.md
+    - Integrantes: sobre/integrantes.md
+  - Produto:
+    - produto/index.md
+    - Documento de Visão: produto/visao.md
+    - Documento de Arquitetura: produto/arquitetura.md
+  - Qualidade:
+    - qualidade/index.md
+    - Roteiro de Testes: qualidade/roteiro-testes.md
+    - Modelo GQM: qualidade/gqm.md
+    - Documentação por Feature:
+      - qualidade/features/index.md
+      - Template: qualidade/features/_template.md
+    - Consolidados por Sprint:
+      - qualidade/sprints/index.md
+      - Sprint 4: qualidade/sprints/sprint-04.md
+      - Sprint 5: qualidade/sprints/sprint-05.md
+  - Atas de Reunião:
+    - atas-reuniao/index.md
+    - Ata nº 1: atas-reuniao/ata-reuniao-1.md
+    - Ata nº 2: atas-reuniao/ata-reuniao-2.md
+    - Ata nº 3: atas-reuniao/ata-reuniao-3.md
+    - Ata nº 4: atas-reuniao/ata-reuniao-4.md
+    - Ata nº 5: atas-reuniao/ata-reuniao-5.md
+    - Ata nº 6: atas-reuniao/ata-reuniao-6.md
+    - Ata nº 7: atas-reuniao/ata-reuniao-7.md
+  - Presenças (gov.br):
+    - presencas/index.md
+    - Lista de Presença nº 1: presencas/lista-presenca-1.md
+    - Lista de Presença nº 2: presencas/lista-presenca-2.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
 
 extra:
   social:
