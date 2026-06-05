@@ -21,6 +21,7 @@ def create_app():
     from app.models.user_company_association import user_company
     from app.models.category import Category
     from app.models.transaction import Transaction
+    from app.models.bill import Bill
 
     # Força a criação das tabelas automaticamente (essencial para o SQLite de teste)
     with app.app_context():
@@ -43,5 +44,9 @@ def create_app():
     # Registro ÚNICO de transações (Removeu a duplicação antiga que causava erro)
     from app.routes.transaction_routes import transaction_bp
     app.register_blueprint(transaction_bp, url_prefix="/api/transactions")
+
+    # Registra o Blueprint de contas a pagar/receber
+    from app.routes.bill_routes import bill_bp
+    app.register_blueprint(bill_bp, url_prefix='/api/contas')
 
     return app
