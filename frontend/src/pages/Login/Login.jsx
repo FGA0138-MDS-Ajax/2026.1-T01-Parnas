@@ -6,6 +6,7 @@ import './Login.css';
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '', rememberMe: false });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -15,23 +16,55 @@ const Login = () => {
     setFormData((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
     if (!formData.email || !formData.password) {
       setError('Preencha todos os campos.');
+      setLoading(false);
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError('Credenciais inválidas. Tente novamente.');
+    if (formData.password.length < 8) {
+      setError('Credenciais inválidas. Verifique seus dados.');
+      setLoading(false);
       return;
     }
 
-    const mockToken = `mock_${formData.email.split('@')[0]}_${Date.now()}`;
-    login(mockToken);
-    navigate('/dashboard');
+    try {
+      const response = await fetch('/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.erro || 'Erro ao realizar o login.');
+      }
+
+      // Passa o token JWT real retornado pelo AuthService para o seu hook global
+      if (data.token) {
+        login(data.token);
+      } else if (data.access_token) {
+        login(data.access_token);
+      }
+
+      navigate('/dashboard');
+
+    } catch (err) {
+      setError(err.message || 'Erro ao conectar ao servidor.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDemoAccess = () => {
@@ -41,7 +74,6 @@ const Login = () => {
 
   return (
     <div className="login-card">
-
       <div className="login-header">
         <div className="login-logo-icon">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0F4C81" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -60,7 +92,6 @@ const Login = () => {
         {error && <p className="msg-error">{error}</p>}
 
         <form onSubmit={handleSubmit} className="login-form">
-
           <div className="input-group">
             <label>E-mail</label>
             <div className="input-icon-wrapper">
@@ -74,6 +105,7 @@ const Login = () => {
                 placeholder="seu@email.com.br"
                 value={formData.email}
                 onChange={handleChange}
+                disabled={loading}
                 required
               />
             </div>
@@ -92,6 +124,7 @@ const Login = () => {
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={handleChange}
+                disabled={loading}
                 required
               />
             </div>
@@ -104,19 +137,21 @@ const Login = () => {
                 name="rememberMe"
                 checked={formData.rememberMe}
                 onChange={handleChange}
+                disabled={loading}
               />
               <span>Lembrar-me</span>
             </label>
             <Link to="/esqueci-senha" className="forgot-link">Esqueceu a senha?</Link>
           </div>
 
-          <button type="submit" className="btn-submit">Entrar</button>
-
+          <button type="submit" className="btn-submit" disabled={loading}>
+            {loading ? 'Entrando...' : 'Entrar'}
+          </button>
         </form>
 
         <div className="divider"><span>ou</span></div>
 
-        <button type="button" className="btn-demo" onClick={handleDemoAccess}>
+        <button type="button" className="btn-demo" onClick={handleDemoAccess} disabled={loading}>
           Acessar Conta Demo
         </button>
 
@@ -129,7 +164,6 @@ const Login = () => {
           Contribuindo para o ODS 9.3 - Democratizando o acesso ao crédito
         </p>
       </div>
-
     </div>
   );
 };
