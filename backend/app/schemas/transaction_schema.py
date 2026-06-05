@@ -19,3 +19,13 @@ class TransactionSchema(Schema):
     def validate_date(self, value):
         if value > date.today():
             raise ValidationError("A data de transação não pode ser futura.")
+
+class TransactionRequirements(Schema):
+    id = fields.Int(attribute="transaction_id", dump_only=True)
+    description = fields.Str(dump_only=True)
+    amount = fields.Float(dump_only=True)
+    date = fields.Date(dump_only=True)
+    type = fields.Str(dump_only=True)
+    category_id = fields.Int(dump_only=True)
+    company_id = fields.Int(dump_only=True)
+    user_id = fields.Int(dump_only=True)

@@ -33,3 +33,5 @@ class UserRequirements(Schema):
     cpf = fields.Str(dump_only=True)
     birth_date = fields.Date(dump_only=True)
     register_date = fields.Date(dump_only=True)
+
+
