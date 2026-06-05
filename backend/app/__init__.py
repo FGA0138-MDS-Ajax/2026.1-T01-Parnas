@@ -21,6 +21,7 @@ def create_app():
     from app.models.user_company_association import user_company
     from app.models.category import Category
     from app.models.transaction import Transaction
+    from app.models.simulation import Simulation
 
     # Força a criação das tabelas automaticamente (essencial para o SQLite de teste)
     with app.app_context():
