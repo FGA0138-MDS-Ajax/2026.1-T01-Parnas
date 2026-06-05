@@ -24,7 +24,7 @@ const Register = () => {
     setLoading(true);
 
     const hoje = new Date();
-    const nacimiento = new Date(formData.dataNascimento);
+    const nascimento = new Date(formData.dataNascimento);
 
     if (nascimento > hoje) {
       setErro("Data de nascimento inválida");
@@ -32,9 +32,9 @@ const Register = () => {
       return;
     }
 
-    let idade = hoje.getFullYear() - nacimiento.getFullYear();
-    const mes = hoje.getMonth() - nacimiento.getMonth();
-    if (mes < 0 || (mes === 0 && hoje.getDate() < nacimiento.getDate())) {
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    const mes = hoje.getMonth() - nascimento.getMonth();
+    if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
       idade--;
     }
 
