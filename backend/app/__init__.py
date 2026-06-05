@@ -23,8 +23,12 @@ def create_app():
     from app.models.transaction import Transaction
 
     # Força a criação das tabelas automaticamente (essencial para o SQLite de teste)
-    with app.app_context():
-        db.create_all()
+    import os as _os
+    migrations_path = _os.path.abspath(_os.path.join(_os.path.dirname(__file__), '..', 'migrations'))
+    # Se não houver migrations, cria as tabelas (modo quickstart). Caso contrário, deixa Alembic gerenciar o schema.
+    if not _os.path.exists(migrations_path):
+        with app.app_context():
+            db.create_all()
 
     # 1. Registro do Blueprint de autenticação (Login/Logout)
     from app.routes.auth_routes import auth_bp
