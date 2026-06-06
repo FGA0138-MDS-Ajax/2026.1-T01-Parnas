@@ -8,7 +8,7 @@ def calculate_table_price(main, rate,term ):
     if i == 0:
         pmt = main / term
     else:
-        pmt = main*(i * (1 + i)**term) / ((1+i)*(1+i)**term - 1)
+        pmt = main * (i * (1 + i) ** term) / ((1 + i) ** term - 1)
 
     installments = []
     balance_due = main
@@ -83,7 +83,7 @@ def project_impact_cash_flow(company_id, first_installment_value):
     }
 
 def process_simulation(data, company_id=None):
-    main = data['requested_amonunt']
+    main = data['requested_amount']
     rate = data['interest_rate']
     term = data['deadline_month']
     modality = data['modality'].upper()
@@ -117,15 +117,15 @@ def save_simulation(data, current_user_id):
     summary = data_simulation["resumo"]
 
     new_simulation = Simulation(
-        company_id=data['company_id'],
-        user_id=current_user_id,
-        requested_amount=data['requested_amount'],
-        deadline_month=data['deadline_month'],
-        modality=data['modality'],
-        interest_rate=data['interest_rate'],
-        installment_value=summary['first_installment'],
-        total_value=summary['total_to_pay'],
-        total_interest=summary['total_interest']
+        id_empresa=data['company_id'],
+        id_usuario=current_user_id,
+        valor_solicitado=data['requested_amount'],
+        prazo_meses=data['deadline_month'],
+        modalidade=data['modality'],
+        taxa_juros=data['interest_rate'],
+        valor_parcela=summary['primeira_parcela'],
+        valor_total=summary['total_a_pagar'],
+        total_juros=summary['total_juros']
     )
 
     try:
@@ -137,7 +137,7 @@ def save_simulation(data, current_user_id):
         return {"erro": "Ocorreu um erro interno ao salvar a simulação."}, 500
 
 def get_simulation(company_id):
-    simulations = Simulation.query.filter_by(company_id=company_id).all()
+    simulations = Simulation.query.filter_by(id_empresa=company_id).all()
     result = []
     for s in simulations:
         result.append({
@@ -155,7 +155,7 @@ def get_simulation(company_id):
     return {"simulations": result}, 200
 
 def delete_simulation(simulation_id, company_id):
-    simulation = Simulation.query.filter_by(simulation_id=simulation_id, company_id=company_id).first()
+    simulation = Simulation.query.filter_by(id_simulacao=simulation_id, id_empresa=company_id).first()
 
     if not simulation:
         return {"erro": "Simulação não encontrada para esta empresa."}, 404

@@ -11,7 +11,7 @@ class SimulationCalculateDTO(Schema):
 
     @validates('requested_amount')
     def validate_requested_amount(self, value):
-        if value < 0:
+        if value <= 0:
             raise ValidationError("O valor solicitado deve ser maior que zero.")
 
     @validates('deadline_month')
@@ -20,7 +20,7 @@ class SimulationCalculateDTO(Schema):
             raise ValidationError("O prazo deve ser de pelo menos 1 mês.")
 
 class SimulationSaveDTO(SimulationCalculateDTO):
-    id_empresa = fields.Int(required=True, error_messages={"required": "O id da empresa é obrigatório."})
+    company_id = fields.Int(required=True, error_messages={"required": "O id da empresa é obrigatório."})
 
     # valor_parcela, valor_total e total_juros não precisam vir do front-end.
     # Nossa Service vai calcular isso no backend para evitar que o usuário fraude os valores salvos!
