@@ -136,3 +136,21 @@ def save_simulation(data, current_user_id):
     except Exception as e:
         db.session.rollback()
         return {"erro": "Ocorreu um erro interno ao salvar a simulação."}, 500
+
+def get_simulation(company_id):
+    simulations = Simulation.query.filter_by(company_id).all()
+    result = []
+    for s in simulations:
+        result.append({
+            "id_simulacao": s.simulation_id,
+            "valor_solicitado": float(s.requested_value),
+            "prazo_meses": s.deadline_months,
+            "modalidade": s.modality,
+            "taxa_juros": float(s.interest_rate),
+            "valor_parcela": float(s.installment_value),
+            "valor_total": float(s.total_value),
+            "total_juros": float(s.total_interest),
+            "data_simulacao": s.simulation_data.strftime('%Y-%m-%d %H:%M')
+        })
+
+    return {"simulations": result}, 200
