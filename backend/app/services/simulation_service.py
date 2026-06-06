@@ -60,8 +60,8 @@ def project_impact_cash_flow(company_id, first_installment_value):
             "comprometimento_perc": None
         }
 
-    entrys = sum(float(t.amount) for t in transactions if t.type.lower() == 'entry')
-    exits = sum(float(t.amount) for t in transactions if t.type.lower() == 'exits')
+    entrys = sum(float(t.amount) for t in transactions if t.type.lower() == 'receita')
+    exits = sum(float(t.amount) for t in transactions if t.type.lower() == 'despesa')
     total_profits = entrys - exits
 
     months_operating = len(set(t.date.strftime('%Y-%m') for t in transactions)) or 1
