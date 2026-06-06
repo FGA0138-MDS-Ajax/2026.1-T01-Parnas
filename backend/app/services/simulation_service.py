@@ -112,3 +112,27 @@ def process_simulation(data, company_id=None):
         answer["projecao_fluxo_caixa"] = project_impact_cash_flow(company_id, base_installments)
 
     return answer
+
+def save_simulation(data, current_user_id):
+    data_simulation: process_simulation(data)
+    summary = data_simulation["resumo"]
+
+    new_simulation = Simulation(
+        company_id=data['id_empresa'],
+        user_id=current_user_id,
+        requested_amount=data['valor_solicitado'],
+        deadline_month=data['prazo_meses'],
+        modality=data['modalidade'],
+        interest_rate=data['taxa_juros'],
+        installment_value=summary['primeira_parcela'],
+        total_value=summary['total_a_pagar'],
+        total_interest=summary['total_juros']
+    )
+
+    try:
+        db.session.add(new_simulation)
+        db.session.commit()
+        return {"mensagem": "Simulação salva no histórico com sucesso.", "id_simulacao": new_simulation.id_simulacao}, 201
+    except Exception as e:
+        db.session.rollback()
+        return {"erro": "Ocorreu um erro interno ao salvar a simulação."}, 500
