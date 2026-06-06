@@ -12,23 +12,23 @@ class DocumentRepository:
         return document
 
     @staticmethod
-    def get_by_company(id_empresa, page=1, per_page=20):
+    def get_by_company(company_id, page=1, per_page=20):
         """Lista documentos paginados por empresa, ordenados do mais recente."""
-        return Document.query.filter_by(id_empresa=id_empresa)\
-            .order_by(Document.data_upload.desc())\
+        return Document.query.filter_by(company_id=company_id)\
+            .order_by(Document.created_at.desc())\
             .paginate(page=page, per_page=per_page)
 
     @staticmethod
-    def get_by_id_and_company(id_documento, id_empresa):
+    def get_by_id_and_company(document_id, company_id):
         """Busca um documento específico garantindo que ele pertence à empresa."""
         return Document.query.filter_by(
-            id_documento=id_documento, 
-            id_empresa=id_empresa
+            document_id=document_id, 
+            company_id=company_id
         ).first()
 
     @staticmethod
-    def delete(documento):
+    def delete(document):
         """Remove o registro do banco de dados."""
-        db.session.delete(documento)
+        db.session.delete(document)
         db.session.commit()
         return True

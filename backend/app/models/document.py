@@ -1,18 +1,23 @@
+from datetime import date
 from app.config import db
-from datetime import datetime
 
 class Document(db.Model):
-    __tablename__ = 'documento'
+    __tablename__ = 'document'
     
-    id_documento = db.Column(db.Integer, primary_key=True)
-    id_empresa = db.Column(db.Integer, db.ForeignKey('company.company_id', ondelete='CASCADE'), nullable=False)
-    id_usuario = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    document_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    company_id = db.Column(db.Integer, db.ForeignKey('company.company_id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     
-    nome = db.Column(db.String(255), nullable=False)
-    tipo = db.Column(db.String(50), nullable=False) # Ex: 'fiscal', 'contabil', 'juridico'
-    descricao = db.Column(db.Text)
-    caminho_arquivo = db.Column(db.String(500), nullable=False)
-    tamanho = db.Column(db.Integer) # Em bytes
-    data_upload = db.Column(db.DateTime, default=datetime.utcnow)
+    name = db.Column(db.String(255), nullable=False)
+    type = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.Text)
+    file_path = db.Column(db.String(500), nullable=False)
+    size = db.Column(db.Integer)
+    created_at = db.Column(db.Date, default=date.today)
 
-    empresa = db.relationship('Company', backref='documentos')
+    # Relacionamentos
+    company = db.relationship('Company', back_populates='documents')
+    user = db.relationship('User', back_populates='documents')
+
+    def __repr__(self):
+        return f'<Document {self.name}>'
