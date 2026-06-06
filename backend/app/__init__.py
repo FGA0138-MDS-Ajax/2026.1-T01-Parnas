@@ -16,6 +16,7 @@ def create_app():
     jwt.init_app(app)
 
     # Importação de TODOS os modelos para o Flask-Migrate registrar as tabelas
+    from app.models.document import Document
     from app.models.user import User
     from app.models.company import Company
     from app.models.user_company_association import user_company
