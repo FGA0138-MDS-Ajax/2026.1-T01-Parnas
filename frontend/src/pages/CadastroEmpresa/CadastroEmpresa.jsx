@@ -12,6 +12,7 @@ const CadastroEmpresa = () => {
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { setIdEmpresaLogada } = useEmpresa();
 
@@ -20,40 +21,71 @@ const CadastroEmpresa = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (eventoFormulario) => {
+  const handleSubmit = async (eventoFormulario) => {
     eventoFormulario.preventDefault();
     setError('');
     setSuccess(false);
+    setLoading(true);
 
-    const cnpjApenasNumeros = formData.cnpj.replace(/\D/g, '');
-    const quantidadeDigitosCnpjValido = 14;
-    const cnpjPossuiFormatoValido = cnpjApenasNumeros === '45845023000138' || cnpjApenasNumeros.length === quantidadeDigitosCnpjValido;
-
-    if (!cnpjPossuiFormatoValido) {
-      setError('CNPJ inválido. Por favor, verifique os números.');
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('Sessão expirada. Por favor, faça login novamente.');
+      setLoading(false);
       return;
     }
 
-    const corpoRequisicaoParaBackend = {
-      name: formData.nome,
-      cnpj: cnpjApenasNumeros,
-      email: formData.email,
-      phone: formData.telefone
-    };
+    const cnpjApenasNumeros = formData.cnpj.replace(/\D/g, '');
 
-    const idEmpresaGeradoPeloBancoSimulado = Math.floor(Math.random() * 5000) + 1;
-    setIdEmpresaLogada(idEmpresaGeradoPeloBancoSimulado);
+    try {
+      const response = await fetch('/api/companies/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          name: formData.nome,
+          cnpj: cnpjApenasNumeros,
+          email: formData.email,
+          phone: formData.telefone
+        })
+      });
 
-    setSuccess(true);
-    setFormData({ nome: '', cnpj: '', email: '', telefone: '' });
+      const responseText = await response.text();
+      const data = responseText ? JSON.parse(responseText) : {};
 
-    console.log('[MOCK API] Dados preparados para o contrato da API:', corpoRequisicaoParaBackend);
-    console.log('[MOCK CONTEXTO] ID salvo globalmente:', idEmpresaGeradoPeloBancoSimulado);
+      if (!response.ok) {
+        if (data.erros_de_validacao) {
+          const mensagensDeErro = Object.values(data.erros_de_validacao).flat().join(' ');
+          throw new Error(mensagensDeErro);
+        }
+        throw new Error(data.erro || 'Erro ao cadastrar empresa.');
+      }
+
+      setIdEmpresaLogada(data.company_id);
+      setSuccess(true);
+
+      const historicoReal = JSON.parse(localStorage.getItem('credifab_empresas_reais') || '[]');
+      historicoReal.push({
+        company_id: data.company_id,
+        name: data.name || formData.nome,
+        cnpj: data.cnpj || cnpjApenasNumeros,
+        email: formData.email,
+        phone: formData.telefone
+      });
+      localStorage.setItem('credifab_empresas_reais', JSON.stringify(historicoReal));
+
+      setFormData({ nome: '', cnpj: '', email: '', telefone: '' });
+
+    } catch (err) {
+      setError(err.message || 'Ocorreu um erro ao tentar cadastrar a empresa.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="cadastro-empresa-pagina">
-      {/* O seu container-cadastro original, agora atuando como o card centralizado */}
       <div className="container-cadastro">
         <div className="form-content">
           <div className="form-header">
@@ -61,7 +93,7 @@ const CadastroEmpresa = () => {
           </div>
 
           {error && <p className="msg-error">{error}</p>}
-          {success && <p className="msg-success">Empresa validada com sucesso!</p>}
+          {success && <p className="msg-success">Empresa cadastrada com sucesso!</p>}
 
           <form onSubmit={handleSubmit} className="form-grid">
             <div className="input-group">
@@ -72,6 +104,7 @@ const CadastroEmpresa = () => {
                 placeholder="Nome da sua empresa"
                 value={formData.nome}
                 onChange={handleChange}
+                disabled={loading}
                 required
               />
             </div>
@@ -84,6 +117,7 @@ const CadastroEmpresa = () => {
                 placeholder="xx.xxx.xxx/0001-xx"
                 value={formData.cnpj}
                 onChange={handleChange}
+                disabled={loading}
                 required
               />
             </div>
@@ -96,6 +130,7 @@ const CadastroEmpresa = () => {
                 placeholder="nome@e-mail.com"
                 value={formData.email}
                 onChange={handleChange}
+                disabled={loading}
                 required
               />
             </div>
@@ -108,12 +143,13 @@ const CadastroEmpresa = () => {
                 placeholder="(00) 00000-0000"
                 value={formData.telefone}
                 onChange={handleChange}
+                disabled={loading}
                 required
               />
             </div>
 
-            <button type="submit" className="btn-submit">
-              Cadastrar Empresa
+            <button type="submit" className="btn-submit" disabled={loading}>
+              {loading ? 'Cadastrando...' : 'Cadastrar Empresa'}
             </button>
           </form>
         </div>

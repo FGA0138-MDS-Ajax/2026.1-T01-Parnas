@@ -43,7 +43,7 @@ def forgot_password():
 
     token = generate_reset_token(user.email)
 
-    reset_link = f"http://localhost:5000/auth/reset-password/{token}"
+    reset_link = f"http://localhost:5173/esqueci-senha?token={token}"
 
     return jsonify({
         "mensagem": "Token gerado",

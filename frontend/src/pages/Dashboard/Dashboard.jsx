@@ -5,12 +5,14 @@ import './Dashboard.css';
 const Dashboard = () => {
   const navigate = useNavigate();
 
+  const empresasCadastradas = JSON.parse(localStorage.getItem('credifab_empresas_reais') || '[]');
+
   return (
     <div className="dashboard-container">
 
       <div className="dashboard-header">
         <h2>Painel de Controle</h2>
-        <p>Bem-vindo ao ambiente integrado do CREDIFAB.</p>
+        <p>Bem-vindo ao CREDIFAB.</p>
       </div>
 
       <div className="dashboard-grid">
@@ -30,7 +32,7 @@ const Dashboard = () => {
           </button>
         </div>
 
-        {/*Transações Financeiras */}
+        {/* Transações Financeiras */}
         <div className="dashboard-card">
           <div>
             <h3 className="dashboard-card-title title-transacoes">Transações Financeiras</h3>
@@ -47,6 +49,28 @@ const Dashboard = () => {
         </div>
 
       </div>
+
+      {empresasCadastradas.length > 0 && (
+        <div className="dashboard-empresas-section">
+          <h3 className="dashboard-empresas-title">Empresas Cadastradas</h3>
+          <div className="dashboard-empresas-list">
+            {empresasCadastradas.map((empresa, index) => (
+              <div className="dashboard-empresa-row" key={empresa.company_id || index}>
+                <div className="empresa-row-info">
+                  <h4>{empresa.name}</h4>
+                  <div className="empresa-row-details">
+                    <span><strong>CNPJ:</strong> {empresa.cnpj}</span>
+                    <span><strong>E-mail:</strong> {empresa.email}</span>
+                    <span><strong>Tel:</strong> {empresa.phone}</span>
+                  </div>
+                </div>
+                <span className="badge-id-banco">ID Banco: {empresa.company_id}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

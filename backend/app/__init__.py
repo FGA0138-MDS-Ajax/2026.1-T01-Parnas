@@ -22,6 +22,7 @@ def create_app():
     from app.models.category import Category
     from app.models.transaction import Transaction
     from app.models.simulation import Simulation
+    from app.models.bill import Bill
 
     # Força a criação das tabelas automaticamente (essencial para o SQLite de teste)
     with app.app_context():
@@ -50,5 +51,9 @@ def create_app():
 
     from app.routes.simulation_routes import simulation_bp
     app.register_blueprint(simulation_bp, url_prefix="/api/simulations")
+    
+    # Registra o Blueprint de contas a pagar/receber
+    from app.routes.bill_routes import bill_bp
+    app.register_blueprint(bill_bp, url_prefix='/api/contas')
 
     return app
