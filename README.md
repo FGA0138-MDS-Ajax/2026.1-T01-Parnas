@@ -1,10 +1,10 @@
 Readme · MD
-# Parnas — Sistema de Gestão Financeira
+# Credifab — Sistema de Gestão Financeira
  
 > Projeto desenvolvido para a disciplina de **Métodos de Desenvolvimento de Software (MDS)**
 > Universidade de Brasília — FGA | Prof. Ricardo Ajax Dias Kosloski
  
-O **Parnas** é uma plataforma de controle e gestão financeira voltada para microempresas. O sistema permite o gerenciamento completo de fluxo de caixa, controle de usuários, organizações, categorias, contas a pagar e a receber, simulações de crédito e centralização documental.
+O **Credifab** é uma plataforma de controle e gestão financeira voltada para microempresas. O sistema permite o gerenciamento completo de fluxo de caixa, controle de usuários, organizações, categorias, contas a pagar e a receber, simulações de crédito e centralização documental.
  
 ---
  
@@ -95,7 +95,7 @@ FLASK_APP=run.py
 ## Estrutura do Projeto
  
 ```
-parnas/
+credifab/
 ├── backend/
 │   ├── app/
 │   │   ├── models/        # Entidades e mapeamento SQLAlchemy
