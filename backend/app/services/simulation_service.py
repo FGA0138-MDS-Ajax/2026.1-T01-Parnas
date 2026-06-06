@@ -138,7 +138,7 @@ def save_simulation(data, current_user_id):
         return {"erro": "Ocorreu um erro interno ao salvar a simulação."}, 500
 
 def get_simulation(company_id):
-    simulations = Simulation.query.filter_by(company_id).all()
+    simulations = Simulation.query.filter_by(company_id=company_id).all()
     result = []
     for s in simulations:
         result.append({
@@ -154,3 +154,17 @@ def get_simulation(company_id):
         })
 
     return {"simulations": result}, 200
+
+def delete_simulation(simulation_id, company_id):
+    simulation = Simulation.query.filter_by(simulation_id=simulation_id, company_id=company_id).first()
+
+    if not simulation:
+        return {"erro": "Simulação não encontrada para esta empresa."}, 404
+
+    try:
+        db.session.delete(simulation)
+        db.session.commit()
+        return {"mensagem": "Simulação excluída com sucesso."}, 200
+    except Exception as e:
+        db.session.rollback()
+        return {"erro": "Ocorreu um erro interno ao excluir a simulação."}, 500
