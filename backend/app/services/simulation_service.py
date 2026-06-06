@@ -141,15 +141,15 @@ def get_simulation(company_id):
     result = []
     for s in simulations:
         result.append({
-            "id_simulacao": s.simulation_id,
-            "valor_solicitado": float(s.requested_value),
-            "prazo_meses": s.deadline_months,
-            "modalidade": s.modality,
-            "taxa_juros": float(s.interest_rate),
-            "valor_parcela": float(s.installment_value),
-            "valor_total": float(s.total_value),
-            "total_juros": float(s.total_interest),
-            "data_simulacao": s.simulation_data.strftime('%Y-%m-%d %H:%M')
+            "id_simulacao": s.id_simulacao,
+            "valor_solicitado": float(s.valor_solicitado),
+            "prazo_meses": s.prazo_meses,
+            "modalidade": s.modalidade,
+            "taxa_juros": float(s.taxa_juros),
+            "valor_parcela": float(s.valor_parcela),
+            "valor_total": float(s.valor_total),
+            "total_juros": float(s.total_juros),
+            "data_simulacao": s.data_simulacao.strftime('%Y-%m-%d %H:%M')
         })
 
     return {"simulations": result}, 200
