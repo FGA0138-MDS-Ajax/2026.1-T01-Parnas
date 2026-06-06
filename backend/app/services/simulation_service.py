@@ -76,8 +76,39 @@ def project_impact_cash_flow(company_id, first_installment_value):
         }
 
     commitment = (first_installment_value / avarege_monthly_profit) * 100
+
     return {
         "media_lucro_mensal": round(avarege_monthly_profit, 2),
         "comprometimento_perc": round(commitment, 2),
         "status": "Saudável" if commitment <= 30 else "Atenção"
     }
+
+def process_simulation(data, company_id=None):
+    main = data['valor_solicitado']
+    rate = data['taxa_juros']
+    term = data['prazo_meses']
+    modality = data['modalidade'].upper()
+
+    if modality == 'PRICE':
+        installments, base_installments = calculate_table_price(main, rate, term)
+    else:
+        installments, base_installments = calculate_table_sac(main, rate, term)
+
+    total_payed = sum(p["valor_parcela"] for p in installments)
+    total_rate = total_payed - main
+
+    answer = {
+        "resumo": {
+            "modalidade": modality,
+            "valor_solicitado": round(main, 2),
+            "total_a_pagar": round(total_payed, 2),
+            "total_juros": round(total_rate, 2),
+            "primeira_parcela": round(base_installments, 2)
+        },
+        "detalhamento_mensal": installments
+    }
+
+    if company_id:
+        answer["projecao_fluxo_caixa"] = project_impact_cash_flow(company_id, base_installments)
+
+    return answer
