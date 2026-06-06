@@ -49,9 +49,6 @@ def create_app():
     from app.routes.transaction_routes import transaction_bp
     app.register_blueprint(transaction_bp, url_prefix="/api/transactions")
 
-    from app.routes.simulation_routes import simulation_bp
-    app.register_blueprint(simulation_bp, url_prefix="/api/simulations")
-    
     # Registra o Blueprint de contas a pagar/receber
     from app.routes.bill_routes import bill_bp
     app.register_blueprint(bill_bp, url_prefix='/api/contas')

@@ -8,7 +8,7 @@ class SimulationCalculateDTO(Schema):
         required=True,
         validate=validate.OneOf(['PRICE', 'SAC'], error="Modalidade deve ser 'PRICE' ou 'SAC'."),
     )
-
+    company_id = fields.Int(required=False, allow_none=True)
     @validates('requested_amount')
     def validate_requested_amount(self, value):
         if value <= 0:
