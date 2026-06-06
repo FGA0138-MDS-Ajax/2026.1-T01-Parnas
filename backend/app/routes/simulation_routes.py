@@ -1,8 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from marshmallow import ValidationError
-from pygments.lexers import data
-
 from app.schemas.simulation_schema import SimulationCalculateDTO, SimulationSaveDTO
 from app.services.simulation_service import (
     process_simulation,
@@ -50,10 +48,10 @@ def get_all():
     if not company_id:
         return jsonify({"erro": "O parâmetro company_id é obrigatório."}), 400
 
-    answer, status_code = save_simulation(company_id)
+    answer, status_code = get_simulation(company_id)
     return jsonify(answer), status_code
 
-@simulation_bp.route("/", methods=["DELETE"])
+@simulation_bp.route("/<int:simulation_id>", methods=["DELETE"])
 @jwt_required()
 def delete(simulation_id):
     company_id = request.args.get("company_id")

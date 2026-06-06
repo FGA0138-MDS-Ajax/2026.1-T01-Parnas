@@ -1,7 +1,6 @@
 from app.config import db
 from app.models.simulation import Simulation
 from app.models.transaction import Transaction
-from models import transaction
 
 
 def calculate_table_price(main, rate,term ):
@@ -61,8 +60,8 @@ def project_impact_cash_flow(company_id, first_installment_value):
             "comprometimento_perc": None
         }
 
-    entrys = sum(float(t.amount) for t in transactions if t.typelower() == 'entry')
-    exits = sum(float(t.amount) for t in transactions if t.typelower() == 'exits')
+    entrys = sum(float(t.amount) for t in transactions if t.type.lower() == 'entry')
+    exits = sum(float(t.amount) for t in transactions if t.type.lower() == 'exits')
     total_profits = entrys - exits
 
     months_operating = len(set(t.date.strftime('%Y-%m') for t in transactions)) or 1
@@ -84,10 +83,10 @@ def project_impact_cash_flow(company_id, first_installment_value):
     }
 
 def process_simulation(data, company_id=None):
-    main = data['valor_solicitado']
-    rate = data['taxa_juros']
-    term = data['prazo_meses']
-    modality = data['modalidade'].upper()
+    main = data['requested_amonunt']
+    rate = data['interest_rate']
+    term = data['deadline_month']
+    modality = data['modality'].upper()
 
     if modality == 'PRICE':
         installments, base_installments = calculate_table_price(main, rate, term)
@@ -114,19 +113,19 @@ def process_simulation(data, company_id=None):
     return answer
 
 def save_simulation(data, current_user_id):
-    data_simulation: process_simulation(data)
+    data_simulation = process_simulation(data)
     summary = data_simulation["resumo"]
 
     new_simulation = Simulation(
-        company_id=data['id_empresa'],
+        company_id=data['company_id'],
         user_id=current_user_id,
-        requested_amount=data['valor_solicitado'],
-        deadline_month=data['prazo_meses'],
-        modality=data['modalidade'],
-        interest_rate=data['taxa_juros'],
-        installment_value=summary['primeira_parcela'],
-        total_value=summary['total_a_pagar'],
-        total_interest=summary['total_juros']
+        requested_amount=data['requested_amount'],
+        deadline_month=data['deadline_month'],
+        modality=data['modality'],
+        interest_rate=data['interest_rate'],
+        installment_value=summary['first_installment'],
+        total_value=summary['total_to_pay'],
+        total_interest=summary['total_interest']
     )
 
     try:
