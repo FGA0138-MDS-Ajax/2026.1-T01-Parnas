@@ -162,6 +162,33 @@
   letter-spacing: 0.04em;
 }
 
+.campo-label-acoes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.campo-label-acoes label {
+  margin: 0;
+}
+
+.btn-link-categoria {
+  background: transparent;
+  border: none;
+  color: var(--azul);
+  cursor: pointer;
+  font-family: var(--fonte-poppins);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.btn-link-categoria:hover {
+  text-decoration: underline;
+}
+
 .filtro-group input,
 .filtro-group select {
   padding: 8px 12px;
@@ -316,15 +343,32 @@
 /* botoes de acao na tabela */
 
 .btn-acao {
+  background: none;
+  border: none;
   color: var(--texto-placeholder);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 4px;
   transition: var(--transicao-suave);
 }
 
+.transacoes-tabela .col-acoes {
+  white-space: nowrap;
+}
+
+.transacoes-tabela .col-acoes .btn-acao + .btn-acao {
+  margin-left: 8px;
+}
+
 .btn-editar:hover {
+  background-color: rgba(15, 76, 129, 0.08);
   color: var(--azul) !important;
 }
 
 .btn-excluir:hover {
+  background-color: #fdecea;
   color: var(--erro) !important;
 }
 
@@ -521,6 +565,11 @@
   animation: slideUp 0.2s ease;
 }
 
+.modal-container--confirmacao,
+.modal-container--sm {
+  max-width: 420px;
+}
+
 /* cabecalho do modal alinhando titulo e fechar */
 .modal-cabecalho {
   display: flex;
@@ -573,6 +622,72 @@
   justify-content: flex-end;
   gap: 12px;
   background-color: #f8fafc;
+}
+
+/* confirmacoes de exclusao e quitacao */
+.confirmacao-icone {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 auto 16px;
+}
+
+.confirmacao-icone--excluir {
+  background-color: #fdecea;
+  color: #c0392b;
+}
+
+.confirmacao-icone--quitar {
+  background-color: #e8f7ef;
+  color: #1a7a46;
+}
+
+.confirmacao-texto {
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--texto-principal);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.confirmacao-valor {
+  display: block;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.valor--receita {
+  color: var(--verde);
+}
+
+.valor--despesa {
+  color: var(--erro);
+}
+
+.confirmacao-aviso {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--texto-placeholder);
+  margin: 0;
+}
+
+.confirmacao-aviso--erro {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+.btn-submit--excluir {
+  background-color: var(--erro);
+}
+
+.btn-submit--excluir:hover:not(:disabled) {
+  background-color: #a93226;
 }
 
 /* animacoes para suavizar a abertura */

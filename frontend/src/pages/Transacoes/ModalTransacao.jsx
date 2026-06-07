@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Transacoes.css';
 
 const hoje = () => new Date().toISOString().split('T')[0];
@@ -12,6 +13,7 @@ const ESTADO_INICIAL = {
 };
 
 const ModalTransacao = ({ transacaoParaEditar, categorias, onSalvar, onFechar }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState(ESTADO_INICIAL);
   const [erros, setErros] = useState({});
   const [salvando, setSalvando] = useState(false);
@@ -183,7 +185,16 @@ const ModalTransacao = ({ transacaoParaEditar, categorias, onSalvar, onFechar })
 
             {/* Categoria */}
             <div className="input-group">
-              <label htmlFor="modal-categoria">Categoria</label>
+              <div className="campo-label-acoes">
+                <label htmlFor="modal-categoria">Categoria</label>
+                <button
+                  type="button"
+                  className="btn-link-categoria"
+                  onClick={() => navigate('/categorias')}
+                >
+                  Cadastrar
+                </button>
+              </div>
               <select
                 id="modal-categoria"
                 name="categoriaId"
