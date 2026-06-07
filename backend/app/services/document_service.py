@@ -2,6 +2,7 @@ import os
 from werkzeug.utils import secure_filename
 from datetime import date
 from app.config import db, Config
+from app.models.document import Document
 from app.models.company import Company
 from app.models.user import User
 from app.repositories.document_repository import DocumentRepository
@@ -101,3 +102,24 @@ class DocumentService:
         except Exception as e:
             db.session.rollback()
             return None, f"Erro ao salvar documento: {str(e)}", 500
+
+    @staticmethod
+    def get_documents_by_company(company_id, user_id, tipo=None, page=1, per_page=20):
+        try:
+            has_access, error_msg, status_code = DocumentService.check_user_company_access(user_id, company_id)
+            if not has_access:
+                return None, error_msg, status_code
+            
+            if tipo:
+                query = Document.query.filter_by(company_id=company_id, type=tipo)\
+                    .order_by(Document.created_at.desc())\
+                    .paginate(page=page, per_page=per_page)
+            else:
+                query = Document.query.filter_by(company_id=company_id)\
+                    .order_by(Document.created_at.desc())\
+                    .paginate(page=page, per_page=per_page)
+            
+            return query, None, 200
+        
+        except Exception as e:
+            return None, f"Erro ao listar documentos: {str(e)}", 500
