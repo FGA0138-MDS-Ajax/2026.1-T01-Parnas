@@ -2,7 +2,6 @@ import os
 from werkzeug.utils import secure_filename
 from datetime import date
 from app.config import db, Config
-from app.models.document import Document
 from app.models.company import Company
 from app.models.user import User
 from app.repositories.document_repository import DocumentRepository
@@ -138,3 +137,26 @@ class DocumentService:
         except Exception as e:
             db.session.rollback()
             return False, f"Erro ao deletar documento: {str(e)}", 500
+        
+    @staticmethod
+    def get_document_for_download(document_id: int, user_id: int):
+        try:
+            document = DocumentRepository.get_by_id(document_id)
+
+            if not document:
+                return None, None, "Documento não encontrado", 404
+
+            has_access, error_msg, status_code = DocumentService.check_user_company_access(user_id, document.company_id)
+            if not has_access:
+                return None, None, error_msg, status_code
+
+            if not os.path.exists(document.file_path):
+                return None, None, "Arquivo não encontrado no servidor", 404
+
+            extension = os.path.splitext(document.file_path)[1]
+            download_name = secure_filename(document.name) + extension
+
+            return document.file_path, download_name, None, 200
+
+        except Exception as e:
+            return None, None, f"Erro ao buscar documento para download: {str(e)}", 500
