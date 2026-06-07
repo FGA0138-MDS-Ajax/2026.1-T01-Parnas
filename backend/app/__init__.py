@@ -54,4 +54,8 @@ def create_app():
     from app.routes.bill_routes import bill_bp
     app.register_blueprint(bill_bp, url_prefix='/api/contas')
 
+    # Registra o Blueprint de documentos
+    from app.routes.document_routes import document_bp
+    app.register_blueprint(document_bp, url_prefix='/api/documentos')
+
     return app
