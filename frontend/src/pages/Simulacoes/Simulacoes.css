@@ -1,0 +1,669 @@
+/* ===== Container ===== */
+.simulacoes-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  font-family: var(--fonte-poppins);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ===== Header ===== */
+.simulacoes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.simulacoes-header h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--azul);
+  margin: 0 0 4px;
+}
+
+.simulacoes-header p {
+  font-size: 0.9rem;
+  color: var(--texto-placeholder);
+  margin: 0;
+}
+
+/* ===== Section titles ===== */
+.secao-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--azul);
+  margin: 0 0 4px;
+}
+
+.secao-descricao {
+  font-size: 0.83rem;
+  color: var(--texto-placeholder);
+  margin: 0 0 16px;
+}
+
+/* ===== Form card ===== */
+.simulacoes-formulario-card {
+  background-color: var(--branco);
+  border: 2px solid var(--borda-input);
+  border-radius: var(--arredondamento-card);
+  padding: 24px;
+}
+
+.simulacoes-form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-group label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+}
+
+.input-group input,
+.input-group select {
+  padding: 10px 12px;
+  border: 1.5px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.9rem;
+  font-family: var(--fonte-poppins);
+  color: var(--texto-principal);
+  background: #fff;
+  transition: var(--transicao-suave);
+  outline: none;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  border-color: var(--azul);
+  box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.08);
+}
+
+.input-group input.input-erro {
+  border-color: var(--erro);
+}
+
+.msg-campo-erro {
+  font-size: 0.78rem;
+  color: var(--erro);
+}
+
+/* ===== Result cards ===== */
+.simulacoes-resultado {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.resultado-card {
+  background-color: var(--branco);
+  border: 2px solid var(--borda-input);
+  border-radius: var(--arredondamento-card);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: var(--transicao-suave);
+}
+
+.resultado-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.resultado-parcela { border-left: 4px solid var(--azul); }
+.resultado-total   { border-left: 4px solid var(--verde); }
+.resultado-juros   { border-left: 4px solid #E07D10; }
+
+.resultado-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--texto-placeholder);
+}
+
+.resultado-valor {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--texto-principal);
+}
+
+.juros-valor {
+  color: #C05621;
+}
+
+.resultado-sub {
+  font-size: 0.78rem;
+  color: var(--texto-placeholder);
+}
+
+/* ===== Impacto no Fluxo de Caixa ===== */
+.simulacoes-impacto-card {
+  background-color: var(--branco);
+  border: 2px solid var(--borda-input);
+  border-radius: var(--arredondamento-card);
+  padding: 24px;
+}
+
+.impacto-sem-dados {
+  padding: 32px 0 8px;
+  text-align: center;
+  color: var(--texto-placeholder);
+  font-size: 0.9rem;
+}
+
+.impacto-resumo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.impacto-card {
+  background-color: #f5f7fa;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.impacto-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--texto-placeholder);
+}
+
+.impacto-valor {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.impacto-receita  { color: var(--verde); }
+.impacto-despesa  { color: var(--erro); }
+.impacto-positivo { color: var(--azul); }
+.impacto-negativo { color: var(--erro); }
+
+/* ===== Viabilidade banner ===== */
+.viabilidade-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  border-left: 6px solid;
+  flex-wrap: wrap;
+}
+
+.viabilidade-viavel {
+  background-color: #E6FAF5;
+  border-color: var(--verde);
+}
+
+.viabilidade-atencao {
+  background-color: #FFF8E6;
+  border-color: #E07D10;
+}
+
+.viabilidade-risco {
+  background-color: #FFF5F5;
+  border-color: var(--erro);
+}
+
+.viabilidade-indicador {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.viabilidade-viavel .viabilidade-indicador  { background-color: var(--verde); }
+.viabilidade-atencao .viabilidade-indicador { background-color: #E07D10; }
+.viabilidade-risco .viabilidade-indicador   { background-color: var(--erro); }
+
+.viabilidade-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 180px;
+}
+
+.viabilidade-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--texto-principal);
+}
+
+.viabilidade-descricao {
+  font-size: 0.83rem;
+  color: var(--texto-placeholder);
+}
+
+.viabilidade-numeros {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.vn-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: right;
+}
+
+.vn-label {
+  font-size: 0.72rem;
+  color: var(--texto-placeholder);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.vn-valor {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--texto-principal);
+}
+
+.vn-vs {
+  font-size: 0.8rem;
+  color: var(--texto-placeholder);
+  font-weight: 600;
+}
+
+/* ===== Cash flow chart ===== */
+.impacto-grafico {
+  margin-top: 4px;
+}
+
+.impacto-grafico-legenda {
+  font-size: 0.8rem;
+  color: var(--texto-placeholder);
+  margin: 0 0 12px;
+}
+
+/* ===== Amortization chart card ===== */
+.simulacoes-grafico-card {
+  background-color: var(--branco);
+  border: 2px solid var(--borda-input);
+  border-radius: var(--arredondamento-card);
+  padding: 24px;
+}
+
+.grafico-tooltip {
+  background: var(--branco);
+  border: 1.5px solid var(--borda-input);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.83rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tooltip-mes {
+  font-weight: 700;
+  color: var(--texto-principal);
+  margin: 0 0 6px;
+}
+
+.grafico-tooltip p {
+  margin: 3px 0;
+}
+
+/* ===== Save actions ===== */
+.simulacoes-acoes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.btn-salvar-simulacao {
+  background-color: var(--verde);
+  color: var(--branco);
+  border: none;
+  padding: 12px 28px;
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--fonte-poppins);
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-salvar-simulacao:hover:not(:disabled) {
+  background-color: #027a5a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(3, 144, 108, 0.3);
+}
+
+.btn-salvar-simulacao:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.msg-error {
+  color: var(--erro);
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.msg-success {
+  color: var(--verde);
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* ===== Saved simulations ===== */
+.simulacoes-historico {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.historico-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.aviso-empresa {
+  font-size: 0.83rem;
+  color: var(--texto-placeholder);
+  margin: 0;
+}
+
+.historico-tabela-wrapper {
+  background-color: var(--branco);
+  border: 2px solid var(--borda-input);
+  border-radius: var(--arredondamento-card);
+  overflow: hidden;
+}
+
+.tabela-info {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--borda-input);
+  font-size: 0.85rem;
+  color: var(--texto-placeholder);
+}
+
+.historico-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.historico-tabela thead tr {
+  background-color: #f5f7fa;
+  border-bottom: 2px solid var(--borda-input);
+}
+
+.historico-tabela th {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--texto-placeholder);
+  white-space: nowrap;
+}
+
+.historico-tabela tbody tr {
+  border-bottom: 1px solid var(--borda-input);
+  transition: background-color 0.15s ease;
+}
+
+.historico-tabela tbody tr:last-child {
+  border-bottom: none;
+}
+
+.historico-tabela tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.historico-tabela td {
+  padding: 13px 14px;
+  color: var(--texto-principal);
+  vertical-align: middle;
+}
+
+.col-acoes {
+  text-align: center;
+  width: 60px;
+}
+
+.valor-juros {
+  color: #C05621;
+  font-weight: 600;
+}
+
+/* ===== Badges ===== */
+.badge-modalidade {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.badge-price { background-color: #EBF4FF; color: #0F4C81; }
+.badge-sac   { background-color: #E6FAF5; color: #03906C; }
+
+/* ===== Action buttons ===== */
+.btn-acao {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: var(--transicao-suave);
+}
+
+.btn-excluir       { color: var(--erro); }
+.btn-excluir:hover { background-color: #fdecea; }
+
+/* ===== Empty state ===== */
+.simulacoes-vazio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  text-align: center;
+  color: var(--texto-placeholder);
+  font-size: 0.95rem;
+}
+
+/* ===== Modal ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: fadeIn 0.15s ease;
+}
+
+.modal-container {
+  background-color: var(--branco);
+  border-radius: var(--arredondamento-card);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 440px;
+  animation: slideUp 0.2s ease;
+}
+
+.modal-container--confirmacao {
+  padding: 32px 28px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.confirmacao-icone     { font-size: 2.5rem; color: #E07D10; }
+.confirmacao-titulo    { font-size: 1.1rem; font-weight: 700; color: var(--texto-principal); margin: 0; }
+.confirmacao-descricao { font-size: 0.9rem; color: var(--texto-placeholder); margin: 0; }
+
+.confirmacao-detalhe {
+  background-color: #f5f7fa;
+  border-radius: 10px;
+  padding: 12px 18px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.confirmacao-detalhe strong { font-size: 0.95rem; color: var(--texto-principal); }
+.confirmacao-valor-sim      { font-size: 0.85rem; color: var(--texto-placeholder); }
+.confirmacao-aviso          { font-size: 0.82rem; color: var(--erro); margin: 0; }
+
+.confirmacao-acoes {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.btn-cancelar {
+  flex: 1;
+  padding: 10px;
+  border: 1.5px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
+  background: transparent;
+  color: var(--texto-principal);
+  font-size: 0.9rem;
+  font-family: var(--fonte-poppins);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-cancelar:hover { background-color: #f5f7fa; }
+
+.btn-excluir-confirmar {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: var(--arredondamento-input-botao);
+  background-color: var(--erro);
+  color: var(--branco);
+  font-size: 0.9rem;
+  font-family: var(--fonte-poppins);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-excluir-confirmar:hover { background-color: #c0392b; }
+
+/* ===== Animations ===== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .simulacoes-form-grid,
+  .simulacoes-resultado,
+  .impacto-resumo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .viabilidade-banner {
+    flex-wrap: wrap;
+  }
+
+  .viabilidade-numeros {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .simulacoes-container {
+    padding: 20px 14px;
+  }
+
+  .simulacoes-form-grid,
+  .simulacoes-resultado,
+  .impacto-resumo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .historico-tabela thead {
+    display: none;
+  }
+
+  .historico-tabela,
+  .historico-tabela tbody,
+  .historico-tabela tr,
+  .historico-tabela td {
+    display: block;
+    width: 100%;
+  }
+
+  .historico-tabela tr {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--borda-input);
+    position: relative;
+  }
+
+  .historico-tabela td {
+    padding: 3px 0;
+    border: none;
+  }
+
+  .col-acoes {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    width: auto;
+  }
+
+  .simulacoes-acoes {
+    align-items: stretch;
+  }
+
+  .viabilidade-numeros {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .vn-item {
+    text-align: left;
+  }
+}
