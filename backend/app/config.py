@@ -20,3 +20,7 @@ class Config:
     )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    UPLOAD_FOLDER = os.path.join(basedir, 'uploads')
+    MAX_CONTENT_LENGTH = 50 * 1024 * 1024 # 50MB
+    ALLOWED_EXTENSIONS = {'pdf','txt','md'}
+    ALLOWED_DOCUMENT_TYPES = ['fiscal', 'contabil', 'juridico']
