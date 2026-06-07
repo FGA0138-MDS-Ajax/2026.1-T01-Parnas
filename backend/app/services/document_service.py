@@ -116,3 +116,25 @@ class DocumentService:
         
         except Exception as e:
             return None, f"Erro ao listar documentos: {str(e)}", 500
+
+    @staticmethod
+    def delete_document(document_id, user_id):
+        try:
+            document = DocumentRepository.get_by_id_and_company(document_id, None)
+            
+            if not document:
+                return False, "Documento não encontrado", 404
+            
+            has_access, error_msg, status_code = DocumentService.check_user_company_access(user_id, document.company_id)
+            if not has_access:
+                return False, error_msg, status_code
+        
+            if os.path.exists(document.file_path):
+                os.remove(document.file_path)
+            DocumentRepository.delete(document)
+            
+            return True, "Documento deletado com sucesso", 200
+        
+        except Exception as e:
+            db.session.rollback()
+            return False, f"Erro ao deletar documento: {str(e)}", 500
