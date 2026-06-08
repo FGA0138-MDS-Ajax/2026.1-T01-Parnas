@@ -107,4 +107,12 @@ def download_document(document_id):
 @document_bp.route('/<int:document_id>', methods=['DELETE'])
 @jwt_required()
 def delete_document(document_id):
-    pass
+    current_user_id = int(get_jwt_identity())
+
+    success, message, status_code = DocumentService.delete_document(
+        document_id=document_id,
+        user_id=current_user_id
+    )
+
+    key = "mensagem" if success else "erro"
+    return jsonify({key: message}), status_code
