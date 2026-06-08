@@ -17,10 +17,10 @@ class Bill(db.Model):
     # Foreign Keys com CASCADE e RESTRICT seguindo a lógica de negócio
     company_id = db.Column(db.Integer, db.ForeignKey('company.company_id', ondelete='CASCADE'), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('category.category_id', ondelete='RESTRICT'), nullable=False)
-    company = db.relationship('Company', backref='bills')
-    category = db.relationship('Category', backref='bills')
-
-    # Relacionamento reverso com as transações geradas por esta conta
+    
+    #relacionamentos
+    company = db.relationship('Company', back_populates='bills')
+    category = db.relationship('Category', back_populates='bills')
     transactions = db.relationship('Transaction', back_populates='bill', lazy=True)
 
     def __repr__(self):
