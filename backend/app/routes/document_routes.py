@@ -56,7 +56,34 @@ def upload_document():
 @document_bp.route('', methods=['GET'])
 @jwt_required()
 def get_documents():
-    pass
+    current_user_id = int(get_jwt_identity())
+
+    company_id = request.args.get('company_id', type=int)
+    if not company_id:
+        return jsonify({"erro": "Parâmetro 'company_id' é obrigatório"}), 400
+
+    tipo     = request.args.get('type')
+    page     = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 20, type=int)
+
+    pagination, error, status_code = DocumentService.get_documents_by_company(
+        company_id=company_id,
+        user_id=current_user_id,
+        tipo=tipo,
+        page=page,
+        per_page=per_page
+    )
+
+    if error:
+        return jsonify({"erro": error}), status_code
+
+    return jsonify({
+        "documentos":   DocumentResponseSchema(many=True).dump(pagination.items),
+        "total":        pagination.total,
+        "paginas":      pagination.pages,
+        "pagina_atual": pagination.page,
+        "por_pagina":   pagination.per_page,
+    }), status_code
 
 @document_bp.route('/<int:document_id>/download', methods=['GET'])
 @jwt_required()
