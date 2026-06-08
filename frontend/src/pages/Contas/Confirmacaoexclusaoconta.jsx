@@ -1,19 +1,18 @@
 import React from 'react';
-import './Transacoes.css';
 
 const formatarMoeda = (valor) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
 
-const ConfirmacaoExclusao = ({ transacao, onConfirmar, onCancelar }) => {
+const ConfirmacaoExclusaoConta = ({ conta, onConfirmar, onCancelar }) => {
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) onCancelar();
   };
 
   return (
     <div className="modal-overlay" onClick={handleOverlayClick} role="dialog" aria-modal="true">
-      <div className="modal-container modal-container--confirmacao">
+      <div className="modal-container modal-container--sm">
         <div className="modal-cabecalho">
-          <h3 className="modal-titulo">Excluir transação?</h3>
+          <h3 className="modal-titulo">Excluir conta?</h3>
           <button className="modal-fechar" onClick={onCancelar} aria-label="Fechar modal">
             ✕
           </button>
@@ -22,16 +21,13 @@ const ConfirmacaoExclusao = ({ transacao, onConfirmar, onCancelar }) => {
         <div className="modal-corpo">
           <div className="confirmacao-icone confirmacao-icone--excluir">!</div>
           <p className="confirmacao-texto">
-            Você está prestes a excluir permanentemente <strong>{transacao?.descricao}</strong>.
+            Você está prestes a excluir <strong>{conta?.descricao}</strong>.
           </p>
-
-          <span className={`confirmacao-valor valor--${transacao?.tipo}`}>
-            {transacao?.tipo === 'despesa' ? '- ' : '+ '}
-            {formatarMoeda(transacao?.valor || 0)}
-          </span>
-
+          <p className="confirmacao-texto">
+            {formatarMoeda(conta?.valor || 0)}
+          </p>
           <p className="confirmacao-aviso confirmacao-aviso--erro">
-            Esta ação não pode ser desfeita.
+            Esta ação não poderá ser desfeita.
           </p>
         </div>
 
@@ -48,4 +44,4 @@ const ConfirmacaoExclusao = ({ transacao, onConfirmar, onCancelar }) => {
   );
 };
 
-export default ConfirmacaoExclusao;
+export default ConfirmacaoExclusaoConta;

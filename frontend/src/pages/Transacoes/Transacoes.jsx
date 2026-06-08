@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useTransacoes from '../../hooks/useTransacoes';
 import ModalTransacao from './ModalTransacao'; // Agora estão na mesma pasta!
 import ConfirmacaoExclusao from './ConfirmacaoExclusao'; // Agora estão na mesma pasta!
@@ -14,6 +15,7 @@ const formatarData = (dataStr) => {
 };
 
 const Transacoes = () => { // Nome do componente alterado
+  const navigate = useNavigate();
   const {
     filtros,
     transacoes,
@@ -129,7 +131,16 @@ const Transacoes = () => { // Nome do componente alterado
             </select>
           </div>
           <div className="filtro-group">
-            <label>Categoria</label>
+            <div className="campo-label-acoes">
+              <label>Categoria</label>
+              <button
+                type="button"
+                className="btn-link-categoria"
+                onClick={() => navigate('/categorias')}
+              >
+                Cadastrar
+              </button>
+            </div>
             <select name="categoria" value={filtros.categoria} onChange={handleFiltroChange}>
               <option value="">Todas</option>
               {categorias.map((cat) => (
@@ -193,7 +204,6 @@ const Transacoes = () => { // Nome do componente alterado
                       className="btn-acao btn-editar"
                       onClick={() => abrirModalEditar(t)}
                       title="Editar transação"
-                      style={{ marginRight: '8px', background: 'none', border: 'none', cursor: 'pointer' }}
                     >
                       ✎
                     </button>
@@ -201,7 +211,6 @@ const Transacoes = () => { // Nome do componente alterado
                       className="btn-acao btn-excluir"
                       onClick={() => abrirConfirmacaoExclusao(t)}
                       title="Excluir transação"
-                      style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                     >
                       ✕
                     </button>
