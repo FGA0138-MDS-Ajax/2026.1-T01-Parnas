@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, send_file
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from marshmallow import ValidationError
 
@@ -88,7 +88,21 @@ def get_documents():
 @document_bp.route('/<int:document_id>/download', methods=['GET'])
 @jwt_required()
 def download_document(document_id):
-    pass
+    current_user_id = int(get_jwt_identity())
+
+    file_path, download_name, error, status_code = DocumentService.get_document_for_download(
+        document_id=document_id,
+        user_id=current_user_id
+    )
+
+    if error:
+        return jsonify({"erro": error}), status_code
+
+    return send_file(
+        file_path,
+        as_attachment=True,
+        download_name=download_name
+    )
 
 @document_bp.route('/<int:document_id>', methods=['DELETE'])
 @jwt_required()
