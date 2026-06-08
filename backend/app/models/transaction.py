@@ -10,25 +10,19 @@ class Transaction(db.Model):
     date = db.Column(db.Date, nullable=False, default=date.today)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # Foreign Keys com CASCADE
+    # Foreign Keys
     company_id = db.Column(db.Integer, db.ForeignKey('company.company_id', ondelete='CASCADE'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('category.category_id', ondelete='RESTRICT'), nullable=False)
-
-    # Adicionando a FK exigida pela Issue 11 para rastrear quitações
+    account_id = db.Column(db.Integer, db.ForeignKey('account.account_id', ondelete='SET NULL'), nullable=True)
     bill_id = db.Column(db.Integer, db.ForeignKey('bill.bill_id', ondelete='SET NULL'), nullable=True)
 
+    # Relacionamentos 
     company = db.relationship('Company', back_populates='transactions')
     user = db.relationship('User', back_populates='transactions')
     category = db.relationship('Category', back_populates='transactions')
-
-    # Relacionamento com a conta
+    account = db.relationship('Account', back_populates='transactions')
     bill = db.relationship('Bill', back_populates='transactions')
-
-    company = db.relationship('Company', back_populates='transactions')
-    user = db.relationship('User', back_populates='transactions')
-    category = db.relationship('Category', back_populates='transactions')
 
     def __repr__(self):
         return f'<Transaction {self.description} - {self.amount}>'
-

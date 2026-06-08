@@ -15,6 +15,7 @@ class Company(db.Model):
     users = db.relationship('User', secondary=user_company, back_populates='companies')
     categories = db.relationship('Category', back_populates='company', lazy=True)
     transactions = db.relationship('Transaction', back_populates='company')
-
+    accounts = db.relationship('Account', back_populates='company', cascade="all, delete-orphan")
+    
     def __repr__(self):
         return f'<Company {self.name}>'
