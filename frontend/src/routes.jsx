@@ -10,6 +10,7 @@ import LayoutBase from './components/Layout/LayoutBase';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Transacoes from './pages/Transacoes/Transacoes';
 import Configuracoes from './pages/Configuracoes/Configuracoes';
+import Documentos from "./pages/Documentos/Documentos";
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -40,6 +41,7 @@ export const AppRoutes = () => {
           <Route path="/categorias" element={<Categorias />} />
           <Route path="/transacoes" element={<Transacoes />} />
           <Route path="/configuracoes" element={<Configuracoes />} />
+          <Route path="/documentos" element={<Documentos />} />
         </Route>
       </Routes>
     </BrowserRouter>
