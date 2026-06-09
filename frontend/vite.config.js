@@ -21,5 +21,11 @@ export default defineConfig({
         secure: false,
       }
     }
-  }
+  },
+  test: {
+    globals: true,            // describe/it/expect sem precisar importar
+    environment: 'jsdom',     // DOM simulado pra renderizar componentes React
+    setupFiles: './src/test/setup.js', // matchers do jest-dom (toBeInTheDocument...)
+    css: true,                // não quebra ao importar .css nos componentes
+  },
 });
