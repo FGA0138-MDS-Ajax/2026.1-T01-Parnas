@@ -11,12 +11,12 @@ class TransactionSchema(Schema):
     company_id = fields.Int(required=True, error_messages={"required":"O ID da empresa é obrigatório"})
 
     @validates('amount')
-    def validate_amount(self, value):
+    def validate_amount(self, value, **kwargs):  
         if value <= 0:
             raise ValidationError("O valor da transação deve ser estritamente positivo.")
 
     @validates('date')
-    def validate_date(self, value):
+    def validate_date(self, value, **kwargs):
         if value > date.today():
             raise ValidationError("A data de transação não pode ser futura.")
 class TransactionRequirements(Schema):

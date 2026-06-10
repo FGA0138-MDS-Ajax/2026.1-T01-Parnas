@@ -25,7 +25,7 @@ class CategoryAddSchema(Schema):
             raise ValidationError("CNPJ inválido")
     
 class CategoryRequirements(Schema):
-    id = fields.Int(dump_only=True)    
+    id = fields.Int(attribute="category_id", dump_only=True)
     type = fields.Str(dump_only=True)
     name = fields.Str(dump_only=True)
     cnpj = fields.Str(dump_only=True)
