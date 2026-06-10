@@ -4,6 +4,8 @@ from app.config import db
 class Transaction(db.Model):
     __tablename__ = 'transaction'
 
+    __table_args__ = (db.Index('idx_company_id_date', 'company_id', 'date'),)
+
     transaction_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     type = db.Column(db.String(20), nullable=False)
     description = db.Column(db.String(255), nullable=False)

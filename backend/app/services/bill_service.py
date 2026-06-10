@@ -4,7 +4,6 @@ from app.models.user import User
 from app.config import db
 from datetime import date, datetime
 
-
 class BillService:
 
     @staticmethod
