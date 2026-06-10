@@ -16,6 +16,7 @@ class Company(db.Model):
     categories = db.relationship('Category', back_populates='company', lazy=True, cascade="all, delete-orphan")
     transactions = db.relationship('Transaction', back_populates='company', cascade="all, delete-orphan")
     bills = db.relationship('Bill', back_populates='company', cascade="all, delete-orphan")
+    comparisons = db.relationship('Comparison', back_populates='company', cascade="all, delete-orphan")
     
     def __repr__(self):
         return f'<Company {self.name}>'
