@@ -25,3 +25,11 @@ class UserRegistrationSchema(Schema):
         cpf_validator = CPF()
         if not cpf_validator.validate(value):
             raise ValidationError("CPF inválido")
+
+class UserRequirements(Schema):
+    id = fields.Int(attribute="user_id", dump_only=True)
+    name = fields.Str(dump_only=True)
+    email = fields.Email(dump_only=True)
+    cpf = fields.Str(dump_only=True)
+    birth_date = fields.Date(dump_only=True)
+    register_date = fields.Date(dump_only=True)
