@@ -51,3 +51,4 @@ def find_user_by_email(email: str):
     if not email:
         return None
     return db.session.query(User).filter(User.email == email).first()
+

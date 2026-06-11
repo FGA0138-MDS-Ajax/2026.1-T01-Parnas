@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { validateCNPJ } from '../../utils/validators.js';
 import "./Register.css";
 
 const Register = () => {
