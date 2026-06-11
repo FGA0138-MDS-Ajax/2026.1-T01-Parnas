@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 .env
 venv/
+.venv
 *.egg-info/
 *.db
 
@@ -18,3 +19,5 @@ dist/
 .DS_Store
 *.log
 .idea/
+
+.claude
