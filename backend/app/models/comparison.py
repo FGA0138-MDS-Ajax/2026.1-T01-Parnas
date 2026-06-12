@@ -7,6 +7,10 @@ class Comparison(db.Model):
     comparison_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     company_id = db.Column(db.Integer, db.ForeignKey('company.company_id', ondelete='CASCADE'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False)
+
+    # Coluna do valor do empréstimo adicionada!
+    loan_amount = db.Column(db.Numeric(12, 2), nullable=False)
+    
     created_at = db.Column(db.DateTime, default=date.today)
 
     # Relacionamento simples (o Comparison pertence a UMA empresa e FOI CRIADO POR UM usuário)
