@@ -20,6 +20,4 @@ dist/
 .idea/
 
 .claude
-
-frontend
-backend
+.vite
