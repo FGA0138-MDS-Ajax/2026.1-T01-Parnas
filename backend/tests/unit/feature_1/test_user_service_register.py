@@ -62,8 +62,8 @@ def test_register_user_internal_error(mock_find_user_by_email,mock_find_user_by_
     mock_bcrypt.hashpw.return_value = b'hashed'
     mock_db.session.commit.side_effect = Exception('erro no banco')
 
-    response, status = register_user(DATA)
+    text, code = register_user(DATA)
 
-    assert status == 500
-    assert response['erro'] == 'Ocorreu um erro interno ao tentar salvar o usuário.'
+    assert text == {"erro": "Ocorreu um erro interno ao tentar salvar o usuário."}
+    assert code == 500
     mock_db.session.rollback.assert_called_once()
