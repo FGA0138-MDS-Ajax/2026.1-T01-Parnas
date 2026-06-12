@@ -22,6 +22,7 @@ def create_app():
     from app.models.category import Category
     from app.models.transaction import Transaction
     from app.models.bill import Bill
+    from app.models.comparison import Comparison, ComparisonModality
 
     # Força a criação das tabelas automaticamente (essencial para o SQLite de teste)
     with app.app_context():
@@ -48,5 +49,9 @@ def create_app():
     # Registra o Blueprint de contas a pagar/receber
     from app.routes.bill_routes import bill_bp
     app.register_blueprint(bill_bp, url_prefix='/api/contas')
+
+    # Registra o Blueprint de comparações de crédito
+    from app.routes.comparison_routes import comparison_bp
+    app.register_blueprint(comparison_bp, url_prefix='/api/comparacoes')
 
     return app
