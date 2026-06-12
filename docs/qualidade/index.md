@@ -43,7 +43,7 @@ menos de integração, menos ainda E2E, e testes de carga sob demanda.
 | Front-end       | **Vitest + React Testing Library** *(a configurar)* | Componentes e telas                                      |
 | Carga           | **Locust** *(sob demanda)*                          | Endpoint de simulação de crédito (futuro)                |
 
-
+> **Estado atual:** Vitest,
 > Playwright e os workflows de CI de testes ainda **não** estão configurados —
 > ver [Pendências de Qualidade](#pendencias-de-qualidade).
 
@@ -58,7 +58,9 @@ backend/tests/
   e2e/                        # test_company_registration_flow.py
 ```
 
-Fixtures globais em `conftest.py`: `app` 
+Fixtures globais em `conftest.py`: `app` (escopo de sessão, `TestConfig` com
+SQLite em memória), `client`, `app_context`, `clean_db`, `test_user`,
+`auth_token`, `auth_headers`.
 
 ---
 ## Fluxo de Trabalho por Sprint
