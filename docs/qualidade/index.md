@@ -34,16 +34,16 @@ menos de integração, menos ainda E2E, e testes de carga sob demanda.
 ---
 ### Tecnologias por nível
 
-| Nível | Ferramenta | Escopo |
-| --- | --- | --- |
-| Unitário | **Pytest + pytest-mock** | Lógica de service isolada com mocks; schemas marshmallow |
-| Integração | **Pytest + client Flask** | Endpoints contra **SQLite em memória** |
-| E2E (API) | **Pytest + client Flask** | Fluxos multi-endpoint encadeados |
-| E2E (navegador) | **Playwright** *(a configurar)* | CEN-01 a CEN-04, caminhos felizes |
-| Front-end | **Vitest + React Testing Library** *(a configurar)* | Componentes e telas |
-| Carga | **Locust** *(sob demanda)* | Endpoint de simulação de crédito (futuro) |
+| Nível           | Ferramenta                                          | Escopo                                                   |
+|-----------------|-----------------------------------------------------|----------------------------------------------------------|
+| Unitário        | **Pytest + pytest-mock**                            | Lógica de service isolada com mocks; schemas marshmallow |
+| Integração      | **Pytest + client Flask**                           | Endpoints contra **SQLite em memória**                   |
+| E2E (API)       | **Pytest + client Flask**                           | Fluxos multi-endpoint encadeados                         |
+| E2E (navegador) | **Playwright** *(a configurar)*                     | CEN-01 a CEN-04, caminhos felizes                        |
+| Front-end       | **Vitest + React Testing Library** *(a configurar)* | Componentes e telas                                      |
+| Carga           | **Locust** *(sob demanda)*                          | Endpoint de simulação de crédito (futuro)                |
 
-> **Estado atual:** Vitest,
+
 > Playwright e os workflows de CI de testes ainda **não** estão configurados —
 > ver [Pendências de Qualidade](#pendencias-de-qualidade).
 
@@ -58,9 +58,7 @@ backend/tests/
   e2e/                        # test_company_registration_flow.py
 ```
 
-Fixtures globais em `conftest.py`: `app` (escopo de sessão, `TestConfig` com
-SQLite em memória), `client`, `app_context`, `clean_db`, `test_user`,
-`auth_token`, `auth_headers`.
+Fixtures globais em `conftest.py`: `app` 
 
 ---
 ## Fluxo de Trabalho por Sprint
@@ -77,11 +75,11 @@ SQLite em memória), `client`, `app_context`, `clean_db`, `test_user`,
 ---
 ## Documentos de Qualidade Produzidos
 
-| Documento | Frequência | Onde                                          |
-| --- | --- |-----------------------------------------------|
+| Documento                            | Frequência  | Onde                                          |
+|--------------------------------------|-------------|-----------------------------------------------|
 | **Documentação de Testes — Feature** | Por feature | [Documentação por Feature](features/index.md) |
-| **Consolidado de Testes — Sprint** | Por Sprint | [Consolidados por Sprint](sprints/index.md)   |
-| **Análise GQM — Sprint** | Por Sprint | Dentro de cada consolidado                    |
+| **Consolidado de Testes — Sprint**   | Por Sprint  | [Consolidados por Sprint](sprints/index.md)   |
+| **Análise GQM — Sprint**             | Por Sprint  | Dentro de cada consolidado                    |
 
 ---
 ## Pendências de Qualidade

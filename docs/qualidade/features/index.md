@@ -8,9 +8,9 @@ evidências, defeitos encontrados e o **status final** da feature.
 ---
 ## Relatórios disponíveis
 
-| Feature | Sprint | Status |
-|---------|:------:|--------|
-| -       |   -    | -      |
+| Feature                                              | Sprint | Status                     |
+|------------------------------------------------------|:------:|----------------------------|
+| [Cadastro de Usuário](feature_1_cadastro-usuario.md) |   4    | 🚧 Aprovada com pendências |
 
 > Use o [Template de Documentação de Testes](_template.md) como ponto de partida
 > para cada nova feature.
@@ -18,8 +18,8 @@ evidências, defeitos encontrados e o **status final** da feature.
 ---
 ## Status possíveis
 
-| Status | Significado |
-| --- | --- |
-| ✅ **Aprovada** | Todos os casos passaram; feature pronta para merge |
+| Status                         | Significado                                           |
+|--------------------------------|-------------------------------------------------------|
+| ✅ **Aprovada**                 | Todos os casos passaram; feature pronta para merge    |
 | 🚧 **Aprovada com pendências** | Funciona, mas há ajustes/defeitos menores registrados |
-| ❌ **Reprovada** | Casos críticos falharam; volta para desenvolvimento |
+| ❌ **Reprovada**                | Casos críticos falharam; volta para desenvolvimento   |
