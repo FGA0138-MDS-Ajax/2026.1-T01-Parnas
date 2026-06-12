@@ -74,6 +74,7 @@ nav:
     - Documentação por Feature:
       - qualidade/features/index.md
       - Template: qualidade/features/_template.md
+      - Feature 1: qualidade/features/feature_1_cadastro-usuario.md
     - Consolidados por Sprint:
       - qualidade/sprints/index.md
       - Sprint 4: qualidade/sprints/sprint-04.md

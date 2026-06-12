@@ -1,3 +1,20 @@
-site/
+# Python
+__pycache__/
+*.pyc
+.env
 venv/
+*.egg-info/
+*.db
+
+# Migrations (opcional, alguns times sobem)
+# migrations/versions/
+
+# Node
+node_modules/
+dist/
+.env
+
+# Sistema
+.DS_Store
+*.log
 .idea/
