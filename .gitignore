@@ -18,3 +18,8 @@ dist/
 .DS_Store
 *.log
 .idea/
+
+.claude
+
+frontend
+backend
