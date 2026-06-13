@@ -38,7 +38,6 @@ const Configuracoes = () => {
         return;
       }
 
-      // Função isolada para garantir que o cache local seja limpo
       const limparCacheLocal = () => {
         const locaisAtuais = JSON.parse(
           localStorage.getItem("credifab_empresas_reais") || "[]",
@@ -74,7 +73,7 @@ const Configuracoes = () => {
         );
 
         alert(response.data.mensagem || "Empresa excluída com sucesso.");
-        limparCacheLocal(); 
+        limparCacheLocal();
         handleCloseModal();
         window.location.reload();
       } catch (error) {
@@ -173,17 +172,10 @@ const Configuracoes = () => {
               </p>
 
               {modalType === "company" && (
-                <div
-                  className="company-input-container"
-                  style={{ margin: "18px 0", textAlign: "left" }}
-                >
+                <div className="company-input-container">
                   <label
                     htmlFor="company-cnpj-field"
-                    style={{
-                      fontWeight: "600",
-                      display: "block",
-                      marginBottom: "6px",
-                    }}
+                    className="company-input-label"
                   >
                     Confirme o CNPJ da empresa para remoção:
                   </label>
@@ -193,13 +185,7 @@ const Configuracoes = () => {
                     placeholder="Digite apenas números ou formato padrão"
                     value={cnpjInput}
                     onChange={(e) => setCnpjInput(e.target.value)}
-                    style={{
-                      width: "100%",
-                      padding: "10px",
-                      borderRadius: "4px",
-                      border: "1px solid #ccc",
-                      boxSizing: "border-box",
-                    }}
+                    className="company-cnpj-input"
                   />
                 </div>
               )}

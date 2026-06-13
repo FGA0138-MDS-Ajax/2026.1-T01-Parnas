@@ -112,8 +112,14 @@
 }
 
 @keyframes fadeIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .modal-header h3 {
@@ -177,4 +183,23 @@ button.btn-modal-confirm {
 
 button.btn-modal-confirm:hover {
   background: #fff5f5;
+}
+
+.company-input-container {
+  margin: 18px 0;
+  text-align: left;
+}
+
+.company-input-label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.company-cnpj-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
