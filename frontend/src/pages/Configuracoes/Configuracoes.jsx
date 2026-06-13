@@ -10,8 +10,6 @@ const Configuracoes = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState(null);
-
-  // ESTADO PARA O CNPJ QUE O USUÁRIO DESEJA EXCLUIR
   const [cnpjInput, setCnpjInput] = useState("");
 
   const handleOpenModal = (type) => {
@@ -40,8 +38,28 @@ const Configuracoes = () => {
         return;
       }
 
+      // Função isolada para garantir que o cache local seja limpo
+      const limparCacheLocal = () => {
+        const locaisAtuais = JSON.parse(
+          localStorage.getItem("credifab_empresas_reais") || "[]",
+        );
+        const cnpjDigitadoLimpo = cnpjInput.trim().replace(/\D/g, "");
+
+        const locaisAtualizados = locaisAtuais.filter((emp) => {
+          const cnpjBancoLimpo = emp.cnpj.replace(/\D/g, "");
+          return cnpjBancoLimpo !== cnpjDigitadoLimpo;
+        });
+
+        localStorage.setItem(
+          "credifab_empresas_reais",
+          JSON.stringify(locaisAtualizados),
+        );
+        localStorage.removeItem("idEmpresaSimulado");
+      };
+
       try {
         const token = localStorage.getItem("token");
+
         const response = await axios.delete(
           "http://127.0.0.1:5000/api/companies/delete",
           {
@@ -56,16 +74,26 @@ const Configuracoes = () => {
         );
 
         alert(response.data.mensagem || "Empresa excluída com sucesso.");
+        limparCacheLocal(); 
         handleCloseModal();
+        window.location.reload();
       } catch (error) {
         console.error("Erro na integração de exclusão:", error);
+
+        if (error.response?.status === 404) {
+          alert(
+            "Esta empresa já foi removida do servidor. Atualizando seu painel local...",
+          );
+          limparCacheLocal();
+          handleCloseModal();
+          window.location.reload();
+          return;
+        }
+
         if (error.response?.data?.erros_de_validacao) {
           alert("O backend recusou: O formato do CNPJ digitado é inválido.");
         } else {
-          alert(
-            error.response?.data?.erro ||
-              "Erro interno do servidor. Por favor, tente novamente mais tarde.",
-          );
+          alert(error.response?.data?.erro || "Erro interno do servidor.");
         }
       }
     } else if (modalType === "user") {
