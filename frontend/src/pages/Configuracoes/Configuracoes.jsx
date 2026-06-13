@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Configuracoes.css";
 import useAuth from "../../hooks/useAuth.js";
+import { useEmpresa } from "../../context/EmpresaContext.jsx";
 
 const Configuracoes = () => {
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const { idEmpresaLogada } = useEmpresa();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState(null);
@@ -68,6 +70,7 @@ const Configuracoes = () => {
             },
             data: {
               cnpj: cnpjInput.trim(),
+              id_empresa: idEmpresaLogada,
             },
           },
         );
@@ -106,7 +109,7 @@ const Configuracoes = () => {
     <div className="config-container">
       <div className="config-header">
         <h2>Configurações</h2>
-        <p>Gerencie as preferências da sua conta.</p>
+        <p>Gerencie as preferences da sua conta.</p>
       </div>
 
       <div className="config-card">
