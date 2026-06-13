@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from app.config import Config, db
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
@@ -8,6 +9,7 @@ jwt = JWTManager()
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)  # Habilita CORS para todas as rotas
     app.config.from_object(Config)
 
     # Inicializa o banco de dados, as migrações e o JWT no app

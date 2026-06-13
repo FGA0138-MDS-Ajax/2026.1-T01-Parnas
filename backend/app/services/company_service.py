@@ -42,7 +42,7 @@ def register_company(user_id, data):
         print(f"Erro ao cadastrar empresa: {str(e)}")
         return {"erro": f"Ocorreu um erro interno ao tentar cadastrar a empresa: {str(e)}"}, 500
 
-def find_company(company_CNPJ,user_id):
+def find_company(company_CNPJ):
      if not company_CNPJ:
           return None
      return db.session.query(Company).filter(Company.cnpj==company_CNPJ).first()
