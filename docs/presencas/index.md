@@ -19,5 +19,6 @@ garantindo autenticidade e validade jurídica dos registros.
 |:---------------------------------------------:|:------------:|
 | [Lista de Presença nº 1](lista-presenca-1.md) | *23/05/2026* | 
 | [Lista de Presença nº 2](lista-presenca-2.md) | *30/05/2026* |
+| [Lista de Presença nº 3](lista-presenca-3.md) | *13/06/2026* |
 
 ---
