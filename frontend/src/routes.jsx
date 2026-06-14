@@ -10,6 +10,7 @@ import LayoutBase from './components/Layout/LayoutBase';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Transacoes from './pages/Transacoes/Transacoes';
 import Contas from './pages/Contas/Contas';
+import ContasCaixa from './pages/ContasCaixa/ContasCaixa';
 import Configuracoes from './pages/Configuracoes/Configuracoes';
 
 const ProtectedRoute = ({ children }) => {
@@ -41,6 +42,7 @@ export const AppRoutes = () => {
           <Route path="/categorias" element={<Categorias />} />
           <Route path="/transacoes" element={<Transacoes />} />
           <Route path="/contas" element={<Contas />} />
+          <Route path="/contas-caixa" element={<ContasCaixa />} />
           <Route path="/configuracoes" element={<Configuracoes />} />
         </Route>
       </Routes>

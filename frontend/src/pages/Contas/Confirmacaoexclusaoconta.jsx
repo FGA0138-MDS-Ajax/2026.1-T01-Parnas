@@ -1,7 +1,5 @@
 import React from 'react';
-
-const formatarMoeda = (valor) =>
-  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
+import formatCurrency from '../../utils/formatCurrency';
 
 const ConfirmacaoExclusaoConta = ({ conta, onConfirmar, onCancelar }) => {
   const handleOverlayClick = (e) => {
@@ -24,7 +22,7 @@ const ConfirmacaoExclusaoConta = ({ conta, onConfirmar, onCancelar }) => {
             Você está prestes a excluir <strong>{conta?.descricao}</strong>.
           </p>
           <p className="confirmacao-texto">
-            {formatarMoeda(conta?.valor || 0)}
+            {formatCurrency(conta?.valor)}
           </p>
           <p className="confirmacao-aviso confirmacao-aviso--erro">
             Esta ação não poderá ser desfeita.

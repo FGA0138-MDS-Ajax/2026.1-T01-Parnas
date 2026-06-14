@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
+import PageHeader from '../../components/Finance/PageHeader';
+import SummaryCards from '../../components/Finance/SummaryCards';
+import FilterPanel from '../../components/Finance/FilterPanel';
 import useContas from './Usecontas';
 import ModalConta from './Modalconta';
 import ConfirmacaoQuitar from './Confirmacaoquitar';
 import ConfirmacaoExclusaoConta from './Confirmacaoexclusaoconta';
+import formatCurrency from '../../utils/formatCurrency';
+import formatDate from '../../utils/formatDate';
 import './Contas.css';
-
-const formatarMoeda = (valor) =>
-  valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-const formatarData = (dataStr) => {
-  if (!dataStr) return '';
-  const [ano, mes, dia] = dataStr.split('-');
-  return `${dia}/${mes}/${ano}`;
-};
 
 const isVencida = (dataVencimento, status) => {
   if (status === 'quitada') return false;
@@ -31,6 +27,7 @@ const Contas = () => {
     erro,
     feedback,
     categorias,
+    contasCaixa,
     totalPendentesReceitas,
     totalPendentesDespesas,
     handleFiltroChange,
@@ -115,66 +112,54 @@ const Contas = () => {
       )}
 
       {/* Header */}
-      <div className="contas-header">
-        <div>
-          <h2>Contas a Pagar e a Receber</h2>
-          <p>Gerencie seus compromissos financeiros futuros e acompanhe vencimentos.</p>
-        </div>
-        <button className="btn-nova-transacao" onClick={abrirModalNova}>
-          <span className="btn-icon">+</span>
-          Nova Conta
-        </button>
-      </div>
+      <PageHeader
+        className="contas-header"
+        title="Contas a Pagar e a Receber"
+        description="Gerencie seus compromissos financeiros futuros e acompanhe vencimentos."
+        actionLabel="Nova Conta"
+        onAction={abrirModalNova}
+      />
 
       {/* Resumo */}
-      <div className="transacoes-totais">
-        <div className="total-card total-receita">
-          <span className="total-label">A Receber (pendente)</span>
-          <span className="total-valor">{formatarMoeda(totalPendentesReceitas)}</span>
-        </div>
-        <div className="total-card total-despesa">
-          <span className="total-label">A Pagar (pendente)</span>
-          <span className="total-valor">{formatarMoeda(totalPendentesDespesas)}</span>
-        </div>
-        <div className={`total-card ${totalPendentesReceitas - totalPendentesDespesas >= 0 ? 'saldo-positivo' : 'saldo-negativo'}`}>
-          <span className="total-label">Saldo Projetado</span>
-          <span className="total-valor">{formatarMoeda(totalPendentesReceitas - totalPendentesDespesas)}</span>
-        </div>
-      </div>
+      <SummaryCards
+        items={[
+          { label: 'A Receber (pendente)', value: formatCurrency(totalPendentesReceitas), className: 'total-receita' },
+          { label: 'A Pagar (pendente)', value: formatCurrency(totalPendentesDespesas), className: 'total-despesa' },
+          {
+            label: 'Saldo Projetado',
+            value: formatCurrency(totalPendentesReceitas - totalPendentesDespesas),
+            className: totalPendentesReceitas - totalPendentesDespesas >= 0 ? 'saldo-positivo' : 'saldo-negativo',
+          },
+        ]}
+      />
 
       {/* Filtros */}
-      <div className="transacoes-filtros">
-        <div className="filtros-grid">
-          <div className="filtro-group">
-            <label>Tipo</label>
-            <select name="tipo" value={filtros.tipo} onChange={handleFiltroChange}>
-              <option value="">Todos</option>
-              <option value="receita">A Receber</option>
-              <option value="despesa">A Pagar</option>
-            </select>
-          </div>
-          <div className="filtro-group">
-            <label>Status</label>
-            <select name="status" value={filtros.status} onChange={handleFiltroChange}>
-              <option value="">Todos</option>
-              <option value="pendente">Pendente</option>
-              <option value="quitada">Quitada</option>
-            </select>
-          </div>
-          <div className="filtro-group">
-            <label>Vencimento inicial</label>
-            <input type="date" name="dataInicio" value={filtros.dataInicio} onChange={handleFiltroChange} />
-          </div>
-          <div className="filtro-group">
-            <label>Vencimento final</label>
-            <input type="date" name="dataFim" value={filtros.dataFim} onChange={handleFiltroChange} />
-          </div>
+      <FilterPanel onClear={limparFiltros} onApply={aplicarFiltros}>
+        <div className="filtro-group">
+          <label>Tipo</label>
+          <select name="tipo" value={filtros.tipo} onChange={handleFiltroChange}>
+            <option value="">Todos</option>
+            <option value="receita">A Receber</option>
+            <option value="despesa">A Pagar</option>
+          </select>
         </div>
-        <div className="filtros-acoes">
-          <button className="btn-limpar" onClick={limparFiltros}>Limpar filtros</button>
-          <button className="btn-aplicar" onClick={aplicarFiltros}>Aplicar filtros</button>
+        <div className="filtro-group">
+          <label>Status</label>
+          <select name="status" value={filtros.status} onChange={handleFiltroChange}>
+            <option value="">Todos</option>
+            <option value="pendente">Pendente</option>
+            <option value="quitada">Quitada</option>
+          </select>
         </div>
-      </div>
+        <div className="filtro-group">
+          <label>Vencimento inicial</label>
+          <input type="date" name="dataInicio" value={filtros.dataInicio} onChange={handleFiltroChange} />
+        </div>
+        <div className="filtro-group">
+          <label>Vencimento final</label>
+          <input type="date" name="dataFim" value={filtros.dataFim} onChange={handleFiltroChange} />
+        </div>
+      </FilterPanel>
 
       {/* Estado de carregamento / erro */}
       {carregando && (
@@ -206,6 +191,7 @@ const Contas = () => {
                     <tr>
                       <th>Descrição</th>
                       <th>Categoria</th>
+                      <th>Conta/Caixa</th>
                       <th>Tipo</th>
                       <th>Vencimento</th>
                       <th>Valor</th>
@@ -222,16 +208,17 @@ const Contas = () => {
                             {vencida && <span className="badge-vencida">Vencida</span>}
                           </td>
                           <td>{conta.categoriaNome || 'Sem categoria'}</td>
+                          <td>{conta.contaCaixaNome || 'Sem conta/caixa'}</td>
                           <td>
                             <span className={`badge badge-${conta.tipo}`}>
                               {conta.tipo === 'receita' ? '↑ A Receber' : '↓ A Pagar'}
                             </span>
                           </td>
                           <td className={vencida ? 'data-vencida' : ''}>
-                            {formatarData(conta.dataVencimento)}
+                            {formatDate(conta.dataVencimento)}
                           </td>
                           <td className={`valor-${conta.tipo}`}>
-                            {formatarMoeda(conta.valor)}
+                            {formatCurrency(conta.valor)}
                           </td>
                           <td className="col-acoes" style={{ textAlign: 'center' }}>
                             <button
@@ -285,6 +272,7 @@ const Contas = () => {
                     <tr>
                       <th>Descrição</th>
                       <th>Categoria</th>
+                      <th>Conta/Caixa</th>
                       <th>Tipo</th>
                       <th>Vencimento</th>
                       <th>Data Quitação</th>
@@ -297,15 +285,16 @@ const Contas = () => {
                       <tr key={conta.id} className="conta-quitada">
                         <td>{conta.descricao}</td>
                         <td>{conta.categoriaNome || 'Sem categoria'}</td>
+                        <td>{conta.contaCaixaNome || 'Sem conta/caixa'}</td>
                         <td>
                           <span className={`badge badge-${conta.tipo}`}>
                             {conta.tipo === 'receita' ? '↑ A Receber' : '↓ A Pagar'}
                           </span>
                         </td>
-                        <td>{formatarData(conta.dataVencimento)}</td>
-                        <td>{formatarData(conta.dataQuitacao)}</td>
+                        <td>{formatDate(conta.dataVencimento)}</td>
+                        <td>{formatDate(conta.dataQuitacao)}</td>
                         <td className={`valor-${conta.tipo}`}>
-                          {formatarMoeda(conta.valor)}
+                          {formatCurrency(conta.valor)}
                         </td>
                         <td className="col-acoes" style={{ textAlign: 'center' }}>
                           <span className="badge-status-quitada">✓ Quitada</span>
@@ -325,6 +314,7 @@ const Contas = () => {
         <ModalConta
           contaParaEditar={contaParaEditar}
           categorias={categorias}
+          contasCaixa={contasCaixa}
           onSalvar={handleSalvar}
           onFechar={fecharModal}
         />

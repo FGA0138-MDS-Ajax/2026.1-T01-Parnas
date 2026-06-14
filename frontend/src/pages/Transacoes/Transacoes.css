@@ -142,7 +142,7 @@
 
 .filtros-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   gap: 16px;
   margin-bottom: 16px;
   width: 100%;
@@ -152,6 +152,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 0;
 }
 
 .filtro-group label {
@@ -167,6 +168,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .campo-label-acoes label {
@@ -417,6 +419,11 @@
 .tipo-btn--despesa.ativo {
   background-color: #fdecea;
   color: #c0392b;
+}
+
+.tipo-btn.ativo:not(.tipo-btn--receita):not(.tipo-btn--despesa) {
+  background-color: rgba(15, 76, 129, 0.1);
+  color: var(--azul);
 }
 
 .tipo-btn:not(.ativo):hover {
