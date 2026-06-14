@@ -49,4 +49,7 @@ def create_app():
     from app.routes.bill_routes import bill_bp
     app.register_blueprint(bill_bp, url_prefix='/api/contas')
 
+    # Registra o Blueprint de relatórios
+    from app.routes.report_routes import report_bp
+    app.register_blueprint(report_bp, url_prefix='/api/reports')
     return app
