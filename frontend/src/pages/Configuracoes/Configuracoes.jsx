@@ -4,6 +4,7 @@ import axios from "axios";
 import "./Configuracoes.css";
 import useAuth from "../../hooks/useAuth.js";
 import { useEmpresa } from "../../context/EmpresaContext.jsx";
+import api from "../../services/api.js";
 
 const Configuracoes = () => {
   const navigate = useNavigate();
@@ -59,21 +60,12 @@ const Configuracoes = () => {
       };
 
       try {
-        const token = localStorage.getItem("token");
-
-        const response = await axios.delete(
-          "http://127.0.0.1:5000/api/companies/delete",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            data: {
-              cnpj: cnpjInput.trim(),
-              id_empresa: idEmpresaLogada,
-            },
+        const response = await api.delete("/api/companies/delete", {
+          data: {
+            cnpj: cnpjInput.trim(),
+            id_empresa: idEmpresaLogada,
           },
-        );
+        });
 
         alert(response.data.mensagem || "Empresa excluída com sucesso.");
         limparCacheLocal();
@@ -99,9 +91,27 @@ const Configuracoes = () => {
         }
       }
     } else if (modalType === "user") {
-      console.log("Executando integração para: Excluir Conta");
-      handleCloseModal();
-      navigate("/login", { replace: true });
+      try {
+        const response = await api.delete("/api/profile");
+
+        alert(response.data.mensagem || "Sua conta foi excluída com sucesso.");
+
+        if (logout) {
+          logout();
+        }
+        localStorage.removeItem("token");
+        localStorage.removeItem("credifab_empresas_reais");
+        localStorage.removeItem("idEmpresaSimulado");
+
+        handleCloseModal();
+        navigate("/login", { replace: true });
+      } catch (error) {
+        console.error("Erro ao excluir conta do usuário:", error);
+        alert(
+          error.response?.data?.erro ||
+            "Não foi possível excluir a sua conta no momento.",
+        );
+      }
     }
   };
 
