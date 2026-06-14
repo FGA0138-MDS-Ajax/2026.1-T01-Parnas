@@ -126,6 +126,19 @@ const Configuracoes = () => {
         <div className="admin-actions">
           <div className="admin-row">
             <div className="admin-info">
+              <h4>Dados do Perfil</h4>
+              <p>Atualize suas informações pessoais.</p>
+            </div>
+            <button
+              onClick={() => navigate("/editar-perfil")}
+              className="btn-action-primary"
+            >
+              Editar Perfil
+            </button>
+          </div>
+
+          <div className="admin-row">
+            <div className="admin-info">
               <h4>Sair do Sistema</h4>
               <p>
                 Encerra sua sessão atual com segurança e remove suas credenciais

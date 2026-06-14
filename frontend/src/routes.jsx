@@ -20,6 +20,7 @@ import Transacoes from "./pages/Transacoes/Transacoes";
 import Configuracoes from "./pages/Configuracoes/Configuracoes";
 import Documentos from "./pages/Documentos/Documentos";
 import Contas from './pages/Contas/Contas';
+import EditarPerfil from "./pages/EditarPerfil/EditarPerfil";
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -82,6 +83,7 @@ export const AppRoutes = () => {
             <Route path="/configuracoes" element={<Configuracoes />} />
             <Route path="/contas" element={<Contas />} />
             <Route path="/documentos" element={<Documentos />} />
+            <Route path="/editar-perfil" element={<EditarPerfil />} />
           </Route>
         </Routes>
       </AxiosInterceptorWrapper>
