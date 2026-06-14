@@ -28,6 +28,7 @@ const LayoutBase = () => {
           <Link to="/dashboard" className="nav-link">Dashboard</Link>
           <Link to="/transacoes" className="nav-link">Transações</Link>
           <Link to="/contas" className="nav-link">Contas</Link>
+          <Link to="/comparacoes" className="nav-link">Crédito</Link>
         </nav>
 
         <button
