@@ -12,6 +12,7 @@ venv/
 # Node
 node_modules/
 dist/
+coverage/
 
 # Sistema
 .DS_Store
