@@ -1,4 +1,4 @@
-# Relatório de QA — Feature 10: Simulação de Crédito
+# Documentação de Testes — Simulação de Crédito
 
 ## 1. Identificação
 

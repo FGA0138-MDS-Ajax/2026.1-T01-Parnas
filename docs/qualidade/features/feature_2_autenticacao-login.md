@@ -1,4 +1,4 @@
-# Relatório de QA — Feature 2: Autenticação e Login
+# Documentação de Testes — Autenticação e Login
 
 ## 1. Identificação
 
@@ -74,6 +74,13 @@ tests/integration/feature_2/test_auth_routes.py::test_login_sem_campos_obrigator
 > vermelhos em `tests/unit/feature_1/test_validators.py::test_is_valid_password_spaces`
 > (validação de senha com espaços). São defeitos da **feature 1**, não do login,
 > e devem ser tratados no relatório/issue daquela feature.
+>
+> Nota (contaminação por outra feature): na suíte de integração completa, o
+> `test_login_email_inexistente` pode aparecer vermelho (`404` em vez de `401`) por
+> **contaminação do DEF-01 da feature 10** — o model `Simulation` referencia a relação
+> inexistente `simulations` em `Company`, quebrando a configuração global dos mappers
+> do SQLAlchemy e derrubando a integração das features 2, 7 e 14. Isolados, os 7 testes
+> deste login passam (ver evidências acima). Tratado no relatório da **feature 10**.
 
 ## 6. Cobertura
 

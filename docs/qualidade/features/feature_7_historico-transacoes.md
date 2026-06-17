@@ -1,4 +1,4 @@
-# Relatório de QA — Feature 7: Histórico de Transações
+# Documentação de Testes — Histórico de Transações
 
 ## 1. Identificação
 
@@ -103,6 +103,14 @@ app/services/transaction_service.py:39: TypeError
 > (`test_register_user_internal_error` e 2× `test_is_valid_password_spaces`).
 > São defeitos da **feature 1** — confirmado que falham também sem as mudanças
 > desta branch — e devem ser tratados no relatório/issue daquela feature.
+>
+> Nota (contaminação por outra feature): na suíte de integração completa, os 11
+> testes desta feature que passam isolados viram **ERROR** por **contaminação dos
+> mappers do SQLAlchemy** — tanto o **DEF-01 da feature 10** (`Simulation` →
+> `Company` sem a relação `simulations`) quanto o **DEF-02 da feature 14**
+> (`Comparison` → `Company`/`User` sem `comparisons`) quebram a configuração global
+> dos mappers ao importar seus models. Devem ser tratados nos relatórios das
+> **features 10 e 14**.
 
 ## 6. Cobertura
 

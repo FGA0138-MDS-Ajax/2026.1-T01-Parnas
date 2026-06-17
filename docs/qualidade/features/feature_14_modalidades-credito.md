@@ -120,6 +120,13 @@ E   assert 404 == 200   (where 404 = WrapperTestResponse [404 NOT FOUND])
 > frontend: `Register.test.jsx` (2 testes de data de nascimento). Confirmado que
 > falham independentemente desta branch; devem ser tratados nos relatórios das
 > respectivas features.
+>
+> Nota (contaminação por outra feature): o **DEF-02** acima tem um análogo na
+> **feature 10** — o **DEF-01 daquela feature** (`Simulation` → `Company` sem a
+> relação `simulations`) é o mesmo tipo de quebra dos mappers do SQLAlchemy e também
+> contamina a integração das features 2, 7 e 14 na suíte completa. As duas correções
+> de `back_populates` (esta e a da feature 10) precisam entrar juntas para a suíte de
+> integração voltar ao verde.
 
 ## 6. Cobertura
 
