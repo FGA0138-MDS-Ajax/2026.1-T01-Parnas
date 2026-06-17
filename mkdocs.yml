@@ -73,16 +73,61 @@ nav:
     - Modelo GQM: qualidade/gqm.md
     - Documentação por Feature:
       - qualidade/features/index.md
-      - Template: qualidade/features/_template.md
-      - Feature 1: qualidade/features/feature_1_cadastro-usuario.md
-      - Feature 2: qualidade/features/feature_2_autenticacao-login.md
-      - Feature 7: qualidade/features/feature_7_historico-transacoes.md
-      - Feature 10: qualidade/features/feature_10_simulacao-credito.md
-      - Feature 14: qualidade/features/feature_14_modalidades-credito.md
+      - Feature 1 — Cadastro de Usuário: qualidade/features/feature_1_cadastro-usuario.md
+      - Feature 2 — Autenticação e Login: qualidade/features/feature_2_autenticacao-login.md
+      - Feature 3 — Recuperação de Senha: qualidade/features/feature_3_recuperacao-senha.md
+      - Feature 4 — Cadastro de Empresa: qualidade/features/feature_4_cadastro-empresa.md
+      - Feature 5 — Cadastro de Categoria: qualidade/features/feature_5_cadastro-categoria.md
+      - Feature 6 — Cadastro de Transação: qualidade/features/feature_6_cadastro-transacao.md
+      - Feature 7 — Histórico de Transações: qualidade/features/feature_7_historico-transacoes.md
+      - Feature 8 — Exclusão de Usuário/Empresa: qualidade/features/feature_8_exclusao-usuario-empresa.md
+      - Feature 9 — Centralização Documental: qualidade/features/feature_9_centralizacao-documental.md
+      - Feature 10 — Simulação de Crédito: qualidade/features/feature_10_simulacao-credito.md
+      - Feature 11 — Cadastro de Contas: qualidade/features/feature_11_cadastro-contas.md
+      - Feature 12 — Relatórios Financeiros: qualidade/features/feature_12_relatorios-financeiros.md
+      - Feature 14 — Comparação de Modalidades: qualidade/features/feature_14_modalidades-credito.md
+      - Feature 15 — Seleção de Empresa Ativa: qualidade/features/feature_15_selecao-empresa-ativa.md
+      - Feature 16 — Dashboard Financeiro: qualidade/features/feature_16_dashboard-financeiro.md
     - Consolidados por Sprint:
       - qualidade/sprints/index.md
       - Sprint 4: qualidade/sprints/sprint-04.md
       - Sprint 5: qualidade/sprints/sprint-05.md
+      - Sprint 6: qualidade/sprints/sprint-06.md
+      - Sprint 7: qualidade/sprints/sprint-07.md
+      - Sprint 8: qualidade/sprints/sprint-08.md
+      - Sprint 9: qualidade/sprints/sprint-09.md
+      - Sprint 10: qualidade/sprints/sprint-10.md
+  - Issues:
+    - issues/index.md
+    - Histórias de Usuário:
+      - us1 — Cadastro de Usuário: issues/us1.md
+      - us2 — Autenticação e Login: issues/us2.md
+      - us3 — Recuperação de Senha: issues/us3.md
+      - us4 — Cadastro de Empresa: issues/us4.md
+      - us5 — Cadastro de Categoria: issues/us5.md
+      - us6 — Cadastro de Transação: issues/us6.md
+      - us7 — Histórico de Transações: issues/us7.md
+      - us8 — Exclusão de Usuário/Empresa: issues/us8.md
+      - us9 — Centralização Documental: issues/us9.md
+      - us10 — Simulação de Crédito: issues/us10.md
+      - us11 — Cadastro de Contas: issues/us11.md
+      - us12 — Relatórios Financeiros: issues/us12.md
+      - us13 — Simulação de Crédito (consolidada): issues/us13.md
+      - us14 — Comparação de Modalidades: issues/us14.md
+      - us15 — Seleção de Empresa Ativa: issues/us15.md
+      - us16 — Dashboard Financeiro: issues/us16.md
+    - Tarefas Técnicas:
+      - task1 — Modelagem Usuário–Empresa: issues/task1.md
+      - task2 — GitHub Pages / MkDocs: issues/task2.md
+      - task3 — Estrutura base de testes: issues/task3.md
+      - task4 — Integração de autenticação: issues/task4.md
+      - task5 — DTOs e redesign: issues/task5.md
+      - task6 — Repositórios e migrations: issues/task6.md
+    - Correções:
+      - fix1 — Integração de Transações: issues/fix1.md
+      - fix2 — Contas vs. Transações: issues/fix2.md
+      - fix3 — Integrações entre classes: issues/fix3.md
+      - fix4 — Exclusão de conta e sessão: issues/fix4.md
   - Atas de Reunião:
     - atas-reuniao/index.md
     - Ata nº 1: atas-reuniao/ata-reuniao-1.md

@@ -1,52 +1,45 @@
-# Consolidado de Testes — Sprint 5
+# Consolidado de Testes e GQM — Sprint 5
 
 | Campo | Valor |
-| --- | --- |
+|---|---|
 | **Sprint** | 5 |
 | **Período** | 24–30/mai |
-| **Foco** | Registro de dados financeiros — categorias, transações, histórico, dashboard (CEN-01) |
+| **Foco** | Conclusão da autenticação e categorização financeira (CEN-00, Func. A e B) |
 
 ---
 ## 1. Features testadas
 
 | Feature | Requisito | Status |
 | --- | :--: | --- |
-| Cadastro de Empresa (continuação) | R04 | *a preencher* |
-| Cadastro de categorias por empresa | R06 | *a preencher* |
-| Registro de transações | R07 | *a preencher* |
-| Histórico de transações | R08 | *a preencher* |
+| [Recuperação de senha](../features/feature_3_recuperacao-senha.md) | R05 | ✅ Aprovada |
+| [Exclusão de usuário/empresa](../features/feature_8_exclusao-usuario-empresa.md) | R02 | ✅ Aprovada |
+| [Cadastro de categoria](../features/feature_5_cadastro-categoria.md) | R06 | ✅ Aprovada |
 
 ---
 ## 2. Casos agregados
 
-| Caso  | Nível      |    Status     |
-|:-----:|------------|:-------------:|
-| TS-04 | Unitário   | *a preencher* |
-| TS-05 | Unitário   | *a preencher* |
-| TS-09 | Integração | *a preencher* |
-| TS-10 | Integração | *a preencher* |
-| TS-11 | Integração | *a preencher* |
-| TS-12 | Integração | *a preencher* |
+| Caso | Nível | Status |
+| :--: | --- | :--: |
+| TS-13 | Integração | ✅ |
+| TS-14 | Integração | ✅ |
+| TS-15 | Integração | ✅ |
 
----
 ## 3. Defeitos
 
 | # | Descrição | Branch | Status |
 | :--: | --- | --- | --- |
-| 1 | Testes de Cadastro de Empresa com mocks/asserts desatualizados | `fix/<nome>` | Em aberto |
-| 2 | Testes "moretti" fora da árvore `tests/` | — | A realocar |
+| 1 | Testes de Cadastro de Empresa com mocks/asserts desatualizados | `fix/testes-empresa` | Corrigido |
+| 2 | Exclusão de conta não invalida a sessão ativa | `fix/exclusao-conta-sessao` | Em aberto (S10) |
 
----
 ## 4. Números gerais
 
 | Indicador | Valor |
 | --- | :--: |
-| Casos planejados | *a preencher* |
-| Casos executados | *a preencher* |
-| Casos aprovados | *a preencher* |
-| Defeitos encontrados | *a preencher* |
+| Casos planejados | 3 |
+| Casos executados | 3 |
+| Casos aprovados | 3 |
+| Defeitos encontrados | 2 |
 
----
 ## 5. Cobertura (M3)
 
 ```bash
@@ -55,23 +48,22 @@ pytest --cov=app tests/
 
 | Cobertura | Valor | Mínimo (S1–5) |
 | --- | :--: | :--: |
-| Back-end | *—%* | 60% |
+| Back-end | 69% | 60% |
 | Front-end | n/d (Vitest a configurar) | 60% |
 
----
 ## 6. Análise GQM
 
 | Métrica | Valor | Meta |
 | :--: | :--: | --- |
-| M1 — Throughput | *a preencher* | Tendência estável/crescente |
-| M2 — Densidade de Defeitos | *a preencher* | ≈ 0 |
-| M3 — Cobertura | *a preencher* | ≥ 60% |
-| M4 — Taxa de Aprovação da Pipeline | n/d (CI de testes inexistente) | ≥ 70% |
+| M1 — Throughput | 6 issues | Tendência estável/crescente |
+| M2 — Densidade de Defeitos | 0,33 | ≈ 0 |
+| M3 — Cobertura | 69% | ≥ 60% |
+| M4 — Taxa de Aprovação da Pipeline | 67% | ≥ 70% (a partir da S5) |
 
-
----
 ## 7. Parecer da dupla
 
-> *a preencher*
- 
- ---
+> A Sprint fechou o cenário CEN-00 (recuperação de senha e exclusão com cascata) e
+> iniciou o CEN-01 com a categorização. Throughput subiu para 6 issues e a densidade
+> de defeitos caiu para 0,33. A pipeline ficou ligeiramente abaixo da meta (67%);
+> a recomendação para a S6 é rodar a suíte localmente antes de cada PR. O defeito de
+> invalidação de sessão foi mapeado para a estabilização.
