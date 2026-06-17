@@ -169,4 +169,3 @@ entregável como está**, por três defeitos de produção:
 1. **DEF-01** — registrar `comparison_bp` em `app/__init__.py` com `url_prefix='/api/comparacoes'`.
 2. **DEF-02** — declarar as relações `comparisons` em `Company` e `User` (ou remover o `back_populates`).
 3. **DEF-03** — adicionar `reportlab` ao `requirements.txt`.
-4. Reexecutar a suíte completa (`pytest`) confirmando que feature 14 e feature 7 voltam ao verde juntas.

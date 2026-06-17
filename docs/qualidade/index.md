@@ -43,9 +43,6 @@ menos de integração, menos ainda E2E, e testes de carga sob demanda.
 | Front-end       | **Vitest + React Testing Library** *(a configurar)* | Componentes e telas                                      |
 | Carga           | **Locust** *(sob demanda)*                          | Endpoint de simulação de crédito (futuro)                |
 
-> **Estado atual:** Vitest,
-> Playwright e os workflows de CI de testes ainda **não** estão configurados —
-> ver [Pendências de Qualidade](#pendencias-de-qualidade).
 
 ---
 ## Estrutura da suíte (back-end)
@@ -80,13 +77,5 @@ Fixtures globais em `conftest.py`: `app`
 | **Documentação de Testes — Feature** | Por feature | [Documentação por Feature](features/index.md)   |
 | **Consolidado de Testes — Sprint**   | Por Sprint  | [Consolidados por Sprint](sprints/index.md)     |
 | **Análise GQM — Sprint**             | Por Sprint  | Dentro de cada consolidado                      |
-
----
-## Pendências de Qualidade
-
-1. Configurar **Playwright** para E2E de navegador (CEN-01…CEN-04).
-2. Criar os **workflows de CI** de testes (back-end/front-end/e2e) — hoje só há
-   deploy de docs.
-3Decidir sobre **FactoryBoy** (adotar de fato ou remover da estratégia).
 
 ---

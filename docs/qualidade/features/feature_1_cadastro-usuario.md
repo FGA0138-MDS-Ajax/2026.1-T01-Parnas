@@ -110,5 +110,3 @@ fechamento definitivo:
 - **DEF-02** — bug que impede o cadastro pela tela (caminho feliz bloqueado, TS-14);
 - **DEF-03** — mensagem de erro do backend não é exibida na UI.
 
-Próximos passos: abrir as três issues com label `bug`, corrigir em branches
-`fix/*` e, ao concluir DEF-02, remover o `.skip` de TS-14 e reexecutar a suíte.

@@ -2,7 +2,7 @@
 
 Para cada feature testada, a dupla de Qualidade produz um **relatório de teste
 próprio**, com identificação, casos executados (referenciando o
-[roteiro TS-0X](../roteiro-testes.md)), resultado esperado × observado,
+[Roteiro de Testes](../roteiro-testes.md)), resultado esperado × observado,
 evidências, defeitos encontrados e o **status final** da feature.
 
 ---
@@ -25,10 +25,6 @@ evidências, defeitos encontrados e o **status final** da feature.
 | [Comparação de Modalidades de Crédito](feature_14_modalidades-credito.md) | I | 9 | ❌ Reprovada |
 | [Seleção de Empresa Ativa](feature_15_selecao-empresa-ativa.md) | A | 7 | 🚧 A preencher |
 | [Dashboard Financeiro](feature_16_dashboard-financeiro.md) | E | 7 | 🚧 A preencher |
-
-> Cada novo relatório segue a mesma estrutura: identificação, critérios testáveis,
-> casos executados (referenciando o [Roteiro de Testes](../roteiro-testes.md)),
-> evidências, defeitos e parecer final.
 
 ---
 ## Status possíveis
