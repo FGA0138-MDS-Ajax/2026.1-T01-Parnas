@@ -24,7 +24,6 @@ from app.models.user import User
 from flask_jwt_extended import create_access_token
 import bcrypt
 
-
 class TestConfig(Config):
     """Configuração usada só em testes: banco em memória, rápido e descartável."""
     TESTING = True
