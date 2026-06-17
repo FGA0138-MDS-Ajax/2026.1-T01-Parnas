@@ -13,6 +13,7 @@ evidências, defeitos encontrados e o **status final** da feature.
 | [Cadastro de Usuário](feature_1_cadastro-usuario.md)    |   4    | 🚧 Aprovada com pendências |
 | [Autenticação e Login](feature_2_autenticacao-login.md) |  4–5   | 🚧 Aprovada com pendências |
 | [Histórico de Transações](feature_7_historico-transacoes.md) |   6    | ❌ Reprovada               |
+| [Simulação de Crédito](feature_10_simulacao-credito.md) |   —    | ❌ Reprovada               |
 | [Comparação de Modalidades de Crédito](feature_14_modalidades-credito.md) |   —    | ❌ Reprovada               |
 
 > Use o [Template de Documentação de Testes](_template.md) como ponto de partida
