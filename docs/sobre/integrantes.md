@@ -32,7 +32,7 @@ A garantia de qualidade do produto fica a cargo da dupla **Daniel Filipe** e
 **Matheus Moretti**, responsável por:
 
 - definir a estratégia de testes do projeto;
-- elaborar planos e casos de teste (roteiro TS-01 a TS-14);
+- elaborar planos e casos de teste;
 - escrever e executar as **suítes automatizadas** (Pytest, Vitest e Playwright);
 - revisar os artefatos produzidos pelo time;
 - consolidar a documentação de testes e a **análise GQM** a cada Sprint.
