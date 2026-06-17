@@ -1,0 +1,801 @@
+/* estrutura da pagina */
+
+.transacoes-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  font-family: var(--fonte-poppins);
+}
+
+.transacoes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 28px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.transacoes-header h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--azul);
+  margin: 0 0 4px;
+}
+
+.transacoes-header p {
+  font-size: 0.9rem;
+  color: var(--texto-placeholder);
+  margin: 0;
+}
+
+/* botao nova transacao */
+
+.btn-nova-transacao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: var(--azul);
+  color: var(--branco);
+  border: none;
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.btn-nova-transacao:hover {
+  background-color: #0c3d68;
+  transform: translateY(-1px);
+}
+
+.btn-nova-transacao:active {
+  transform: translateY(0);
+}
+
+.btn-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+  display: inline-block;
+}
+
+/* cards de resumo totais */
+
+.transacoes-totais {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.total-card {
+  background-color: var(--branco);
+  border: 2px solid var(--borda-input);
+  border-radius: var(--arredondamento-card);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: var(--transicao-suave);
+}
+
+.total-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--texto-placeholder);
+}
+
+.total-valor {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.total-receita {
+  border-left: 4px solid var(--verde);
+}
+
+.total-receita .total-valor {
+  color: var(--verde);
+}
+
+.total-despesa {
+  border-left: 4px solid var(--erro);
+}
+
+.total-despesa .total-valor {
+  color: var(--erro);
+}
+
+.saldo-positivo {
+  border-left: 4px solid var(--verde);
+}
+
+.saldo-positivo .total-valor {
+  color: var(--verde);
+}
+
+.saldo-negativo {
+  border-left: 4px solid var(--erro);
+}
+
+.saldo-negativo .total-valor {
+  color: var(--erro);
+}
+
+/* barra de filtros */
+
+.transacoes-filtros {
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  background-color: var(--branco);
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-card);
+}
+
+.filtros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.filtro-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filtro-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.campo-label-acoes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.campo-label-acoes label {
+  margin: 0;
+}
+
+.btn-link-categoria {
+  background: transparent;
+  border: none;
+  color: var(--azul);
+  cursor: pointer;
+  font-family: var(--fonte-poppins);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.btn-link-categoria:hover {
+  text-decoration: underline;
+}
+
+.filtro-group input,
+.filtro-group select {
+  padding: 8px 12px;
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.85rem;
+  color: var(--texto-principal);
+  background-color: var(--branco);
+  outline: none;
+  transition: var(--transicao-suave);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.filtro-group input:focus,
+.filtro-group select:focus {
+  border-color: var(--azul);
+  box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1);
+}
+
+.filtros-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  width: 100%;
+}
+
+.btn-limpar {
+  background: transparent;
+  border: 1px solid var(--borda-input);
+  color: var(--texto-placeholder);
+  padding: 9px 20px;
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-limpar:hover {
+  border-color: var(--texto-placeholder);
+  color: var(--texto-principal);
+}
+
+.btn-aplicar {
+  background-color: var(--azul);
+  border: none;
+  color: var(--branco);
+  padding: 9px 20px;
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-aplicar:hover {
+  opacity: 0.9;
+}
+
+/* tabela e listagem de transacoes */
+
+.transacoes-tabela-wrapper {
+  background-color: var(--branco);
+  border: 2px solid var(--borda-input);
+  border-radius: var(--arredondamento-card);
+  overflow: hidden;
+}
+
+.tabela-info {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--borda-input);
+  font-size: 0.85rem;
+  color: var(--texto-placeholder);
+}
+
+.transacoes-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.transacoes-tabela thead tr {
+  background-color: #f5f7fa;
+  border-bottom: 2px solid var(--borda-input);
+}
+
+.transacoes-tabela th {
+  padding: 13px 16px;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--texto-placeholder);
+  white-space: nowrap;
+}
+
+.transacoes-tabela tbody tr {
+  border-bottom: 1px solid var(--borda-input);
+  transition: background-color 0.15s ease;
+}
+
+.transacoes-tabela tbody tr:last-child {
+  border-bottom: none;
+}
+
+.transacoes-tabela tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.transacoes-tabela td {
+  padding: 14px 16px;
+  color: var(--texto-principal);
+  vertical-align: middle;
+}
+
+/* badges e cores de valores */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.badge-receita {
+  background-color: #e8f7ef;
+  color: #1a7a46;
+}
+
+.badge-despesa {
+  background-color: #fdecea;
+  color: #c0392b;
+}
+
+.valor-receita {
+  color: var(--verde);
+  font-weight: 700;
+  text-align: right;
+}
+
+.valor-despesa {
+  color: var(--erro);
+  font-weight: 700;
+  text-align: right;
+}
+
+/* botoes de acao na tabela */
+
+.btn-acao {
+  background: none;
+  border: none;
+  color: var(--texto-placeholder);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: var(--transicao-suave);
+}
+
+.transacoes-tabela .col-acoes {
+  white-space: nowrap;
+}
+
+.transacoes-tabela .col-acoes .btn-acao + .btn-acao {
+  margin-left: 8px;
+}
+
+.btn-editar:hover {
+  background-color: rgba(15, 76, 129, 0.08);
+  color: var(--azul) !important;
+}
+
+.btn-excluir:hover {
+  background-color: #fdecea;
+  color: var(--erro) !important;
+}
+
+/* estado vazio */
+
+.transacoes-vazio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  text-align: center;
+  color: var(--texto-placeholder);
+  font-size: 0.95rem;
+}
+
+/* formulario e componentes internos do modal nova transacao */
+
+/* tipo toggle receita despesa */
+.tipo-toggle {
+  display: flex;
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
+  overflow: hidden;
+  background-color: #f8fafc;
+  padding: 2px;
+}
+
+.tipo-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+  color: var(--texto-placeholder);
+  border-radius: calc(var(--arredondamento-input-botao) - 2px);
+}
+
+.tipo-btn--receita.ativo {
+  background-color: #e8f7ef;
+  color: #1a7a46;
+}
+
+.tipo-btn--despesa.ativo {
+  background-color: #fdecea;
+  color: #c0392b;
+}
+
+.tipo-btn:not(.ativo):hover {
+  background-color: #eef2f6;
+  color: var(--texto-principal);
+}
+
+/* Grupos de campos e inputs do form */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+  text-align: left;
+}
+
+.input-group input,
+.input-group select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.9rem;
+  font-family: var(--fonte-poppins);
+  outline: none;
+  transition: var(--transicao-suave);
+  color: var(--texto-principal);
+  background-color: var(--branco);
+  box-sizing: border-box;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  border-color: var(--azul);
+  box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1);
+}
+
+.input-group input.input-erro,
+.input-group select.input-erro {
+  border-color: var(--erro);
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.08);
+}
+
+.msg-campo-erro {
+  display: block;
+  text-align: left;
+  margin-top: 5px;
+  font-size: 0.78rem;
+  color: var(--erro);
+  font-weight: 600;
+}
+
+.msg-campo-aviso {
+  display: block;
+  text-align: left;
+  margin-top: 5px;
+  font-size: 0.78rem;
+  color: #b8860b;
+  font-weight: 600;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Botões de ação do formulário (Rodapé) */
+.btn-cancelar {
+  padding: 10px 20px;
+  background-color: transparent;
+  color: var(--texto-principal);
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: var(--fonte-poppins);
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-cancelar:hover:not(:disabled) {
+  background-color: #f0f4f8;
+  border-color: var(--texto-placeholder);
+}
+
+.btn-cancelar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-submit {
+  padding: 10px 22px;
+  background-color: var(--azul);
+  color: var(--branco);
+  border: none;
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: var(--fonte-poppins);
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-submit:hover:not(:disabled) {
+  background-color: #0c3d68;
+}
+
+.btn-submit:disabled {
+  background-color: var(--texto-placeholder);
+  cursor: not-allowed;
+}
+/* posicionamento e fundo escuro do modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+  animation: fadeIn 0.15s ease;
+}
+
+/* container do modal com fundo branco e sombra */
+.modal-container {
+  background-color: var(--branco, #ffffff);
+  border-radius: var(--arredondamento-card, 12px);
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.2s ease;
+}
+
+.modal-container--confirmacao,
+.modal-container--sm {
+  max-width: 420px;
+}
+
+/* cabecalho do modal alinhando titulo e fechar */
+.modal-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--borda-input, #e2e8f0);
+}
+
+.modal-titulo {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--azul, #0f4c81);
+  margin: 0;
+}
+
+.modal-fechar {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--texto-placeholder, #94a3b8);
+  cursor: pointer;
+  transition: var(--transicao-suave, 0.2s);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+}
+
+.modal-fechar:hover {
+  background-color: #f1f5f9;
+  color: var(--texto-principal, #334155);
+}
+
+/* corpo do modal envolvendo o formulario */
+.modal-corpo {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* rodape do modal alinhando os botoes de acao */
+.modal-rodape {
+  padding: 16px 24px;
+  border-top: 1px solid var(--borda-input, #e2e8f0);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  background-color: #f8fafc;
+}
+
+/* confirmacoes de exclusao e quitacao */
+.confirmacao-icone {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 auto 16px;
+}
+
+.confirmacao-icone--excluir {
+  background-color: #fdecea;
+  color: #c0392b;
+}
+
+.confirmacao-icone--quitar {
+  background-color: #e8f7ef;
+  color: #1a7a46;
+}
+
+.confirmacao-texto {
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--texto-principal);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.confirmacao-valor {
+  display: block;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.valor--receita {
+  color: var(--verde);
+}
+
+.valor--despesa {
+  color: var(--erro);
+}
+
+.confirmacao-aviso {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--texto-placeholder);
+  margin: 0;
+}
+
+.confirmacao-aviso--erro {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+.btn-submit--excluir {
+  background-color: var(--erro);
+}
+
+.btn-submit--excluir:hover:not(:disabled) {
+  background-color: #a93226;
+}
+
+/* animacoes para suavizar a abertura */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+/* paginacao e responsividade */
+
+.transacoes-paginacao {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.btn-pagina {
+  background-color: var(--branco);
+  border: 1px solid var(--borda-input);
+  color: var(--texto-principal);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 14px;
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-pagina:hover:not(:disabled) {
+  border-color: var(--azul);
+  color: var(--azul);
+}
+
+.btn-pagina:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-pagina-ativa {
+  background-color: var(--azul);
+  border-color: var(--azul);
+  color: var(--branco);
+  font-weight: 600;
+}
+
+.btn-pagina-nav {
+  width: auto;
+  padding: 0 16px;
+}
+
+@media (max-width: 640px) {
+  .transacoes-container {
+    padding: 20px 16px;
+  }
+
+  .transacoes-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-nova-transacao {
+    justify-content: center;
+  }
+
+  .transacoes-totais {
+    grid-template-columns: 1fr;
+  }
+
+  .transacoes-tabela thead {
+    display: none;
+  }
+
+  .transacoes-tabela,
+  .transacoes-tabela tbody,
+  .transacoes-tabela tr,
+  .transacoes-tabela td {
+    display: block;
+    width: 100%;
+  }
+
+  .transacoes-tabela tr {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--borda-input);
+    position: relative;
+  }
+
+  .transacoes-tabela td {
+    padding: 4px 0;
+    border: none;
+  }
+
+  .col-acoes {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    text-align: right;
+  }
+
+  .valor-receita, .valor-despesa {
+    text-align: left;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}

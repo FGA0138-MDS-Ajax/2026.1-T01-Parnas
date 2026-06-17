@@ -1,0 +1,306 @@
+
+@import '../Transacoes/Transacoes.css';
+
+
+.contas-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  font-family: var(--fonte-poppins);
+  position: relative;
+}
+
+/* header */
+
+.contas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 28px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.contas-header h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--azul);
+  margin: 0 0 4px;
+}
+
+.contas-header p {
+  font-size: 0.9rem;
+  color: var(--texto-placeholder);
+  margin: 0;
+}
+
+/* toast de feedback */
+
+.contas-feedback {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 99999;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  animation: slideUp 0.25s ease;
+  max-width: 380px;
+}
+
+.contas-feedback--sucesso {
+  background-color: #e8f7ef;
+  color: #1a7a46;
+  border: 1px solid #b7e4cc;
+}
+
+.contas-feedback--erro {
+  background-color: #fdecea;
+  color: #c0392b;
+  border: 1px solid #f5b7b1;
+}
+
+/* erro de carregamento */
+
+.contas-erro {
+  padding: 20px;
+  background-color: #fdecea;
+  border: 1px solid #f5b7b1;
+  border-radius: var(--arredondamento-card);
+  color: #c0392b;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+/* secoes pendentes e quitadas */
+
+.contas-secao {
+  margin-bottom: 32px;
+}
+
+.contas-secao-header {
+  margin-bottom: 12px;
+}
+
+.contas-secao-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--texto-principal);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.contas-secao-titulo--quitadas {
+  color: var(--texto-placeholder);
+}
+
+.contas-secao-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+  background-color: var(--azul);
+  color: var(--branco);
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.contas-secao-badge--quitadas {
+  background-color: var(--texto-placeholder);
+}
+
+/* linha de conta vencida */
+
+.conta-vencida {
+  background-color: #fff8f7 !important;
+}
+
+.conta-vencida:hover {
+  background-color: #fef0ee !important;
+}
+
+.data-vencida {
+  color: var(--erro) !important;
+  font-weight: 700;
+}
+
+.badge-vencida {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 2px 8px;
+  background-color: #fdecea;
+  color: #c0392b;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+/* linha de conta quitada (opaca) */
+
+.conta-quitada td {
+  opacity: 0.6;
+}
+
+/* badge status quitada */
+
+.badge-status-quitada {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background-color: #e8f7ef;
+  color: #1a7a46;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+/* botao quitar */
+
+.btn-quitar {
+  color: #1a7a46 !important;
+  font-weight: 700;
+}
+
+.btn-quitar:hover {
+  background-color: #e8f7ef;
+  color: #135c34 !important;
+}
+
+/* botao submit variante quitar */
+
+.btn-submit--quitar {
+  background-color: #1a7a46;
+}
+
+.btn-submit--quitar:hover:not(:disabled) {
+  background-color: #135c34;
+}
+
+/* botao submit variante excluir */
+
+.btn-submit--excluir {
+  background-color: var(--erro);
+}
+
+.btn-submit--excluir:hover:not(:disabled) {
+  background-color: #a93226;
+}
+
+/* modal menor para confirmacoes */
+
+.modal-container--sm {
+  max-width: 400px;
+}
+
+/* icone de confirmacao */
+
+.confirmacao-icone {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 auto 16px;
+}
+
+.confirmacao-icone--quitar {
+  background-color: #e8f7ef;
+  color: #1a7a46;
+}
+
+.confirmacao-icone--excluir {
+  background-color: #fdecea;
+  color: #c0392b;
+}
+
+.confirmacao-texto {
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--texto-principal);
+  line-height: 1.5;
+  margin: 0 0 8px;
+}
+
+.confirmacao-aviso {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--texto-placeholder);
+  margin: 0;
+}
+
+.confirmacao-aviso--erro {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+/* responsividade */
+
+@media (max-width: 640px) {
+  .contas-container {
+    padding: 20px 16px;
+  }
+
+  .contas-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-nova-transacao {
+    justify-content: center;
+  }
+
+  .contas-feedback {
+    bottom: 16px;
+    right: 16px;
+    left: 16px;
+    max-width: none;
+  }
+
+  .transacoes-tabela thead {
+    display: none;
+  }
+
+  .transacoes-tabela,
+  .transacoes-tabela tbody,
+  .transacoes-tabela tr,
+  .transacoes-tabela td {
+    display: block;
+    width: 100%;
+  }
+
+  .transacoes-tabela tr {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--borda-input);
+    position: relative;
+  }
+
+  .transacoes-tabela td {
+    padding: 4px 0;
+    border: none;
+  }
+
+  .col-acoes {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    text-align: right;
+  }
+}

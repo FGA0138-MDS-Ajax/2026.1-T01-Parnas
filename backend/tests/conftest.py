@@ -1,45 +1,42 @@
 """
-conftest.py - Fixtures compartilhadas para todos os testes
+conftest.py - Fixtures compartilhadas por TODOS os testes do backend.
 
-Este arquivo contém configurações e fixtures que são usado em múltiplos arquivos de teste.
-Pytest carrega automaticamente fixtures do conftest.py.
+O pytest carrega este arquivo automaticamente. Tudo que estiver aqui fica
+disponível como fixture em qualquer teste de tests/unit, tests/integration e
+tests/e2e — sem precisar importar.
 
-Fixtures aqui:
-- app: Aplicação Flask configurada para testes
-- client: Cliente HTTP para fazer requisições de teste
-- app_context: Contexto da aplicação
-- db_session: Sessão do banco de dados para testes
-- clean_db: Limpa o BD antes de cada teste
-- auth_token: Token JWT válido para usuário autenticado
+Fixtures disponíveis:
+- app           : aplicação Flask configurada para testes (SQLite em memória)
+- client        : cliente HTTP do Flask para chamar endpoints
+- app_context   : contexto de app para operar o BD fora de uma requisição HTTP
+- clean_db      : zera o banco antes e depois de cada teste
+- test_user     : um usuário já persistido no banco
+- auth_token    : JWT válido do test_user
+- auth_headers  : headers HTTP com o JWT (use em requisições autenticadas)
 """
 
 import pytest
-import os
+from datetime import date
+
 from app import create_app
 from app.config import db, Config
 from app.models.user import User
-from app.models.company import Company
 from flask_jwt_extended import create_access_token
 import bcrypt
 
-
 class TestConfig(Config):
-    """Configuração especial para testes"""
+    """Configuração usada só em testes: banco em memória, rápido e descartável."""
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'  # BD em memória para testes
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
     JWT_SECRET_KEY = 'test-key-super-secreto'
 
 
 @pytest.fixture(scope='session')
 def app():
-    """
-    Cria aplicação Flask para testes (escopo de sessão).
-    Escopo 'session' significa que a app é criada uma única vez para toda a sessão de testes.
-    """
+    """App Flask criada uma vez por sessão de testes."""
     application = create_app()
     application.config.from_object(TestConfig)
 
-    # Cria contexto da aplicação para testes
     with application.app_context():
         db.create_all()
         yield application
@@ -49,35 +46,25 @@ def app():
 
 @pytest.fixture
 def client(app):
-    """
-    Cliente HTTP do Flask para fazer requisições de teste.
-    Escopo de função = criado novo para cada teste
-    """
+    """Cliente HTTP do Flask (novo a cada teste)."""
     return app.test_client()
 
 
 @pytest.fixture
 def app_context(app):
-    """
-    Contexto da aplicação Flask.
-    Necessário para qualquer operação com banco de dados fora de requisições HTTP.
-    """
+    """Contexto de aplicação para mexer no BD fora de uma requisição HTTP."""
     with app.app_context():
         yield app
 
 
 @pytest.fixture
 def clean_db(app):
-    """
-    Limpa o banco de dados antes de cada teste.
-    Remove todos os registros de todas as tabelas.
-    """
+    """Garante um banco limpo antes e depois do teste."""
     with app.app_context():
         db.session.remove()
         db.drop_all()
         db.create_all()
         yield
-        # Teardown: limpar após o teste
         db.session.remove()
         db.drop_all()
         db.create_all()
@@ -85,77 +72,62 @@ def clean_db(app):
 
 @pytest.fixture
 def test_user(app_context, clean_db):
-    """
-    Cria um usuário de teste e o persiste no BD.
-    
-    Returns:
-        User: Usuário criado com:
-            - email: 'teste@email.com'
-            - user_id: Gerado automaticamente
-    """
-    from datetime import date
-    hashed_password = bcrypt.hashpw('Senha@123'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-    
+    """Cria e persiste um usuário de teste (email: teste@email.com)."""
+    hashed = bcrypt.hashpw('Senha@123'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     user = User(
         email='teste@email.com',
-        password_hash=hashed_password,
+        password_hash=hashed,
         name='Usuário Teste',
         cpf='12345678901',
-        birth_date=date(2000, 1, 1)
+        birth_date=date(2000, 1, 1),
     )
     db.session.add(user)
     db.session.commit()
-    
     return user
 
 
 @pytest.fixture
 def auth_token(test_user, app):
-    """
-    Gera um token JWT válido para o usuário de teste.
-
-    Returns:
-        str: Token JWT válido para autenticação
-    """
+    """JWT válido para o test_user."""
     with app.app_context():
-        token = create_access_token(identity=str(test_user.user_id))
-    return token
+        return create_access_token(identity=str(test_user.user_id))
 
 
 @pytest.fixture
 def auth_headers(auth_token):
-    """
-    Headers HTTP com autenticação JWT.
-    Use em requisições que precisam de autenticação.
-
-    Returns:
-        dict: Headers com 'Authorization: Bearer {token}'
-    """
+    """Headers HTTP com Bearer token. Use em requisições que exigem login."""
     return {
         'Authorization': f'Bearer {auth_token}',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
     }
 
+@pytest.fixture
+def valid_company_payload():
+     return {
+		"name": "Empresa de Teste LTDA",
+		"cnpj": "04.252.011/0001-10",
+		"email": "empresa@teste.com",
+		"phone": "11999999999",
+	}
 
-# ==================== EXEMPLO DE USO ====================
-#
-# # Teste simples usando fixtures
-# def test_exemplo(client, auth_headers, clean_db):
-#     """
-#     Exemplo de como usar as fixtures.
-#     - client: cliente HTTP
-#     - auth_headers: headers com token JWT
-#     - clean_db: BD limpo antes do teste
-#     """
-#     response = client.post(
-#         '/api/companies/register',
-#         json={
-#             'name': 'Empresa Teste',
-#             'cnpj': '11.222.333/0001-81',
-#             'email': 'empresa@email.com',
-#             'phone': '1133334444'
-#         },
-#         headers=auth_headers
-#     )
-#     assert response.status_code == 201
+
+@pytest.fixture
+def payload_without_name(valid_company_payload):
+    payload = valid_company_payload.copy()
+    payload.pop("name")
+    return payload
+
+
+@pytest.fixture
+def payload_without_cnpj(valid_company_payload):
+    payload = valid_company_payload.copy()
+    payload.pop("cnpj")
+    return payload
+
+
+@pytest.fixture
+def payload_with_invalid_cnpj(valid_company_payload):
+    payload = valid_company_payload.copy()
+    payload["cnpj"] = "11.111.111/1111-11"
+    return payload
 
