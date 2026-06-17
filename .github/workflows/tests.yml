@@ -19,7 +19,20 @@ jobs:
           cache: pip
           cache-dependency-path: backend/requirements.txt
       - run: pip install -r requirements.txt
-      - run: pytest
+      - name: pytest + coverage
+        run: |
+          pytest \
+            --cov=app --cov-report=term-missing --cov-report=xml \
+            --junitxml=test-results.xml | tee test-output.txt
+      - name: Publicar dados do backend (coverage + resultados)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-backend
+          path: |
+            backend/test-output.txt
+            backend/coverage.xml
+            backend/test-results.xml
 
   frontend:
     runs-on: ubuntu-latest
@@ -34,4 +47,13 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
-      - run: npm run test:run
+      - name: vitest + coverage
+        run: npm run test:coverage | tee test-output.txt
+      - name: Publicar dados do frontend (coverage + resultados)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-frontend
+          path: |
+            frontend/test-output.txt
+            frontend/coverage/
