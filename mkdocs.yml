@@ -76,6 +76,8 @@ nav:
       - Template: qualidade/features/_template.md
       - Feature 1: qualidade/features/feature_1_cadastro-usuario.md
       - Feature 2: qualidade/features/feature_2_autenticacao-login.md
+      - Feature 7: qualidade/features/feature_7_historico-transacoes.md
+      - Feature 14: qualidade/features/feature_14_modalidades-credito.md
     - Consolidados por Sprint:
       - qualidade/sprints/index.md
       - Sprint 4: qualidade/sprints/sprint-04.md

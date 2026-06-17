@@ -75,11 +75,11 @@ Tests  4 passed | 1 skipped (5)
 ---
 ## 5. Defeitos encontrados
 
-| Issue          | Descrição                                                                                                                                                                                                | Branch de correção                              | Status |
-|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|--------|
-| #— *(a abrir)* | **DEF-01:** `is_valid_password` aceita senha com espaços; deveria rejeitar (`'Senha 67!'` retorna `True`).                                                                                               | `fix/validacao-senha-espacos` (a ser feita)     | Aberto |
-| #— *(a abrir)* | **DEF-02:** Em `Register.jsx`, os campos **Nome** e **Senha** não têm `value`/`onChange`; o estado nunca é preenchido, `senha` fica `""` e o cadastro trava em "senha < 8". Impede o cadastro pela tela. | `fix/register-campos-controlados` (a ser feita) | Aberto |
-| #— *(a abrir)* | **DEF-03:** `Register.jsx` lê `data.message` na resposta de erro, mas o backend retorna a mensagem em `data.erro`; o usuário sempre vê o texto genérico.                                                 | `fix/register-mensagem-erro` (a ser feita)      | Aberto |
+| Issue          | Descrição                                                                                                                                                                                                | Status  |
+|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------| 
+| #— *(a abrir)* | **DEF-01:** `is_valid_password` aceita senha com espaços; deveria rejeitar (`'Senha 67!'` retorna `True`).                                                                                               | Aberto  |
+| #— *(a abrir)* | **DEF-02:** Em `Register.jsx`, os campos **Nome** e **Senha** não têm `value`/`onChange`; o estado nunca é preenchido, `senha` fica `""` e o cadastro trava em "senha < 8". Impede o cadastro pela tela. | Aberto  |
+| #— *(a abrir)* | **DEF-03:** `Register.jsx` lê `data.message` na resposta de erro, mas o backend retorna a mensagem em `data.erro`; o usuário sempre vê o texto genérico.                                                 | Aberto  |
 
 ---
 ## 6. Cobertura

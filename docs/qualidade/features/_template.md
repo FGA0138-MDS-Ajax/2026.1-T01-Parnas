@@ -5,16 +5,16 @@
  ---
 ## 1. Identificação
 
-| Campo | Valor |
-| --- | --- |
-| **Feature** | *Nome da feature* |
-| **Cenário** | *CEN-0X* |
-| **Requisito(s)** | *R0X* |
-| **Branch de desenvolvimento** | `feature/<nome>` |
-| **Branch de teste** | `test/feature/<numero-nome>` |
-| **Sprint(s)** | *N* |
-| **Responsáveis** | Daniel Filipe / Matheus Moretti |
-| **Data** | *dd/mm/aaaa* |
+| Campo                         | Valor                           |
+|-------------------------------|---------------------------------| 
+| **Feature**                   | *Nome da feature*               |
+| **Cenário**                   | *CEN-0X*                        |
+| **Requisito(s)**              | *R0X*                           |
+| **Branch de desenvolvimento** | `feature/<nome>`                |
+| **Branch de teste**           | `test/feature/<numero-nome>`    |
+| **Sprint(s)**                 | *N*                             |
+| **Responsáveis**              | Daniel Filipe / Matheus Moretti |
+| **Data**                      | *dd/mm/aaaa*                    |
  ---
 ## 2. Critérios de aceitação testáveis
 
@@ -47,9 +47,9 @@ tests/unit/test_company_service.py::test_register_company_duplicate_cnpj PASSED
 ---
 ## 5. Defeitos encontrados
 
-| Issue | Descrição | Branch de correção | Status |
-| --- | --- | --- | --- |
-| #— | *...* | `fix/<nome>` | Aberto / Corrigido |
+| Issue   | Descrição  | Status             |
+|---------|------------|--------------------|
+| #—      | *...*      | Aberto / Corrigido |
 
 ---
 ## 6. Cobertura
@@ -58,9 +58,9 @@ tests/unit/test_company_service.py::test_register_company_duplicate_cnpj PASSED
 pytest --cov=app tests/
 ```
 
-| Métrica | Valor |
-| --- | --- |
-| Cobertura da feature | *—%* |
+| Métrica              | Valor |
+|----------------------|-------|
+| Cobertura da feature | *—%*  |
 
 ---
 ## 7. Parecer final

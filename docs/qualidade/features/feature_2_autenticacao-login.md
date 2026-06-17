@@ -65,10 +65,10 @@ tests/integration/feature_2/test_auth_routes.py::test_login_sem_campos_obrigator
 
 ## 5. Defeitos encontrados
 
-| ID | Descrição | Branch de correção | Status |
-|---|---|---|---|
-| DEF-01 | `backend/app/utils/auth.py` é apenas um **stub de exemplo** — não há `@jwt_required()` aplicado a nenhuma rota real do backend. A tarefa "Criar middleware de autenticação para rotas protegidas" está marcada como concluída, mas a proteção de rotas no back não está implementada/testável. | `fix/middleware-autenticacao` | Aberto |
-| DEF-02 | Os `<label>` em `Login.jsx` não estão associados aos `<input>` (sem `htmlFor`/`id`), prejudicando acessibilidade e forçando os testes a buscar por `placeholder` em vez de `getByLabelText`. | `fix/login-labels-acessibilidade` | Aberto |
+| ID     | Descrição                                                                                                                                                                                                                                                                                      | Status |
+|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
+| DEF-01 | `backend/app/utils/auth.py` é apenas um **stub de exemplo** — não há `@jwt_required()` aplicado a nenhuma rota real do backend. A tarefa "Criar middleware de autenticação para rotas protegidas" está marcada como concluída, mas a proteção de rotas no back não está implementada/testável. | Aberto |
+| DEF-02 | Os `<label>` em `Login.jsx` não estão associados aos `<input>` (sem `htmlFor`/`id`), prejudicando acessibilidade e forçando os testes a buscar por `placeholder` em vez de `getByLabelText`.                                                                                                   | Aberto |
 
 > Nota (fora do escopo desta feature): a suíte completa do backend tem 2 testes
 > vermelhos em `tests/unit/feature_1/test_validators.py::test_is_valid_password_spaces`
@@ -79,18 +79,18 @@ tests/integration/feature_2/test_auth_routes.py::test_login_sem_campos_obrigator
 
 **Backend** — `pytest tests/unit/feature_2 tests/integration/feature_2 --cov=app.services.auth_service --cov=app.routes.auth_routes --cov-report=term-missing`
 
-| Módulo | Cobertura | Observação |
-|---|---|---|
-| `app/services/auth_service.py` | **100%** | — |
-| `app/routes/auth_routes.py` | 49% | o não-coberto (`32-94`) é `forgot-password`/`reset-password`, fora desta história |
+| Módulo                         | Cobertura | Observação                                                                        |
+|--------------------------------|-----------|-----------------------------------------------------------------------------------|
+| `app/services/auth_service.py` | **100%**  | —                                                                                 |
+| `app/routes/auth_routes.py`    | 49%       | o não-coberto (`32-94`) é `forgot-password`/`reset-password`, fora desta história |
 
 **Frontend** — `npx vitest run src/pages/Login/Login.test.jsx --coverage`
 
-| Módulo | Cobertura | Linhas não cobertas |
-|---|---|---|
-| `src/pages/Login/Login.jsx` | **93,66%** | `25-28` (campos vazios), `58-59` (fallback `access_token`), `71-73` (`handleDemoAccess`) |
-| `src/hooks/useAuth.js` | **100%** | — |
-| `src/context/AuthContext.jsx` | 82,35% | `14-16` (`logout`) |
+| Módulo                        | Cobertura  | Linhas não cobertas                                                                      |
+|-------------------------------|------------|------------------------------------------------------------------------------------------|
+| `src/pages/Login/Login.jsx`   | **93,66%** | `25-28` (campos vazios), `58-59` (fallback `access_token`), `71-73` (`handleDemoAccess`) |
+| `src/hooks/useAuth.js`        | **100%**   | —                                                                                        |
+| `src/context/AuthContext.jsx` | 82,35%     | `14-16` (`logout`)                                                                       |
 
 Cobertura dos módulos centrais do login (service + hook) acima da meta de **≥ 60%**.
 
