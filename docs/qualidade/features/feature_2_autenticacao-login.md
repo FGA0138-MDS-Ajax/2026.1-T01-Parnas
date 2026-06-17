@@ -2,19 +2,17 @@
 
 ## 1. Identificação
 
-| Campo                         | Valor                              |
-|-------------------------------|------------------------------------|
-| **Feature**                   | US02 — Autenticação e Login        |
-| **Issue**                     | [#2](../../../../issues/2)         |
-| **Cenário**                   | CEN-00 — Plataforma e autenticação |
-| **Requisito**                 | R03                                |
-| **Funcionalidade do produto** | A                                  |
-| **Sprint**                    | 4-5                                |
-| **Prioridade**                | Must                               |
-| **Branch de desenvolvimento** | `feature/2-autenticacao-login`     |
-| **Branch de teste (QA)**      | `test/feature/2-login`             |
-| **Responsáveis (QA)**         | Daniel Filipe / Matheus Moretti    |
-| **Data**                      | 23/05/2026                         |
+| Campo                         | Valor                           |
+|-------------------------------|---------------------------------|
+| **Feature**                   | Autenticação e Login            |
+| **Cenário**                   | CEN-00                          |
+| **Requisito**                 | R03                             |
+| **Prioridade**                | Must                            |
+| **Branch de desenvolvimento** | `feature/2-autenticacao-login`  |
+| **Branch de teste (QA)**      | `test/feature/2-login`          |
+| **Sprint**                    | 4-5                             |
+| **Responsáveis (QA)**         | Daniel Filipe / Matheus Moretti |
+| **Data**                      | 23/05/2026                      |
 
 ## 2. Critérios de aceitação testáveis
 
