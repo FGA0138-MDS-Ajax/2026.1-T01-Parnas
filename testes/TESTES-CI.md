@@ -5,15 +5,12 @@
 
 ---
 
-## 1. O que é CI e por que temos:
+## 1. Como funciona a CI:
 
-**Integração Contínua (CI)** é deixar uma máquina rodar nossa suíte de testes
+A **Integração Contínua (CI)** funciona ao deixar uma máquina rodar nossa suíte de testes
 **automaticamente**, toda vez que código novo chega no repositório. Em vez de
 confiar que cada pessoa lembrou de rodar `pytest`/`vitest` antes de subir, o
 GitHub roda por nós e mostra um ✅ ou ❌ no Pull Request.
-
-Para o QA isso fecha o ciclo: "passou nos testes" deixa de ser promessa e vira
-**fato verificável**, visível no PR antes do merge.
 
 ---
 
@@ -57,8 +54,8 @@ on:
 Dois **jobs** independentes, rodando **em paralelo**, cada um numa máquina
 virtual Ubuntu **limpa** (nasce sem nada do nosso projeto):
 
-| Job        | Pasta       | Passos                                                                                          |
-|------------|-------------|-------------------------------------------------------------------------------------------------|
+| Job        | Pasta       | Passos                                                                                           |
+|------------|-------------|--------------------------------------------------------------------------------------------------|
 | `backend`  | `backend/`  | clona o repo → instala Python 3.14 → `pip install -r requirements.txt` → `pytest` + coverage     |
 | `frontend` | `frontend/` | clona o repo → instala Node 20 → `npm ci` → `npm run test:coverage` (vitest)                     |
 
@@ -130,40 +127,16 @@ Além de passar/falhar, a pipeline **mede a cobertura** (quais linhas do código
 testes exercitam) e **guarda os resultados** como *artifacts* — arquivos que você
 baixa pela aba **Actions** do GitHub, na seção **Artifacts** do rodapé do run.
 
-| Artifact            | O que tem dentro                                                          |
-|---------------------|--------------------------------------------------------------------------|
-| `relatorio-backend` | `test-output.txt` (resultado + coverage por arquivo), `coverage.xml`, `test-results.xml` (JUnit) |
-| `relatorio-frontend`| `test-output.txt` (resultado + tabela de coverage) e a pasta `coverage/` (HTML navegável) |
+| Artifact             | O que tem dentro                                                                          |
+|----------------------|-------------------------------------------------------------------------------------------|
+| `relatorio-backend`  | `test-output.txt` (resultado + coverage por arquivo), `coverage.xml`, `test-results.xml`  |
+| `relatorio-frontend` | `test-output.txt` (resultado + tabela de coverage) e a pasta `coverage/` (HTML navegável) |
 
 O passo de upload usa `if: always()`, então os dados são publicados **mesmo quando
 algum teste falha** — útil justamente pra investigar a falha.
 
 > **Por que isso existe:** o CI **não** gera o relatório de QA sozinho (isso exigiria
 > um modelo de IA rodando no CI, que é pago). O relatório continua sendo um passo
-> seu, com a ajuda do Claude Code no editor — a pipeline só te entrega os números
-> prontos pra isso.
-
-### Fluxo: do artifact ao relatório de feature
-
-1. Push/PR → a pipeline roda no GitHub.
-2. Abra o run na aba **Actions** → baixe `relatorio-backend` / `relatorio-frontend`.
-3. Descompacte os `.zip` (no projeto ou em qualquer pasta).
-4. No editor, peça ao Claude Code: *"gera o relatório da feature X com esses dados"* —
-   ele roda a skill `/relatorio_testes`, lê o coverage + resultados que você baixou,
-   consulta a issue da feature no GitHub e preenche o template em `testes/qualidade/`,
-   com o parecer final.
-
-Usar os artifacts garante que o relatório bate **exatamente** com os números que o
-CI registrou, sem divergência entre "o que rodou no CI" e "o que rodou na sua máquina".
+> da dupla de QA — a pipeline só entrega os números.
 
 ---
-
-## 8. Como isso entra no fluxo de QA
-
-1. Abriu PR para a `develop` → o CI roda sozinho.
-2. Check **verde** é pré-requisito do merge (junto com o relatório da feature).
-3. Check **vermelho** → leia o log do job que falhou, corrija na branch do PR,
-   dê push; o CI re-roda.
-
-Guias relacionados: **TESTES-RESUMO.md** (visão geral), **TESTES-BACK.md**,
-**TESTES-FRONT.md**, **TESTES-INT.md**, **TESTES-E2E.md**.
