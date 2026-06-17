@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./Categorias.css";
+import { Tag } from "lucide-react";
 
 function Categorias() {
   const [nome, setNome] = useState("");
@@ -81,9 +82,17 @@ function Categorias() {
     <div className="categorias-page">
 
       <header className="categorias-header">
-        <div className="header-content">
-          <h1>💰 CREDIFAB</h1>
-          <p>Plataforma de Acesso a Crédito</p>
+        <div className="header-logo">
+
+          <div className="logo-icon">
+            <Tag size={18} color="white" />
+          </div>
+
+          <div className="logo-text">
+            <h1>CREDIFAB</h1>
+            <p>Plataforma de Acesso a Crédito</p>
+          </div>
+      
         </div>
       </header>
 
