@@ -1,11 +1,11 @@
-# Testes do CrediFab — Integração Contínua (CI)
+# Integração Contínua (CI)
 
 > Como a pipeline de testes roda sozinha no GitHub Actions a cada push/PR.
 > Mantido pela dupla de Qualidade (Daniel Filipe / Matheus Moretti).
 
 ---
 
-## 1. O que é CI e por que temos
+## 1. O que é CI e por que temos:
 
 **Integração Contínua (CI)** é deixar uma máquina rodar nossa suíte de testes
 **automaticamente**, toda vez que código novo chega no repositório. Em vez de
@@ -57,10 +57,10 @@ on:
 Dois **jobs** independentes, rodando **em paralelo**, cada um numa máquina
 virtual Ubuntu **limpa** (nasce sem nada do nosso projeto):
 
-| Job        | Pasta       | Passos                                                    |
-|------------|-------------|-----------------------------------------------------------|
-| `backend`  | `backend/`  | clona o repo → instala Python 3.14 → `pip install -r requirements.txt` → `pytest` |
-| `frontend` | `frontend/` | clona o repo → instala Node 20 → `npm ci` → `npm run test:run` (vitest) |
+| Job        | Pasta       | Passos                                                                                          |
+|------------|-------------|-------------------------------------------------------------------------------------------------|
+| `backend`  | `backend/`  | clona o repo → instala Python 3.14 → `pip install -r requirements.txt` → `pytest` + coverage     |
+| `frontend` | `frontend/` | clona o repo → instala Node 20 → `npm ci` → `npm run test:coverage` (vitest)                     |
 
 Como são jobs separados, o tempo total é o do mais lento, não a soma. Cada um
 usa cache (de `pip` e de `npm`) para não reinstalar tudo do zero quando as
@@ -94,12 +94,12 @@ teste (e perder o registro do problema), a gente o mantém **marcado**:
 
 Pendências atuais (a corrigir em PRs próprios):
 
-| Teste                                   | Marca   | Motivo                                                  |
-|-----------------------------------------|---------|--------------------------------------------------------|
-| histórico — filtro por tipo / totais    | `xfail` | bug real: `Decimal - float` estoura em `transaction_service.py` |
-| senha com espaço (2 casos)              | `xfail` | `is_valid_password` ainda aceita espaço (decisão de produto) |
-| register — erro interno de banco        | `xfail` | `register_user` não faz `rollback`/500 em erro de commit |
-| cadastro — data futura / menor de 18    | `skip`  | `Register.jsx` ainda não valida data/idade             |
+| Teste                                    | Marca    | Motivo                                                          |
+|------------------------------------------|----------|-----------------------------------------------------------------|
+| histórico — filtro por tipo / totais     | `xfail`  | bug real: `Decimal - float` estoura em `transaction_service.py` |
+| senha com espaço (2 casos)               | `xfail`  | `is_valid_password` ainda aceita espaço (decisão de produto)    |
+| register — erro interno de banco         | `xfail`  | `register_user` não faz `rollback`/500 em erro de commit        |
+| cadastro — data futura / menor de 18     | `skip`   | `Register.jsx` ainda não valida data/idade                      |
 
 ---
 
@@ -124,7 +124,41 @@ você tem instalada na mão mas não está no `requirements.txt`/`package.json`.
 
 ---
 
-## 7. Como isso entra no fluxo de QA
+## 7. Coverage e os artifacts (insumo do relatório de feature)
+
+Além de passar/falhar, a pipeline **mede a cobertura** (quais linhas do código os
+testes exercitam) e **guarda os resultados** como *artifacts* — arquivos que você
+baixa pela aba **Actions** do GitHub, na seção **Artifacts** do rodapé do run.
+
+| Artifact            | O que tem dentro                                                          |
+|---------------------|--------------------------------------------------------------------------|
+| `relatorio-backend` | `test-output.txt` (resultado + coverage por arquivo), `coverage.xml`, `test-results.xml` (JUnit) |
+| `relatorio-frontend`| `test-output.txt` (resultado + tabela de coverage) e a pasta `coverage/` (HTML navegável) |
+
+O passo de upload usa `if: always()`, então os dados são publicados **mesmo quando
+algum teste falha** — útil justamente pra investigar a falha.
+
+> **Por que isso existe:** o CI **não** gera o relatório de QA sozinho (isso exigiria
+> um modelo de IA rodando no CI, que é pago). O relatório continua sendo um passo
+> seu, com a ajuda do Claude Code no editor — a pipeline só te entrega os números
+> prontos pra isso.
+
+### Fluxo: do artifact ao relatório de feature
+
+1. Push/PR → a pipeline roda no GitHub.
+2. Abra o run na aba **Actions** → baixe `relatorio-backend` / `relatorio-frontend`.
+3. Descompacte os `.zip` (no projeto ou em qualquer pasta).
+4. No editor, peça ao Claude Code: *"gera o relatório da feature X com esses dados"* —
+   ele roda a skill `/relatorio_testes`, lê o coverage + resultados que você baixou,
+   consulta a issue da feature no GitHub e preenche o template em `testes/qualidade/`,
+   com o parecer final.
+
+Usar os artifacts garante que o relatório bate **exatamente** com os números que o
+CI registrou, sem divergência entre "o que rodou no CI" e "o que rodou na sua máquina".
+
+---
+
+## 8. Como isso entra no fluxo de QA
 
 1. Abriu PR para a `develop` → o CI roda sozinho.
 2. Check **verde** é pré-requisito do merge (junto com o relatório da feature).
