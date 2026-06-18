@@ -1,16 +1,27 @@
 from app.config import db
+from app.models.user import User
 from app.models.transaction import Transaction
 from app.models.category import Category
 from sqlalchemy import func
 
+def _validate_user_company_access(user_id, company_id):
+    """
+    Verifica se o usuário tem acesso à empresa informada.
+    """
+    user = db.session.query(User).filter(User.user_id == user_id).first()
+    user_companies_ids = [c.company_id for c in user.companies] if user else []
+    return company_id in user_companies_ids
+
 def get_history_filtered(user_id, page, per_page, filtros):
-    # 1. Filtros obrigatórios: garante isolamento por usuário E por empresa logada
+    company_id = filtros.get('company_id')
+    if not _validate_user_company_access(user_id, company_id):
+        return {"erro": "Você não tem permissão para acessar os dados desta empresa."}, 403
+
     condicoes = [
         Transaction.user_id == user_id,
-        Transaction.company_id == filtros.get('company_id')
+        Transaction.company_id == company_id
     ]
 
-    # 2. Filtros dinâmicos da URL
     if filtros.get('data_inicio'):
         condicoes.append(Transaction.date >= filtros['data_inicio'])
     if filtros.get('data_fim'):
@@ -22,14 +33,11 @@ def get_history_filtered(user_id, page, per_page, filtros):
     if filtros.get('valor_max') is not None:
         condicoes.append(Transaction.amount <= filtros['valor_max'])
 
-    # Query base para listar os itens
     query_base = Transaction.query.filter(*condicoes)
 
-    # Se filtraram por nome de categoria, fazemos o JOIN com a tabela Category
     if filtros.get('categoria'):
         query_base = query_base.join(Category).filter(Category.name.ilike(f"%{filtros['categoria']}%"))
 
-    # 3. Cálculo de Totais (Agregação otimizada no Banco)
     totais = db.session.query(
         Transaction.type, func.sum(Transaction.amount)
     ).filter(*condicoes).group_by(Transaction.type).all()
@@ -38,12 +46,10 @@ def get_history_filtered(user_id, page, per_page, filtros):
     despesas = sum(valor for tipo, valor in totais if tipo == 'despesa') or 0.0
     saldo = receitas - despesas
 
-    # 4. Paginação dos resultados
     paginacao = query_base.order_by(Transaction.date.desc()).paginate(
         page=page, per_page=per_page, error_out=False
     )
 
-    # 5. Formatação da lista usando os nomes reais dos campos da sua Model
     transacoes_lista = [{
         "transaction_id": t.transaction_id,
         "description": t.description,
@@ -67,7 +73,14 @@ def get_history_filtered(user_id, page, per_page, filtros):
         "transacoes": transacoes_lista
     }, 200
 
-def create_transaction(data, current_user_id):
+
+def create_transaction(data, user_id):
+    category_id = data.get('category_id')
+    company_id = data.get('company_id')
+
+    if not _validate_user_company_access(user_id, company_id):
+        return {"erro": "Você não tem permissão para lançar transações nesta empresa."}, 403
+
     category = Category.query.filter_by(
         category_id=data['category_id'],
         company_id=data['company_id']
@@ -81,9 +94,9 @@ def create_transaction(data, current_user_id):
         amount=data['amount'],
         date=data['date'],
         type=data['type'],
-        company_id=data['company_id'],
-        category_id=data['category_id'],
-        user_id=current_user_id
+        company_id=company_id,
+        category_id=category_id,
+        user_id=user_id
     )
 
     try:
@@ -97,27 +110,28 @@ def create_transaction(data, current_user_id):
         db.session.rollback()
         return {"erro": "Ocorreu um erro interno ao registrar transação."}, 500
 
-def get_company_transactions(company_id):
-    transactions = Transaction.query.filter_by(company_id=company_id).all()
 
-    result = []
-    for t in transactions:
-        result.append({
-            "transaction_id": t.transaction_id,
-            "description": t.description,
-            "amount": float(t.amount),
-            "date": t.date.strftime("%Y-%m-%d"),
-            "type": t.type,
-            "category_id": t.category_id,
-        })
+def get_company_transactions(company_id, user_id):
+    if not _validate_user_company_access(user_id, company_id):
+        return {"erro": "Você não tem permissão para visualizar transações nesta empresa."}, 403
 
-    return {"transactions": result}, 200
+    transactions = Transaction.query.filter_by(company_id=company_id, user_id=user_id).all()
+    return {"transactions_objects": transactions}, 200
 
-def update_transaction(transaction_id, data, company_id):
-    transaction = Transaction.query.filter_by(transaction_id=transaction_id, company_id=company_id).first()
 
+def update_transaction(transaction_id, user_id, data):
+    transaction = Transaction.query.filter_by(transaction_id=transaction_id, user_id=user_id).first()
     if not transaction:
-        return {"erro": "Transação não encontrada nesta empresa."}, 404
+        return {"erro": "Transação não encontrada ou você não possui permissão para alterá-la."}, 404
+
+    if 'category_id' in data:
+        category = Category.query.filter_by(
+            category_id=data['category_id'],
+            company_id=transaction.company_id
+        ).first()
+        if not category:
+            return {"erro": "A categoria informada não pertence à empresa desta transação."}, 400
+        transaction.category_id = data['category_id']
 
     if 'description' in data:
         transaction.description = data['description']
@@ -127,21 +141,23 @@ def update_transaction(transaction_id, data, company_id):
         transaction.date = data['date']
     if 'type' in data:
         transaction.type = data['type']
-    if 'category_id' in data:
-        transaction.category_id = data['category_id']
 
     try:
         db.session.commit()
-        return {"mensagem": "Transação atualizada com sucesso."}, 200
+        return {
+            "mensagem": "Transação atualizada com sucesso.",
+            "transaction": transaction
+        }, 200
     except Exception as e:
         db.session.rollback()
-        return {"erro": "Ocorreu um erro ao atualizar"}, 500
+        return {"erro": "Ocorreu um erro interno ao atualizar a transação."}, 500
 
-def delete_transaction(transaction_id, company_id):
-    transaction = Transaction.query.filter_by(transaction_id=transaction_id, company_id=company_id).first()
+
+def delete_transaction(transaction_id, user_id):
+    transaction = Transaction.query.filter_by(transaction_id=transaction_id, user_id=user_id).first()
 
     if not transaction:
-        return {"erro": "Transação não encontrada nesta empresa."}, 404
+        return {"erro": "Transação não encontrada ou você não possui permissão para excluí-la."}, 404
 
     try:
         db.session.delete(transaction)
