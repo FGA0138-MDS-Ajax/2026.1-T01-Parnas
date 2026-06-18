@@ -3,16 +3,16 @@
 ---
 ## 1. Identificação
 
-| Campo | Valor |
-|---|---|
-| **Feature** | Cadastro de Categoria |
-| **Cenário** | CEN-01 |
-| **Requisito(s)** | R06 |
-| **Branch de desenvolvimento** | `feature/5-cadastro-categoria` |
-| **Branch de teste** | `test/feature/5-cadastro-categoria` |
-| **Sprint(s)** | 5 |
-| **Responsáveis** | Daniel Filipe / Matheus Moretti |
-| **Data** | 30/05/2026 |
+| Campo                         | Valor                               |
+|-------------------------------|-------------------------------------|
+| **Feature**                   | Cadastro de Categoria               |
+| **Cenário**                   | CEN-01                              |
+| **Requisito(s)**              | R06                                 |
+| **Branch de desenvolvimento** | `feature/5-cadastro-categoria`      |
+| **Branch de teste**           | `test/feature/5-cadastro-categoria` |
+| **Sprint(s)**                 | 5                                   |
+| **Responsáveis**              | Daniel Filipe / Matheus Moretti     |
+| **Data**                      | 30/05/2026                          |
 
 ---
 ## 2. Critérios de aceitação testáveis
@@ -30,33 +30,33 @@
 ---
 ## 3. Casos executados
 
-| Caso | Descrição | Nível | Esperado | Observado | Status |
-| :--: | --- | --- | --- | --- | :--: |
-| TS-01 | `POST /api/categories` com dados válidos | Integração | `201` + mensagem de sucesso | Conforme | ✅ |
-| TS-02 | `POST /api/categories` sem token | Integração | `401` | Conforme | ✅ |
-| TS-03 | `POST` com CNPJ válido de empresa não cadastrada | Integração | `404` + "Empresa não encontrada" | Conforme | ✅ |
-| TS-04 | `POST` com CNPJ fora de formato | Integração | `400` (barrado pelo schema) | Conforme | ✅ |
-| TS-05 | `GET /api/categories?cnpj=` lista categorias da empresa | Integração | só as categorias daquela empresa | Conforme | ✅ |
-| TS-06 | Listagem não inclui categorias de outra empresa | Integração | categoria da empresa B ausente | Conforme | ✅ |
-| TS-07 | `PUT /api/categories` edita o nome de categoria existente | Integração | `200` + nome atualizado | Conforme | ✅ |
-| TS-08 | `PUT` em categoria inexistente | Integração | `404` | Conforme | ✅ |
-| TS-09 | `DELETE /api/categories` de categoria sem transações | Integração | `200` + some da listagem | Conforme | ✅ |
-| TS-10 | Nome duplicado na mesma empresa não cria 2ª categoria | Integração | duplicata bloqueada (1 registro) | Bloqueada pela constraint `UNIQUE` | ✅ |
-| TS-11 | Nome duplicado retorna status amigável (400/409) | Integração | `400` ou `409` | `500` (IntegrityError vazado) | ⏭️ xfail (DEF-01) |
-| TS-12 | Exclusão de categoria com transações vinculadas é bloqueada | Integração | `400`/`409` recusando a exclusão | Exclusão não é bloqueada | ⏭️ xfail (DEF-02) |
-| TS-13 | Usuário sem vínculo não gerencia categoria de outra empresa | Integração | `403` | `201` — `user_id` ignorado | ⏭️ xfail (DEF-03) |
-| TS-14 | `add_category` com empresa inexistente | Unitário | `404` | Conforme | ✅ |
-| TS-15 | `add_category` com empresa válida persiste a categoria | Unitário | `201` + `db.session.add/commit` | Conforme | ✅ |
-| TS-16 | `get_categories` com empresa inexistente | Unitário | `404` | Conforme | ✅ |
-| TS-17 | `update_category` com categoria inexistente | Unitário | `404` | Conforme | ✅ |
-| TS-18 | `delete_category` com categoria inexistente | Unitário | `404` | Conforme | ✅ |
-| TS-19 | Página lista as categorias iniciais | Unitário (front) | Salário e Alimentação na tela | Conforme | ✅ |
-| TS-20 | Adicionar nova categoria pelo formulário | Unitário (front) | nova categoria aparece na tabela | Conforme | ✅ |
-| TS-21 | Formulário limpa o nome após adicionar | Unitário (front) | campo de nome volta a vazio | Conforme | ✅ |
-| TS-22 | Editar nome de categoria inline | Unitário (front) | nome trocado, antigo some | Conforme | ✅ |
-| TS-23 | Cancelar edição mantém o nome original | Unitário (front) | nome original preservado | Conforme | ✅ |
-| TS-24 | Excluir categoria após confirmação | Unitário (front) | categoria removida da tabela | Conforme | ✅ |
-| TS-25 | Não excluir quando a confirmação é cancelada | Unitário (front) | categoria permanece | Conforme | ✅ |
+| Caso  | Descrição                                                   | Nível            | Esperado                         | Observado                          |      Status       |
+|:-----:|-------------------------------------------------------------|------------------|----------------------------------|------------------------------------|:-----------------:|
+| TS-01 | `POST /api/categories` com dados válidos                    | Integração       | `201` + mensagem de sucesso      | Conforme                           |         ✅         |
+| TS-02 | `POST /api/categories` sem token                            | Integração       | `401`                            | Conforme                           |         ✅         |
+| TS-03 | `POST` com CNPJ válido de empresa não cadastrada            | Integração       | `404` + "Empresa não encontrada" | Conforme                           |         ✅         |
+| TS-04 | `POST` com CNPJ fora de formato                             | Integração       | `400` (barrado pelo schema)      | Conforme                           |         ✅         |
+| TS-05 | `GET /api/categories?cnpj=` lista categorias da empresa     | Integração       | só as categorias daquela empresa | Conforme                           |         ✅         |
+| TS-06 | Listagem não inclui categorias de outra empresa             | Integração       | categoria da empresa B ausente   | Conforme                           |         ✅         |
+| TS-07 | `PUT /api/categories` edita o nome de categoria existente   | Integração       | `200` + nome atualizado          | Conforme                           |         ✅         |
+| TS-08 | `PUT` em categoria inexistente                              | Integração       | `404`                            | Conforme                           |         ✅         |
+| TS-09 | `DELETE /api/categories` de categoria sem transações        | Integração       | `200` + some da listagem         | Conforme                           |         ✅         |
+| TS-10 | Nome duplicado na mesma empresa não cria 2ª categoria       | Integração       | duplicata bloqueada (1 registro) | Bloqueada pela constraint `UNIQUE` |         ✅         |
+| TS-11 | Nome duplicado retorna status amigável (400/409)            | Integração       | `400` ou `409`                   | `500` (IntegrityError vazado)      | ⏭️ xfail (DEF-01) |
+| TS-12 | Exclusão de categoria com transações vinculadas é bloqueada | Integração       | `400`/`409` recusando a exclusão | Exclusão não é bloqueada           | ⏭️ xfail (DEF-02) |
+| TS-13 | Usuário sem vínculo não gerencia categoria de outra empresa | Integração       | `403`                            | `201` — `user_id` ignorado         | ⏭️ xfail (DEF-03) |
+| TS-14 | `add_category` com empresa inexistente                      | Unitário         | `404`                            | Conforme                           |         ✅         |
+| TS-15 | `add_category` com empresa válida persiste a categoria      | Unitário         | `201` + `db.session.add/commit`  | Conforme                           |         ✅         |
+| TS-16 | `get_categories` com empresa inexistente                    | Unitário         | `404`                            | Conforme                           |         ✅         |
+| TS-17 | `update_category` com categoria inexistente                 | Unitário         | `404`                            | Conforme                           |         ✅         |
+| TS-18 | `delete_category` com categoria inexistente                 | Unitário         | `404`                            | Conforme                           |         ✅         |
+| TS-19 | Página lista as categorias iniciais                         | Unitário (front) | Salário e Alimentação na tela    | Conforme                           |         ✅         |
+| TS-20 | Adicionar nova categoria pelo formulário                    | Unitário (front) | nova categoria aparece na tabela | Conforme                           |         ✅         |
+| TS-21 | Formulário limpa o nome após adicionar                      | Unitário (front) | campo de nome volta a vazio      | Conforme                           |         ✅         |
+| TS-22 | Editar nome de categoria inline                             | Unitário (front) | nome trocado, antigo some        | Conforme                           |         ✅         |
+| TS-23 | Cancelar edição mantém o nome original                      | Unitário (front) | nome original preservado         | Conforme                           |         ✅         |
+| TS-24 | Excluir categoria após confirmação                          | Unitário (front) | categoria removida da tabela     | Conforme                           |         ✅         |
+| TS-25 | Não excluir quando a confirmação é cancelada                | Unitário (front) | categoria permanece              | Conforme                           |         ✅         |
 
 ---
 ## 4. Evidências
@@ -132,15 +132,15 @@ pytest tests/unit/feature_5 tests/integration/feature_5 \
 npx vitest run src/pages/Categorias/Categorias.test.jsx --coverage
 ```
 
-| Métrica | Valor |
-|---|---|
-| `app/models/category.py` | 100% |
-| `app/schemas/category_schema.py` | 100% |
-| `app/services/category_service.py` | 89% |
-| `app/routes/category_routes.py` | 87% |
-| `app/repositories/category_repository.py` | 0% (código morto — ver DEF-04) |
-| **Backend — total (módulos importados)** | **91%** |
-| `src/pages/Categorias/Categorias.jsx` (front) | 97,9% |
+| Métrica                                       | Valor                          |
+|-----------------------------------------------|--------------------------------|
+| `app/models/category.py`                      | 100%                           |
+| `app/schemas/category_schema.py`              | 100%                           |
+| `app/services/category_service.py`            | 89%                            |
+| `app/routes/category_routes.py`               | 87%                            |
+| `app/repositories/category_repository.py`     | 0% (código morto — ver DEF-04) |
+| **Backend — total (módulos importados)**      | **91%**                        |
+| `src/pages/Categorias/Categorias.jsx` (front) | 97,9%                          |
 
 Núcleo da feature acima da meta de **≥ 60%**.
 
