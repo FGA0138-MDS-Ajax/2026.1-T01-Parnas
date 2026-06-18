@@ -69,7 +69,7 @@ def get_documents():
     pagination, error, status_code = DocumentService.get_documents_by_company(
         company_id=company_id,
         user_id=current_user_id,
-        tipo=tipo,
+        #tipo=tipo, // por algum motivo isso deu erro na integração e tirando essa linha funcionou
         page=page,
         per_page=per_page
     )

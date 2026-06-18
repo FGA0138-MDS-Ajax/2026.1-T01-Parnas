@@ -1,68 +1,13 @@
 .documentos-page {
-  min-height: 100vh;
-  background: #ffffff;
-}
-
-.documentos-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: #0f4c81;
-  display: flex;
-  align-items: center;
-  padding: 0.9rem 2rem;
-  z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0,0,0,.15);
-}
-
-.header-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.logo-icon {
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 0.5rem;
-  background: yellowgreen;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-}
-
-.logo-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.logo-text h1 {
-  margin: 0;
-
-  color: white;
-
-  font-size: 1.4rem;
-
-  font-weight: 700;
-
-  line-height: 1.1;
-}
-
-.logo-text p {
-  margin: 0;
-
-  color: rgba(255,255,255,.9);
-
-  font-size: 0.82rem;
+  min-height: auto;
+  background: transparent;
 }
 
 .documentos-content {
-  width: 90%;
-  max-width: 75rem;
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
-  padding-top: 5rem;
+  padding-top: 0;
   padding-bottom: 2rem;
 }
 
@@ -77,8 +22,8 @@
 
 .documentos-card h2 {
   margin-bottom: 1.25rem;
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.2rem;
+  font-weight: 700;
   color: #111827;
 }
 
@@ -139,8 +84,13 @@
   transition: 0.2s;
 }
 
-.documentos-form button[type="submit"]:hover {
+.documentos-form button[type="submit"]:hover:not(:disabled) {
   background: #0c3d68;
+}
+
+.documentos-form button[type="submit"]:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
 }
 
 .progress-bar {
@@ -161,6 +111,10 @@
   color: #dc2626;
   font-size: 0.85rem;
   font-weight: 600;
+  padding: 0.5rem;
+  background-color: #fee2e2;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .documentos-table {
@@ -203,6 +157,7 @@
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 .btn-download:hover {
@@ -218,6 +173,7 @@
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 .btn-excluir:hover {
@@ -230,7 +186,6 @@
   }
   .documentos-table {
     display: block;
-
     overflow-x: auto;
   }
   .acoes {
