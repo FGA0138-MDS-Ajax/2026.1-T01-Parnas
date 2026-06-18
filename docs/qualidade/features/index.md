@@ -12,7 +12,7 @@ evidências, defeitos encontrados e o **status final** da feature.
 |---|:--:|:--:|---|
 | [Cadastro de Usuário](feature_1_cadastro-usuario.md) | A | 4 | 🚧 Aprovada com pendências |
 | [Autenticação e Login](feature_2_autenticacao-login.md) | A | 4 | 🚧 Aprovada com pendências |
-| [Recuperação de Senha](feature_3_recuperacao-senha.md) | A | 5 | 🚧 A preencher |
+| [Recuperação de Senha](feature_3_recuperacao-senha.md) | A | 5 | 🚧 Aprovada com pendências |
 | [Cadastro de Empresa](feature_4_cadastro-empresa.md) | A | 4 | 🚧 A preencher |
 | [Cadastro de Categoria](feature_5_cadastro-categoria.md) | B | 5 | 🚧 A preencher |
 | [Cadastro de Transação](feature_6_cadastro-transacao.md) | C | 6 | 🚧 A preencher |

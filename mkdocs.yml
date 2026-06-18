@@ -88,6 +88,9 @@ nav:
       - Feature 14 — Comparação de Modalidades: qualidade/features/feature_14_modalidades-credito.md
       - Feature 15 — Seleção de Empresa Ativa: qualidade/features/feature_15_selecao-empresa-ativa.md
       - Feature 16 — Dashboard Financeiro: qualidade/features/feature_16_dashboard-financeiro.md
+    - Documentação por Tarefa Técnica:
+      - qualidade/tasks/index.md
+      - Tarefa IV — Integração do Ciclo de Vida: qualidade/tasks/task_4_integracao-ciclo-vida.md
     - Consolidados por Sprint:
       - qualidade/sprints/index.md
       - Sprint 4: qualidade/sprints/sprint-04.md
