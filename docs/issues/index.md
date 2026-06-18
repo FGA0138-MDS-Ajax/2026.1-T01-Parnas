@@ -31,8 +31,8 @@ Sprint, prioridade, funcionalidade), **critérios de aceitação**, **tarefas**,
 | [us15](us15.md) | Seleção de empresa ativa | A | R04 | CEN-00 | 7 | 🔄 Aberta |
 | [us9](us9.md) | Centralização documental | G | R10 | CEN-02 | 8 | 🔄 Aberta |
 | [us12](us12.md) | Relatórios financeiros | F | R11 | CEN-03 | 8 | 🔄 Aberta |
-| [us10](us10.md) | Simulação de crédito | H | R12 | CEN-04 | 9 | 🚧 Fechada com pendências |
-| [us13](us13.md) | Simulação de crédito *(consolidada na us10)* | H | R12 | CEN-04 | 9 | 🔄 Aberta |
+| [us10](us10.md) | Simulação de crédito *(frontend)* | H | R12 | CEN-04 | 9 | 🚧 Fechada com pendências |
+| [us13](us13.md) | Simulação de crédito *(backend)* | H | R12 | CEN-04 | 9 | 🔄 Aberta |
 | [us14](us14.md) | Comparação de modalidades de crédito | I | R13 | CEN-04 | 9 | 🚧 Fechada com pendências |
 
 ---

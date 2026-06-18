@@ -82,7 +82,7 @@ nav:
       - Feature 7 — Histórico de Transações: qualidade/features/feature_7_historico-transacoes.md
       - Feature 8 — Exclusão de Usuário/Empresa: qualidade/features/feature_8_exclusao-usuario-empresa.md
       - Feature 9 — Centralização Documental: qualidade/features/feature_9_centralizacao-documental.md
-      - Feature 10 — Simulação de Crédito: qualidade/features/feature_10_simulacao-credito.md
+      - Feature 10 e 13 — Simulação de Crédito: qualidade/features/feature_10_e_13_simulacao-credito.md
       - Feature 11 — Cadastro de Contas: qualidade/features/feature_11_cadastro-contas.md
       - Feature 12 — Relatórios Financeiros: qualidade/features/feature_12_relatorios-financeiros.md
       - Feature 14 — Comparação de Modalidades: qualidade/features/feature_14_modalidades-credito.md
@@ -109,10 +109,10 @@ nav:
       - us7 — Histórico de Transações: issues/us7.md
       - us8 — Exclusão de Usuário/Empresa: issues/us8.md
       - us9 — Centralização Documental: issues/us9.md
-      - us10 — Simulação de Crédito: issues/us10.md
+      - us10 — Simulação de Crédito (Frontend): issues/us10.md
       - us11 — Cadastro de Contas: issues/us11.md
       - us12 — Relatórios Financeiros: issues/us12.md
-      - us13 — Simulação de Crédito (consolidada): issues/us13.md
+      - us13 — Simulação de Crédito (Backend): issues/us13.md
       - us14 — Comparação de Modalidades: issues/us14.md
       - us15 — Seleção de Empresa Ativa: issues/us15.md
       - us16 — Dashboard Financeiro: issues/us16.md
