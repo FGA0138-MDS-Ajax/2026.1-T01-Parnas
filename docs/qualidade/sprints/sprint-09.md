@@ -15,7 +15,7 @@
 
 | Feature | Requisito | Status |
 | --- | :--: | --- |
-| [Simulação de crédito](../features/feature_10_simulacao-credito.md) | R12 | ❌ Reprovada |
+| [Simulação de crédito (front + back)](../features/feature_10_e_13_simulacao-credito.md) | R12 | 🚧 Aprovada com pendências |
 | [Comparação de modalidades de crédito](../features/feature_14_modalidades-credito.md) | R13 | ❌ Reprovada |
 
 ---
