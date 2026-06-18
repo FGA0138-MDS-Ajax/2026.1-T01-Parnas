@@ -22,7 +22,7 @@ evidências, defeitos encontrados e o **status final** da feature.
 | [Simulação de Crédito (front + back)](feature_10_e_13_simulacao-credito.md) | H | 9 | 🚧 Aprovada com pendências |
 | [Cadastro de Contas](feature_11_cadastro-contas.md) | J | 7 | 🚧 Aprovada com pendências |
 | [Relatórios Financeiros](feature_12_relatorios-financeiros.md) | F | 8 | 🚧 Aprovada com pendências |
-| [Comparação de Modalidades de Crédito](feature_14_modalidades-credito.md) | I | 9 | ❌ Reprovada |
+| [Comparação de Modalidades de Crédito](feature_14_modalidades-credito.md) | I | 9 | 🚧 Aprovada com pendências |
 | [Seleção de Empresa Ativa](feature_15_selecao-empresa-ativa.md) | A | 7 | 🚧 A preencher |
 | [Dashboard Financeiro](feature_16_dashboard-financeiro.md) | E | 7 | 🚧 A preencher |
 
