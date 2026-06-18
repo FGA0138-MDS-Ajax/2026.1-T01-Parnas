@@ -59,4 +59,8 @@ def create_app():
     from app.routes.simulation_routes import simulation_bp
     app.register_blueprint(simulation_bp, url_prefix='/api/simulations')
 
+    # Registra o Blueprint de relatórios financeiros
+    from app.routes.report_routes import report_bp
+    app.register_blueprint(report_bp, url_prefix='/api/reports')
+
     return app
