@@ -5,3 +5,4 @@ from app.models.transaction import Transaction
 from app.models.bill import Bill
 from app.models.document import Document
 from app.models.simulation import Simulation
+from app.models.comparison import Comparison, ComparisonModality

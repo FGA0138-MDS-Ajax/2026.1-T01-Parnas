@@ -13,6 +13,7 @@ import Contas from './pages/Contas/Contas';
 import Configuracoes from './pages/Configuracoes/Configuracoes';
 import Documentos from "./pages/Documentos/Documentos";
 import Simulacoes from './pages/Simulacoes/Simulacoes';
+import Comparacoes from './pages/Comparacoes/Comparacoes';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -44,6 +45,7 @@ export const AppRoutes = () => {
           <Route path="/transacoes" element={<Transacoes />} />
           <Route path="/contas" element={<Contas />} />
           <Route path="/simulacoes" element={<Simulacoes />} />
+          <Route path="/comparacoes" element={<Comparacoes />} />
           <Route path="/configuracoes" element={<Configuracoes />} />
           <Route path="/documentos" element={<Documentos />} />
         </Route>
