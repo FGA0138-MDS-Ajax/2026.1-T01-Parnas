@@ -86,14 +86,19 @@ def test_user(app_context, clean_db):
 
 
 @pytest.fixture
-def test_company(app_context, clean_db):
-    """Uma empresa persistida (genérica, reutilizável entre features)."""
+def test_company(app_context, clean_db, test_user):
+    """Uma empresa persistida (genérica, reutilizável entre features).
+
+    Já vinculada ao test_user (tabela user_company): vários services exigem que
+    o usuário autenticado pertença à empresa para liberar o acesso (403 caso não).
+    """
     company = Company(
         name='Padaria Central',
         cnpj='11.222.333/0001-81',
         email='contato@padaria.com',
         phone='1130000000',
     )
+    company.users.append(test_user)
     db.session.add(company)
     db.session.commit()
     return company
