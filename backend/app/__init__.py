@@ -63,5 +63,8 @@ def create_app():
     # Registra o Blueprint de comparação de modalidades de crédito
     from app.routes.comparison_routes import comparison_bp
     app.register_blueprint(comparison_bp, url_prefix='/api/comparacoes')
+    # Registra o Blueprint de relatórios financeiros
+    from app.routes.report_routes import report_bp
+    app.register_blueprint(report_bp, url_prefix='/api/reports')
 
     return app
