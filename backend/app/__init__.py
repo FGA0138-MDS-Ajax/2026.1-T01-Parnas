@@ -23,6 +23,7 @@ def create_app():
     from app.models.transaction import Transaction
     from app.models.bill import Bill
     from app.models.document import Document
+    from app.models.simulation import Simulation
 
     # Força a criação das tabelas automaticamente (essencial para o SQLite de teste)
     with app.app_context():
@@ -53,5 +54,9 @@ def create_app():
     # Registra o Blueprint de documentos (centralização documental)
     from app.routes.document_routes import document_bp
     app.register_blueprint(document_bp, url_prefix='/api/documentos')
+
+    # Registra o Blueprint de simulação de crédito
+    from app.routes.simulation_routes import simulation_bp
+    app.register_blueprint(simulation_bp, url_prefix='/api/simulations')
 
     return app
