@@ -21,6 +21,9 @@ import Configuracoes from "./pages/Configuracoes/Configuracoes";
 import Documentos from "./pages/Documentos/Documentos";
 import Contas from './pages/Contas/Contas';
 import EditarPerfil from "./pages/EditarPerfil/EditarPerfil";
+import Simulacoes from './pages/Simulacoes/Simulacoes';
+import Comparacoes from './pages/Comparacoes/Comparacoes';
+import Relatorios from './pages/Relatorios/Relatorios';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -80,8 +83,11 @@ export const AppRoutes = () => {
             <Route path="/cadastro-empresa" element={<CadastroEmpresa />} />
             <Route path="/categorias" element={<Categorias />} />
             <Route path="/transacoes" element={<Transacoes />} />
-            <Route path="/configuracoes" element={<Configuracoes />} />
             <Route path="/contas" element={<Contas />} />
+            <Route path="/simulacoes" element={<Simulacoes />} />
+            <Route path="/comparacoes" element={<Comparacoes />} />
+            <Route path="/relatorios" element={<Relatorios />} />
+            <Route path="/configuracoes" element={<Configuracoes />} />
             <Route path="/documentos" element={<Documentos />} />
             <Route path="/editar-perfil" element={<EditarPerfil />} />
           </Route>

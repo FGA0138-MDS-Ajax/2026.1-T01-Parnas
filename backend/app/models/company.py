@@ -17,6 +17,7 @@ class Company(db.Model):
     transactions = db.relationship('Transaction', back_populates='company', cascade="all, delete-orphan")
     bills = db.relationship('Bill', back_populates='company', cascade="all, delete-orphan")
     documents = db.relationship('Document', back_populates='company', cascade="all, delete-orphan")
+    simulations = db.relationship('Simulation', back_populates='empresa', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<Company {self.name}>'
