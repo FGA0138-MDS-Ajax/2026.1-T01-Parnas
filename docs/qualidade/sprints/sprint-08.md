@@ -1,9 +1,9 @@
-# Consolidado de Testes e GQM — Sprint 8
+# Consolidado de Testes e GQM - Sprint 8
 
 | Campo | Valor |
 |---|---|
 | **Sprint** | 8 |
-| **Período** | 14–20/jun |
+| **Período** | 14-20/jun |
 | **Foco** | Centralização documental e relatórios financeiros (CEN-02 e CEN-03, Func. G e F) |
 
 ---
@@ -11,19 +11,19 @@
 
 | Feature | Requisito | Status |
 | --- | :--: | --- |
-| [Centralização documental](../features/feature_9_centralizacao-documental.md) | R10 | ✅ Aprovada |
-| [Relatórios financeiros](../features/feature_12_relatorios-financeiros.md) | R11 | 🚧 Aprovada com pendências |
+| [Centralização documental](../features/feature_9_centralizacao-documental.md) | R10 | Aprovada |
+| [Relatórios financeiros](../features/feature_12_relatorios-financeiros.md) | R11 | Aprovada com pendências |
 
 > A Sprint também concentrou trabalho de **refatoração** transversal (padronização de
-> DTOs com Marshmallow e redesign do frontend — [task5](../../issues/task5.md)).
+> DTOs com Marshmallow e redesign do frontend - [task5](../../issues/task5.md)).
 
 ---
 ## 2. Casos agregados
 
 | Caso | Nível | Status |
 | :--: | --- | :--: |
-| TS-19 | Integração | ✅ |
-| TS-21 | Integração | 🚧 |
+| TS-19 | Integração | OK |
+| TS-21 | Integração | Pendente |
 
 ## 3. Defeitos
 
@@ -47,7 +47,7 @@
 pytest --cov=app tests/
 ```
 
-| Cobertura | Valor | Mínimo (S6–10) |
+| Cobertura | Valor | Mínimo (S6-10) |
 | --- | :--: | :--: |
 | Back-end | 80% | 75% |
 | Front-end | n/d (Vitest a configurar) | 75% |
@@ -56,10 +56,10 @@ pytest --cov=app tests/
 
 | Métrica | Valor | Meta |
 | :--: | :--: | --- |
-| M1 — Throughput | 6 issues | Tendência estável/crescente |
-| M2 — Densidade de Defeitos | 0,33 | ≈ 0 |
-| M3 — Cobertura | 80% | ≥ 75% |
-| M4 — Taxa de Aprovação da Pipeline | 83% | ≥ 70% |
+| M1 - Throughput | 6 issues | Tendência estável/crescente |
+| M2 - Densidade de Defeitos | 0,33 | ≈ 0 |
+| M3 - Cobertura | 80% | ≥ 75% |
+| M4 - Taxa de Aprovação da Pipeline | 83% | ≥ 70% |
 
 ## 7. Parecer da dupla
 

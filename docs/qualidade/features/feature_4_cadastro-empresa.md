@@ -1,4 +1,4 @@
-# Documentação de Testes — Cadastro de Empresa
+# Documentação de Testes - Cadastro de Empresa
 
 ---
 ## 1. Identificação
@@ -12,17 +12,17 @@
 | **Branch de teste** | `test/feature/4-cadastro-empresa-qa` (recriada a partir da develop) |
 | **Sprint(s)** | 4 |
 | **Responsáveis** | Daniel Filipe / Matheus Moretti |
-| **Data** | 25/05/2026 |
+| **Data** | 23/05/2026 |
 
 ---
 ## 2. Critérios de aceitação testáveis
 
 > Acordados com a dupla de desenvolvimento no início da feature (US04).
 
-- [x] Usuário consegue cadastrar empresa com nome e CNPJ obrigatórios — `TS-01`, `TS-04`, `TS-05`
-- [x] CNPJ duplicado retorna erro com mensagem clara — `TS-02`, `TS-04`, `TS-05` (409 "CNPJ já cadastrado")
-- [x] CNPJ é validado (formato e dígitos verificadores) — `TS-01`, `TS-03`
-- [x] Após cadastro, usuário é vinculado automaticamente à empresa — `TS-02`, `TS-05`, `TS-06`, `TS-18`
+- [x] Usuário consegue cadastrar empresa com nome e CNPJ obrigatórios - `TS-01`, `TS-04`, `TS-05`
+- [x] CNPJ duplicado retorna erro com mensagem clara - `TS-02`, `TS-04`, `TS-05` (409 "CNPJ já cadastrado")
+- [x] CNPJ é validado (formato e dígitos verificadores) - `TS-01`, `TS-03`
+- [x] Após cadastro, usuário é vinculado automaticamente à empresa - `TS-02`, `TS-05`, `TS-06`, `TS-18`
 
 ---
 ## 3. Casos executados
@@ -31,23 +31,23 @@
 
 | Caso | Descrição | Nível | Esperado | Observado | Status |
 | :--: | --- | --- | --- | --- | :--: |
-| TS-01 | Schema: validação de nome/CNPJ/email/telefone (19 casos) | Unitário | aceita válidos, rejeita inválidos/ausentes | Conforme | ✅ |
-| TS-02 | `register_company`: sucesso, CNPJ duplicado (409), erro de BD (500), vínculo (7 casos) | Unitário | status e efeitos corretos | Conforme | ✅ |
-| TS-03 | Validação de CNPJ (formato e dígitos verificadores) (5 casos) | Unitário | rejeita CNPJ inválido | Conforme | ✅ |
-| TS-04 | Rota `POST /api/companies/register`: sucesso, validação, duplicado, content-type, integração (15 casos) | Integração | 201/400/409 conforme cenário | Conforme (1 xfail) | ✅ |
-| TS-05 | Service + BD real: persistência, associação user-company, constraints, rollback, múltiplas empresas (10 casos) | Integração | grava e vincula corretamente | Conforme | ✅ |
-| TS-06 | E2E: fluxo completo cadastro→login→empresa, múltiplos usuários/CNPJs (7 casos) | E2E | fluxo ponta a ponta funciona | Conforme | ✅ |
-| TS-18 | (roteiro) Isolamento/vínculo usuário–empresa | Integração/E2E | cada usuário associado só à sua empresa | Conforme | ✅ |
-| — | Token JWT malformado → deveria 401 | Integração | `401` | `422` (default flask-jwt) | ⏭️ xfail (DEF-01) |
+| TS-01 | Schema: validação de nome/CNPJ/email/telefone (19 casos) | Unitário | aceita válidos, rejeita inválidos/ausentes | Conforme | OK |
+| TS-02 | `register_company`: sucesso, CNPJ duplicado (409), erro de BD (500), vínculo (7 casos) | Unitário | status e efeitos corretos | Conforme | OK |
+| TS-03 | Validação de CNPJ (formato e dígitos verificadores) (5 casos) | Unitário | rejeita CNPJ inválido | Conforme | OK |
+| TS-04 | Rota `POST /api/companies/register`: sucesso, validação, duplicado, content-type, integração (15 casos) | Integração | 201/400/409 conforme cenário | Conforme (1 xfail) | OK |
+| TS-05 | Service + BD real: persistência, associação user-company, constraints, rollback, múltiplas empresas (10 casos) | Integração | grava e vincula corretamente | Conforme | OK |
+| TS-06 | E2E: fluxo completo cadastro→login→empresa, múltiplos usuários/CNPJs (7 casos) | E2E | fluxo ponta a ponta funciona | Conforme | OK |
+| TS-18 | (roteiro) Isolamento/vínculo usuário-empresa | Integração/E2E | cada usuário associado só à sua empresa | Conforme | OK |
+| - | Token JWT malformado → deveria 401 | Integração | `401` | `422` (default flask-jwt) | xfail (DEF-01) |
 
 ---
 ## 4. Evidências
 
 > Resultados conferem com os artifacts da pipeline (GitHub Actions, `tests.yml`):
 > `tests.unit.feature_4`, `tests.integration.feature_4` e `tests.e2e.feature_4`
-> somam **60 casos — 59 pass, 0 fail, 1 xfail**.
+> somam **60 casos - 59 pass, 0 fail, 1 xfail**.
 
-### Backend — `python -m pytest tests/unit/feature_4 tests/integration/feature_4 tests/e2e/feature_4 -q`
+### Backend - `python -m pytest tests/unit/feature_4 tests/integration/feature_4 tests/e2e/feature_4 -q`
 
 ```
 tests/unit/feature_4/test_company_schema.py ................        (19)
@@ -64,7 +64,7 @@ tests/e2e/feature_4/test_company_registration_flow.py .......       (7)
 > soltos + duplicados) e com 11 falhas de **teste/ambiente** (mocks que patchavam
 > a classe `Company` inteira, CNPJs de teste inválidos, expectativa errada de
 > campos extras). Foram **reorganizados** em `tests/{unit,integration,e2e}/feature_4/`
-> e as falhas corrigidas no lado do teste — **nenhuma era bug do código de produção**
+> e as falhas corrigidas no lado do teste - **nenhuma era bug do código de produção**
 > de company. Guias/rascunhos e artefatos versionados foram removidos.
 
 ---
@@ -75,7 +75,7 @@ tests/e2e/feature_4/test_company_registration_flow.py .......       (7)
 | DEF-01 | Token JWT malformado retorna **HTTP 422** (default do flask-jwt-extended), não **401** como o contrato espera. Exige um handler customizado de erro de token (`@jwt.invalid_token_loader`). Marcado `xfail`. Branch sugerida: `fix/jwt-erro-401`. | Aberto |
 
 > Nenhum defeito de produção encontrado no fluxo de **cadastro de empresa**
-> (criar, CNPJ duplicado, validação de CNPJ, vínculo automático) — todos os
+> (criar, CNPJ duplicado, validação de CNPJ, vínculo automático) - todos os
 > critérios passam.
 
 ---
@@ -113,5 +113,5 @@ pytest tests/unit/feature_4 tests/integration/feature_4 tests/e2e/feature_4 \
 > fluxo de cadastro.
 >
 > **Pendências (não bloqueantes):**
-> 1. **DEF-01** — padronizar o retorno de token JWT inválido para `401` (hoje `422`); depois remover o `xfail`.
-> 2. **Cobertura mínima** — o número por módulo (49%) está abaixo de 60% por diluição com código de outras features; se a meta for por módulo, completar testes de `delete`/`update` de empresa (fora do escopo desta US) ou medir a cobertura só do recorte da feature.
+> 1. **DEF-01** - padronizar o retorno de token JWT inválido para `401` (hoje `422`); depois remover o `xfail`.
+> 2. **Cobertura mínima** - o número por módulo (49%) está abaixo de 60% por diluição com código de outras features; se a meta for por módulo, completar testes de `delete`/`update` de empresa (fora do escopo desta US) ou medir a cobertura só do recorte da feature.

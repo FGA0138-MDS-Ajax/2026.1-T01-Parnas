@@ -3,11 +3,11 @@
 
 ## Rastreabilidade
 - **Requisito(s):** R07, R08
-- **Cenário:** CEN-01 — Registro de dados financeiros
+- **Cenário:** CEN-01 - Registro de dados financeiros
 - **Sprint:** 10
 - **Prioridade:** Must
 - **Tipo:** fix (frontend, backend)
-- **Funcionalidade do produto:** C — Cadastro de Transações Financeiras
+- **Funcionalidade do produto:** C - Cadastro de Transações Financeiras
 
 ## Tarefas Frontend
 - [ ] Remover todos os dados mock do arquivo de `Transacoes/`
@@ -19,8 +19,8 @@
 - [ ] Integrar totais (receitas, despesas, saldo) retornados pela API
 - [ ] Integrar paginação com os parâmetros `page` e `per_page`
 - [x] Garantir que o `id_empresa` vem do contexto autenticado (`EmpresaContext`)
-- [ ] Exibir loading enquanto aguarda resposta da API
-- [ ] Exibir mensagem de erro em caso de falha na requisição
+- [x] Exibir loading enquanto aguarda resposta da API
+- [x] Exibir mensagem de erro em caso de falha na requisição
 
 ## Tarefas Backend
 - [ ] Verificar se `GET /transacoes` retorna os filtros corretamente

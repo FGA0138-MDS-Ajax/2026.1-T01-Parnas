@@ -1,9 +1,9 @@
-# Consolidado de Testes e GQM — Sprint 5
+# Consolidado de Testes e GQM - Sprint 5
 
 | Campo | Valor |
 |---|---|
 | **Sprint** | 5 |
-| **Período** | 24–30/mai |
+| **Período** | 24-30/mai |
 | **Foco** | Conclusão da autenticação e categorização financeira (CEN-00, Func. A e B) |
 
 ---
@@ -11,18 +11,18 @@
 
 | Feature | Requisito | Status |
 | --- | :--: | --- |
-| [Recuperação de senha](../features/feature_3_recuperacao-senha.md) | R05 | ✅ Aprovada |
-| [Exclusão de usuário/empresa](../features/feature_8_exclusao-usuario-empresa.md) | R02 | ✅ Aprovada |
-| [Cadastro de categoria](../features/feature_5_cadastro-categoria.md) | R06 | ✅ Aprovada |
+| [Recuperação de senha](../features/feature_3_recuperacao-senha.md) | R05 | Aprovada |
+| [Exclusão de usuário/empresa](../features/feature_8_exclusao-usuario-empresa.md) | R02 | Aprovada |
+| [Cadastro de categoria](../features/feature_5_cadastro-categoria.md) | R06 | Aprovada |
 
 ---
 ## 2. Casos agregados
 
 | Caso | Nível | Status |
 | :--: | --- | :--: |
-| TS-13 | Integração | ✅ |
-| TS-14 | Integração | ✅ |
-| TS-15 | Integração | ✅ |
+| TS-13 | Integração | OK |
+| TS-14 | Integração | OK |
+| TS-15 | Integração | OK |
 
 ## 3. Defeitos
 
@@ -46,7 +46,7 @@
 pytest --cov=app tests/
 ```
 
-| Cobertura | Valor | Mínimo (S1–5) |
+| Cobertura | Valor | Mínimo (S1-5) |
 | --- | :--: | :--: |
 | Back-end | 69% | 60% |
 | Front-end | n/d (Vitest a configurar) | 60% |
@@ -55,10 +55,10 @@ pytest --cov=app tests/
 
 | Métrica | Valor | Meta |
 | :--: | :--: | --- |
-| M1 — Throughput | 6 issues | Tendência estável/crescente |
-| M2 — Densidade de Defeitos | 0,33 | ≈ 0 |
-| M3 — Cobertura | 69% | ≥ 60% |
-| M4 — Taxa de Aprovação da Pipeline | 67% | ≥ 70% (a partir da S5) |
+| M1 - Throughput | 6 issues | Tendência estável/crescente |
+| M2 - Densidade de Defeitos | 0,33 | ≈ 0 |
+| M3 - Cobertura | 69% | ≥ 60% |
+| M4 - Taxa de Aprovação da Pipeline | 67% | ≥ 70% (a partir da S5) |
 
 ## 7. Parecer da dupla
 

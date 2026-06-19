@@ -1,4 +1,4 @@
-# Documentação de Testes — Seleção de Empresa Ativa
+# Documentação de Testes - Seleção de Empresa Ativa
 
 ---
 ## 1. Identificação
@@ -12,7 +12,7 @@
 | **Branch de teste** | `test/feature/15-selecao-empresa-ativa` |
 | **Sprint(s)** | 7 |
 | **Responsáveis** | Daniel Filipe / Matheus Moretti |
-| **Data** | *dd/mm/aaaa* |
+| **Data** | 11/06/2026 |
 
 ---
 ## 2. Critérios de aceitação testáveis
@@ -26,7 +26,7 @@
 
 | Caso | Descrição | Nível | Esperado | Observado | Status |
 | :--: | --- | --- | --- | --- | :--: |
-| TS-18 | Isolamento de dados entre empresas (vínculo usuário–empresa) | Integração | *a preencher* | *a preencher* | 🚧 |
+| TS-18 | Isolamento de dados entre empresas (vínculo usuário-empresa) | Integração | *a preencher* | *a preencher* | Pendente |
 
 ---
 ## 4. Evidências
@@ -38,7 +38,7 @@
 
 | Issue | Descrição | Status |
 |---|---|---|
-| #— | *a preencher* | — |
+| #- | *a preencher* | - |
 
 ---
 ## 6. Cobertura
@@ -49,7 +49,7 @@ pytest --cov=app tests/
 
 | Métrica | Valor |
 |---|---|
-| Cobertura da feature | *—%* |
+| Cobertura da feature | *-%* |
 
 ---
 ## 7. Parecer final

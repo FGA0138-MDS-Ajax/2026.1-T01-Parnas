@@ -1,12 +1,12 @@
-# Consolidado de Testes e GQM — Sprint 10
+# Consolidado de Testes e GQM - Sprint 10
 
 | Campo | Valor |
 |---|---|
 | **Sprint** | 10 |
-| **Período** | 28/jun–04/jul |
-| **Foco** | Estabilização, refatoração e entrega final — testes E2E (Playwright) e carga (Locust) |
+| **Período** | 28/jun-04/jul |
+| **Foco** | Estabilização, refatoração e entrega final - testes E2E (Playwright) e carga (Locust) |
 
-> 🚧 **Sprint de estabilização, ainda não iniciada.** Concentra a consolidação dos
+> **Sprint de estabilização, ainda não iniciada.** Concentra a consolidação dos
 > defeitos mapeados nas Sprints anteriores, a refatoração das integrações e os testes
 > E2E e de carga. Os valores de GQM serão *projetados/consolidados* no fechamento.
 
@@ -15,7 +15,7 @@
 
 | Feature | Requisito | Status |
 | --- | :--: | --- |
-| *Reexecução do roteiro completo (regressão)* | R01–R15 | *a preencher* |
+| *Reexecução do roteiro completo (regressão)* | R01-R15 | *a preencher* |
 
 ---
 ## 2. Casos agregados
@@ -51,19 +51,19 @@
 pytest --cov=app tests/
 ```
 
-| Cobertura | Valor | Mínimo (S6–10) |
+| Cobertura | Valor | Mínimo (S6-10) |
 | --- | :--: | :--: |
-| Back-end | *—%* | 75% |
+| Back-end | *-%* | 75% |
 | Front-end | n/d (Vitest a configurar) | 75% |
 
 ## 6. Análise GQM
 
 | Métrica | Valor | Meta |
 | :--: | :--: | --- |
-| M1 — Throughput | *a preencher* | Tendência estável/crescente |
-| M2 — Densidade de Defeitos | *a preencher* | ≈ 0 |
-| M3 — Cobertura | *a preencher* | ≥ 75% |
-| M4 — Taxa de Aprovação da Pipeline | *a preencher* | ≥ 70% |
+| M1 - Throughput | *a preencher* | Tendência estável/crescente |
+| M2 - Densidade de Defeitos | *a preencher* | ≈ 0 |
+| M3 - Cobertura | *a preencher* | ≥ 75% |
+| M4 - Taxa de Aprovação da Pipeline | *a preencher* | ≥ 70% |
 
 ## 7. Parecer da dupla
 

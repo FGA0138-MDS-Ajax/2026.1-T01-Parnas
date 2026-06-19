@@ -30,7 +30,7 @@ no Documento de Visão, seção 6.2); esta página é a versão navegável.
 | TS-15 | Cadastro de categoria por empresa (unicidade)                      | Integração | Funcional     |      R06      |
 | TS-16 | Cadastro de transação vinculada à categoria via API                | Integração | Funcional     |      R07      |
 | TS-17 | Histórico de transações com filtros e totais                       | Integração | Funcional     |      R08      |
-| TS-18 | Isolamento de dados entre empresas (vínculo usuário–empresa)       | Integração | Funcional     |      R04      |
+| TS-18 | Isolamento de dados entre empresas (vínculo usuário-empresa)       | Integração | Funcional     |      R04      |
 | TS-19 | Upload e organização de documentos                                 | Integração | Funcional     |      R10      |
 | TS-20 | Cadastro de contas a pagar/receber                                 | Integração | Funcional     |      R15      |
 | TS-21 | Geração de relatório financeiro em PDF                             | Integração | Funcional     |      R11      |
@@ -46,21 +46,21 @@ no Documento de Visão, seção 6.2); esta página é a versão navegável.
 
 |                       Requisito                       | Casos de teste                    |
 |:-----------------------------------------------------:|-----------------------------------|
-|     R01 — Cadastro com validação de e-mail/senha      | TS-01, TS-02, TS-04, TS-24        |
-|              R02 — Exclusão com cascata               | TS-14                             |
-|                R03 — Autenticação JWT                 | TS-03, TS-04, TS-12, TS-24        |
-| R04 — Modelagem Usuário–Empresa / isolamento de dados | TS-18                             |
-|              R05 — Recuperação de senha               | TS-13                             |
-|       R06 — Categorias por empresa (unicidade)        | TS-15                             |
-|                   R07 — Transações                    | TS-05, TS-16, TS-24               |
-|              R08 — Histórico com filtros              | TS-11, TS-17, TS-25               |
-|              R09 — Dashboard financeiro               | TS-17                             |
-|            R10 — Centralização documental             | TS-19                             |
-|          R11 — Relatórios financeiros (PDF)           | TS-21                             |
-|        R12 — Simulação de crédito (Price/SAC)         | TS-06, TS-07, TS-08, TS-22, TS-26 |
-|            R13 — Comparação de modalidades            | TS-09, TS-10, TS-23               |
-|                   R14 — Desempenho                    | TS-27                             |
-|               R15 — Cadastro de contas                | TS-20                             |
+|     R01 - Cadastro com validação de e-mail/senha      | TS-01, TS-02, TS-04, TS-24        |
+|              R02 - Exclusão com cascata               | TS-14                             |
+|                R03 - Autenticação JWT                 | TS-03, TS-04, TS-12, TS-24        |
+| R04 - Modelagem Usuário-Empresa / isolamento de dados | TS-18                             |
+|              R05 - Recuperação de senha               | TS-13                             |
+|       R06 - Categorias por empresa (unicidade)        | TS-15                             |
+|                   R07 - Transações                    | TS-05, TS-16, TS-24               |
+|              R08 - Histórico com filtros              | TS-11, TS-17, TS-25               |
+|              R09 - Dashboard financeiro               | TS-17                             |
+|            R10 - Centralização documental             | TS-19                             |
+|          R11 - Relatórios financeiros (PDF)           | TS-21                             |
+|        R12 - Simulação de crédito (Price/SAC)         | TS-06, TS-07, TS-08, TS-22, TS-26 |
+|            R13 - Comparação de modalidades            | TS-09, TS-10, TS-23               |
+|                   R14 - Desempenho                    | TS-27                             |
+|               R15 - Cadastro de contas                | TS-20                             |
 
 ---
 ## Distribuição por nível
@@ -81,10 +81,10 @@ Ao executar o roteiro em cada Sprint, cada caso recebe um status:
 
 |      Status      | Significado                                    |
 |:----------------:|------------------------------------------------|
-|     ✅ Passou     | Resultado observado igual ao esperado          |
-|     ❌ Falhou     | Divergência → abrir issue `bug` + `fix/<nome>` |
-| ⏭️ Não executado | Fora do escopo da Sprint ou bloqueado          |
-|   🚧 Pendente    | Caso depende de feature ainda não entregue     |
+|     Passou     | Resultado observado igual ao esperado          |
+|     Falhou     | Divergência → abrir issue `bug` + `fix/<nome>` |
+| Não executado | Fora do escopo da Sprint ou bloqueado          |
+|   Pendente    | Caso depende de feature ainda não entregue     |
 
 Os resultados por feature ficam na
 [Documentação por Feature](features/index.md) e os agregados nos

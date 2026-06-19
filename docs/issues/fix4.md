@@ -3,16 +3,16 @@
 
 ## Rastreabilidade
 - **Requisito(s):** R02, R03
-- **Cenário:** CEN-00 — Plataforma e autenticação
+- **Cenário:** CEN-00 - Plataforma e autenticação
 - **Sprint:** 10
 - **Prioridade:** Must
 - **Tipo:** fix (backend)
-- **Funcionalidade do produto:** A — Cadastro e Autenticação de Usuário/Empresa
+- **Funcionalidade do produto:** A - Cadastro e Autenticação de Usuário/Empresa
 
 ## Tarefas Backend
 - [ ] Criar controle de tokens invalidados:
-      - Opção A — adicionar campo `ativo` (boolean) em `USUARIO` e checar a cada requisição autenticada
-      - Opção B — criar tabela `TOKEN_BLOCKLIST` com os tokens revogados
+      - Opção A - adicionar campo `ativo` (boolean) em `USUARIO` e checar a cada requisição autenticada
+      - Opção B - criar tabela `TOKEN_BLOCKLIST` com os tokens revogados
 - [ ] Criar migration para a solução escolhida
 - [ ] Atualizar o middleware de autenticação para verificar se o usuário ainda está ativo antes de processar a requisição
 - [ ] Garantir que ao deletar usuário o campo `ativo` vira `False` (ou o token é adicionado à blocklist)

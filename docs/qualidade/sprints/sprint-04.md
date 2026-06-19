@@ -1,31 +1,31 @@
-# Consolidado de Testes e GQM — Sprint 4
+# Consolidado de Testes e GQM - Sprint 4
 
 | Campo | Valor |
 |---|---|
 | **Sprint** | 4 |
-| **Período** | 17–23/mai |
-| **Foco** | Plataforma e autenticação — cadastro, login e empresa (CEN-00, Func. A parcial) |
+| **Período** | 17-23/mai |
+| **Foco** | Plataforma e autenticação - cadastro, login e empresa (CEN-00, Func. A parcial) |
 
 ---
 ## 1. Features testadas
 
 | Feature | Requisito | Status |
 | --- | :--: | --- |
-| [Cadastro de usuário](../features/feature_1_cadastro-usuario.md) | R01 | 🚧 Aprovada com pendências |
-| [Autenticação e login](../features/feature_2_autenticacao-login.md) | R03 | 🚧 Aprovada com pendências |
-| [Cadastro de empresa](../features/feature_4_cadastro-empresa.md) | R04 | ✅ Aprovada |
+| [Cadastro de usuário](../features/feature_1_cadastro-usuario.md) | R01 | Aprovada com pendências |
+| [Autenticação e login](../features/feature_2_autenticacao-login.md) | R03 | Aprovada com pendências |
+| [Cadastro de empresa](../features/feature_4_cadastro-empresa.md) | R04 | Aprovada |
 
 ---
 ## 2. Casos agregados
 
 | Caso | Nível | Status |
 | :--: | --- | :--: |
-| TS-01 | Unitário | ✅ |
-| TS-02 | Unitário | ✅ |
-| TS-03 | Unitário | ✅ |
-| TS-04 | Unitário | ✅ |
-| TS-12 | Integração | ✅ |
-| TS-18 | Integração | ✅ |
+| TS-01 | Unitário | OK |
+| TS-02 | Unitário | OK |
+| TS-03 | Unitário | OK |
+| TS-04 | Unitário | OK |
+| TS-12 | Integração | OK |
+| TS-18 | Integração | OK |
 
 ## 3. Defeitos
 
@@ -49,7 +49,7 @@
 pytest --cov=app tests/
 ```
 
-| Cobertura | Valor | Mínimo (S1–5) |
+| Cobertura | Valor | Mínimo (S1-5) |
 | --- | :--: | :--: |
 | Back-end | 63% | 60% |
 | Front-end | n/d (Vitest a configurar) | 60% |
@@ -58,15 +58,15 @@ pytest --cov=app tests/
 
 | Métrica | Valor | Meta |
 | :--: | :--: | --- |
-| M1 — Throughput | 5 issues | Tendência estável/crescente |
-| M2 — Densidade de Defeitos | 0,40 | ≈ 0 |
-| M3 — Cobertura | 63% | ≥ 60% |
-| M4 — Taxa de Aprovação da Pipeline | — (CI em implantação) | ≥ 70% (a partir da S5) |
+| M1 - Throughput | 5 issues | Tendência estável/crescente |
+| M2 - Densidade de Defeitos | 0,40 | ≈ 0 |
+| M3 - Cobertura | 63% | ≥ 60% |
+| M4 - Taxa de Aprovação da Pipeline | - (CI em implantação) | ≥ 70% (a partir da S5) |
 
 ## 7. Parecer da dupla
 
 > Primeira Sprint de construção: a base de autenticação foi entregue e validada no
 > núcleo de negócio (cadastro, login e empresa). A densidade de defeitos (0,40)
-> reflete a maturidade inicial das práticas de teste — os dois defeitos de cadastro
+> reflete a maturidade inicial das práticas de teste - os dois defeitos de cadastro
 > foram registrados como `bug` e encaminhados para a Sprint de estabilização. A
 > pipeline de CI de testes ainda estava em implantação, então M4 não foi medida.

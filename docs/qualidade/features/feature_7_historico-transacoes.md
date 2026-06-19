@@ -1,10 +1,10 @@
-# Documentação de Testes — Histórico de Transações
+# Documentação de Testes - Histórico de Transações
 
 ## 1. Identificação
 
 | Campo                         | Valor                                 |
 |-------------------------------|---------------------------------------|
-| **Feature**                   | US07 — Histórico de Transações        |
+| **Feature**                   | US07 - Histórico de Transações        |
 | **Cenário**                   | CEN-01                                |
 | **Requisito**                 | R08                                   |
 | **Prioridade**                | Should                                |
@@ -12,53 +12,53 @@
 | **Branch de teste (QA)**      | `test/feature/7-historico-transacoes` |
 | **Sprint**                    | 6                                     |
 | **Responsáveis (QA)**         | Daniel Filipe / Matheus Moretti       |
-| **Data**                      | 06/06/2026                            |
+| **Data**                      | 05/06/2026                            |
 
 ## 2. Critérios de aceitação testáveis
 
-- [x] Visualiza todas as transações da empresa em ordem cronológica — `TS-04`, `TS-24`
-- [x] Filtrar por período (data início e data fim) — `TS-05`, `TS-17`
-- [ ] Filtrar por tipo (receita/despesa) — `TS-15` (front) ✅, mas `TS-06` (back) **falha** → ver **DEF-01**
-- [x] Filtrar por categoria — `TS-07`, `TS-16`
-- [x] Filtrar por valor mínimo e máximo — `TS-08`, `TS-18`
-- [ ] Total de receitas, despesas e saldo do período **filtrado** — `TS-09` (sem filtro) ✅, mas `TS-10` (totais com filtro que isola um tipo) **falha** → ver **DEF-01**
-- [ ] Lista paginada (máximo 20 itens por página) — back pagina corretamente (`TS-11`, `TS-12`); front pagina a **5** itens, não 20 → ver **DEF-02**
-- [x] Apenas transações da empresa autenticada são retornadas — `TS-01`, `TS-02`, `TS-03`
+- [x] Visualiza todas as transações da empresa em ordem cronológica - `TS-04`, `TS-24`
+- [x] Filtrar por período (data início e data fim) - `TS-05`, `TS-17`
+- [ ] Filtrar por tipo (receita/despesa) - `TS-15` (front) OK, mas `TS-06` (back) **falha** → ver **DEF-01**
+- [x] Filtrar por categoria - `TS-07`, `TS-16`
+- [x] Filtrar por valor mínimo e máximo - `TS-08`, `TS-18`
+- [ ] Total de receitas, despesas e saldo do período **filtrado** - `TS-09` (sem filtro) OK, mas `TS-10` (totais com filtro que isola um tipo) **falha** → ver **DEF-01**
+- [ ] Lista paginada (máximo 20 itens por página) - back pagina corretamente (`TS-11`, `TS-12`); front pagina a **5** itens, não 20 → ver **DEF-02**
+- [x] Apenas transações da empresa autenticada são retornadas - `TS-01`, `TS-02`, `TS-03`
 
 ## 3. Casos executados
 
 | Caso  | Descrição                                                        | Nível      | Esperado                                           | Observado                           | Status |
 |-------|------------------------------------------------------------------|------------|----------------------------------------------------|-------------------------------------|--------|
-| TS-01 | `GET /api/transactions/` sem `company_id`                        | Integração | `400` + "company_id é obrigatório"                 | Conforme                            | ✅      |
-| TS-02 | `GET /api/transactions/` sem token                               | Integração | `401`                                              | Conforme                            | ✅      |
-| TS-03 | Lista escopada por empresa/usuário (ignora ruído)                | Integração | só as 4 da empresa A do usuário                    | Conforme                            | ✅      |
-| TS-04 | Listagem em ordem cronológica (mais recente primeiro)            | Integração | datas em ordem decrescente                         | Conforme                            | ✅      |
-| TS-05 | Filtro por período (`data_inicio`/`data_fim`)                    | Integração | só itens dentro do intervalo                       | Conforme                            | ✅      |
-| TS-06 | Filtro por tipo `receita`                                        | Integração | `200` + só receitas                                | `TypeError` `Decimal - float` (500) | ❌      |
-| TS-07 | Filtro por categoria (`Vendas`)                                  | Integração | só itens da categoria                              | Conforme                            | ✅      |
-| TS-08 | Filtro por valor mínimo e máximo                                 | Integração | só itens na faixa                                  | Conforme                            | ✅      |
-| TS-09 | Resumo de totais sem filtro                                      | Integração | receitas/despesas/saldo corretos                   | Conforme                            | ✅      |
-| TS-10 | Totais respeitando filtro que isola um tipo                      | Integração | receitas corretas, despesas `0`                    | `TypeError` `Decimal - float` (500) | ❌      |
-| TS-11 | Paginação limita itens (`per_page=2`)                            | Integração | 2 itens, 2 páginas                                 | Conforme                            | ✅      |
-| TS-12 | Segunda página continua a ordem                                  | Integração | itens restantes em ordem decrescente               | Conforme                            | ✅      |
-| TS-13 | Estado inicial do hook (1ª página, totais de página)             | Unitário   | 12 itens, 5 por página, 3 páginas                  | Conforme                            | ✅      |
-| TS-14 | Totais somam receitas, despesas e saldo de tudo                  | Unitário   | 15800 / 10100 / 5700                               | Conforme                            | ✅      |
-| TS-15 | Filtro por tipo `receita` (hook)                                 | Unitário   | só receitas, despesas `0`                          | Conforme                            | ✅      |
-| TS-16 | Filtro por categoria (hook)                                      | Unitário   | só a categoria escolhida                           | Conforme                            | ✅      |
-| TS-17 | Filtro por período (hook)                                        | Unitário   | só itens no intervalo                              | Conforme                            | ✅      |
-| TS-18 | Filtro por valor mín/máx (hook)                                  | Unitário   | só itens na faixa                                  | Conforme                            | ✅      |
-| TS-19 | Aplicar filtros volta para a 1ª página                           | Unitário   | `paginaAtual = 1`                                  | Conforme                            | ✅      |
-| TS-20 | Limpar filtros restaura a listagem completa                      | Unitário   | volta a 12 itens, filtros vazios                   | Conforme                            | ✅      |
-| TS-21 | Mudar página avança dentro dos limites                           | Unitário   | `paginaAtual = 2`                                  | Conforme                            | ✅      |
-| TS-22 | Mudar página ignora valores fora do intervalo                    | Unitário   | permanece em 1                                     | Conforme                            | ✅      |
-| TS-23 | Página exibe os cartões de totais no topo                        | Unitário   | Receitas/Despesas/Saldo na tela                    | Conforme                            | ✅      |
-| TS-24 | Página lista a 1ª página (cabeçalho + 5 linhas)                  | Unitário   | "12 transação(ões)" + 6 linhas                     | Conforme                            | ✅      |
-| TS-25 | Aplicar filtro de tipo atualiza a listagem                       | Unitário   | "5 transação(ões) encontrada(s)"                   | Conforme                            | ✅      |
-| TS-26 | Limpar filtros restaura a listagem na UI                         | Unitário   | volta a "12 transação(ões)"                        | Conforme                            | ✅      |
+| TS-01 | `GET /api/transactions/` sem `company_id`                        | Integração | `400` + "company_id é obrigatório"                 | Conforme                            | OK      |
+| TS-02 | `GET /api/transactions/` sem token                               | Integração | `401`                                              | Conforme                            | OK      |
+| TS-03 | Lista escopada por empresa/usuário (ignora ruído)                | Integração | só as 4 da empresa A do usuário                    | Conforme                            | OK      |
+| TS-04 | Listagem em ordem cronológica (mais recente primeiro)            | Integração | datas em ordem decrescente                         | Conforme                            | OK      |
+| TS-05 | Filtro por período (`data_inicio`/`data_fim`)                    | Integração | só itens dentro do intervalo                       | Conforme                            | OK      |
+| TS-06 | Filtro por tipo `receita`                                        | Integração | `200` + só receitas                                | `TypeError` `Decimal - float` (500) | Falhou      |
+| TS-07 | Filtro por categoria (`Vendas`)                                  | Integração | só itens da categoria                              | Conforme                            | OK      |
+| TS-08 | Filtro por valor mínimo e máximo                                 | Integração | só itens na faixa                                  | Conforme                            | OK      |
+| TS-09 | Resumo de totais sem filtro                                      | Integração | receitas/despesas/saldo corretos                   | Conforme                            | OK      |
+| TS-10 | Totais respeitando filtro que isola um tipo                      | Integração | receitas corretas, despesas `0`                    | `TypeError` `Decimal - float` (500) | Falhou      |
+| TS-11 | Paginação limita itens (`per_page=2`)                            | Integração | 2 itens, 2 páginas                                 | Conforme                            | OK      |
+| TS-12 | Segunda página continua a ordem                                  | Integração | itens restantes em ordem decrescente               | Conforme                            | OK      |
+| TS-13 | Estado inicial do hook (1ª página, totais de página)             | Unitário   | 12 itens, 5 por página, 3 páginas                  | Conforme                            | OK      |
+| TS-14 | Totais somam receitas, despesas e saldo de tudo                  | Unitário   | 15800 / 10100 / 5700                               | Conforme                            | OK      |
+| TS-15 | Filtro por tipo `receita` (hook)                                 | Unitário   | só receitas, despesas `0`                          | Conforme                            | OK      |
+| TS-16 | Filtro por categoria (hook)                                      | Unitário   | só a categoria escolhida                           | Conforme                            | OK      |
+| TS-17 | Filtro por período (hook)                                        | Unitário   | só itens no intervalo                              | Conforme                            | OK      |
+| TS-18 | Filtro por valor mín/máx (hook)                                  | Unitário   | só itens na faixa                                  | Conforme                            | OK      |
+| TS-19 | Aplicar filtros volta para a 1ª página                           | Unitário   | `paginaAtual = 1`                                  | Conforme                            | OK      |
+| TS-20 | Limpar filtros restaura a listagem completa                      | Unitário   | volta a 12 itens, filtros vazios                   | Conforme                            | OK      |
+| TS-21 | Mudar página avança dentro dos limites                           | Unitário   | `paginaAtual = 2`                                  | Conforme                            | OK      |
+| TS-22 | Mudar página ignora valores fora do intervalo                    | Unitário   | permanece em 1                                     | Conforme                            | OK      |
+| TS-23 | Página exibe os cartões de totais no topo                        | Unitário   | Receitas/Despesas/Saldo na tela                    | Conforme                            | OK      |
+| TS-24 | Página lista a 1ª página (cabeçalho + 5 linhas)                  | Unitário   | "12 transação(ões)" + 6 linhas                     | Conforme                            | OK      |
+| TS-25 | Aplicar filtro de tipo atualiza a listagem                       | Unitário   | "5 transação(ões) encontrada(s)"                   | Conforme                            | OK      |
+| TS-26 | Limpar filtros restaura a listagem na UI                         | Unitário   | volta a "12 transação(ões)"                        | Conforme                            | OK      |
 
 ## 4. Evidências
 
-### Backend — `python -m pytest tests/integration/feature_7 -v`
+### Backend - `python -m pytest tests/integration/feature_7 -v`
 
 ```
 tests/integration/feature_7/test_transaction_history.py::test_historico_sem_company_id PASSED
@@ -79,16 +79,16 @@ app/services/transaction_service.py:39: TypeError
 ================== 2 failed, 10 passed, 82 warnings in 6.22s ===================
 ```
 
-### Frontend — `npx vitest run src/hooks/useTransacoes.test.js src/pages/Transacoes/Transacoes.test.jsx`
+### Frontend - `npx vitest run src/hooks/useTransacoes.test.js src/pages/Transacoes/Transacoes.test.jsx`
 
 ```
- ✓ src/hooks/useTransacoes.test.js (10 tests) 28ms
- ✓ src/pages/Transacoes/Transacoes.test.jsx (4 tests) 456ms
+ src/hooks/useTransacoes.test.js (10 tests) 28ms
+ src/pages/Transacoes/Transacoes.test.jsx (4 tests) 456ms
  Test Files  2 passed (2)
       Tests  14 passed (14)
 ```
 
-**Total:** 26 testes — 24 passaram, 2 falharam (documentando **DEF-01**), 0 skip.
+**Total:** 26 testes - 24 passaram, 2 falharam (documentando **DEF-01**), 0 skip.
 
 ## 5. Defeitos encontrados
 
@@ -101,12 +101,12 @@ app/services/transaction_service.py:39: TypeError
 > Nota (fora do escopo desta feature): a suíte completa do backend tem 3 testes
 > vermelhos pré-existentes em `tests/unit/feature_1`
 > (`test_register_user_internal_error` e 2× `test_is_valid_password_spaces`).
-> São defeitos da **feature 1** — confirmado que falham também sem as mudanças
-> desta branch — e devem ser tratados no relatório/issue daquela feature.
+> São defeitos da **feature 1** - confirmado que falham também sem as mudanças
+> desta branch - e devem ser tratados no relatório/issue daquela feature.
 >
 > Nota (contaminação por outra feature): na suíte de integração completa, os 11
 > testes desta feature que passam isolados viram **ERROR** por **contaminação dos
-> mappers do SQLAlchemy** — tanto o **DEF-01 da feature 10** (`Simulation` →
+> mappers do SQLAlchemy** - tanto o **DEF-01 da feature 10** (`Simulation` →
 > `Company` sem a relação `simulations`) quanto o **DEF-02 da feature 14**
 > (`Comparison` → `Company`/`User` sem `comparisons`) quebram a configuração global
 > dos mappers ao importar seus models. Devem ser tratados nos relatórios das
@@ -114,14 +114,14 @@ app/services/transaction_service.py:39: TypeError
 
 ## 6. Cobertura
 
-**Backend** — `pytest tests/integration/feature_7 --cov=app.services.transaction_service --cov=app.routes.transaction_routes --cov-report=term-missing`
+**Backend** - `pytest tests/integration/feature_7 --cov=app.services.transaction_service --cov=app.routes.transaction_routes --cov-report=term-missing`
 
 | Módulo                                | Cobertura | Observação                                                                                                                                                                                         |
 |---------------------------------------|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `app/services/transaction_service.py` | 40%       | a função desta história, `get_history_filtered` (linhas 6-68), é **testada integralmente **; o não-coberto (`71-152`) é `create`/`get_company_transactions`/`update`/`delete`, de outras histórias |
 | `app/routes/transaction_routes.py`    | 53%       | o não-coberto é `create`/`update`/`delete` (POST/PUT/DELETE), fora desta história                                                                                                                  |
 
-**Frontend** — `npx vitest run src/hooks/useTransacoes.test.js src/pages/Transacoes/Transacoes.test.jsx --coverage`
+**Frontend** - `npx vitest run src/hooks/useTransacoes.test.js src/pages/Transacoes/Transacoes.test.jsx --coverage`
 
 | Módulo                                | Cobertura | Linhas não cobertas                                              |
 |---------------------------------------|-----------|------------------------------------------------------------------|
@@ -144,7 +144,7 @@ principal da história ("analisar a situação financeira com filtros"), a featu
 não pode ser aprovada como está.
 
 **Próximos passos para reavaliação:**
-1. **DEF-01** — corrigir o cálculo dos totais em `get_history_filtered` (normalizar
+1. **DEF-01** - corrigir o cálculo dos totais em `get_history_filtered` (normalizar
    tipos antes do `saldo = receitas - despesas`).
-2. **DEF-02** — alinhar a paginação do front para 20 itens/página (ou justificar o 5).
-3. **DEF-03** — integrar o front ao endpoint real; hoje a tela roda sobre mock.
+2. **DEF-02** - alinhar a paginação do front para 20 itens/página (ou justificar o 5).
+3. **DEF-03** - integrar o front ao endpoint real; hoje a tela roda sobre mock.

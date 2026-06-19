@@ -1,17 +1,17 @@
-# Relatório de QA — Tarefa IV: Integração do Ciclo de Vida (Usuário / Empresa / Autenticação)
+# Relatório de QA - Tarefa IV: Integração do Ciclo de Vida (Usuário / Empresa / Autenticação)
 
 ## 1. Identificação
 
 | Campo                         | Valor                                                        |
 |-------------------------------|-------------------------------------------------------------|
-| **Tarefa**                    | Tarefa IV — Integração ponta a ponta (issue #26)            |
+| **Tarefa**                    | Tarefa IV - Integração ponta a ponta (issue #26)            |
 | **Requisitos**                | R01, R02, R03, R04, R05                                      |
 | **Casos do roteiro**          | TS-12, TS-13, TS-14, TS-18                                   |
 | **Branch de desenvolvimento** | `task/integracao`                                           |
 | **Branch base comparada**     | `develop`                                                    |
 | **Branch de teste (QA)**      | `test/task/integracao-qa`                                    |
 | **Data**                      | 18/06/2026                                                   |
-| **Parecer**                   | **❌ REPROVADA** (ver §6)                                    |
+| **Parecer**                   | **REPROVADA** (ver §6)                                    |
 
 > Por ser uma tarefa de **integração/refatoração**, não cabe "aprovada com
 > pendências": ou o fluxo está íntegro, ou é reprovada com os defeitos apontados.
@@ -23,15 +23,15 @@
 Cada defeito abaixo aponta **arquivo:linha**, o que está errado, o impacto para o
 usuário e a correção sugerida. A severidade é:
 
-- 🔴 **Crítico** — quebra o fluxo (erro 500, tela que não funciona, dado corrompido).
-- 🟠 **Alto** — funciona em parte, mas viola o critério de aceitação ou expõe risco.
-- 🟡 **Médio** — inconsistência/desvio de arquitetura que precisa ser alinhado.
+- **Crítico** - quebra o fluxo (erro 500, tela que não funciona, dado corrompido).
+- **Alto** - funciona em parte, mas viola o critério de aceitação ou expõe risco.
+- **Médio** - inconsistência/desvio de arquitetura que precisa ser alinhado.
 
 ---
 
 ## 3. Defeitos de BACKEND
 
-### 🔴 DEF-B1 — Exclusão **e** atualização de empresa quebradas (erro 500)
+### DEF-B1 - Exclusão **e** atualização de empresa quebradas (erro 500)
 
 **Arquivo:** `backend/app/services/company_service.py`
 
@@ -52,7 +52,7 @@ Isso derruba os casos **TS-14** (exclusão/cascata) e **TS-18** (isolamento), po
 erro acontece **antes** da verificação de permissão.
 
 > Observação importante: a branch `task/integracao` **já corrige** isto
-> (lá `find_company` tem 1 parâmetro). O defeito está hoje na **`develop`** —
+> (lá `find_company` tem 1 parâmetro). O defeito está hoje na **`develop`** -
 > provavelmente um `user_id` foi adicionado à assinatura em outro merge sem
 > atualizar as chamadas.
 
@@ -64,7 +64,7 @@ def find_company(company_CNPJ):
 
 ---
 
-### 🔴 DEF-B2 — `task/integracao` está atrasada e o merge **apaga features inteiras**
+### DEF-B2 - `task/integracao` está atrasada e o merge **apaga features inteiras**
 
 **Escopo:** diff `develop → task/integracao` (backend).
 
@@ -93,7 +93,7 @@ adiciona, nunca remoções das outras features.
 
 ---
 
-### 🟠 DEF-B3 — Token de redefinição expira em 60 min (critério pede 30)
+### DEF-B3 - Token de redefinição expira em 60 min (critério pede 30)
 
 **Arquivo:** `backend/app/utils/reset_token.py:7`
 
@@ -107,7 +107,7 @@ def verify_reset_token(token, expiration=3600):   # 3600s = 60 min
 
 ---
 
-### 🟠 DEF-B4 — Token de reset volta no corpo da resposta e não há e-mail no backend
+### DEF-B4 - Token de reset volta no corpo da resposta e não há e-mail no backend
 
 **Arquivo:** `backend/app/routes/auth_routes.py:46-51`
 
@@ -129,7 +129,7 @@ no backend; aqui o envio foi empurrado para o frontend (ver DEF-F4).
 
 ## 4. Defeitos de FRONTEND
 
-### 🔴 DEF-F1 — A tela "Redefinir Senha" é um stub: não faz nada
+### DEF-F1 - A tela "Redefinir Senha" é um stub: não faz nada
 
 **Arquivo:** `frontend/src/pages/RedefinirSenha/RedefinirSenha.jsx:45-58`
 
@@ -153,7 +153,7 @@ ou remover a rota/página e consolidar tudo em `EsqueciSenha.jsx` (ver DEF-F2).
 
 ---
 
-### 🔴 DEF-F2 — Token extraído errado: o link de e-mail nasce quebrado
+### DEF-F2 - Token extraído errado: o link de e-mail nasce quebrado
 
 **Arquivo:** `frontend/src/pages/EsqueciSenha/EsqueciSenha.jsx:49-51`
 
@@ -180,7 +180,7 @@ const rawToken = url.searchParams.get('token');
 
 ---
 
-### 🟠 DEF-F3 — Dois fluxos de redefinição concorrentes / página órfã
+### DEF-F3 - Dois fluxos de redefinição concorrentes / página órfã
 
 **Arquivos:** `EsqueciSenha.jsx` (linhas 139 e 163) · `RedefinirSenha.jsx` · `routes.jsx:68-69` · `auth_routes.py:46`
 
@@ -196,7 +196,7 @@ deixando `/redefinir-senha` **sem uso**.
 
 ---
 
-### 🟠 DEF-F4 — Envio de e-mail no cliente com credenciais hardcoded
+### DEF-F4 - Envio de e-mail no cliente com credenciais hardcoded
 
 **Arquivo:** `frontend/src/pages/EsqueciSenha/EsqueciSenha.jsx:53-62`
 
@@ -207,13 +207,13 @@ deixando `/redefinir-senha` **sem uso**.
 
 **Impacto:** chaves do EmailJS expostas no bundle do frontend (qualquer um inspeciona e
 usa). Além disso, o envio é client-side, divergindo do requisito de **Flask-Mail** no
-backend — se o JS falhar/for bloqueado, nenhum e-mail sai.
+backend - se o JS falhar/for bloqueado, nenhum e-mail sai.
 
 **Correção:** mover o envio para o backend (Flask-Mail) e tirar as chaves do código do front.
 
 ---
 
-### 🟡 DEF-F5 — Proxy do Vite tem entrada que não corresponde ao backend
+### DEF-F5 - Proxy do Vite tem entrada que não corresponde ao backend
 
 **Arquivo:** `frontend/vite.config.js:18-22`
 
@@ -233,12 +233,12 @@ ponta a ponta contra a `develop`:
 
 | Fluxo                                                       | Caso  | Resultado |
 |------------------------------------------------------------|-------|-----------|
-| Cadastro → login → JWT abre rota protegida de empresa      | TS-12 | ✅ passou |
-| Empresa criada fica vinculada ao usuário criador           | TS-18 | ✅ passou |
-| Recuperação de senha (gera token → redefine → login novo)  | TS-13 | ✅ passou (via token direto, sem o link do e-mail — ver DEF-F2) |
-| Exclusão do próprio usuário                                 | TS-14 | ✅ passou |
-| Exclusão de empresa (cascata no vínculo)                   | TS-14 | ⚠️ bloqueado por **DEF-B1** |
-| Isolamento: usuário não exclui empresa de outro            | TS-18 | ⚠️ bloqueado por **DEF-B1** |
+| Cadastro → login → JWT abre rota protegida de empresa      | TS-12 | OK |
+| Empresa criada fica vinculada ao usuário criador           | TS-18 | OK |
+| Recuperação de senha (gera token → redefine → login novo)  | TS-13 | OK (via token direto, sem o link do e-mail - ver DEF-F2) |
+| Exclusão do próprio usuário                                 | TS-14 | OK |
+| Exclusão de empresa (cascata no vínculo)                   | TS-14 | Bloqueado por **DEF-B1** |
+| Isolamento: usuário não exclui empresa de outro            | TS-18 | Bloqueado por **DEF-B1** |
 
 > A mecânica de login/JWT, vínculo usuário-empresa e o núcleo da redefinição de senha
 > (token) funcionam. O que reprova a tarefa são os defeitos que **impedem** exclusão/edição
@@ -248,15 +248,15 @@ ponta a ponta contra a `develop`:
 
 ## 6. Parecer final
 
-**❌ REPROVADA.**
+**REPROVADA.**
 
 A integração não pode ser mesclada no estado atual por três motivos bloqueantes:
 
-1. **DEF-B1** — exclusão e atualização de empresa retornam 500 na `develop`
+1. **DEF-B1** - exclusão e atualização de empresa retornam 500 na `develop`
    (assinatura de `find_company`); derruba TS-14 e TS-18.
-2. **DEF-B2** — a branch `task/integracao` está atrás da `develop` e seu merge
+2. **DEF-B2** - a branch `task/integracao` está atrás da `develop` e seu merge
    **apaga** as features 10/12/13/14. Precisa ser atualizada antes do PR.
-3. **DEF-F1 + DEF-F2** — o fluxo de redefinição de senha por e-mail está quebrado
+3. **DEF-F1 + DEF-F2** - o fluxo de redefinição de senha por e-mail está quebrado
    no front (tela stub + token mal extraído).
 
 **Para reavaliação, corrigir na ordem:** DEF-B1 → DEF-B2 (atualizar branch) →

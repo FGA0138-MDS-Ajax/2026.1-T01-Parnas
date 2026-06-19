@@ -1,4 +1,4 @@
-# Documentação de Testes — Dashboard Financeiro
+# Documentação de Testes - Dashboard Financeiro
 
 ---
 ## 1. Identificação
@@ -12,7 +12,7 @@
 | **Branch de teste** | `test/feature/16-dashboard-financeiro` |
 | **Sprint(s)** | 7 |
 | **Responsáveis** | Daniel Filipe / Matheus Moretti |
-| **Data** | *dd/mm/aaaa* |
+| **Data** | 13/06/2026 |
 
 ---
 ## 2. Critérios de aceitação testáveis
@@ -26,7 +26,7 @@
 
 | Caso | Descrição | Nível | Esperado | Observado | Status |
 | :--: | --- | --- | --- | --- | :--: |
-| TS-17 | Histórico/agregações reutilizadas no dashboard | Integração | *a preencher* | *a preencher* | 🚧 |
+| TS-17 | Histórico/agregações reutilizadas no dashboard | Integração | *a preencher* | *a preencher* | Pendente |
 
 ---
 ## 4. Evidências
@@ -38,7 +38,7 @@
 
 | Issue | Descrição | Status |
 |---|---|---|
-| #— | *a preencher* | — |
+| #- | *a preencher* | - |
 
 ---
 ## 6. Cobertura
@@ -49,7 +49,7 @@ pytest --cov=app tests/
 
 | Métrica | Valor |
 |---|---|
-| Cobertura da feature | *—%* |
+| Cobertura da feature | *-%* |
 
 ---
 ## 7. Parecer final

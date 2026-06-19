@@ -1,9 +1,9 @@
-# Consolidado de Testes e GQM — Sprint 7
+# Consolidado de Testes e GQM - Sprint 7
 
 | Campo | Valor |
 |---|---|
 | **Sprint** | 7 |
-| **Período** | 07–13/jun |
+| **Período** | 07-13/jun |
 | **Foco** | Dashboard, contas a pagar/receber e seleção de empresa ativa (CEN-01, Func. E e J) |
 
 ---
@@ -11,18 +11,18 @@
 
 | Feature | Requisito | Status |
 | --- | :--: | --- |
-| [Dashboard financeiro](../features/feature_16_dashboard-financeiro.md) | R09 | ✅ Aprovada |
-| [Cadastro de contas](../features/feature_11_cadastro-contas.md) | R15 | 🚧 Aprovada com pendências |
-| [Seleção de empresa ativa](../features/feature_15_selecao-empresa-ativa.md) | R04 | ✅ Aprovada |
+| [Dashboard financeiro](../features/feature_16_dashboard-financeiro.md) | R09 | Aprovada |
+| [Cadastro de contas](../features/feature_11_cadastro-contas.md) | R15 | Aprovada com pendências |
+| [Seleção de empresa ativa](../features/feature_15_selecao-empresa-ativa.md) | R04 | Aprovada |
 
 ---
 ## 2. Casos agregados
 
 | Caso | Nível | Status |
 | :--: | --- | :--: |
-| TS-20 | Integração | ✅ |
-| TS-18 | Integração | ✅ |
-| TS-17 | Integração | ✅ |
+| TS-20 | Integração | OK |
+| TS-18 | Integração | OK |
+| TS-17 | Integração | OK |
 
 ## 3. Defeitos
 
@@ -46,7 +46,7 @@
 pytest --cov=app tests/
 ```
 
-| Cobertura | Valor | Mínimo (S6–10) |
+| Cobertura | Valor | Mínimo (S6-10) |
 | --- | :--: | :--: |
 | Back-end | 77% | 75% |
 | Front-end | n/d (Vitest a configurar) | 75% |
@@ -55,10 +55,10 @@ pytest --cov=app tests/
 
 | Métrica | Valor | Meta |
 | :--: | :--: | --- |
-| M1 — Throughput | 7 issues | Tendência estável/crescente |
-| M2 — Densidade de Defeitos | 0,29 | ≈ 0 |
-| M3 — Cobertura | 77% | ≥ 75% |
-| M4 — Taxa de Aprovação da Pipeline | 79% | ≥ 70% |
+| M1 - Throughput | 7 issues | Tendência estável/crescente |
+| M2 - Densidade de Defeitos | 0,29 | ≈ 0 |
+| M3 - Cobertura | 77% | ≥ 75% |
+| M4 - Taxa de Aprovação da Pipeline | 79% | ≥ 70% |
 
 ## 7. Parecer da dupla
 

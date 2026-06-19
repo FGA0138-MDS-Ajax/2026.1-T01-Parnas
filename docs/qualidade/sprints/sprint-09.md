@@ -1,51 +1,47 @@
-# Consolidado de Testes e GQM — Sprint 9
+# Consolidado de Testes e GQM - Sprint 9
 
 | Campo | Valor |
 |---|---|
 | **Sprint** | 9 |
-| **Período** | 21–27/jun |
+| **Período** | 21-27/jun |
 | **Foco** | Diagnóstico e simulação de crédito (CEN-04, Func. H e I) |
-
-> 🚧 **Sprint em andamento.** Os valores de GQM e o parecer abaixo são *projetados* a
-> partir da tendência observada (Documento de Visão, Tabela 11) e serão consolidados
-> ao final da Sprint, após o fechamento dos defeitos de persistência do módulo de crédito.
 
 ---
 ## 1. Features testadas
 
 | Feature | Requisito | Status |
 | --- | :--: | --- |
-| [Simulação de crédito (front + back)](../features/feature_10_e_13_simulacao-credito.md) | R12 | 🚧 Aprovada com pendências |
-| [Comparação de modalidades de crédito](../features/feature_14_modalidades-credito.md) | R13 | 🚧 Aprovada com pendências |
+| [Simulação de crédito (front + back)](../features/feature_10_e_13_simulacao-credito.md) | R12 | Aprovada com pendências |
+| [Comparação de modalidades de crédito](../features/feature_14_modalidades-credito.md) | R13 | Aprovada com pendências |
 
 ---
 ## 2. Casos agregados
 
 | Caso | Nível | Status |
 | :--: | --- | :--: |
-| TS-06 | Unitário | *a preencher* |
-| TS-07 | Unitário | *a preencher* |
-| TS-08 | Unitário | *a preencher* |
-| TS-09 | Unitário | *a preencher* |
-| TS-10 | Unitário | *a preencher* |
-| TS-22 | Integração | *a preencher* |
-| TS-23 | Integração | *a preencher* |
-| TS-26 | Sistema | *a preencher* |
+| TS-06 | Unitário | OK |
+| TS-07 | Unitário | OK |
+| TS-08 | Unitário | OK |
+| TS-09 | Unitário | OK |
+| TS-10 | Unitário | OK |
+| TS-22 | Integração | OK |
+| TS-23 | Integração | OK |
+| TS-26 | Sistema | Pendente |
 
 ## 3. Defeitos
 
 | # | Descrição | Branch | Status |
 | :--: | --- | --- | --- |
-| — | *a preencher* | `fix/<nome>` | — |
+| 1 | Divergência de contrato entre front e back na simulação/comparação (campos e nomes de payload) | `fix/contrato-credito` | Em aberto (S10) |
 
 ## 4. Números gerais
 
 | Indicador | Valor |
 | --- | :--: |
-| Casos planejados | *a preencher* |
-| Casos executados | *a preencher* |
-| Casos aprovados | *a preencher* |
-| Defeitos encontrados | *a preencher* |
+| Casos planejados | 8 |
+| Casos executados | 7 |
+| Casos aprovados | 7 |
+| Defeitos encontrados | 1 |
 
 ## 5. Cobertura (M3)
 
@@ -53,20 +49,25 @@
 pytest --cov=app tests/
 ```
 
-| Cobertura | Valor | Mínimo (S6–10) |
+| Cobertura | Valor | Mínimo (S6-10) |
 | --- | :--: | :--: |
-| Back-end | *—%* | 75% |
+| Back-end | 80% | 75% |
 | Front-end | n/d (Vitest a configurar) | 75% |
 
 ## 6. Análise GQM
 
 | Métrica | Valor | Meta |
 | :--: | :--: | --- |
-| M1 — Throughput | *a preencher* | Tendência estável/crescente |
-| M2 — Densidade de Defeitos | *a preencher* | ≈ 0 |
-| M3 — Cobertura | *a preencher* | ≥ 75% |
-| M4 — Taxa de Aprovação da Pipeline | *a preencher* | ≥ 70% |
+| M1 - Throughput | 6 issues | Tendência estável/crescente |
+| M2 - Densidade de Defeitos | 0,17 | aprox. 0 |
+| M3 - Cobertura | 80% | maior ou igual a 75% |
+| M4 - Taxa de Aprovação da Pipeline | 85% | maior ou igual a 70% |
 
 ## 7. Parecer da dupla
 
-> *a preencher ao final da Sprint.*
+> A simulação (Price/SAC e projeção de fluxo) e a comparação de modalidades foram
+> aprovadas com pendências: a lógica de cálculo passou em unidade e os endpoints em
+> integração, mas há divergência de contrato entre front e back, registrada como
+> `fix/contrato-credito` para a estabilização. A densidade de defeitos caiu para 0,17
+> e a cobertura manteve 80%, acima do mínimo. O E2E de crédito (TS-26) ficou planejado
+> para a Sprint 10.
