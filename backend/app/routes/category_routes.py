@@ -18,7 +18,7 @@ def add_category_route():
     except ValidationError as err:
         return jsonify({"erros_de_validacao": err.messages}), 400
     
-    answer, status_code = add_category(user_id, data)
+    answer, status_code = add_category(data)
     
     if status_code == 201 and "category" in answer:
         answer["category"] = category_output_schema.dump(answer["category"])
@@ -29,13 +29,9 @@ def add_category_route():
 @jwt_required()
 def get_categories_route():
     user_id = int(get_jwt_identity())
-    
-    cnpj = request.args.get('cnpj')
-    if not cnpj:
-        return jsonify({"erro": "O parâmetro cnpj é obrigatório na URL."}), 400
-        
-    data = {"cnpj": cnpj}
-    answer, status_code = get_categories(user_id, data)
+
+    data = {}
+    answer, status_code = get_categories()
     
     if status_code == 200 and "categories" in answer:
         answer["categories"] = category_output_schema.dump(answer["categories"], many=True)
@@ -51,7 +47,7 @@ def update_category_route():
     except ValidationError as err:
         return jsonify({"erros_de_validacao": err.messages}), 400
     
-    answer, status_code = update_category(user_id, data)
+    answer, status_code = update_category(data)
     
     if status_code == 200 and "category" in answer:
         answer["category"] = category_output_schema.dump(answer["category"])
@@ -68,5 +64,5 @@ def delete_category_route():
     except ValidationError as err:
         return jsonify({"erros_de_validacao": err.messages}), 400
     
-    answer, status_code = delete_category(user_id, data)
+    answer, status_code = delete_category(data)
     return jsonify(answer), status_code

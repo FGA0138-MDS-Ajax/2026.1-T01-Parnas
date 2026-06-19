@@ -24,14 +24,7 @@ def upload_document():
         'name':        request.form.get('name'),
         'type':        request.form.get('type'),
         'description': request.form.get('description'),
-        'company_id':  request.form.get('company_id'),
     }
-
-    try:
-        if raw_data['company_id'] is not None:
-            raw_data['company_id'] = int(raw_data['company_id'])
-    except (ValueError, TypeError):
-        return jsonify({"erro": "company_id deve ser um número inteiro"}), 400
 
     try:
         validated = DocumentUploadSchema().load(raw_data)
@@ -41,7 +34,6 @@ def upload_document():
     document, error, status_code = DocumentService.save_document(
         file=file,
         user_id=current_user_id,
-        company_id=validated['company_id'],
         name=validated['name'],
         tipo=validated['type'],
         description=validated.get('description')
@@ -56,19 +48,12 @@ def upload_document():
 @document_bp.route('', methods=['GET'])
 @jwt_required()
 def get_documents():
-    current_user_id = int(get_jwt_identity())
-
-    company_id = request.args.get('company_id', type=int)
-    if not company_id:
-        return jsonify({"erro": "Parâmetro 'company_id' é obrigatório"}), 400
 
     tipo     = request.args.get('type')
     page     = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 20, type=int)
 
     pagination, error, status_code = DocumentService.get_documents_by_company(
-        company_id=company_id,
-        user_id=current_user_id,
         tipo=tipo,
         page=page,
         per_page=per_page
@@ -88,11 +73,9 @@ def get_documents():
 @document_bp.route('/<int:document_id>/download', methods=['GET'])
 @jwt_required()
 def download_document(document_id):
-    current_user_id = int(get_jwt_identity())
 
     file_path, download_name, error, status_code = DocumentService.get_document_for_download(
-        document_id=document_id,
-        user_id=current_user_id
+        document_id=document_id
     )
 
     if error:
@@ -107,11 +90,9 @@ def download_document(document_id):
 @document_bp.route('/<int:document_id>', methods=['DELETE'])
 @jwt_required()
 def delete_document(document_id):
-    current_user_id = int(get_jwt_identity())
 
     success, message, status_code = DocumentService.delete_document(
-        document_id=document_id,
-        user_id=current_user_id
+        document_id=document_id
     )
 
     key = "mensagem" if success else "erro"

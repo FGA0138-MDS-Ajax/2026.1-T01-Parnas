@@ -22,9 +22,7 @@ def calculate():
     except ValidationError as err:
         return jsonify({"erros_de_validacao": err.messages}), 400
 
-    company_id = request.json.get("company_id")
-
-    answer = process_simulation(data, company_id)
+    answer = process_simulation(data)
     return jsonify(answer), 200
 
 @simulation_bp.route("/", methods=["POST"])
@@ -42,21 +40,12 @@ def create():
 @simulation_bp.route("/", methods=["GET"])
 @jwt_required()
 def get_all():
-    company_id = request.args.get("company_id")
-
-    if not company_id:
-        return jsonify({"erro": "O parâmetro company_id é obrigatório."}), 400
-
-    answer, status_code = get_simulation(company_id)
+    answer, status_code = get_simulation()
     return jsonify(answer), status_code
 
 
 @simulation_bp.route("/<int:simulation_id>", methods=["DELETE"])
 @jwt_required()
 def delete(simulation_id):
-    company_id = request.args.get("company_id")
-    if not company_id:
-        return jsonify({"erro": "O parâmetro company_id é obrigatório."}), 400
-
-    answer, status_code = delete_simulation(simulation_id, company_id)
+    answer, status_code = delete_simulation(simulation_id)
     return jsonify(answer), status_code
