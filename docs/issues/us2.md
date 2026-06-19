@@ -33,7 +33,7 @@ Como Gestor de uma Micro-Empresa, quero fazer login com email e senha, para aces
 - [x] Caso(s) de teste do Roteiro cobertos: TS-03, TS-04, TS-12, TS-24
 - [x] Testes unitários escritos (Pytest / Vitest)
 - [x] Testes de integração escritos (se aplicável)
-- [ ] Teste E2E (Playwright) — apenas se a feature pertencer ao fluxo crítico
+- [x] Teste E2E (Playwright) — apenas se a feature pertencer ao fluxo crítico
 - [x] Cobertura mínima atingida
 
 ## Definição de Done
@@ -45,5 +45,3 @@ Como Gestor de uma Micro-Empresa, quero fazer login com email e senha, para aces
 
 ## Branch
 `feature/2-autenticacao-login`
-
-FECHADA

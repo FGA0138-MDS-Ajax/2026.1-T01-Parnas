@@ -25,5 +25,3 @@ Criar a estrutura base para os testes (backend e frontend) e um guia de instruç
 
 ## Branch
 `develop`
-
-FECHADA

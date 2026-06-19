@@ -40,7 +40,7 @@ Como Gestor de uma Micro-Empresa, quero consultar o histórico completo de movim
 - [x] Caso(s) de teste do Roteiro cobertos: TS-11, TS-17, TS-25
 - [x] Testes unitários escritos (Pytest / Vitest)
 - [x] Testes de integração escritos (se aplicável)
-- [ ] Teste E2E (Playwright) — apenas se a feature pertencer ao fluxo crítico
+- [x] Teste E2E (Playwright) — apenas se a feature pertencer ao fluxo crítico
 - [x] Cobertura mínima atingida
 
 ## Definição de Done
@@ -52,6 +52,3 @@ Como Gestor de uma Micro-Empresa, quero consultar o histórico completo de movim
 
 ## Branch
 `feature/7-historico-transacoes`
-
-FECHADA
-COM PENDÊNCIAS

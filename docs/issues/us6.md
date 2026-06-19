@@ -9,13 +9,13 @@ Como Gestor de uma Micro-Empresa, quero registrar manualmente entradas e saídas
 - **Funcionalidade do produto:** C — Cadastro de Transações Financeiras
 
 ## Critérios de aceitação
-- [ ] Gestor consegue registrar transação com valor, data, tipo e descrição
-- [ ] Categoria é obrigatória e listada a partir das categorias da empresa
-- [ ] Valor deve ser positivo
-- [ ] Data não pode ser futura
-- [ ] Transação registrada aparece imediatamente no histórico
-- [ ] Gestor consegue editar uma transação existente
-- [ ] Gestor consegue excluir uma transação
+- [x] Gestor consegue registrar transação com valor, data, tipo e descrição
+- [x] Categoria é obrigatória e listada a partir das categorias da empresa
+- [x] Valor deve ser positivo
+- [x] Data não pode ser futura
+- [x] Transação registrada aparece imediatamente no histórico
+- [x] Gestor consegue editar uma transação existente
+- [x] Gestor consegue excluir uma transação
 
 ## Tarefas Banco de Dados
 - [x] Criar model Transacao
@@ -24,12 +24,12 @@ Como Gestor de uma Micro-Empresa, quero registrar manualmente entradas e saídas
 - [x] Criar repository com queries de busca por empresa e filtros básicos
 
 ## Tarefas Backend
-- [ ] Criar endpoint POST /transacoes
-- [ ] Criar endpoint GET /transacoes
-- [ ] Criar endpoint PUT /transacoes/<id>
-- [ ] Criar endpoint DELETE /transacoes/<id>
-- [ ] Validar valor positivo e data não futura
-- [ ] Validar que categoria pertence à mesma empresa do usuário autenticado
+- [x] Criar endpoint POST /transacoes
+- [x] Criar endpoint GET /transacoes
+- [x] Criar endpoint PUT /transacoes/<id>
+- [x] Criar endpoint DELETE /transacoes/<id>
+- [x] Validar valor positivo e data não futura
+- [x] Validar que categoria pertence à mesma empresa do usuário autenticado
 
 ## Tarefas Frontend
 - [x] Criar página Transacoes/
@@ -38,23 +38,23 @@ Como Gestor de uma Micro-Empresa, quero registrar manualmente entradas e saídas
 - [x] Listar transações cadastradas
 - [x] Botão de editar transação
 - [x] Botão de excluir com confirmação
-- [ ] Integrar todos os endpoints
+- [x] Integrar todos os endpoints
 - [x] Exibir feedback de sucesso e erro
 
 ## Critérios de teste
-- [ ] Caso(s) de teste do Roteiro cobertos: TS-05, TS-16, TS-24
-- [ ] Testes unitários escritos (Pytest / Vitest)
-- [ ] Testes de integração escritos (se aplicável)
-- [ ] Teste E2E (Playwright) — apenas se a feature pertencer ao fluxo crítico
-- [ ] Cobertura mínima atingida
+- [x] Caso(s) de teste do Roteiro cobertos: TS-05, TS-16, TS-24
+- [x] Testes unitários escritos (Pytest / Vitest)
+- [x] Testes de integração escritos (se aplicável)
+- [x] Teste E2E (Playwright) — apenas se a feature pertencer ao fluxo crítico
+- [x] Cobertura mínima atingida
 
 ## Definição de Done
-- [ ] Código revisado em pair programming
-- [ ] PR aberto de `feature/6-cadastro-transacao` para `develop`
-- [ ] Pipeline do GitHub Actions aprovada
-- [ ] Branch `test/6-cadastro-transacao` executada pela dupla de QA
-- [ ] Documento da feature preenchido
-- [ ] Status final marcado: aprovada / reprovada / aprovada com pendências
+- [x] Código revisado em pair programming
+- [x] PR aberto de `feature/6-cadastro-transacao` para `develop`
+- [x] Pipeline do GitHub Actions aprovada
+- [x] Branch `test/6-cadastro-transacao` executada pela dupla de QA
+- [x] Documento da feature preenchido
+- [x] Status final marcado: aprovada / reprovada / aprovada com pendências
 
 ## Branch
 `feature/6-cadastro-transacao`

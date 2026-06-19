@@ -30,19 +30,19 @@ Como Gestor de uma Micro-Empresa, quero cadastrar minha empresa informando seus 
 - [x] Salvar id_empresa no contexto global (EmpresaContext.jsx)
 
 ## Critérios de teste
-- [ ] Caso(s) de teste do Roteiro cobertos: TS-18
-- [ ] Testes unitários escritos (Pytest / Vitest)
-- [ ] Testes de integração escritos (se aplicável)
-- [ ] Teste E2E (Playwright) — apenas se a feature pertencer ao fluxo crítico
-- [ ] Cobertura mínima atingida
+- [x] Caso(s) de teste do Roteiro cobertos: TS-18
+- [x] Testes unitários escritos (Pytest / Vitest)
+- [x] Testes de integração escritos (se aplicável)
+- [x] Teste E2E (Playwright) — apenas se a feature pertencer ao fluxo crítico
+- [x] Cobertura mínima atingida
 
 ## Definição de Done
-- [ ] Código revisado em pair programming
-- [ ] PR aberto de `feature/4-cadastro-empresa` para `develop`
-- [ ] Pipeline do GitHub Actions aprovada
-- [ ] Branch `test/4-cadastro-empresa` executada pela dupla de QA
-- [ ] Documento da feature preenchido
-- [ ] Status final marcado: aprovada / reprovada / aprovada com pendências
+- [x] Código revisado em pair programming
+- [x] PR aberto de `feature/4-cadastro-empresa` para `develop`
+- [x] Pipeline do GitHub Actions aprovada
+- [x] Branch `test/4-cadastro-empresa` executada pela dupla de QA
+- [x] Documento da feature preenchido
+- [x] Status final marcado: aprovada / reprovada / aprovada com pendências
 
 ## Branch
 `feature/4-cadastro-empresa`

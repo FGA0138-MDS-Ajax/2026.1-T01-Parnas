@@ -9,12 +9,12 @@ Como Gestor de uma Micro-Empresa, quero criar categorias personalizadas para min
 - **Funcionalidade do produto:** B — Categorização Financeira
 
 ## Critérios de aceitação
-- [ ] Gestor consegue criar uma categoria com nome e tipo (receita/despesa)
-- [ ] Categorias são exclusivas por empresa — outra empresa não as vê
-- [ ] Não é possível criar duas categorias com o mesmo nome na mesma empresa
-- [ ] Gestor consegue listar todas as categorias da sua empresa
-- [ ] Gestor consegue editar o nome de uma categoria existente
-- [ ] Gestor consegue excluir uma categoria que não tenha transações vinculadas
+- [x] Gestor consegue criar uma categoria com nome e tipo (receita/despesa)
+- [x] Categorias são exclusivas por empresa — outra empresa não as vê
+- [x] Não é possível criar duas categorias com o mesmo nome na mesma empresa
+- [x] Gestor consegue listar todas as categorias da sua empresa
+- [x] Gestor consegue editar o nome de uma categoria existente
+- [x] Gestor consegue excluir uma categoria que não tenha transações vinculadas
 
 ## Tarefas Banco de Dados
 - [x] Criar model Categoria
@@ -27,9 +27,9 @@ Como Gestor de uma Micro-Empresa, quero criar categorias personalizadas para min
 - [x] Criar endpoint GET /categorias
 - [x] Criar endpoint PUT /categorias/<id>
 - [x] Criar endpoint DELETE /categorias/<id>
-- [ ] Criar service com validação de categoria duplicada na mesma empresa
-- [ ] Criar service com bloqueio de exclusão se houver transações vinculadas
-- [ ] Validar que categoria pertence à empresa do usuário autenticado
+- [x] Criar service com validação de categoria duplicada na mesma empresa
+- [x] Criar service com bloqueio de exclusão se houver transações vinculadas
+- [x] Validar que categoria pertence à empresa do usuário autenticado
 
 ## Tarefas Frontend
 - [x] Criar página Categorias/
@@ -37,23 +37,23 @@ Como Gestor de uma Micro-Empresa, quero criar categorias personalizadas para min
 - [x] Listar categorias existentes da empresa
 - [x] Botão de editar categoria inline
 - [x] Botão de excluir com confirmação
-- [ ] Integrar todos os endpoints
-- [ ] Exibir mensagem de erro ao tentar excluir categoria em uso
+- [x] Integrar todos os endpoints
+- [x] Exibir mensagem de erro ao tentar excluir categoria em uso
 
 ## Critérios de teste
-- [ ] Caso(s) de teste do Roteiro cobertos: TS-15
-- [ ] Testes unitários escritos (Pytest / Vitest)
-- [ ] Testes de integração escritos (se aplicável)
-- [ ] Teste E2E (Playwright) — apenas se a feature pertencer ao fluxo crítico
-- [ ] Cobertura mínima atingida
+- [x] Caso(s) de teste do Roteiro cobertos: TS-15
+- [x] Testes unitários escritos (Pytest / Vitest)
+- [x] Testes de integração escritos (se aplicável)
+- [x] Teste E2E (Playwright) — apenas se a feature pertencer ao fluxo crítico
+- [x] Cobertura mínima atingida
 
 ## Definição de Done
-- [ ] Código revisado em pair programming
-- [ ] PR aberto de `feature/5-cadastro-categoria` para `develop`
-- [ ] Pipeline do GitHub Actions aprovada
-- [ ] Branch `test/5-cadastro-categoria` executada pela dupla de QA
-- [ ] Documento da feature preenchido
-- [ ] Status final marcado: aprovada / reprovada / aprovada com pendências
+- [x] Código revisado em pair programming
+- [x] PR aberto de `feature/5-cadastro-categoria` para `develop`
+- [x] Pipeline do GitHub Actions aprovada
+- [x] Branch `test/5-cadastro-categoria` executada pela dupla de QA
+- [x] Documento da feature preenchido
+- [x] Status final marcado: aprovada / reprovada / aprovada com pendências
 
 ## Branch
 `feature/5-cadastro-categoria`

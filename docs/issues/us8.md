@@ -11,9 +11,9 @@ Como Gestor de uma Micro-Empresa, quero poder excluir minha conta de usuário ou
 ## Critérios de aceitação
 - [x] Gestor consegue excluir a empresa e todos os dados vinculados
 - [x] Usuário consegue excluir sua própria conta
-- [ ] Exclusão de empresa remove categorias e transações vinculadas
+- [x] Exclusão de empresa remove categorias e transações vinculadas
 - [x] Exclusão de usuário remove seu vínculo com a empresa
-- [ ] Operação exige confirmação antes de executar
+- [x] Operação exige confirmação antes de executar
 - [x] Usuário não consegue excluir empresa se não for o responsável pela conta
 
 ## Tarefas Banco de Dados
@@ -36,19 +36,19 @@ Como Gestor de uma Micro-Empresa, quero poder excluir minha conta de usuário ou
 - [ ] Integrar com DELETE /empresas e DELETE /usuarios
 
 ## Critérios de teste
-- [ ] Caso(s) de teste do Roteiro cobertos: TS-14
-- [ ] Testes unitários escritos (Pytest / Vitest)
-- [ ] Testes de integração escritos (comportamento de cascata via API)
-- [ ] Teste E2E (Playwright) — apenas se a feature pertencer ao fluxo crítico
-- [ ] Cobertura mínima atingida
+- [x] Caso(s) de teste do Roteiro cobertos: TS-14
+- [x] Testes unitários escritos (Pytest / Vitest)
+- [x] Testes de integração escritos (comportamento de cascata via API)
+- [x] Teste E2E (Playwright) — apenas se a feature pertencer ao fluxo crítico
+- [x] Cobertura mínima atingida
 
 ## Definição de Done
-- [ ] Código revisado em pair programming
-- [ ] PR aberto de `feature/8-exclusao-usuario-empresa` para `develop`
-- [ ] Pipeline do GitHub Actions aprovada
-- [ ] Branch `test/8-exclusao-usuario-empresa` executada pela dupla de QA
-- [ ] Documento da feature preenchido
-- [ ] Status final marcado: aprovada / reprovada / aprovada com pendências
+- [x] Código revisado em pair programming
+- [x] PR aberto de `feature/8-exclusao-usuario-empresa` para `develop`
+- [x] Pipeline do GitHub Actions aprovada
+- [x] Branch `test/8-exclusao-usuario-empresa` executada pela dupla de QA
+- [x] Documento da feature preenchido
+- [x] Status final marcado: aprovada / reprovada / aprovada com pendências
 
 ## Branch
 `feature/8-exclusao-usuario-empresa`

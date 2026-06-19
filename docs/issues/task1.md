@@ -34,5 +34,3 @@ O relacionamento definido é: cada `USUARIO` pertence a uma `EMPRESA` via `empre
 
 ## Branch
 `task/modelagem-usuario-empresa`
-
-FECHADA

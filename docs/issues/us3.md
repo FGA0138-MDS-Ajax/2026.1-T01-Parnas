@@ -9,10 +9,10 @@ Como Gestor de uma Micro-Empresa, quero recuperar minha senha por email, para n�
 - **Funcionalidade do produto:** A — Cadastro e Autenticação de Usuário/Empresa
 
 ## Critérios de aceitação
-- [ ] Usuário informa email e recebe link de redefinição
-- [ ] Link expira em 30 minutos
-- [ ] Usuário consegue definir nova senha pelo link
-- [ ] Após redefinição, login funciona com nova senha
+- [x] Usuário informa email e recebe link de redefinição
+- [x] Link expira em 30 minutos
+- [x] Usuário consegue definir nova senha pelo link
+- [x] Após redefinição, login funciona com nova senha
 
 ## Tarefas Backend
 - [x] Criar endpoint POST /auth/forgot-password
@@ -29,19 +29,19 @@ Como Gestor de uma Micro-Empresa, quero recuperar minha senha por email, para n�
 - [x] Exibir feedback de sucesso/erro em cada etapa
 
 ## Critérios de teste
-- [ ] Caso(s) de teste do Roteiro cobertos: TS-13
-- [ ] Testes unitários escritos (Pytest / Vitest)
-- [ ] Testes de integração escritos (se aplicável)
-- [ ] Teste E2E (Playwright) — apenas se a feature pertencer ao fluxo crítico
-- [ ] Cobertura mínima atingida
+- [x] Caso(s) de teste do Roteiro cobertos: TS-13
+- [x] Testes unitários escritos (Pytest / Vitest)
+- [x] Testes de integração escritos (se aplicável)
+- [x] Teste E2E (Playwright) — apenas se a feature pertencer ao fluxo crítico
+- [x] Cobertura mínima atingida
 
 ## Definição de Done
-- [ ] Código revisado em pair programming
-- [ ] PR aberto de `feature/3-recuperacao-senha` para `develop`
-- [ ] Pipeline do GitHub Actions aprovada
-- [ ] Branch `test/3-recuperacao-senha` executada pela dupla de QA
-- [ ] Documento da feature preenchido
-- [ ] Status final marcado: aprovada / reprovada / aprovada com pendências
+- [x] Código revisado em pair programming
+- [x] PR aberto de `feature/3-recuperacao-senha` para `develop`
+- [x] Pipeline do GitHub Actions aprovada
+- [x] Branch `test/3-recuperacao-senha` executada pela dupla de QA
+- [x] Documento da feature preenchido
+- [x] Status final marcado: aprovada / reprovada / aprovada com pendências
 
 ## Branch
 `feature/3-recuperacao-senha`

@@ -24,5 +24,3 @@ Configurar o GitHub Pages e a estrutura de documentação do projeto (MkDocs Mat
 
 ## Branch
 `docs`
-
-FECHADA

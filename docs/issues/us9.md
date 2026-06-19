@@ -9,12 +9,12 @@ Como Gestor de uma Micro-Empresa, quero enviar e organizar documentos fiscais, c
 - **Funcionalidade do produto:** G — Centralização Documental
 
 ## Critérios de aceitação
-- [ ] Gestor consegue enviar documento informando nome, tipo e descrição
-- [ ] Sistema valida tipo e tamanho do arquivo enviado
-- [ ] Documentos são listados com nome, tipo, data e tamanho
-- [ ] Gestor consegue baixar um documento enviado
-- [ ] Gestor consegue excluir um documento com confirmação
-- [ ] Documentos são exclusivos por empresa — outra empresa não os vê
+- [x] Gestor consegue enviar documento informando nome, tipo e descrição
+- [x] Sistema valida tipo e tamanho do arquivo enviado
+- [x] Documentos são listados com nome, tipo, data e tamanho
+- [x] Gestor consegue baixar um documento enviado
+- [x] Gestor consegue excluir um documento com confirmação
+- [x] Documentos são exclusivos por empresa — outra empresa não os vê
 
 ## Tarefas Banco de Dados
 - [x] Criar model Documento com os campos id_documento, id_empresa, id_usuario, nome, tipo, descricao, caminho_arquivo, tamanho, data_upload
@@ -39,24 +39,24 @@ Como Gestor de uma Micro-Empresa, quero enviar e organizar documentos fiscais, c
 - [x] Listar documentos com nome, tipo, data e tamanho
 - [x] Botão de download por documento
 - [x] Botão de excluir com confirmação
-- [ ] Exibir barra de progresso durante upload
-- [ ] Exibir mensagem de erro para arquivos inválidos ou muito grandes
-- [ ] Integrar todos os endpoints
+- [x] Exibir barra de progresso durante upload
+- [x] Exibir mensagem de erro para arquivos inválidos ou muito grandes
+- [x] Integrar todos os endpoints
 
 ## Critérios de teste
-- [ ] Caso(s) de teste do Roteiro cobertos: TS-19
-- [ ] Testes unitários escritos (Pytest / Vitest)
-- [ ] Testes de integração escritos (se aplicável)
-- [ ] Teste E2E (Playwright) — apenas se a feature pertencer ao fluxo crítico
-- [ ] Cobertura mínima atingida
+- [x] Caso(s) de teste do Roteiro cobertos: TS-19
+- [x] Testes unitários escritos (Pytest / Vitest)
+- [x] Testes de integração escritos (se aplicável)
+- [x] Teste E2E (Playwright) — apenas se a feature pertencer ao fluxo crítico
+- [x] Cobertura mínima atingida
 
 ## Definição de Done
-- [ ] Código revisado em pair programming
-- [ ] PR aberto de `feature/9-centralizacao-documental` para `develop`
-- [ ] Pipeline do GitHub Actions aprovada
-- [ ] Branch `test/9-centralizacao-documental` executada pela dupla de QA
-- [ ] Documento da feature preenchido
-- [ ] Status final marcado: aprovada / reprovada / aprovada com pendências
+- [x] Código revisado em pair programming
+- [x] PR aberto de `feature/9-centralizacao-documental` para `develop`
+- [x] Pipeline do GitHub Actions aprovada
+- [x] Branch `test/9-centralizacao-documental` executada pela dupla de QA
+- [x] Documento da feature preenchido
+- [x] Status final marcado: aprovada / reprovada / aprovada com pendências
 
 ## Branch
 `feature/9-centralizacao-documental`

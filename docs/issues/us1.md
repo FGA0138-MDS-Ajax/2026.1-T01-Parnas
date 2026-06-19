@@ -33,8 +33,8 @@ Como Gestor de uma Micro-Empresa, quero me cadastrar no sistema informando meus 
 ## Critérios de teste
 - [x] Caso(s) de teste do Roteiro cobertos: TS-01, TS-02, TS-04, TS-24
 - [x] Testes unitários escritos (Pytest / Vitest)
-- [ ] Testes de integração escritos (se aplicável)
-- [ ] Teste E2E (Playwright) — apenas se a feature pertencer ao fluxo crítico
+- [x] Testes de integração escritos (se aplicável)
+- [x] Teste E2E (Playwright) — apenas se a feature pertencer ao fluxo crítico
 - [x] Cobertura mínima atingida
 
 ## Definição de Done
@@ -46,5 +46,3 @@ Como Gestor de uma Micro-Empresa, quero me cadastrar no sistema informando meus 
 
 ## Branch
 `feature/1-cadastro-usuario`
-
-FECHADA
