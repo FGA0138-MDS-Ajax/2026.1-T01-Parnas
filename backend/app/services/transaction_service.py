@@ -1,21 +1,17 @@
 from app.config import db
-from app.models.user import User
 from app.models.transaction import Transaction
 from app.models.category import Category
 from sqlalchemy import func
+from flask_jwt_extended import get_jwt
 
-def _validate_user_company_access(user_id, company_id):
-    """
-    Verifica se o usuário tem acesso à empresa informada.
-    """
-    user = db.session.query(User).filter(User.user_id == user_id).first()
-    user_companies_ids = [c.company_id for c in user.companies] if user else []
-    return company_id in user_companies_ids
+def _get_active_company():
+    claims = get_jwt()
+    return claims.get("active_company_id")
 
 def get_history_filtered(user_id, page, per_page, filtros):
-    company_id = filtros.get('company_id')
-    if not _validate_user_company_access(user_id, company_id):
-        return {"erro": "Você não tem permissão para acessar os dados desta empresa."}, 403
+    company_id = _get_active_company()
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
     condicoes = [
         Transaction.user_id == user_id,
@@ -76,10 +72,9 @@ def get_history_filtered(user_id, page, per_page, filtros):
 
 def create_transaction(data, user_id):
     category_id = data.get('category_id')
-    company_id = data.get('company_id')
-
-    if not _validate_user_company_access(user_id, company_id):
-        return {"erro": "Você não tem permissão para lançar transações nesta empresa."}, 403
+    company_id = _get_active_company()
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
     category = Category.query.filter_by(
         category_id=data['category_id'],
@@ -111,9 +106,10 @@ def create_transaction(data, user_id):
         return {"erro": "Ocorreu um erro interno ao registrar transação."}, 500
 
 
-def get_company_transactions(company_id, user_id):
-    if not _validate_user_company_access(user_id, company_id):
-        return {"erro": "Você não tem permissão para visualizar transações nesta empresa."}, 403
+def get_company_transactions(user_id):
+    company_id = _get_active_company()
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
     transactions = Transaction.query.filter_by(company_id=company_id, user_id=user_id).all()
     return {"transactions_objects": transactions}, 200

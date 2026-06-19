@@ -2,6 +2,7 @@ from app.models.company import Company
 from app.models.user_company_association import user_company
 from app.config import db
 import re
+from flask_jwt_extended import get_jwt
 
 def register_company(user_id, data):
      try:
@@ -42,55 +43,49 @@ def register_company(user_id, data):
         print(f"Erro ao cadastrar empresa: {str(e)}")
         return {"erro": f"Ocorreu um erro interno ao tentar cadastrar a empresa: {str(e)}"}, 500
 
-def find_company(company_CNPJ,user_id):
+def find_company(company_CNPJ):
      if not company_CNPJ:
           return None
      return db.session.query(Company).filter(Company.cnpj==company_CNPJ).first()
 
-def delete_company(cnpj, user_id):
-     cnpj_clean = re.sub(r'\D', '', cnpj)
-     company = find_company(cnpj_clean)
-     if not company:
-          return {"erro": "Empresa não encontrada."}, 404
 
-     has_access = db.session.query(user_company).filter(
-          user_company.c.user_id == user_id,
-          user_company.c.company_id == company.company_id
-     ).first()
+def delete_company():
+    claims = get_jwt()
+    company_id = claims.get("active_company_id")
 
-     if not has_access:
-          return {"erro": "Acesso negado. Você não tem permissão para excluir esta empresa."}, 403
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
-     try:
-          db.session.delete(company)
-          db.session.commit()
-          return {"mensagem": "Empresa excluída com sucesso."}, 200
-     except Exception as e:
-          db.session.rollback()
-          return {"erro": "Ocorreu um erro interno ao tentar excluir a empresa."}, 500
-
-def update_company(cnpj, data, user_id):
-
-    cnpj_clean = re.sub(r'\D', '', cnpj)
-    company = find_company(cnpj_clean)
-
+    company = Company.query.get(company_id)
     if not company:
         return {"erro": "Empresa não encontrada."}, 404
 
-    has_access = db.session.query(user_company).filter(
-        user_company.c.user_id == user_id,
-        user_company.c.company_id == company.company_id
-    ).first()
+    try:
+        db.session.delete(company)
+        db.session.commit()
+        return {"mensagem": "Empresa excluída com sucesso."}, 200
+    except Exception as e:
+        db.session.rollback()
+        return {"erro": "Ocorreu um erro interno ao tentar excluir a empresa."}, 500
 
-    if not has_access:
-        return {"erro": "Acesso negado. Você não tem permissão para alterar esta empresa."}, 403
+
+def update_company(data):
+    claims = get_jwt()
+    company_id = claims.get("active_company_id")
+
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+
+    company = Company.query.get(company_id)
+    if not company:
+        return {"erro": "Empresa não encontrada."}, 404
 
     novo_cnpj = data.get('cnpj')
     if novo_cnpj:
         novo_cnpj_clean = re.sub(r'\D', '', novo_cnpj)
         if novo_cnpj_clean != company.cnpj:
-            # Reutiliza o find_company para ver se o novo CNPJ já existe no banco
-            if find_company(novo_cnpj_clean):
+            existe = Company.query.filter_by(cnpj=novo_cnpj_clean).first()
+            if existe:
                 return {"erro": "Este CNPJ já está em uso por outra empresa."}, 409
             company.cnpj = novo_cnpj_clean
 

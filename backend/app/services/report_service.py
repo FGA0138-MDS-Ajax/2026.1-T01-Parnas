@@ -2,10 +2,9 @@ from app.config import db
 from app.models import Transaction, Category
 from sqlalchemy import func, case
 from app.models.company import Company
-from app.models.user_company_association import user_company
 from datetime import date
 import calendar
-import re
+from flask_jwt_extended import get_jwt
 
 class ReportService:
 
@@ -84,41 +83,37 @@ class ReportService:
             "ou informe 'start_date' e 'end_date'."
         )
 
-def generate_report(user_id, data):
-    cnpj = data.get('cnpj')
-    cnpj_clean = re.sub(r'\D', '', cnpj)
-    company = db.session.query(Company).filter(Company.cnpj==cnpj_clean).first()
+    @staticmethod
+    def generate_report(data):
+        claims = get_jwt()
+        company_id = claims.get("active_company_id")
 
-    if not company:
-        return {"erro": "Empresa não encontrada."}, 404
+        if not company_id:
+            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
-    has_access = db.session.query(user_company).filter(
-        user_company.c.user_id == user_id,
-        user_company.c.company_id == company.company_id
-    ).first()
+        company = db.session.query(Company).filter(Company.company_id == company_id).first()
+        if not company:
+            return {"erro": "Empresa não encontrada."}, 404
 
-    if not has_access:
-        return {"erro": "Acesso negado. Você não tem permissão para acessar os relatórios dessa empresa!"}, 403
+        try:
+            start_date, end_date = ReportService.get_period_dates(data)
+        except ValueError as e:
+            return {"erro": str(e)}, 400
 
-    try:
-        start_date, end_date = ReportService.get_period_dates(data)
-    except ValueError as e:
-        return {"erro": str(e)}, 400
+        try:
+            totais = ReportService.get_period_summary(company_id, start_date, end_date)
+            distribuicao = ReportService.get_category_distribution(company_id, start_date, end_date)
+            evolucao = ReportService.get_balance_evolution(company_id, start_date, end_date)
+        except Exception as e:
+            print(f"Erro ao gerar relatório financeiro: {str(e)}")
+            return {"erro": "Ocorreu um erro interno ao gerar o relatório."}, 500
 
-    try:
-        totais = ReportService.get_period_summary(company.company_id, start_date, end_date)
-        distribuicao = ReportService.get_category_distribution(company.company_id, start_date, end_date)
-        evolucao = ReportService.get_balance_evolution(company.company_id, start_date, end_date)
-    except Exception as e:
-        print(f"Erro ao gerar relatório financeiro: {str(e)}")
-        return {"erro": "Ocorreu um erro interno ao gerar o relatório."}, 500
-
-    return {
-        "periodo": {
-            "data_inicio": start_date.isoformat(),
-            "data_fim": end_date.isoformat(),
-        },
-        "totais": totais,
-        "distribuicao_categorias": distribuicao,
-        "evolucao": evolucao,
-    }, 200
+        return {
+            "periodo": {
+                "data_inicio": start_date.isoformat(),
+                "data_fim": end_date.isoformat(),
+            },
+            "totais": totais,
+            "distribuicao_categorias": distribuicao,
+            "evolucao": evolucao,
+        }, 200

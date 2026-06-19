@@ -1,18 +1,19 @@
 from app.models import Category, Company 
 from app.config import db
+from flask_jwt_extended import get_jwt
 
 
-def add_category(user_id, data):
-    cnpj = data.get("cnpj")
+def add_category(data):
+    claims = get_jwt()
+    company_id = claims.get("active_company_id")
 
-    company = Company.query.filter_by(cnpj=cnpj).first()
-    if not company:
-        return {"erro": "Empresa não encontrada ou você não tem permissão para gerenciar as categorias dela."}, 404
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
     new_category = Category(
         name=data.get("name"),
         type=data.get("type"),
-        company_id=company.company_id
+        company_id=company_id
     )
 
     try:
@@ -24,26 +25,26 @@ def add_category(user_id, data):
         return {"erro": f"Erro interno ao salvar a categoria: {str(e)}"}, 500
 
 
-def get_categories(user_id, data):
-    cnpj = data.get("cnpj")
+def get_categories():
+    claims = get_jwt()
+    company_id = claims.get("active_company_id")
 
-    company = Company.query.filter_by(cnpj=cnpj).first()
-    if not company:
-        return {"erro": "Empresa não encontrada ou você não tem permissão."}, 404
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
-    categories = Category.query.filter_by(company_id=company.company_id).all()
+    categories = Category.query.filter_by(company_id=company_id).all()
     return {"categories": categories}, 200
 
 
-def update_category(user_id, data):
+def update_category(data):
     category_id = data.get("category_id") or data.get("id")
-    cnpj = data.get("cnpj")
+    claims = get_jwt()
+    company_id = claims.get("active_company_id")
 
-    company = Company.query.filter_by(cnpj=cnpj).first()
-    if not company:
-        return {"erro": "Empresa não encontrada ou você não tem permissão."}, 404
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
-    category = Category.query.filter_by(category_id=category_id, company_id=company.company_id).first()
+    category = Category.query.filter_by(category_id=category_id, company_id=company_id).first()
     if not category:
         return {"erro": "Categoria não encontrada para esta empresa."}, 404
 
@@ -60,15 +61,15 @@ def update_category(user_id, data):
         return {"erro": f"Erro interno ao atualizar: {str(e)}"}, 500
 
 
-def delete_category(user_id, data):
+def delete_category(data):
     category_id = data.get("category_id") or data.get("id")
-    cnpj = data.get("cnpj")
+    claims = get_jwt()
+    company_id = claims.get("active_company_id")
 
-    company = Company.query.filter_by(cnpj=cnpj).first()
-    if not company:
-        return {"erro": "Empresa não encontrada ou você não tem permissão."}, 404
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
-    category = Category.query.filter_by(category_id=category_id, company_id=company.company_id).first()
+    category = Category.query.filter_by(category_id=category_id, company_id=company_id).first()
     if not category:
         return {"erro": "Categoria não encontrada para esta empresa."}, 404
 

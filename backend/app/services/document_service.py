@@ -2,9 +2,8 @@ import os
 from werkzeug.utils import secure_filename
 from datetime import date
 from app.config import db, Config
-from app.models.company import Company
-from app.models.user import User
 from app.repositories.document_repository import DocumentRepository
+from flask_jwt_extended import get_jwt
 
 class DocumentService:
     ALLOWED_EXTENSIONS = Config.ALLOWED_EXTENSIONS
@@ -38,22 +37,15 @@ class DocumentService:
         return True, None
 
     @staticmethod
-    def check_user_company_access(user_id, company_id):
-        user = User.query.get(user_id)
-        if not user:
-            return False, "Usuário não encontrado", 404
-        
-        company = Company.query.get(company_id)
-        if not company:
-            return False, "Empresa não encontrada", 404
-        
-        if company not in user.companies:
-            return False, "Você não tem acesso a esta empresa", 403
-        
-        return True, None, None
+    def get_active_company():
+        claims = get_jwt()
+        company_id = claims.get("active_company_id")
+        if not company_id:
+            return None, "Nenhuma empresa ativa selecionada na sessão", 400
+        return company_id, None, None
 
     @staticmethod
-    def save_document(file, user_id, company_id, name, tipo, description=None):
+    def save_document(file, user_id, name, tipo, description=None):
         try:
             if not file or file.filename == '':
                 return None, "Arquivo não selecionado", 400
@@ -65,9 +57,9 @@ class DocumentService:
             valid, msg = DocumentService.validate_file_size(file)
             if not valid:
                 return None, msg, 400
-            
-            has_access, error_msg, status_code = DocumentService.check_user_company_access(user_id, company_id)
-            if not has_access:
+
+            company_id, error_msg, status_code = DocumentService.get_active_company()
+            if not company_id:
                 return None, error_msg, status_code
             
             company_folder = os.path.join(DocumentService.UPLOAD_FOLDER, str(company_id))
@@ -103,10 +95,10 @@ class DocumentService:
             return None, f"Erro ao salvar documento: {str(e)}", 500
 
     @staticmethod
-    def get_documents_by_company(company_id, user_id, page=1, per_page=20):
+    def get_documents_by_company(page=1, per_page=20):
         try:
-            has_access, error_msg, status_code = DocumentService.check_user_company_access(user_id, company_id)
-            if not has_access:
+            company_id, error_msg, status_code = DocumentService.get_active_company()
+            if not company_id:
                 return None, error_msg, status_code
             
             query = DocumentRepository.get_by_company(company_id, page, per_page)
@@ -117,15 +109,15 @@ class DocumentService:
             return None, f"Erro ao listar documentos: {str(e)}", 500
 
     @staticmethod
-    def delete_document(document_id, user_id):
+    def delete_document(document_id):
         try:
             document = DocumentRepository.get_by_id_and_company(document_id, None)
             
             if not document:
                 return False, "Documento não encontrado", 404
-            
-            has_access, error_msg, status_code = DocumentService.check_user_company_access(user_id, document.company_id)
-            if not has_access:
+
+            company_id, error_msg, status_code = DocumentService.get_active_company()
+            if not company_id:
                 return False, error_msg, status_code
         
             if os.path.exists(document.file_path):
@@ -139,16 +131,16 @@ class DocumentService:
             return False, f"Erro ao deletar documento: {str(e)}", 500
         
     @staticmethod
-    def get_document_for_download(document_id: int, user_id: int):
+    def get_document_for_download(document_id: int):
         try:
             document = DocumentRepository.get_by_id(document_id)
 
             if not document:
                 return None, None, "Documento não encontrado", 404
 
-            has_access, error_msg, status_code = DocumentService.check_user_company_access(user_id, document.company_id)
-            if not has_access:
-                return None, None, error_msg, status_code
+            company_id, error_msg, status_code = DocumentService.get_active_company()
+            if not company_id:
+                return False, error_msg, status_code
 
             if not os.path.exists(document.file_path):
                 return None, None, "Arquivo não encontrado no servidor", 404
