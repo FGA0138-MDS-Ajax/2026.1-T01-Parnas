@@ -104,6 +104,39 @@
   font-size: 0.62rem;
 }
 
+/* Grade de fotos da equipe (pagina Integrantes) */
+.team-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.6rem;
+  justify-content: center;
+  margin: 1.2rem 0 2rem;
+}
+.team-card {
+  width: 150px;
+  margin: 0;
+  text-align: center;
+}
+.team-card p {
+  margin: 0;
+}
+.team-card img {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--md-primary-fg-color);
+  background: var(--md-default-fg-color--lightest);
+}
+.team-card figcaption {
+  margin-top: .55rem;
+  font-size: .78rem;
+  line-height: 1.3;
+}
+.team-card figcaption small {
+  opacity: .75;
+}
+
 /* diagrama Mermaid (produto)*/
 .md-typeset .mermaid {
   margin: 1.5rem auto;

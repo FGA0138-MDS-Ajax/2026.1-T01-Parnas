@@ -44,3 +44,115 @@ Overleaf e publicadas neste site) e pela manutenção e organização de todos o
 referentes ao Grupo Parnas.
 
 ---
+
+## Equipe em fotos
+
+> As fotos ficam em `docs/assets/images/integrantes/`. Hoje estão com imagens
+> temporárias; basta substituir cada arquivo pelo retrato real, mantendo o mesmo nome
+> (ex.: `alan-semil.png`). Cada foto leva ao GitHub pessoal do integrante.
+
+### Desenvolvimento - Back-end
+
+<div class="team-grid" markdown>
+<figure class="team-card" markdown>
+[![Alan Semil dos Santos Vieira](../assets/images/integrantes/alan-semil.png)](https://github.com/Semil-2006)
+<figcaption markdown>
+**[Alan Semil dos Santos Vieira](https://github.com/Semil-2006)**<br>
+<small>Dev Back-end</small>
+</figcaption>
+</figure>
+<figure class="team-card" markdown>
+[![Gabriel Melo Rodrigues Cardone](../assets/images/integrantes/gabriel-cardone.png)](https://github.com/gabriellcardone-06)
+<figcaption markdown>
+**[Gabriel Melo Rodrigues Cardone](https://github.com/gabriellcardone-06)**<br>
+<small>Dev Back-end</small>
+</figcaption>
+</figure>
+<figure class="team-card" markdown>
+[![Igor Dantas Araújo](../assets/images/integrantes/igor-dantas.png)](https://github.com/IgorDARAUJO)
+<figcaption markdown>
+**[Igor Dantas Araújo](https://github.com/IgorDARAUJO)**<br>
+<small>Dev Back-end</small>
+</figcaption>
+</figure>
+<figure class="team-card" markdown>
+[![João Pedro da Nóbrega Souza Cordeiro](../assets/images/integrantes/joao-pedro.png)](https://github.com/nbg-cordeiro)
+<figcaption markdown>
+**[João Pedro da Nóbrega Souza Cordeiro](https://github.com/nbg-cordeiro)**<br>
+<small>Dev Back-end</small>
+</figcaption>
+</figure>
+</div>
+
+### Desenvolvimento - Front-end
+
+<div class="team-grid" markdown>
+<figure class="team-card" markdown>
+[![Anna Júlia Aparecida Silva Primo](../assets/images/integrantes/anna-julia.png)](https://github.com/annaaju)
+<figcaption markdown>
+**[Anna Júlia Aparecida Silva Primo](https://github.com/annaaju)**<br>
+<small>Dev Front-end</small>
+</figcaption>
+</figure>
+<figure class="team-card" markdown>
+[![Cibelle de Assis Silva](../assets/images/integrantes/cibelle.png)](https://github.com/cibelledeas-boop)
+<figcaption markdown>
+**[Cibelle de Assis Silva](https://github.com/cibelledeas-boop)**<br>
+<small>Dev Front-end</small>
+</figcaption>
+</figure>
+<figure class="team-card" markdown>
+[![João Marcos Santos e Carvalho](../assets/images/integrantes/joao-marcos.png)](https://github.com/dev-joaocarvalho)
+<figcaption markdown>
+**[João Marcos Santos e Carvalho](https://github.com/dev-joaocarvalho)**<br>
+<small>Dev Front-end</small>
+</figcaption>
+</figure>
+<figure class="team-card" markdown>
+[![Júlia Amanda Silva Lima](../assets/images/integrantes/julia-amanda.png)](https://github.com/juliaamandasl)
+<figcaption markdown>
+**[Júlia Amanda Silva Lima](https://github.com/juliaamandasl)**<br>
+<small>Dev Front-end</small>
+</figcaption>
+</figure>
+</div>
+
+### Qualidade e Testes (QA)
+
+<div class="team-grid" markdown>
+<figure class="team-card" markdown>
+[![Daniel Filipe Borges de Oliveira](../assets/images/integrantes/daniel-filipe.png)](https://github.com/daniel-fbo)
+<figcaption markdown>
+**[Daniel Filipe Borges de Oliveira](https://github.com/daniel-fbo)**<br>
+<small>QA / Tests</small>
+</figcaption>
+</figure>
+<figure class="team-card" markdown>
+[![Matheus Moretti Soares](../assets/images/integrantes/matheus-moretti.png)](https://github.com/Boynic3)
+<figcaption markdown>
+**[Matheus Moretti Soares](https://github.com/Boynic3)**<br>
+<small>QA / Tests</small>
+</figcaption>
+</figure>
+</div>
+
+### Banco de Dados
+
+<div class="team-grid" markdown>
+<figure class="team-card" markdown>
+[![Eduardo Jesus Dal Pizzol](../assets/images/integrantes/eduardo-pizzol.png)](https://github.com/Edupizzol)
+<figcaption markdown>
+**[Eduardo Jesus Dal Pizzol](https://github.com/Edupizzol)**<br>
+<small>DBA / Líder</small>
+</figcaption>
+</figure>
+<figure class="team-card" markdown>
+[![Maria Eduarda de Oliveira Gomes](../assets/images/integrantes/maria-eduarda.png)](https://github.com/eduarda-ogomes)
+<figcaption markdown>
+**[Maria Eduarda de Oliveira Gomes](https://github.com/eduarda-ogomes)**<br>
+<small>DBA</small>
+</figcaption>
+</figure>
+</div>
+
+---

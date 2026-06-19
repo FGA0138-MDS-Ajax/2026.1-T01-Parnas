@@ -65,6 +65,7 @@ Esta documentação tem três objetivos:
 | [O Grupo](sobre/index.md) | Quem é o Grupo Parnas, a disciplina e os integrantes |
 | [Produto](produto/index.md) | O CrediFab, o Documento de Visão e o de Arquitetura |
 | [Qualidade](qualidade/index.md) | Estratégia de testes, roteiro, docs por feature, consolidados de Sprint e GQM |
+| [Issues](issues/index.md) | Histórias de usuário, tarefas técnicas e correções (fixes) |
 | [Atas de Reunião](atas-reuniao/index.md) | Registros das reuniões do grupo |
 | [Presenças (gov.br)](presencas/index.md) | Listas de presença assinadas digitalmente |
 
