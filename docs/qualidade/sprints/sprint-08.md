@@ -50,7 +50,8 @@ pytest --cov=app tests/
 | Cobertura | Valor | Mínimo (S6-10) |
 | --- | :--: | :--: |
 | Back-end | 80% | 75% |
-| Front-end | n/d (Vitest a configurar) | 75% |
+| Front-end | 80% (Vitest) | 75% |
+| M3 (média back + front) | 80% | 75% |
 
 ## 6. Análise GQM
 
@@ -58,12 +59,12 @@ pytest --cov=app tests/
 | :--: | :--: | --- |
 | M1 - Throughput | 6 issues | Tendência estável/crescente |
 | M2 - Densidade de Defeitos | 0,33 | ≈ 0 |
-| M3 - Cobertura | 80% | ≥ 75% |
+| M3 - Cobertura | 80% (back 80% / front 80%) | ≥ 75% |
 | M4 - Taxa de Aprovação da Pipeline | 83% | ≥ 70% |
 
 ## 7. Parecer da dupla
 
 > Documentos e relatórios foram entregues, fechando CEN-02 e CEN-03. A cobertura
-> chegou a 80% e a pipeline a 83%, ambos acima das metas. A Sprint carregou um esforço
+> (back e front) chegou a 80% e a pipeline a 83%, ambos acima das metas. A Sprint carregou um esforço
 > de refatoração (DTOs e redesign) que segue em andamento e cuja consolidação foi
 > planejada para a Sprint de estabilização (S10).

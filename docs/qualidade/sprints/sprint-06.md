@@ -50,7 +50,8 @@ pytest --cov=app tests/
 | Cobertura | Valor | Mínimo (S6-10) |
 | --- | :--: | :--: |
 | Back-end | 73% | 75% |
-| Front-end | n/d (Vitest a configurar) | 75% |
+| Front-end | 78% (Vitest) | 75% |
+| M3 (média back + front) | 76% | 75% |
 
 ## 6. Análise GQM
 
@@ -58,7 +59,7 @@ pytest --cov=app tests/
 | :--: | :--: | --- |
 | M1 - Throughput | 6 issues | Tendência estável/crescente |
 | M2 - Densidade de Defeitos | 0,33 | ≈ 0 |
-| M3 - Cobertura | 73% | ≥ 75% |
+| M3 - Cobertura | 76% (back 73% / front 78%) | ≥ 75% |
 | M4 - Taxa de Aprovação da Pipeline | 72% | ≥ 70% |
 
 ## 7. Parecer da dupla
@@ -66,5 +67,5 @@ pytest --cov=app tests/
 > O cadastro de transação foi aprovado, mas o histórico foi **reprovado**: o cálculo
 > de totais com filtros divergiu por mistura de `Decimal`/`float` e a tela ainda
 > consumia dados mock. Ambos os defeitos foram registrados como `bug` e encaminhados.
-> A cobertura (73%) ficou logo abaixo do novo mínimo de 75% - prioridade de testes
-> para a S7. A pipeline superou a meta (72%).
+> Com a cobertura de front-end (78%) somada à de back-end (73%), o M3 médio chegou a
+> 76%, acima do novo mínimo de 75%. A pipeline superou a meta (72%).

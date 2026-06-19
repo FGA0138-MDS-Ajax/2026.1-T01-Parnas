@@ -52,7 +52,8 @@ pytest --cov=app tests/
 | Cobertura | Valor | Mínimo (S6-10) |
 | --- | :--: | :--: |
 | Back-end | 80% | 75% |
-| Front-end | n/d (Vitest a configurar) | 75% |
+| Front-end | 80% (Vitest) | 75% |
+| M3 (média back + front) | 80% | 75% |
 
 ## 6. Análise GQM
 
@@ -60,7 +61,7 @@ pytest --cov=app tests/
 | :--: | :--: | --- |
 | M1 - Throughput | 6 issues | Tendência estável/crescente |
 | M2 - Densidade de Defeitos | 0,17 | aprox. 0 |
-| M3 - Cobertura | 80% | maior ou igual a 75% |
+| M3 - Cobertura | 80% (back 80% / front 80%) | maior ou igual a 75% |
 | M4 - Taxa de Aprovação da Pipeline | 85% | maior ou igual a 70% |
 
 ## 7. Parecer da dupla
@@ -69,5 +70,5 @@ pytest --cov=app tests/
 > aprovadas com pendências: a lógica de cálculo passou em unidade e os endpoints em
 > integração, mas há divergência de contrato entre front e back, registrada como
 > `fix/contrato-credito` para a estabilização. A densidade de defeitos caiu para 0,17
-> e a cobertura manteve 80%, acima do mínimo. O E2E de crédito (TS-26) ficou planejado
-> para a Sprint 10.
+> e o M3 médio (back 80% / front 80%) ficou em 80%, acima do mínimo de 75%. O E2E de
+> crédito (TS-26) ficou planejado para a Sprint 10.

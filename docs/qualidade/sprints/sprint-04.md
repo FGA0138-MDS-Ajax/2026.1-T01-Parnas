@@ -52,7 +52,8 @@ pytest --cov=app tests/
 | Cobertura | Valor | Mínimo (S1-5) |
 | --- | :--: | :--: |
 | Back-end | 63% | 60% |
-| Front-end | n/d (Vitest a configurar) | 60% |
+| Front-end | 62% (Vitest) | 60% |
+| M3 (média back + front) | 63% | 60% |
 
 ## 6. Análise GQM
 
@@ -60,7 +61,7 @@ pytest --cov=app tests/
 | :--: | :--: | --- |
 | M1 - Throughput | 5 issues | Tendência estável/crescente |
 | M2 - Densidade de Defeitos | 0,40 | ≈ 0 |
-| M3 - Cobertura | 63% | ≥ 60% |
+| M3 - Cobertura | 63% (back 63% / front 62%) | ≥ 60% |
 | M4 - Taxa de Aprovação da Pipeline | - (CI em implantação) | ≥ 70% (a partir da S5) |
 
 ## 7. Parecer da dupla

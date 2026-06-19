@@ -1,17 +1,17 @@
-# Relatório de QA - Tarefa IV: Integração do Ciclo de Vida (Usuário / Empresa / Autenticação)
+# Documentação de Teste - Tarefa IV: Integração do Ciclo de Vida 
 
 ## 1. Identificação
 
 | Campo                         | Valor                                                        |
-|-------------------------------|-------------------------------------------------------------|
-| **Tarefa**                    | Tarefa IV - Integração ponta a ponta (issue #26)            |
+|-------------------------------|--------------------------------------------------------------111|
+| **Tarefa**                    | Tarefa IV - Integração ponta a ponta (issue #26)             |
 | **Requisitos**                | R01, R02, R03, R04, R05                                      |
 | **Casos do roteiro**          | TS-12, TS-13, TS-14, TS-18                                   |
-| **Branch de desenvolvimento** | `task/integracao`                                           |
+| **Branch de desenvolvimento** | `task/integracao`                                            |
 | **Branch base comparada**     | `develop`                                                    |
 | **Branch de teste (QA)**      | `test/task/integracao-qa`                                    |
 | **Data**                      | 18/06/2026                                                   |
-| **Parecer**                   | **REPROVADA** (ver §6)                                    |
+| **Parecer**                   | **REPROVADA** (ver §6)                                       |
 
 > Por ser uma tarefa de **integração/refatoração**, não cabe "aprovada com
 > pendências": ou o fluxo está íntegro, ou é reprovada com os defeitos apontados.
