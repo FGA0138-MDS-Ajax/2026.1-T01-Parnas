@@ -1,8 +1,5 @@
 import bcrypt
 from flask_jwt_extended import create_access_token
-from app.models.company import Company
-from app.models.user import User
-from app.config import db
 from datetime import datetime, date
 from app.repositories.user_repository import UserRepository
 
