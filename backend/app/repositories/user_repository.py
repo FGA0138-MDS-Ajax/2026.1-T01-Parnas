@@ -1,7 +1,6 @@
 from app.config import db
 from app.models.user import User
 
-
 class UserRepository:
 
     @staticmethod
