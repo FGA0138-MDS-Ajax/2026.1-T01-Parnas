@@ -1,9 +1,5 @@
 """
-conftest.py - Fixtures compartilhadas por TODOS os testes do backend.
-
-O pytest carrega este arquivo automaticamente. Tudo que estiver aqui fica
-disponível como fixture em qualquer teste de tests/unit, tests/integration e
-tests/e2e — sem precisar importar.
+conftest.py - Fixtures compartilhadas pelos testes do backend.
 
 Fixtures disponíveis:
 - app           : aplicação Flask configurada para testes (SQLite em memória)
@@ -21,6 +17,8 @@ from datetime import date
 from app import create_app
 from app.config import db, Config
 from app.models.user import User
+from app.models.company import Company
+from app.models.category import Category
 from flask_jwt_extended import create_access_token
 import bcrypt
 
@@ -85,6 +83,34 @@ def test_user(app_context, clean_db):
     db.session.add(user)
     db.session.commit()
     return user
+
+
+@pytest.fixture
+def test_company(app_context, clean_db, test_user):
+    """Uma empresa persistida (genérica, reutilizável entre features).
+
+    Já vinculada ao test_user (tabela user_company): vários services exigem que
+    o usuário autenticado pertença à empresa para liberar o acesso (403 caso não).
+    """
+    company = Company(
+        name='Padaria Central',
+        cnpj='11.222.333/0001-81',
+        email='contato@padaria.com',
+        phone='1130000000',
+    )
+    company.users.append(test_user)
+    db.session.add(company)
+    db.session.commit()
+    return company
+
+
+@pytest.fixture
+def test_category(test_company):
+    """Uma categoria de receita já vinculada à test_company."""
+    category = Category(name='Vendas', type='receita', company_id=test_company.company_id)
+    db.session.add(category)
+    db.session.commit()
+    return category
 
 
 @pytest.fixture

@@ -1,0 +1,167 @@
+from app.config import db
+from app.models.simulation import Simulation
+from app.models.transaction import Transaction
+
+def calculate_table_price(main, rate, term):
+    i = rate/100
+    if i==0:
+        pmt = main/term
+    else:
+        pmt = main*(i*(1+i)**term)/((1+i)**term-1)
+
+    installments = []
+    balance_due = main
+
+    for month in range(1,term+1):
+        monthly_interest = balance_due*i
+        monthly_amortization = pmt-monthly_interest
+        balance_due -= monthly_amortization
+
+        installments.append({
+            "mes": month,
+            "valor_parcela": round(pmt, 2),
+            "amortizacao": round(monthly_amortization, 2),
+            "juros": round(monthly_interest, 2),
+            "saldo_devedor": round(max(0, balance_due), 2)
+        })
+
+    return installments, pmt
+
+def calculate_table_sac(main, rate, term):
+    i = rate/100
+    amortization = main/term
+    balance_due = main
+    installments = []
+
+    for month in range(1,term+1):
+        monthly_interest = balance_due*i
+        pmt = amortization + monthly_interest
+        balance_due -= amortization
+
+        installments.append({
+            "mes": month,
+            "valor_parcela": round(pmt, 2),
+            "amortizacao": round(amortization, 2),
+            "juros": round(monthly_interest, 2),
+            "saldo_devedor": round(max(0, balance_due), 2)
+        })
+
+    return installments, installments[0]["valor_parcela"]
+
+def project_impact_cash_flow(company_id, first_installment_value):
+    transactions = Transaction.query.filter_by(company_id=company_id).all()
+
+    if not transactions:
+        return {
+            "status": "Indisponível",
+            "mensagem": "Empresa sem histórico para projeção confiável.",
+            "comprometimento_perc": None
+        }
+
+    entries = sum(float(t.amount) for t in transactions if t.type.lower() == 'receita')
+    exits = sum(float(t.amount) for t in transactions if t.type.lower() == 'despesa')
+    total_profits = entries - exits
+
+    months_operating = len(set(t.date.strftime("%Y-%m") for t in transactions)) or 1
+    average_monthly_profit = total_profits/months_operating
+
+    if average_monthly_profit <= 0:
+        return {
+            "status": "Alerta vermelho",
+            "mensagem": "Empresa opera no prejuízo médio. Nova dívida altamente arriscada",
+            "comprometimento_perc": 100.0
+        }
+
+    commitment = (first_installment_value/average_monthly_profit)*100
+
+    return{
+        "media_lucro_mensal": round(average_monthly_profit, 2),
+        "comprometimento_perc": round(commitment, 2),
+        "status": "Saudável" if commitment <= 30 else "Atenção"
+    }
+
+def process_simulation(data, company_id = None):
+    main = data['requested_amount']
+    rate = data['interest_rate']
+    term = data['deadline_month']
+    modality = data['modality'].upper()
+
+    if modality == 'PRICE':
+        installments, base_installment = calculate_table_price(main, rate, term)
+    else:
+        installments, base_installment = calculate_table_sac(main, rate, term)
+
+    total_paid = sum(p["valor_parcela"] for p in installments)
+    total_interest = total_paid - main
+
+    answer = {
+        "resumo": {
+            "modalidade": modality,
+            "valor_solicitado": round(main, 2),
+            "total_a_pagar": round(total_paid, 2),
+            "total_juros": round(total_interest, 2),
+            "primeira_parcela": round(base_installment, 2)
+        },
+        "detalhamento_mensal": installments
+    }
+
+    if company_id:
+        answer["projecao_fluxo_caixa"] = project_impact_cash_flow(company_id, base_installment)
+
+    return answer
+
+def save_simulation(data, current_user_id):
+    data_simulation = process_simulation(data)
+    summary = data_simulation["resumo"]
+
+    new_simulation = Simulation(
+        company_id = data['company_id'],
+        user_id = current_user_id,
+        valor_solicitado = data['requested_amount'],
+        prazo_meses = data['deadline_month'],
+        modalidade=data['modality'],
+        taxa_juros=data['interest_rate'],
+        valor_parcela=summary['primeira_parcela'],
+        valor_total=summary['total_a_pagar'],
+        total_juros=summary['total_juros']
+    )
+
+    try:
+        db.session.add(new_simulation)
+        db.session.commit()
+        return {"mensagem": "Simulação salva no histórico com sucesso.", "simulation_id": new_simulation.simulation_id}, 201
+    except Exception as e:
+        db.session.rollback()
+        return {"erro": "Ocorreu um erro interno ao salvar a simulação."}, 500
+
+def get_simulation(company_id):
+    simulations = Simulation.query.filter_by(company_id=company_id).all()
+    result = []
+    for s in simulations:
+        result.append({
+            "simulation_id": s.simulation_id,
+            "valor_solicitado": float(s.valor_solicitado),
+            "prazo_meses": s.prazo_meses,
+            "modalidade": s.modalidade,
+            "taxa_juros": float(s.taxa_juros),
+            "valor_parcela": float(s.valor_parcela),
+            "valor_total": float(s.valor_total),
+            "total_juros": float(s.total_juros),
+            "data_simulacao": s.data_simulacao.strftime('%Y-%m-%d %H:%M')
+        })
+
+    return {"simulations": result}, 200
+
+def delete_simulation(simulation_id, company_id):
+    simulation = Simulation.query.filter_by(simulation_id=simulation_id, company_id=company_id).first()
+
+    if not simulation:
+        return {"erro": "Simulação não encontrada para esta empresa."}, 404
+
+    try:
+        db.session.delete(simulation)
+        db.session.commit()
+        return {"mensagem": "Simulação excluída com sucesso."}, 200
+    except Exception as e:
+        db.session.rollback()
+        return {"erro": "Ocorreu um erro interno ao excluir a simulação."}, 500

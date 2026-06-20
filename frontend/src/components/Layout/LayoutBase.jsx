@@ -24,19 +24,16 @@ const LayoutBase = () => {
         </Link>
 
         <nav className="layout-nav">
-          <Link to="/dashboard" className="nav-link">
-            Dashboard
-          </Link>
-          <Link to="/transacoes" className="nav-link">
-            Transações
-          </Link>
-          <Link to="/contas" className="nav-link">
-            Contas
-          </Link>
-          <Link to="/categorias" className="nav-link">
-            Categorias
-          </Link>{" "}
-        </nav>
+
+          <Link to="/dashboard" className="nav-link">Dashboard</Link>
+          <Link to="/transacoes" className="nav-link">Transações</Link>
+          <Link to="/contas" className="nav-link">Contas</Link>
+          <Link to="/simulacoes" className="nav-link">Simulações</Link>
+          <Link to="/comparacoes" className="nav-link">Comparações</Link>
+          <Link to="/relatorios" className="nav-link">Relatórios</Link>
+           <Link to="/categorias" className="nav-link">Categorias</Link>
+        
+         </nav>
 
         <button
           onClick={() => navigate("/configuracoes")}

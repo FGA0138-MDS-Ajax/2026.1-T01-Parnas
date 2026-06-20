@@ -1,8 +1,11 @@
 .register-container {
   width: 100%;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .register-card {
@@ -95,6 +98,11 @@
   gap: 16px;
 }
 
+.register-row {
+  display: flex;
+  gap: 2%;
+}
+
 .register-input-group {
   display: flex;
   flex-direction: column;
@@ -153,4 +161,26 @@
   font-size: 0.85rem;
   font-weight: 600;
   text-align: left;
+
+}
+
+@media (max-width: 768px) {
+
+  .register-card {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .register-row {
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .register-form-content {
+    padding: 30px;
+  }
+
+  .register-sidebar {
+    padding: 30px;
+  }
 }

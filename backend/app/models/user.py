@@ -17,6 +17,8 @@ class User(db.Model):
     
     companies = db.relationship('Company', secondary=user_company, back_populates='users')
     transactions = db.relationship('Transaction', back_populates='user')
+    documents = db.relationship('Document', back_populates='user')
+    simulations = db.relationship('Simulation', back_populates='usuario', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<User {self.name}>'    
