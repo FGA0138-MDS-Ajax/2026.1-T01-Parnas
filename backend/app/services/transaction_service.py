@@ -1,14 +1,10 @@
-from app.config import db
-from app.models.user import User
-from app.models.transaction import Transaction
-from app.models.category import Category
-from sqlalchemy import func
+from app.repositories.transaction_repository import TransactionRepository
+from app.repositories.category_repository import CategoryRepository
+from app.repositories.user_repository import UserRepository  # Se houver um UserRepository para carregar o usuário
 
 def _validate_user_company_access(user_id, company_id):
-    """
-    Verifica se o usuário tem acesso à empresa informada.
-    """
-    user = db.session.query(User).filter(User.user_id == user_id).first()
+    """Verifica se o usuário tem acesso à empresa informada."""
+    user = UserRepository.get_by_id(user_id)
     user_companies_ids = [c.company_id for c in user.companies] if user else []
     return company_id in user_companies_ids
 
@@ -18,37 +14,31 @@ def get_history_filtered(user_id, page, per_page, filtros):
         return {"erro": "Você não tem permissão para acessar os dados desta empresa."}, 403
 
     condicoes = [
-        Transaction.user_id == user_id,
-        Transaction.company_id == company_id
+        TransactionRepository.model.user_id == user_id,  # Referenciando via mapeamento do ORM
+        TransactionRepository.model.company_id == company_id
     ]
 
     if filtros.get('data_inicio'):
-        condicoes.append(Transaction.date >= filtros['data_inicio'])
+        condicoes.append(TransactionRepository.model.date >= filtros['data_inicio'])
     if filtros.get('data_fim'):
-        condicoes.append(Transaction.date <= filtros['data_fim'])
+        condicoes.append(TransactionRepository.model.date <= filtros['data_fim'])
     if filtros.get('tipo'):
-        condicoes.append(Transaction.type == filtros['tipo'])
+        condicoes.append(TransactionRepository.model.type == filtros['tipo'])
     if filtros.get('valor_min') is not None:
-        condicoes.append(Transaction.amount >= filtros['valor_min'])
+        condicoes.append(TransactionRepository.model.amount >= filtros['valor_min'])
     if filtros.get('valor_max') is not None:
-        condicoes.append(Transaction.amount <= filtros['valor_max'])
+        condicoes.append(TransactionRepository.model.amount <= filtros['valor_max'])
 
-    query_base = Transaction.query.filter(*condicoes)
-
-    if filtros.get('categoria'):
-        query_base = query_base.join(Category).filter(Category.name.ilike(f"%{filtros['categoria']}%"))
-
-    totais = db.session.query(
-        Transaction.type, func.sum(Transaction.amount)
-    ).filter(*condicoes).group_by(Transaction.type).all()
+    query_base, totais = TransactionRepository.get_filtered_history_query(
+        condicoes,
+        categoria_nome=filtros.get('categoria')
+    )
 
     receitas = sum(valor for tipo, valor in totais if tipo == 'receita') or 0.0
     despesas = sum(valor for tipo, valor in totais if tipo == 'despesa') or 0.0
     saldo = receitas - despesas
 
-    paginacao = query_base.order_by(Transaction.date.desc()).paginate(
-        page=page, per_page=per_page, error_out=False
-    )
+    paginacao = query_base.order_by(TransactionRepository.model.date.desc()).paginate(page=page, per_page=per_page, error_out=False)
 
     transacoes_lista = [{
         "transaction_id": t.transaction_id,
@@ -81,33 +71,27 @@ def create_transaction(data, user_id):
     if not _validate_user_company_access(user_id, company_id):
         return {"erro": "Você não tem permissão para lançar transações nesta empresa."}, 403
 
-    category = Category.query.filter_by(
-        category_id=data['category_id'],
-        company_id=data['company_id']
-    ).first()
-
+    category = CategoryRepository.get_by_id_and_company(category_id, company_id)
     if not category:
         return {"erro": "A categoria informada não existe ou não pertence a esta empresa."}, 400
 
-    new_transaction = Transaction(
-        description=data['description'],
-        amount=data['amount'],
-        date=data['date'],
-        type=data['type'],
-        company_id=company_id,
-        category_id=category_id,
-        user_id=user_id
-    )
-
     try:
-        db.session.add(new_transaction)
-        db.session.commit()
+        new_transaction = TransactionRepository.create(
+            description=data['description'],
+            amount=data['amount'],
+            date=data['date'],
+            type=data['type'],
+            company_id=company_id,
+            category_id=category_id,
+            user_id=user_id
+        )
         return {
             "mensagem": "Transação registrada com sucesso.",
             "transaction_id": new_transaction.transaction_id
         }, 201
+    except ValueError as ve:
+        return {"erro": str(ve)}, 400
     except Exception as e:
-        db.session.rollback()
         return {"erro": "Ocorreu um erro interno ao registrar transação."}, 500
 
 
@@ -115,20 +99,16 @@ def get_company_transactions(company_id, user_id):
     if not _validate_user_company_access(user_id, company_id):
         return {"erro": "Você não tem permissão para visualizar transações nesta empresa."}, 403
 
-    transactions = Transaction.query.filter_by(company_id=company_id, user_id=user_id).all()
+    transactions = TransactionRepository.list_by_company_and_user(company_id, user_id)
     return {"transactions_objects": transactions}, 200
 
-
 def update_transaction(transaction_id, user_id, data):
-    transaction = Transaction.query.filter_by(transaction_id=transaction_id, user_id=user_id).first()
+    transaction = TransactionRepository.get_by_id_and_user(transaction_id, user_id)
     if not transaction:
         return {"erro": "Transação não encontrada ou você não possui permissão para alterá-la."}, 404
 
     if 'category_id' in data:
-        category = Category.query.filter_by(
-            category_id=data['category_id'],
-            company_id=transaction.company_id
-        ).first()
+        category = CategoryRepository.get_by_id_and_company(data['category_id'], transaction.company_id)
         if not category:
             return {"erro": "A categoria informada não pertence à empresa desta transação."}, 400
         transaction.category_id = data['category_id']
@@ -143,26 +123,22 @@ def update_transaction(transaction_id, user_id, data):
         transaction.type = data['type']
 
     try:
-        db.session.commit()
+        TransactionRepository.save(transaction)
         return {
-            "mensagem": "Transação atualizada com sucesso.",
+            "mensagem": "Transação actualizada com sucesso.",
             "transaction": transaction
         }, 200
     except Exception as e:
-        db.session.rollback()
         return {"erro": "Ocorreu um erro interno ao atualizar a transação."}, 500
 
 
 def delete_transaction(transaction_id, user_id):
-    transaction = Transaction.query.filter_by(transaction_id=transaction_id, user_id=user_id).first()
-
+    transaction = TransactionRepository.get_by_id_and_user(transaction_id, user_id)
     if not transaction:
         return {"erro": "Transação não encontrada ou você não possui permissão para excluí-la."}, 404
 
     try:
-        db.session.delete(transaction)
-        db.session.commit()
+        TransactionRepository.delete_instance(transaction)
         return {"mensagem": "Transação excluída com sucesso."}, 200
     except Exception as e:
-        db.session.rollback()
         return {"erro": "Ocorreu um erro ao excluir a transação."}, 500
