@@ -3,7 +3,8 @@ from flask_jwt_extended import create_access_token
 from app.models.company import Company
 from app.models.user import User
 from app.config import db
-from datetime import datetime,date
+from datetime import datetime, date
+from app.repositories.user_repository import UserRepository
 
 def register_user(data):
     name = data.get('name')
@@ -16,27 +17,23 @@ def register_user(data):
         birth_date = datetime.strptime(birth_date_raw, '%Y-%m-%d').date()
     else:
         birth_date = birth_date_raw
-    
-    if find_user_by_email(email):
+
+    if UserRepository.get_by_email(email):
         return {"erro": "Este e-mail já está cadastrado"}, 409
 
-    if find_user_by_cpf(cpf):
+    if UserRepository.get_by_cpf(cpf):
         return {"erro": "Este CPF já está cadastrado"}, 409
 
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
-    new_user = User(
-        name=name,
-        email=email,
-        cpf=cpf,
-        password_hash=hashed_password,
-        birth_date=birth_date,
-        register_date=date.today()
-    )
-
     try:
-        db.session.add(new_user)
-        db.session.commit()
+        new_user = UserRepository.create(
+            name=name,
+            email=email,
+            cpf=cpf,
+            password_hash=hashed_password,
+            birth_date=birth_date
+        )
 
         token = create_access_token(identity=str(new_user.user_id))
 
@@ -47,41 +44,28 @@ def register_user(data):
         }, 201
 
     except Exception as e:
-        db.session.rollback()
         return {"erro": f"Ocorreu um erro interno ao tentar salvar o usuário. message: {str(e)}"}, 500
-    
-def find_user_by_cpf(cpf: str):
-    if not cpf:
-        return None
-    cleaned_cpf = ''.join(filter(str.isdigit, cpf))
-    return db.session.query(User).filter(User.cpf == cleaned_cpf).first()
 
-def find_user_by_email(email: str):
-    if not email:
-        return None
-    return db.session.query(User).filter(User.email == email).first()
 
 def delete_user(user_id):
-    user = db.session.query(User).filter(User.user_id == user_id).first()
+    user = UserRepository.get_by_id(user_id)
     if not user:
         return {"erro": "Usuário não encontrado."}, 404
+
     try:
-        db.session.delete(user)
-        db.session.commit()
+        UserRepository.delete(user)
         return {"mensagem": "Usuário excluído com sucesso."}, 200
     except Exception as e:
-        db.session.rollback()
         return {"erro": "Ocorreu um erro interno ao tentar excluir o usuário."}, 500
 
 def update_user(user_id, data):
-    user = db.session.query(User).filter(User.user_id == user_id).first()
-
+    user = UserRepository.get_by_id(user_id)
     if not user:
         return {"erro": "Usuário não encontrado."}, 404
 
     email = data.get('email')
     if email and email != user.email:
-        if find_user_by_email(email):
+        if UserRepository.get_by_email(email):
             return {"erro": "Este e-mail já está em uso por outra conta."}, 409
         user.email = email
 
@@ -89,7 +73,7 @@ def update_user(user_id, data):
     if raw_cpf:
         cpf = ''.join(filter(str.isdigit, raw_cpf))
         if cpf != user.cpf:
-            if find_user_by_cpf(cpf):
+            if UserRepository.get_by_cpf(cpf):
                 return {"erro": "Este CPF já está em uso por outra conta."}, 409
             user.cpf = cpf
 
@@ -103,9 +87,8 @@ def update_user(user_id, data):
             return {"erro": "Formato de data de nascimento inválido. Use AAAA-MM-DD."}, 400
 
     try:
-        db.session.commit()
+        UserRepository.save(user)
         return {"mensagem": "Dados do usuário atualizados com sucesso.", "user": user}, 200
     except Exception as e:
-        db.session.rollback()
         return {"erro": "Ocorreu um erro interno ao tentar atualizar o usuário."}, 500
 
