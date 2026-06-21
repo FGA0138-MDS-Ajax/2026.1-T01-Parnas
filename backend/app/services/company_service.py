@@ -67,37 +67,31 @@ def delete_company(company_id, user_id):
           print(f"Erro ao deletar empresa: {str(e)}")
           return {"erro": f"Ocorreu um erro interno ao tentar deletar a empresa: {str(e)}"}, 500
 
-def update_company(cnpj, data, user_id):
+def update_company(data, user_id, company_id):
+     try:
+          company = CompanyRepository.get_by_id(company_id)
+          if not company:
+               raise APIException("Empresa não encontrada.", 404)
+          
+          CompanyRepository.check_access(company_id, user_id)
 
-    cnpj_clean = re.sub(r'\D', '', cnpj)
-    company = find_company(cnpj_clean)
+          if 'cnpj' in data:
+               if(CompanyRepository.get_by_cnpj(data['cnpj']) and CompanyRepository.get_by_cnpj(data['cnpj']).company_id != company_id):
+                    raise APIException("CNPJ já cadastrado.", 409)
+               company.cnpj = data['cnpj']
+          if 'name' in data:
+               company.name = data['name']
+          if 'email' in data:
+               company.email = data['email']
+          if 'phone' in data:
+               company.phone = data['phone']
+          db.session.commit()
 
-    if not company:
-        return {"erro": "Empresa não encontrada."}, 404
-
-    has_access = db.session.query(user_company).filter(
-        user_company.c.user_id == user_id,
-        user_company.c.company_id == company.company_id
-    ).first()
-
-    if not has_access:
-        return {"erro": "Acesso negado. Você não tem permissão para alterar esta empresa."}, 403
-
-    novo_cnpj = data.get('cnpj')
-    if novo_cnpj:
-        novo_cnpj_clean = re.sub(r'\D', '', novo_cnpj)
-        if novo_cnpj_clean != company.cnpj:
-            # Reutiliza o find_company para ver se o novo CNPJ já existe no banco
-            if find_company(novo_cnpj_clean):
-                return {"erro": "Este CNPJ já está em uso por outra empresa."}, 409
-            company.cnpj = novo_cnpj_clean
-
-    if 'name' in data:
-        company.name = data['name']
-
-    try:
-        db.session.commit()
-        return {"mensagem": "Dados da empresa atualizados com sucesso."}, 200
-    except Exception as e:
-        db.session.rollback()
-        return {"erro": "Ocorreu um erro interno ao tentar atualizar a empresa."}, 500
+          return {"mensagem": "Dados da empresa atualizados com sucesso.", "company": company}, 200
+          
+     except APIException as ve:
+          raise ve
+     except Exception as e:
+          db.session.rollback()
+          print(f"Erro ao atualizar empresa: {str(e)}")
+          return {"erro": f"Ocorreu um erro interno ao tentar atualizar a empresa: {str(e)}"}, 500

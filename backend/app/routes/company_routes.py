@@ -37,22 +37,18 @@ def delete_company_route(company_id):
     return jsonify(answer), status_code
 
 
-@company_bp.route("/update", methods=["PUT"])
+@company_bp.route("/<int:company_id>", methods=["PUT"])
 @jwt_required()
-def update_company_route():
+def update_company_route(company_id):
     user_id = int(get_jwt_identity())
     raw_data = request.get_json()
 
-    cnpj = raw_data.get("cnpj_original") or raw_data.get("cnpj")
-    if not cnpj:
-        return jsonify({"erro": "O CNPJ da empresa que será alterada é obrigatório."}), 400
-
     try:
-        validated_data = company_schema.load(raw_data, partial=True)
+        data = company_schema.load(raw_data, partial=True)
     except ValidationError as err:
         return jsonify({"erros_de_validacao": err.messages}), 400
 
-    answer, status_code = update_company(cnpj, validated_data, user_id)
+    answer, status_code = update_company(data=data, user_id=user_id, company_id=company_id)
     
     if status_code == 200 and "company" in answer:
         answer["company"] = company_output_schema.dump(answer["company"])
