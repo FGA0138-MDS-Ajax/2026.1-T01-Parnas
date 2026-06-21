@@ -2,6 +2,8 @@ from app.models.company import Company
 from app.models.user_company_association import user_company
 from app.config import db
 import re
+from app.repositories.company_repository import CompanyRepository
+from app.exceptions.api_exception import APIException
 
 def register_company(user_id, data):
      try:
@@ -47,27 +49,23 @@ def find_company(company_CNPJ,user_id):
           return None
      return db.session.query(Company).filter(Company.cnpj==company_CNPJ).first()
 
-def delete_company(cnpj, user_id):
-     cnpj_clean = re.sub(r'\D', '', cnpj)
-     company = find_company(cnpj_clean)
-     if not company:
-          return {"erro": "Empresa não encontrada."}, 404
-
-     has_access = db.session.query(user_company).filter(
-          user_company.c.user_id == user_id,
-          user_company.c.company_id == company.company_id
-     ).first()
-
-     if not has_access:
-          return {"erro": "Acesso negado. Você não tem permissão para excluir esta empresa."}, 403
-
+def delete_company(company_id, user_id):
      try:
-          db.session.delete(company)
-          db.session.commit()
-          return {"mensagem": "Empresa excluída com sucesso."}, 200
+          company = CompanyRepository.get_by_id(company_id)
+          if not company:
+               raise APIException("Empresa não encontrada.", 404)
+          
+          CompanyRepository.check_access(company_id, user_id)
+          CompanyRepository.delete(company_id)
+          
+          return {"mensagem": "Empresa deletada com sucesso."}, 200
+     
+     except APIException as ve:
+          raise ve
      except Exception as e:
           db.session.rollback()
-          return {"erro": "Ocorreu um erro interno ao tentar excluir a empresa."}, 500
+          print(f"Erro ao deletar empresa: {str(e)}")
+          return {"erro": f"Ocorreu um erro interno ao tentar deletar a empresa: {str(e)}"}, 500
 
 def update_company(cnpj, data, user_id):
 
