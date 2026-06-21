@@ -1,7 +1,5 @@
 from app.models.company import Company
-from app.models.user_company_association import user_company
 from app.config import db
-import re
 from app.repositories.company_repository import CompanyRepository
 from app.exceptions.api_exception import APIException
 
@@ -11,38 +9,23 @@ def register_company(user_id, data):
           cnpj = data.get('cnpj')
           email = data.get('email')
           phone = data.get('phone')
-
-          cnpj_clean = re.sub(r'\D', '', cnpj)
           
-          existing_company = Company.query.filter_by(cnpj=cnpj_clean).first()
-          if existing_company:
-               return {"erro": "CNPJ já cadastrado"}, 409
+          if(CompanyRepository.get_by_cnpj(cnpj)):
+               raise APIException("CNPJ já cadastrado.", 409)
           
-          new_company = Company(
-               name=name,
-               cnpj=cnpj_clean,
-               email=email,
-               phone=phone
-          )
-          db.session.add(new_company)
-          db.session.flush()
-
-          UserCompany = user_company.insert().values(
-               user_id=user_id,
-               company_id=new_company.company_id,
-          )
-          db.session.execute(UserCompany)
-          db.session.commit()
+          new_company = CompanyRepository.create(name, cnpj, email, phone, user_id)
 
           return {"mensagem": "Empresa cadastrada com sucesso",
                "company_id": new_company.company_id,
                "name": new_company.name,
                "cnpj": new_company.cnpj}, 201
      
+     except APIException as ve:
+          raise ve
      except Exception as e:
-        db.session.rollback()
-        print(f"Erro ao cadastrar empresa: {str(e)}")
-        return {"erro": f"Ocorreu um erro interno ao tentar cadastrar a empresa: {str(e)}"}, 500
+          db.session.rollback()
+          print(f"Erro ao cadastrar empresa: {str(e)}")
+          return {"erro": f"Ocorreu um erro interno ao tentar cadastrar a empresa: {str(e)}"}, 500
 
 def find_company(company_CNPJ,user_id):
      if not company_CNPJ:

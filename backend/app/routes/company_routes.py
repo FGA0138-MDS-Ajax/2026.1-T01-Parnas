@@ -21,7 +21,7 @@ def register_company_route():
     except ValidationError as err:
         return jsonify({"erros_de_validacao": err.messages}), 400
     
-    answer, status_code = register_company(user_id, data)
+    answer, status_code = register_company(user_id=user_id, data=data)
 
     if status_code == 201 and "company" in answer:
         answer["company"] = company_output_schema.dump(answer["company"])
