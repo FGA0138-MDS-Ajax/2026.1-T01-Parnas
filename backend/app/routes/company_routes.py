@@ -10,7 +10,7 @@ company_schema = CompanyRegistrationSchema()
 company_delete_schema = CompanyDeleteSchema()
 company_output_schema = CompanyRequirements()
 
-@company_bp.route("/register", methods=["POST"])
+@company_bp.route("", methods=["POST"])
 @jwt_required()
 def register_company_route():    
     

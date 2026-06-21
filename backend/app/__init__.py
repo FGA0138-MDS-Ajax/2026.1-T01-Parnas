@@ -1,7 +1,8 @@
-from flask import Flask
+from flask import Flask # Removido o 'app' daqui
 from app.config import Config, db
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
+from app.exceptions.api_exception import APIException
 
 migrate = Migrate()
 jwt = JWTManager()
@@ -26,10 +27,13 @@ def create_app():
     from app.models.simulation import Simulation
     from app.models.comparison import Comparison, ComparisonModality
 
-    # Força a criação das tabelas automaticamente (essencial para o SQLite de teste)
     with app.app_context():
         db.create_all()
 
+    @app.errorhandler(APIException)
+    def handle_api_error(error):
+        return {"erro": error.message}, error.status_code
+    
     # 1. Registro do Blueprint de autenticação (Login/Logout)
     from app.routes.auth_routes import auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
