@@ -1,7 +1,6 @@
-from app.models.company import Company
-from app.config import db
 from app.repositories.company_repository import CompanyRepository
 from app.exceptions.api_exception import APIException
+from app.config import db
 
 def register_company(user_id, data):
      try:
@@ -26,11 +25,6 @@ def register_company(user_id, data):
           db.session.rollback()
           print(f"Erro ao cadastrar empresa: {str(e)}")
           return {"erro": f"Ocorreu um erro interno ao tentar cadastrar a empresa: {str(e)}"}, 500
-
-def find_company(company_CNPJ,user_id):
-     if not company_CNPJ:
-          return None
-     return db.session.query(Company).filter(Company.cnpj==company_CNPJ).first()
 
 def delete_company(company_id, user_id):
      try:
@@ -78,3 +72,30 @@ def update_company(data, user_id, company_id):
           db.session.rollback()
           print(f"Erro ao atualizar empresa: {str(e)}")
           return {"erro": f"Ocorreu um erro interno ao tentar atualizar a empresa: {str(e)}"}, 500
+     
+def get_company(company_id, user_id):
+     try:
+          company = CompanyRepository.get_by_id(company_id)
+          if not company:
+               raise APIException("Empresa não encontrada.", 404)
+          
+          CompanyRepository.check_access(company_id, user_id)
+
+          return {"company": company}, 200
+     
+     except APIException as ve:
+          raise ve
+     except Exception as e:
+          print(f"Erro ao buscar empresa: {str(e)}")
+          return {"erro": f"Ocorreu um erro interno ao tentar buscar a empresa: {str(e)}"}, 500
+     
+def get_all_companies(user_id):
+     try:
+          companies = CompanyRepository.get_all_by_user(user_id)
+          return {"companies": companies}, 200
+     
+     except APIException as ve:
+          raise ve
+     except Exception as e:
+          print(f"Erro ao buscar empresas: {str(e)}")
+          return {"erro": f"Ocorreu um erro interno ao tentar buscar as empresas: {str(e)}"}, 500

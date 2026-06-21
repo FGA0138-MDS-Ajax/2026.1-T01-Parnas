@@ -1,8 +1,9 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.services.company_service import register_company, delete_company, update_company
-from app.schemas.company_schema import CompanyRegistrationSchema, CompanyDeleteSchema, CompanyRequirements
+from app.services.company_service import get_all_companies, get_company, register_company, delete_company, update_company
+from app.schemas.company_schema import CompanyRegistrationSchema, CompanyRequirements
 from marshmallow import ValidationError
+
 
 company_bp = Blueprint("company_bp", __name__)
 
@@ -53,4 +54,28 @@ def update_company_route(company_id):
     if status_code == 200 and "company" in answer:
         answer["company"] = company_output_schema.dump(answer["company"])
         
+    return jsonify(answer), status_code
+
+@company_bp.route("/<int:company_id>", methods=["GET"])
+@jwt_required()
+def get_company_route(company_id):
+    user_id = int(get_jwt_identity())
+
+    answer, status_code = get_company(user_id=user_id, company_id=company_id)
+
+    if "company" in answer:
+        answer["company"] = company_output_schema.dump(answer["company"])
+
+    return jsonify(answer), status_code
+
+@company_bp.route("", methods=["GET"])
+@jwt_required()
+def get_all_companies_route():
+    user_id = int(get_jwt_identity())
+
+    answer, status_code = get_all_companies(user_id=user_id)
+
+    if "companies" in answer:
+        answer["companies"] = company_output_schema.dump(answer["companies"], many=True)
+
     return jsonify(answer), status_code
