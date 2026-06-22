@@ -2,21 +2,18 @@
 
 ## 1. Identificação
 
-| Campo                         | Valor                                                       |
-|-------------------------------|-------------------------------------------------------------|
-| **Tarefa**                    | Tarefa V - redesign do frontend (parte da issue `task5`, DTOs e redesign) |
-| **Escopo deste relatório**    | Somente frontend (marcação, CSS e testes)                   |
-| **Telas**                     | Autenticação, categorias e painel                           |
-| **Branch de desenvolvimento** | `refactor/redesign-frontend`                                |
-| **Branch base comparada**     | `develop`                                                   |
-| **Sprint**                    | 8                                                           |
-| **Responsáveis (QA)**         | Daniel Filipe / Matheus Moretti                             |
-| **Data**                      | 21/06/2026                                                  |
-| **Evidências**                | Pipeline CI - job `frontend` (artifact `relatorio-frontend`)|
-| **Parecer**                   | **APROVADA** (ver §6)                                       |
-
-> Por ser uma **refatoração**, não cabe "aprovada com pendências": ou a entrega
-> está íntegra (**Aprovada**), ou é **Reprovada**. Aqui está íntegra.
+| Campo                          | Valor                                                                     |
+|--------------------------------|---------------------------------------------------------------------------|
+| **Tarefa**                     | Tarefa V - redesign do frontend (parte da issue `task5`, DTOs e redesign) |
+| **Escopo deste relatório**     | Somente frontend (marcação, CSS e testes)                                 |
+| **Telas**                      | Autenticação, categorias e painel                                         |
+| **Branch de desenvolvimento**  | `refactor/redesign-frontend`                                              |
+| **Branch base comparada**      | `develop`                                                                 |
+| **Sprint**                     | 8                                                                         |
+| **Responsáveis (QA)**          | Daniel Filipe / Matheus Moretti                                           |
+| **Data**                       | 21/06/2026                                                                |
+| **Evidências**                 | Pipeline CI - job `frontend` (artifact `relatorio-frontend`)              |
+| **Parecer**                    | **APROVADA** (ver §6)                                                     |
 
 ---
 
@@ -36,11 +33,6 @@ identidade visual` redesenhou as telas:
 Ganho colateral observado: o `Register.jsx` deixou de ter os campos Nome e Senha
 "soltos" - agora são controlados, e as validações de data futura, idade mínima
 (16) e senha curta funcionam (eram `test.skip` na `develop`).
-
-> Observação de escopo (não é pendência): `Comparacoes`, `Relatorios` e
-> `Simulacoes` estão fora do redesign e dependem de `recharts`; seus testes não
-> entram nesta suíte.
-
 ---
 
 ## 3. Casos executados (frontend)
@@ -49,22 +41,22 @@ Suíte Vitest + Testing Library, criada para cobrir as telas redesenhadas
 (`npm run test:coverage`). **72 testes em 12 arquivos, 0 falhas.** Os casos
 abaixo são os criados para o redesign.
 
-| Caso  | Descrição                                                        | Nível       | Esperado                                  | Status |
-|-------|------------------------------------------------------------------|-------------|-------------------------------------------|:------:|
-| TS-01 | Login renderiza e-mail, senha e botão Entrar                     | Componente  | Campos e botão presentes                  | Passou |
-| TS-02 | Login com sucesso guarda token e redireciona ao dashboard        | Integração  | `POST /auth/login`, token salvo, navegou  | Passou |
-| TS-03 | Login com credenciais inválidas mostra erro da API               | Integração  | Mensagem do backend, sem token/redirect   | Passou |
-| TS-04 | Login barra senha < 8 antes da API                               | Componente  | Erro local, `fetch` não chamado           | Passou |
-| TS-05 | Acesso demo gera token e leva ao dashboard sem API               | Componente  | Token demo, navegou, sem `fetch`          | Passou |
-| TS-06 | Register valida data de nascimento futura                        | Componente  | "Data de nascimento inválida"             | Passou |
-| TS-07 | Register valida idade mínima de 16 anos                          | Componente  | "pelo menos 16 anos"                       | Passou |
-| TS-08 | Register valida senha < 8                                        | Componente  | "no mínimo 8 caracteres"                   | Passou |
-| TS-09 | Register válido chama `POST /api/register` com CPF limpo          | Integração  | Payload com `"cpf":"12345678900"`         | Passou |
-| TS-10 | EsqueciSenha: solicitação e erro da API                          | Integração  | Sucesso e mensagem de falha               | Passou |
-| TS-11 | EsqueciSenha: token na URL abre o formulário de nova senha       | Componente  | Tela "Nova senha", valida senha/divergência| Passou |
-| TS-12 | RedefinirSenha valida senha curta, divergência e sucesso         | Componente  | Mensagens corretas em cada caso           | Passou |
-| TS-13 | Categorias: listar, adicionar, editar inline, excluir/cancelar   | Componente  | CRUD em memória consistente               | Passou |
-| TS-14 | Dashboard: painel, navegação e listagem de empresas              | Componente  | Render, navega, lê `localStorage`         | Passou |
+| Caso  | Descrição                                                         | Nível      | Esperado                                    | Status |
+|-------|-------------------------------------------------------------------|------------|---------------------------------------------|:------:|
+| TS-01 | Login renderiza e-mail, senha e botão Entrar                      | Unitário   | Campos e botão presentes                    | Passou |
+| TS-02 | Login com sucesso guarda token e redireciona ao dashboard         | Integração | `POST /auth/login`, token salvo, navegou    | Passou |
+| TS-03 | Login com credenciais inválidas mostra erro da API                | Integração | Mensagem do backend, sem token/redirect     | Passou |
+| TS-04 | Login barra senha < 8 antes da API                                | Unitário   | Erro local, `fetch` não chamado             | Passou |
+| TS-05 | Acesso demo gera token e leva ao dashboard sem API                | Unitário   | Token demo, navegou, sem `fetch`            | Passou |
+| TS-06 | Register valida data de nascimento futura                         | Componente | "Data de nascimento inválida"               | Passou |
+| TS-07 | Register valida idade mínima de 16 anos                           | Unitário   | "pelo menos 16 anos"                        | Passou |
+| TS-08 | Register valida senha < 8                                         | Unitário   | "no mínimo 8 caracteres"                    | Passou |
+| TS-09 | Register válido chama `POST /api/register` com CPF limpo          | Integração | Payload com `"cpf":"12345678900"`           | Passou |
+| TS-10 | EsqueciSenha: solicitação e erro da API                           | Integração | Sucesso e mensagem de falha                 | Passou |
+| TS-11 | EsqueciSenha: token na URL abre o formulário de nova senha        | Unitário   | Tela "Nova senha", valida senha/divergência | Passou |
+| TS-12 | RedefinirSenha valida senha curta, divergência e sucesso          | Unitário   | Mensagens corretas em cada caso             | Passou |
+| TS-13 | Categorias: listar, adicionar, editar inline, excluir/cancelar    | Unitário   | CRUD em memória consistente                 | Passou |
+| TS-14 | Dashboard: painel, navegação e listagem de empresas               | Unitário   | Render, navega, lê `localStorage`           | Passou |
 
 > A suíte completa do front também inclui testes herdados de Contas, Documentos,
 > Configuracoes, Transacoes e hooks, todos verdes, somando os 72.
@@ -93,14 +85,14 @@ npm run test:run
 
 Telas do redesign (`npm run test:coverage`, v8):
 
-| Módulo                | % Stmts | % Branch |
-|-----------------------|:-------:|:--------:|
-| `Login.jsx`           | 96.57   | 72.22    |
-| `Register.jsx`        | 94.04   | 80.00    |
-| `EsqueciSenha.jsx`    | 85.63   | 77.77    |
-| `RedefinirSenha.jsx`  | 98.86   | 92.85    |
-| `Categorias.jsx`      | 100     | 100      |
-| `Dashboard.jsx`       | 100     | 83.33    |
+| Módulo                | % Stmts  | % Branch  |
+|-----------------------|:--------:|:---------:|
+| `Login.jsx`           | 96.57    | 72.22     |
+| `Register.jsx`        |  94.04   |   80.00   |
+| `EsqueciSenha.jsx`    |  85.63   |   77.77   |
+| `RedefinirSenha.jsx`  |  98.86   |   92.85   |
+| `Categorias.jsx`      |   100    |    100    |
+| `Dashboard.jsx`       |   100    |   83.33   |
 
 > O total do projeto (47.8%) é puxado para baixo por módulos fora do escopo do
 > redesign (`Comparacoes`, `Relatorios`, `Simulacoes`, `services/`, `utils/`),
