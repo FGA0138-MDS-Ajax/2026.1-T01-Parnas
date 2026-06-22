@@ -1,15 +1,15 @@
-# Documentação de Teste - Refatoração: Redesign do Frontend
+# Documentação de Teste - Tarefa V: Redesign do Frontend
 
 ## 1. Identificação
 
 | Campo                         | Valor                                                       |
 |-------------------------------|-------------------------------------------------------------|
-| **Tarefa**                    | Refatoração - nova identidade visual do frontend            |
-| **Escopo**                    | Somente frontend (marcação, CSS e testes)                   |
+| **Tarefa**                    | Tarefa V - redesign do frontend (parte da issue `task5`, DTOs e redesign) |
+| **Escopo deste relatório**    | Somente frontend (marcação, CSS e testes)                   |
 | **Telas**                     | Autenticação, categorias e painel                           |
 | **Branch de desenvolvimento** | `refactor/redesign-frontend`                                |
 | **Branch base comparada**     | `develop`                                                   |
-| **Sprint**                    | 9 (21-27/jun) - estabilização/refatoração                   |
+| **Sprint**                    | 8                                                           |
 | **Responsáveis (QA)**         | Daniel Filipe / Matheus Moretti                             |
 | **Data**                      | 21/06/2026                                                  |
 | **Evidências**                | Pipeline CI - job `frontend` (artifact `relatorio-frontend`)|
