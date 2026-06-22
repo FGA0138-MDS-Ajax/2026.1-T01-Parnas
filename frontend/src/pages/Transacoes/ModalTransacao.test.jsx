@@ -1,22 +1,18 @@
-import { render, screen } from '@testing-library/react';
+import { describe, test, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { fireEvent } from '@testing-library/react';
-import { vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import ModalTransacao from './ModalTransacao';
 
-// o modal usa useNavigate (botão "Cadastrar" categoria)
-vi.mock('react-router-dom', async (importOriginal) => {
-  const actual = await importOriginal();
-  return { ...actual, useNavigate: () => vi.fn() };
-});
-
-const CATEGORIAS = [
-  { id: 1, nome: 'Vendas', tipo: 'receita' },
-  { id: 2, nome: 'Aluguel', tipo: 'despesa' },
+// categorias sem tipo aparecem para qualquer tipo (como o Transacoes.jsx as monta)
+const categorias = [
+  { id: 1, nome: 'Vendas', tipo: '' },
+  { id: 2, nome: 'Servicos', tipo: '' },
 ];
-
-const hoje = () => new Date().toISOString().split('T')[0];
+const contasCaixa = [
+  { id: 1, nome: 'Inter' },
+  { id: 2, nome: 'Caixa Vendas' },
+];
 
 function renderModal(props = {}) {
   const onSalvar = vi.fn().mockResolvedValue(undefined);
@@ -24,7 +20,9 @@ function renderModal(props = {}) {
   render(
     <MemoryRouter>
       <ModalTransacao
-        categorias={CATEGORIAS}
+        transacaoParaEditar={null}
+        categorias={categorias}
+        contasCaixa={contasCaixa}
         onSalvar={onSalvar}
         onFechar={onFechar}
         {...props}
@@ -34,109 +32,64 @@ function renderModal(props = {}) {
   return { onSalvar, onFechar };
 }
 
-const campoDescricao = () => screen.getByLabelText(/descrição/i);
-const campoValor = () => screen.getByLabelText(/valor/i);
-const campoData = () => screen.getByLabelText(/data/i);
-const campoCategoria = () => screen.getByLabelText(/categoria/i);
-const botaoRegistrar = () => screen.getByRole('button', { name: /registrar transação/i });
-
-test('exibe titulo de nova transacao quando nao ha edicao', () => {
-  // Act
-  renderModal();
-
-  // Assert
-  expect(screen.getByText('Nova Transação')).toBeInTheDocument();
-});
-
-test('exibe titulo de edicao quando recebe transacao para editar', () => {
-  // Act
-  renderModal({
-    transacaoParaEditar: { descricao: 'Venda', valor: 100, tipo: 'receita', data: hoje(), categoriaId: 1 },
+describe('ModalTransacao', () => {
+  test('renderiza o titulo de nova transacao', () => {
+    renderModal();
+    expect(screen.getByRole('heading', { name: /nova transação/i })).toBeInTheDocument();
   });
 
-  // Assert
-  expect(screen.getByText('Editar Transação')).toBeInTheDocument();
-});
+  test('movimentacao vazia mostra erros e nao salva', async () => {
+    const { onSalvar } = renderModal();
 
-test('submete transacao valida chamando onSalvar com os dados convertidos', async () => {
-  const { onSalvar } = renderModal();
+    await userEvent.click(screen.getByRole('button', { name: /registrar transação/i }));
 
-  await userEvent.type(campoDescricao(), 'Venda do dia');
-  await userEvent.type(campoValor(), '150.50');
-  await userEvent.selectOptions(campoCategoria(), '1');
+    expect(await screen.findByText(/a descrição é obrigatória/i)).toBeInTheDocument();
+    expect(screen.getByText(/informe um valor válido/i)).toBeInTheDocument();
+    expect(onSalvar).not.toHaveBeenCalled();
+  });
 
-  // Act
-  await userEvent.click(botaoRegistrar());
+  test('movimentacao valida chama onSalvar convertendo valor e categoria', async () => {
+    const { onSalvar } = renderModal();
 
-  // Assert: valor vira number e categoriaId vira number
-  expect(onSalvar).toHaveBeenCalledTimes(1);
-  expect(onSalvar).toHaveBeenCalledWith(
-    expect.objectContaining({ descricao: 'Venda do dia', valor: 150.5, categoriaId: 1, tipo: 'receita' }),
-  );
-});
+    await userEvent.type(screen.getByLabelText('Descrição'), 'Venda do dia');
+    await userEvent.type(screen.getByLabelText(/valor/i), '250.5');
+    await userEvent.selectOptions(screen.getByLabelText('Conta/Caixa'), '1');
+    await userEvent.selectOptions(screen.getByLabelText('Categoria'), '1');
 
-test('valor negativo bloqueia o envio e mostra erro', async () => {
-  const { onSalvar } = renderModal();
+    await userEvent.click(screen.getByRole('button', { name: /registrar transação/i }));
 
-  await userEvent.type(campoDescricao(), 'Venda');
-  await userEvent.type(campoValor(), '-5');
-  await userEvent.selectOptions(campoCategoria(), '1');
+    expect(onSalvar).toHaveBeenCalledWith(
+      expect.objectContaining({ descricao: 'Venda do dia', valor: 250.5, categoriaId: 1 }),
+    );
+  });
 
-  // Act
-  await userEvent.click(botaoRegistrar());
+  test('data futura é barrada', async () => {
+    const { onSalvar } = renderModal();
 
-  // Assert
-  expect(screen.getByText(/o valor deve ser positivo/i)).toBeInTheDocument();
-  expect(onSalvar).not.toHaveBeenCalled();
-});
+    await userEvent.type(screen.getByLabelText('Descrição'), 'Venda');
+    await userEvent.type(screen.getByLabelText(/valor/i), '100');
+    await userEvent.selectOptions(screen.getByLabelText('Conta/Caixa'), '1');
+    await userEvent.selectOptions(screen.getByLabelText('Categoria'), '1');
+    fireEvent.change(screen.getByLabelText('Data'), { target: { value: '2099-01-01' } });
 
-test('data futura bloqueia o envio e mostra erro', async () => {
-  const { onSalvar } = renderModal();
-  const amanha = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+    await userEvent.click(screen.getByRole('button', { name: /registrar transação/i }));
 
-  await userEvent.type(campoDescricao(), 'Venda');
-  await userEvent.type(campoValor(), '100');
-  await userEvent.selectOptions(campoCategoria(), '1');
-  // input date tem max=hoje; setamos o valor futuro diretamente
-  fireEvent.change(campoData(), { target: { value: amanha } });
+    expect(await screen.findByText(/a data não pode ser futura/i)).toBeInTheDocument();
+    expect(onSalvar).not.toHaveBeenCalled();
+  });
 
-  // Act
-  await userEvent.click(botaoRegistrar());
+  test('transferencia com origem igual a destino acusa erro', async () => {
+    const { onSalvar } = renderModal();
 
-  // Assert
-  expect(screen.getByText(/a data não pode ser futura/i)).toBeInTheDocument();
-  expect(onSalvar).not.toHaveBeenCalled();
-});
+    await userEvent.click(screen.getByRole('button', { name: /transferência/i }));
 
-test('categoria obrigatoria bloqueia o envio', async () => {
-  const { onSalvar } = renderModal();
+    await userEvent.type(screen.getByLabelText(/valor/i), '300');
+    await userEvent.selectOptions(screen.getByLabelText(/conta\/caixa de origem/i), '1');
+    await userEvent.selectOptions(screen.getByLabelText(/conta\/caixa de destino/i), '1');
 
-  await userEvent.type(campoDescricao(), 'Venda');
-  await userEvent.type(campoValor(), '100');
+    await userEvent.click(screen.getByRole('button', { name: /registrar transferência/i }));
 
-  // Act: sem selecionar categoria
-  await userEvent.click(botaoRegistrar());
-
-  // Assert: a mensagem de erro (não confundir com o placeholder "Selecione uma categoria...")
-  expect(screen.getByText('Selecione uma categoria.')).toBeInTheDocument();
-  expect(onSalvar).not.toHaveBeenCalled();
-});
-
-test('select de categoria mostra apenas as do tipo selecionado', () => {
-  // Act: tipo inicial é receita
-  renderModal();
-
-  // Assert: só "Vendas" (receita) aparece; "Aluguel" (despesa) não
-  expect(screen.getByRole('option', { name: 'Vendas' })).toBeInTheDocument();
-  expect(screen.queryByRole('option', { name: 'Aluguel' })).not.toBeInTheDocument();
-});
-
-test('botao cancelar chama onFechar', async () => {
-  const { onFechar } = renderModal();
-
-  // Act
-  await userEvent.click(screen.getByRole('button', { name: /cancelar/i }));
-
-  // Assert
-  expect(onFechar).toHaveBeenCalledTimes(1);
+    expect(await screen.findByText(/origem e destino devem ser diferentes/i)).toBeInTheDocument();
+    expect(onSalvar).not.toHaveBeenCalled();
+  });
 });

@@ -1,0 +1,65 @@
+.contas-caixa-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  font-family: var(--fonte-poppins);
+}
+
+.contas-caixa-card {
+  background-color: var(--branco);
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-card);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.btn-voltar-contas {
+  background: transparent;
+  border: 1px solid var(--borda-input);
+  color: var(--azul);
+  padding: 9px 16px;
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: var(--fonte-poppins);
+  cursor: pointer;
+  transition: var(--transicao-suave);
+  margin-bottom: 16px;
+}
+
+.btn-voltar-contas:hover {
+  border-color: var(--azul);
+  background-color: rgba(15, 76, 129, 0.06);
+}
+
+.contas-caixa-card h3 {
+  color: var(--azul);
+  font-size: 1rem;
+  margin: 0 0 14px;
+}
+
+.contas-caixa-form {
+  display: flex;
+  gap: 12px;
+}
+
+.contas-caixa-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 14px;
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.9rem;
+  font-family: var(--fonte-poppins);
+}
+
+@media (max-width: 640px) {
+  .contas-caixa-container {
+    padding: 20px 16px;
+  }
+
+  .contas-caixa-form {
+    flex-direction: column;
+  }
+}
