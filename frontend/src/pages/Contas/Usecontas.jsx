@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import useAppliedFilters from '../../hooks/useAppliedFilters';
+import { CONTAS_CAIXA_MOCK } from '../../services/contaCaixa.service';
 
 // ---------------------------------------------------------------------------
 // MOCK — remover imports abaixo e descomentar os de produção quando o back
@@ -35,6 +37,8 @@ const CONTAS_MOCK = [
     dataQuitacao: null,
     categoria: 3,
     categoriaNome: 'Infraestrutura',
+    contaCaixaId: 1,
+    contaCaixaNome: 'Inter',
   },
   {
     id: 2,
@@ -46,6 +50,8 @@ const CONTAS_MOCK = [
     dataQuitacao: null,
     categoria: 1,
     categoriaNome: 'Vendas',
+    contaCaixaId: 2,
+    contaCaixaNome: 'Caixa Vendas',
   },
   {
     id: 3,
@@ -57,6 +63,8 @@ const CONTAS_MOCK = [
     dataQuitacao: null,
     categoria: 3,
     categoriaNome: 'Infraestrutura',
+    contaCaixaId: 3,
+    contaCaixaNome: 'Banco do Brasil',
   },
   {
     id: 4,
@@ -68,6 +76,8 @@ const CONTAS_MOCK = [
     dataQuitacao: null,
     categoria: 2,
     categoriaNome: 'Servicos',
+    contaCaixaId: 1,
+    contaCaixaNome: 'Inter',
   },
   {
     id: 5,
@@ -79,6 +89,8 @@ const CONTAS_MOCK = [
     dataQuitacao: null,
     categoria: 3,
     categoriaNome: 'Infraestrutura',
+    contaCaixaId: 4,
+    contaCaixaNome: 'Dinheiro em Especie',
   },
   {
     id: 6,
@@ -90,6 +102,8 @@ const CONTAS_MOCK = [
     dataQuitacao: '2026-05-04',
     categoria: 4,
     categoriaNome: 'Pessoal',
+    contaCaixaId: 3,
+    contaCaixaNome: 'Banco do Brasil',
   },
   {
     id: 7,
@@ -101,6 +115,8 @@ const CONTAS_MOCK = [
     dataQuitacao: '2026-05-19',
     categoria: 2,
     categoriaNome: 'Servicos',
+    contaCaixaId: 2,
+    contaCaixaNome: 'Caixa Vendas',
   },
 ];
 
@@ -129,8 +145,12 @@ const aplicarFiltrosMock = (lista, filtros) => {
 const buscarCategoria = (id) =>
   CATEGORIAS_MOCK.find((categoria) => String(categoria.id) === String(id));
 
+const buscarContaCaixa = (id) =>
+  CONTAS_CAIXA_MOCK.find((contaCaixa) => String(contaCaixa.id) === String(id));
+
 const normalizarConta = (dados) => {
   const categoria = dados.categoria ? buscarCategoria(dados.categoria) : null;
+  const contaCaixa = buscarContaCaixa(dados.contaCaixaId);
 
   return {
     descricao: dados.descricao.trim(),
@@ -139,13 +159,20 @@ const normalizarConta = (dados) => {
     dataVencimento: dados.dataVencimento,
     categoria: categoria?.id || null,
     categoriaNome: categoria?.nome || '',
+    contaCaixaId: contaCaixa?.id || null,
+    contaCaixaNome: contaCaixa?.nome || '',
   };
 };
 
 const useContas = () => {
   const [todasContas, setTodasContas] = useState(CONTAS_MOCK);
-  const [filtros, setFiltros] = useState(FILTROS_INICIAIS);
-  const [filtrosAplicados, setFiltrosAplicados] = useState(FILTROS_INICIAIS);
+  const {
+    filtros,
+    filtrosAplicados,
+    handleFiltroChange,
+    aplicarFiltros,
+    limparFiltros,
+  } = useAppliedFilters(FILTROS_INICIAIS);
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState(null);
   const [feedback, setFeedback] = useState(null);
@@ -166,20 +193,6 @@ const useContas = () => {
     setCarregando(true);
     delay(400).then(() => setCarregando(false));
   }, []);
-
-  const handleFiltroChange = (e) => {
-    const { name, value } = e.target;
-    setFiltros((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const aplicarFiltros = () => {
-    setFiltrosAplicados(filtros);
-  };
-
-  const limparFiltros = () => {
-    setFiltros(FILTROS_INICIAIS);
-    setFiltrosAplicados(FILTROS_INICIAIS);
-  };
 
   // CRUD mock — substitua o corpo de cada função pela chamada real ao service
 
@@ -275,6 +288,7 @@ const useContas = () => {
     quitadas,
     filtros,
     categorias: CATEGORIAS_MOCK,
+    contasCaixa: CONTAS_CAIXA_MOCK,
     carregando,
     erro,
     feedback,

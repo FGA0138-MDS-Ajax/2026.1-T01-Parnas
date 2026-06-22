@@ -10,6 +10,7 @@ import LayoutBase from './components/Layout/LayoutBase';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Transacoes from './pages/Transacoes/Transacoes';
 import Contas from './pages/Contas/Contas';
+import ContasCaixa from './pages/ContasCaixa/ContasCaixa';
 import Configuracoes from './pages/Configuracoes/Configuracoes';
 import Documentos from "./pages/Documentos/Documentos";
 import Simulacoes from './pages/Simulacoes/Simulacoes';
@@ -45,6 +46,7 @@ export const AppRoutes = () => {
           <Route path="/categorias" element={<Categorias />} />
           <Route path="/transacoes" element={<Transacoes />} />
           <Route path="/contas" element={<Contas />} />
+          <Route path="/contas-caixa" element={<ContasCaixa />} />
           <Route path="/simulacoes" element={<Simulacoes />} />
           <Route path="/comparacoes" element={<Comparacoes />} />
           <Route path="/relatorios" element={<Relatorios />} />
