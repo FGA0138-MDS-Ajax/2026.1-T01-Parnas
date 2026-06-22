@@ -35,7 +35,7 @@
 ## Critérios de teste
 - [ ] Caso(s) de teste do Roteiro cobertos: TS-16, TS-17
 - [ ] Teste que reproduz o defeito escrito antes do fix
-- [ ] Cobertura mínima mantida
+- [x] Cobertura mínima mantida
 
 ## Definição de Done
 - [ ] Código revisado em pair programming

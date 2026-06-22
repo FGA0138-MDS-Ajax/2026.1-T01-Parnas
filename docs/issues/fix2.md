@@ -21,24 +21,24 @@
 - [ ] Garantir que `GET /transacoes` não retorna duplicidade quando uma transação tem origem em uma conta
 
 ## Tarefas Frontend
-- [ ] Revisar a página `Contas/` para exibir somente pendentes
-- [ ] Revisar a página `Transacoes/` para exibir o histórico completo
-- [ ] Diferenciar visualmente as duas páginas (layout, cores ou ícones)
-- [ ] Ao quitar conta na tela de Contas, atualizar a lista removendo o item
+- [x] Revisar a página `Contas/` para exibir somente pendentes
+- [x] Revisar a página `Transacoes/` para exibir o histórico completo
+- [x] Diferenciar visualmente as duas páginas (layout, cores ou ícones)
+- [x] Ao quitar conta na tela de Contas, atualizar a lista removendo o item
 - [ ] Exibir indicador na transação quando ela teve origem em uma conta (badge "Gerado de conta")
 
 ## Critérios de conclusão
 - [ ] Tela de Contas exibe apenas contas com status "pendente"
-- [ ] Tela de Transações exibe apenas registros já efetivados (histórico)
-- [ ] Ao marcar uma conta como quitada, ela desaparece da tela de Contas
+- [x] Tela de Transações exibe apenas registros já efetivados (histórico)
+- [x] Ao marcar uma conta como quitada, ela desaparece da tela de Contas
 - [ ] Ao quitar uma conta, uma transação correspondente é criada automaticamente e aparece na tela de Transações
 - [ ] Transação gerada a partir de uma conta mantém referência à conta de origem (`id_conta`)
-- [ ] As duas telas têm layouts visualmente distintos
+- [x] As duas telas têm layouts visualmente distintos
 
 ## Critérios de teste
 - [ ] Caso(s) de teste do Roteiro cobertos: TS-16, TS-20
-- [ ] Teste que reproduz o defeito escrito antes do fix
-- [ ] Cobertura mínima mantida
+- [x] Teste que reproduz o defeito escrito antes do fix
+- [x] Cobertura mínima mantida
 
 ## Definição de Done
 - [ ] Código revisado em pair programming

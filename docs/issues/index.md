@@ -55,7 +55,7 @@ Sprint, prioridade, funcionalidade), **critérios de aceitação**, **tarefas**,
 |-------|--------|------|:------:|--------|
 | [fix1](fix1.md) | Integração da aba de Transações com a API | fix | 10 | Em andamento |
 | [fix4](fix4.md) | Exclusão de conta não invalida a sessão | fix | 10 | Em andamento |
-| [fix2](fix2.md) | Diferenciação entre Contas e Transações | fix | 10 | Em andamento |
+| [fix2](fix2.md) | Diferenciação entre Contas e Transações | fix | 10 | Fechada com pendências |
 | [fix3](fix3.md) | Consolidação das integrações entre classes | refactor | 10 | Em andamento |
 
 > A Sprint 10 concentra a **estabilização e refatoração**: consolidação dos defeitos
