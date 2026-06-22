@@ -1,8 +1,6 @@
-from app.models import Category, Company 
-from app.repositories.category_repository import CategoryRepository
-from app.repositories.company_repository import CompanyRepository
-from app.exceptions.api_exception import APIException
+from app.repositories import CategoryRepository, CompanyRepository
 from app.config import db
+from app.exceptions.api_exception import APIException
 
 
 def add_category(user_id, company_id, data):
@@ -72,21 +70,21 @@ def update_category(user_id, company_id, category_id, data):
         return {"erro": f"Erro interno ao atualizar: {str(e)}"}, 500
 
 
-def delete_category(user_id, data):
-    category_id = data.get("category_id") or data.get("id")
-    cnpj = data.get("cnpj")
-
-    company = Company.query.filter_by(cnpj=cnpj).first()
+def delete_category(user_id, company_id, category_id):
+    
+    company = CompanyRepository.get_by_id(company_id)
     if not company:
-        return {"erro": "Empresa não encontrada ou você não tem permissão."}, 404
+        raise APIException("Empresa não encontrada", 404)
 
-    category = Category.query.filter_by(category_id=category_id, company_id=company.company_id).first()
+    CategoryRepository.check_user_permission(company_id, user_id)
+
+    category = CategoryRepository.get_by_id_and_company(category_id, company_id)
+
     if not category:
-        return {"erro": "Categoria não encontrada para esta empresa."}, 404
+        raise APIException("Categoria não encontrada para esta empresa.", 404)
 
     try:
-        db.session.delete(category)
-        db.session.commit()
+        CategoryRepository.delete(category_id, company_id)
         return {"msg": "Categoria deletada com sucesso!"}, 200
     except Exception as e:
         db.session.rollback()

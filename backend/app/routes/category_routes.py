@@ -58,15 +58,15 @@ def update_category_route(company_id, category_id):
         
     return jsonify(answer), status_code
 
-@category_bp.route("", methods=["DELETE"])
+@category_bp.route("/<int:category_id>", methods=["DELETE"])
 @jwt_required()
-def delete_category_route():
+def delete_category_route(company_id, category_id):
     user_id = int(get_jwt_identity())
     
-    try:
-        data = category_schema.load(request.get_json(), partial=True)
-    except ValidationError as err:
-        return jsonify({"erros_de_validacao": err.messages}), 400
-    
-    answer, status_code = delete_category(user_id, data)
+    answer, status_code = delete_category(
+        user_id=user_id,
+        company_id=company_id, 
+        category_id=category_id,
+    )
+
     return jsonify(answer), status_code
