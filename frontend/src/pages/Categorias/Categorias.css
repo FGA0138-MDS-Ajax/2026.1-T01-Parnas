@@ -13,27 +13,8 @@
 }
 
 .categorias-page {
-   min-height: 100vh;
-  background: #ffffff;
-}
-
-.categorias-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-
-  background-color: #0f4c81;
-
-  display: flex;
-  align-items: center;
-
-  padding: 0.5rem 2rem;
-
-  z-index: 1000;
-
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  min-height: auto;
+  background: transparent;
 }
 
 .header-content {
@@ -51,69 +32,84 @@
 
 .header-content p {
   margin: 0;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255, 255, 255, 0.8);
   font-size: 0.85rem;
 }
 
 .categorias-content {
-  padding-top: 6rem;
-
-  padding-left: 4%;
-  padding-right: 4%;
+  padding-top: 0;
+  padding-left: 0;
+  padding-right: 0;
   padding-bottom: 2rem;
-
   width: 100%;
 }
 
 .categorias-card {
   width: 100%;
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  background: var(--fundo-card);
+  border-radius: var(--arredondamento-card);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(6, 38, 35, 0.04);
+  border: 1px solid var(--borda-input);
 }
 
 .categorias-card h2 {
   margin-bottom: 1.5rem;
-  color: #1f2937;
-  font-size: 1.35rem;
+  color: var(--texto-principal);
+  font-size: 1.45rem;
   font-weight: 700;
 }
 
 .categorias-form {
-display: grid;
-
-  grid-template-columns:
-    minmax(300px, 3fr)
-    minmax(150px, 1fr)
-    auto;
-
+  display: grid;
+  grid-template-columns: minmax(300px, 3fr) minmax(150px, 1fr) auto;
   gap: 1rem;
 }
 
 .categorias-form input,
-.categorias-form select {
+.categorias-form select,
+.table-input,
+.table-select {
   width: 100%;
-  padding: 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 10px;
-  font-size: 0.9rem;
+  padding: 12px 14px;
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.88rem;
+  color: var(--texto-principal);
+  background-color: var(--branco);
+  outline: none;
+  transition: var(--transicao-suave);
+}
+
+.categorias-form input:focus,
+.categorias-form select:focus,
+.table-input:focus,
+.table-select:focus {
+  border-color: var(--verde-claro);
+  box-shadow: 0 0 0 3px rgba(35, 155, 143, 0.15);
 }
 
 .categorias-form input {
   flex: 1;
 }
 
-.categorias-form button {
-  background: #0f4c81;
-  color: white;
+.btn-adicionar {
+  background: var(--azul) !important;
+  color: var(--branco);
   border: none;
-  border-radius: 10px;
-  padding: 1rem 1.5rem;
-  font-weight: 600;
+  border-radius: var(--arredondamento-input-botao);
+  padding: 12px 24px;
+  font-weight: 700;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  transition: var(--transicao-suave);
+  letter-spacing: 0.5px;
+}
+
+.btn-adicionar:hover {
+  background: var(--verde-claro) !important;
+  box-shadow: 0 4px 12px rgba(35, 155, 143, 0.2);
 }
 
 .categorias-table {
@@ -122,13 +118,11 @@ display: grid;
 }
 
 .categorias-table th {
-  width: 100%;
-  border-collapse: collapse;
-  background: #f7f9fc;
+  background: var(--verde-suave);
   text-align: left;
-  font-size: 0.83rem;
-  font-weight: 600;
-  color: #111827;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--texto-principal);
   text-transform: none;
   letter-spacing: 0;
 }
@@ -136,25 +130,26 @@ display: grid;
 .categorias-table th,
 .categorias-table td {
   padding: 1rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--borda-input);
   font-size: 0.9rem;
+  color: var(--texto-principal);
 }
 
 .tipo-badge {
-  padding: 4px 10px;
+  padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .receita {
   background: #dcfce7;
-  color: #166534;
+  color: var(--sucesso);
 }
 
 .despesa {
   background: #fee2e2;
-  color: #991b1b;
+  color: var(--erro);
 }
 
 .acoes {
@@ -164,34 +159,53 @@ display: grid;
 
 .btn-editar,
 .btn-salvar {
-  background: #0f4c81;
-  color: white;
+  background: var(--azul) !important;
+  color: var(--branco);
   border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
+  padding: 10px 16px;
+  border-radius: var(--arredondamento-input-botao);
   cursor: pointer;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 700;
+  transition: var(--transicao-suave);
+}
+
+.btn-editar:hover,
+.btn-salvar:hover {
+  background: var(--verde-claro) !important;
+  box-shadow: 0 4px 10px rgba(35, 155, 143, 0.15);
 }
 
 .btn-excluir {
-  background: #dc2626;
-  color: white;
+  background: var(--erro) !important;
+  color: var(--branco) !important;
   border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
+  padding: 10px 16px;
+  border-radius: var(--arredondamento-input-botao);
   cursor: pointer;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 700;
+  transition: var(--transicao-suave);
+}
+
+.btn-excluir:hover {
+  color: var(--branco) !important;
+  background: #bd2121 !important;
+  box-shadow: 0 4px 10px rgba(229, 62, 62, 0.2);
 }
 
 .btn-cancelar {
   background: #6b7280;
-  color: white;
+  color: var(--branco);
   border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
+  padding: 10px 16px;
+  border-radius: var(--arredondamento-input-botao);
   cursor: pointer;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 700;
+  transition: var(--transicao-suave);
+}
+
+.btn-cancelar:hover {
+  background: #4b5563;
 }

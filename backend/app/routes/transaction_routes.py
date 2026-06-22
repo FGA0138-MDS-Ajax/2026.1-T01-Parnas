@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.schemas.transaction_schema import TransactionSchema
+from app.schemas.transaction_schema import TransactionSchema, TransactionRequirements
 from marshmallow import ValidationError
 from app.services.transaction_service import (
     get_history_filtered, # Para o método get_history do histórico
@@ -11,6 +11,7 @@ from app.services.transaction_service import (
 
 transaction_bp = Blueprint("transaction_bp", __name__)
 transaction_schema = TransactionSchema()
+transaction_output_schema = TransactionRequirements()
 
 @transaction_bp.route('/', methods=['GET'])
 @jwt_required()
@@ -43,6 +44,9 @@ def get_transactions():
     # Chama a service de histórico que veio da branch 7
     resultado, status_code = get_history_filtered(current_user_id, page, per_page, filtros)
 
+    if status_code == 200 and "transactions" in resultado:
+        resultado["transactions"] = transaction_output_schema.dump(resultado["transactions"], many=True)
+
     return jsonify(resultado), status_code
 
 @transaction_bp.route("/", methods=["POST"])
@@ -55,18 +59,31 @@ def create():
 
     current_user_id = get_jwt_identity()
     answer, status_code = create_transaction(data, current_user_id)
+    
+    if status_code == 201 and "transaction" in answer:
+        answer["transaction"] = transaction_output_schema.dump(answer["transaction"])
+        
     return jsonify(answer), status_code
 
 @transaction_bp.route('/<int:transaction_id>', methods=['PUT'])
 @jwt_required()
 def update(transaction_id):
-    data = request.get_json()
-    company_id = data.get("company_id")
+    raw_data = request.get_json()
+    company_id = raw_data.get("company_id")
 
     if not company_id:
         return jsonify({"erro": "O company_id é obrigatório no corpo da requisição."}), 400
 
-    answer, status_code = update_transaction(transaction_id, data, company_id)
+    try:
+        validated_data = transaction_schema.load(raw_data, partial=True)
+    except ValidationError as err:
+        return jsonify({"erros_de_validacao": err.messages}), 400
+
+    answer, status_code = update_transaction(transaction_id, validated_data, company_id)
+    
+    if status_code == 200 and "transaction" in answer:
+        answer["transaction"] = transaction_output_schema.dump(answer["transaction"])
+        
     return jsonify(answer), status_code
 
 @transaction_bp.route('/<int:transaction_id>', methods=['DELETE'])

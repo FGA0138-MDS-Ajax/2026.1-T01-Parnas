@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import logoImg from "../../assets/LogoFundoBranco.png";
 import "./Register.css";
 
 const Register = () => {
@@ -73,14 +74,15 @@ const Register = () => {
 
       if (!response.ok) {
         if (data.erros_de_validcao) {
-          const mensagens = Object.values(data.erros_de_validcao).flat().join(" | ");
+          const mensagens = Object.values(data.erros_de_validcao)
+            .flat()
+            .join(" | ");
           throw new Error(mensagens);
         }
         throw new Error(data.erro || "Erro ao realizar o cadastro.");
       }
 
       window.location.href = "/";
-
     } catch (error) {
       setErro(error.message || "Erro ao conectar ao servidor.");
     } finally {
@@ -92,6 +94,13 @@ const Register = () => {
     <div className="register-container">
       <div className="register-card">
         <div className="register-sidebar">
+          <div className="register-logo-container">
+            <img
+              src={logoImg}
+              alt="Logo CREDIFAB"
+              className="register-logo-img"
+            />
+          </div>
           <h1 className="register-logo">CREDIFAB</h1>
           <p className="register-subtitle">Facilitando sua gestão financeira</p>
         </div>
@@ -103,79 +112,77 @@ const Register = () => {
           </div>
 
           <form className="register-form" onSubmit={handleSubmit}>
-            <div className="register-row">
-              <div className="register-input-group">
-                <label>Nome</label>
-                <input
-                  type="text"
-                  name="nome"
-                  value={formData.nome}
-                  onChange={handleChange}
-                  placeholder="Seu nome completo"
-                  disabled={loading}
-                  required
-                />
-              </div>
-
-              <div className="register-input-group">
-                <label>Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="nome@email.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  disabled={loading}
-                  required
-                />
-              </div>
+            <div className="register-input-group">
+              <label>Nome</label>
+              <input
+                type="text"
+                name="nome"
+                value={formData.nome}
+                onChange={handleChange}
+                placeholder="Seu nome completo"
+                disabled={loading}
+                required
+              />
             </div>
 
-            <div className="register-row">
-              <div className="register-input-group">
-                <label>CPF</label>
-                <input
-                  type="text"
-                  name="cpf"
-                  placeholder="000.000.000-00"
-                  value={formData.cpf}
-                  onChange={handleChange}
-                  disabled={loading}
-                  required
-                />
-              </div>
-
-              <div className="register-input-group">
-                <label>Data de nascimento</label>
-                <input
-                  type="date"
-                  name="dataNascimento"
-                  value={formData.dataNascimento}
-                  onChange={handleChange}
-                  disabled={loading}
-                  required
-                />
-              </div>
+            <div className="register-input-group">
+              <label>Email</label>
+              <input
+                type="email"
+                name="email"
+                placeholder="nome@email.com"
+                value={formData.email}
+                onChange={handleChange}
+                disabled={loading}
+                required
+              />
             </div>
 
-            <div className="register-row">
-              <div className="register-input-group" style={{ width: "100%" }}>
-                <label>Senha</label>
-                <input
-                  type="password"
-                  name="senha"
-                  placeholder="No mínimo 8 caracteres"
-                  value={formData.senha}
-                  onChange={handleChange}
-                  disabled={loading}
-                  required
-                />
-              </div>
+            <div className="register-input-group">
+              <label>CPF</label>
+              <input
+                type="text"
+                name="cpf"
+                placeholder="000.000.000-00"
+                value={formData.cpf}
+                onChange={handleChange}
+                disabled={loading}
+                required
+              />
+            </div>
+
+            <div className="register-input-group">
+              <label>Data de nascimento</label>
+              <input
+                type="date"
+                name="dataNascimento"
+                value={formData.dataNascimento}
+                onChange={handleChange}
+                disabled={loading}
+                required
+              />
+            </div>
+
+            <div className="register-input-group">
+              <label>Senha</label>
+              <input
+                type="password"
+                name="senha"
+                placeholder="No mínimo 8 caracteres"
+                value={formData.senha}
+                onChange={handleChange}
+                disabled={loading}
+                required
+              />
             </div>
 
             {erro && <p className="register-error">{erro}</p>}
 
-            <button type="submit" className="register-button" disabled={loading}>
+            <button
+              type="submit"
+              className="register-button"
+              disabled={loading}
+            >
               {loading ? "Cadastrando..." : "Finalizar registro"}
             </button>
           </form>

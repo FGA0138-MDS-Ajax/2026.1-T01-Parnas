@@ -1,23 +1,25 @@
 .register-container {
   width: 100%;
-  min-height: 500px;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .register-card {
-  width: 950px;
-  min-height: 520px;
-  background: white;
-  border-radius: 20px;
+  width: 840px;
+  min-height: 640px;
+  background: var(--fundo-card);
+  border-radius: var(--arredondamento-card);
   overflow: hidden;
   display: flex;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 60px rgba(6, 38, 35, 0.15);
 }
 
 .register-sidebar {
-  flex: 1;
+  flex: 0.9;
   background: var(--gradiente-fundo);
   display: flex;
   flex-direction: column;
@@ -28,98 +30,157 @@
   text-align: center;
 }
 
+.register-logo-container {
+  width: 85px;
+  height: 85px;
+  background-color: var(--branco);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.register-logo-img {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  transform: translate(-1px, 1px);
+}
+
 .register-logo {
-    font-size: 4rem;
+  font-size: 2.8rem;
   font-weight: 800;
-  letter-spacing: 1px;
-  margin-bottom: 5px;
+  letter-spacing: 2px;
+  margin-bottom: 2px;
+  line-height: 1.1;
 }
 
 .register-subtitle {
-  font-size: 0.9rem;
-  opacity: 0.9;
+  font-size: 0.85rem;
+  color: var(--branco);
+  opacity: 0.85;
+  font-weight: 500;
 }
 
 .register-form-content {
-  flex: 1;
-  padding: 40px 50px;
+  flex: 1.1;
+  padding: 45px 50px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 .register-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 25px;
+  gap: 12px;
+  margin-bottom: 24px;
   color: var(--texto-principal);
 }
 
+.icon-user {
+  font-size: 1.5rem;
+  opacity: 0.8;
+}
+
 .register-header h2 {
-  font-size: 2rem;
-  color: #1f1f1f;
+  font-size: 1.8rem;
+  color: var(--texto-principal);
   font-weight: 700;
+  margin: 0;
 }
 
 .register-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
 
 .register-row {
   display: flex;
-  gap: 20px;
+  gap: 2%;
 }
 
 .register-input-group {
   display: flex;
   flex-direction: column;
-  flex: 1;
 }
 
 .register-input-group label {
-  font-size: 0.85rem;
+  font-size: 0.83rem;
   margin-bottom: 6px;
   font-weight: 600;
-  color: #333;
+  color: var(--texto-principal);
 }
 
 .register-input-group input {
-  height: 42px;
-  border: 1px solid #cfcfcf;
-  border-radius: 8px;
+  height: 45px;
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
   padding: 0 14px;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   outline: none;
-  transition: 0.2s;
+  background-color: var(--branco);
+  color: var(--texto-principal);
+  transition: var(--transicao-suave);
 }
 
 .register-input-group input:focus {
-  border-color: #0f4c81;
-
-  box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1);
+  border-color: var(--verde-claro);
+  box-shadow: 0 0 0 3px rgba(35, 155, 143, 0.15);
 }
 
 .register-button {
-  margin-top: 10px;
-  height: 45px;
+  margin-top: 12px;
+  height: 48px;
   border: none;
-  border-radius: 8px;
-  background: #0f4c81;
-  color: white;
+  border-radius: var(--arredondamento-input-botao);
+  background: var(--azul) !important;
+  color: var(--branco);
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: 0.2s;
+  transition: var(--transicao-suave);
+  letter-spacing: 0.5px;
 }
 
-.register-button:hover {
-  background: #0c3d68;
+.register-button:hover:not(:disabled) {
+  background: var(--verde-escuro) !important;
+  box-shadow: 0 4px 12px rgba(11, 68, 62, 0.25);
+}
+
+.register-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .register-error {
-  color: #d62828;
+  color: var(--erro);
   font-size: 0.85rem;
   font-weight: 600;
+  text-align: left;
+
+}
+
+@media (max-width: 768px) {
+
+  .register-card {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .register-row {
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .register-form-content {
+    padding: 30px;
+  }
+
+  .register-sidebar {
+    padding: 30px;
+  }
 }
