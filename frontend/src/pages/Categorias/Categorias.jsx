@@ -52,8 +52,8 @@ function Categorias() {
               nome: nomeEditado,
               tipo: tipoEditado,
             }
-          : categoria
-      )
+          : categoria,
+      ),
     );
 
     setEditandoId(null);
@@ -65,58 +65,35 @@ function Categorias() {
 
   const excluirCategoria = (id) => {
     const confirmar = window.confirm(
-      "Deseja realmente excluir esta categoria?"
+      "Deseja realmente excluir esta categoria?",
     );
 
     if (!confirmar) return;
 
-    setCategorias(
-      categorias.filter(
-        (categoria) => categoria.id !== id
-      )
-    );
+    setCategorias(categorias.filter((categoria) => categoria.id !== id));
   };
 
   return (
     <div className="categorias-page">
-
-      <header className="categorias-header">
-        <div className="header-content">
-          <h1>💰 CREDIFAB</h1>
-          <p>Plataforma de Acesso a Crédito</p>
-        </div>
-      </header>
-
       <main className="categorias-content">
-
         <section className="categorias-card">
           <h2>Nova Categoria</h2>
 
-          <form
-            className="categorias-form"
-            onSubmit={handleSubmit}
-          >
+          <form className="categorias-form" onSubmit={handleSubmit}>
             <input
               type="text"
               placeholder="Nome da categoria"
               value={nome}
-              onChange={(e) =>
-                setNome(e.target.value)
-              }
+              onChange={(e) => setNome(e.target.value)}
               required
             />
 
-            <select
-              value={tipo}
-              onChange={(e) =>
-                setTipo(e.target.value)
-              }
-            >
+            <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
               <option>Receita</option>
               <option>Despesa</option>
             </select>
 
-            <button type="submit">
+            <button type="submit" className="btn-adicionar">
               Adicionar Categoria
             </button>
           </form>
@@ -140,13 +117,10 @@ function Categorias() {
                   <td>
                     {editandoId === categoria.id ? (
                       <input
+                        className="table-input"
                         type="text"
                         value={nomeEditado}
-                        onChange={(e) =>
-                          setNomeEditado(
-                            e.target.value
-                          )
-                        }
+                        onChange={(e) => setNomeEditado(e.target.value)}
                       />
                     ) : (
                       categoria.nome
@@ -156,27 +130,17 @@ function Categorias() {
                   <td>
                     {editandoId === categoria.id ? (
                       <select
+                        className="table-select"
                         value={tipoEditado}
-                        onChange={(e) =>
-                          setTipoEditado(
-                            e.target.value
-                          )
-                        }
+                        onChange={(e) => setTipoEditado(e.target.value)}
                       >
-                        <option>
-                          Receita
-                        </option>
-                        <option>
-                          Despesa
-                        </option>
+                        <option>Receita</option>
+                        <option>Despesa</option>
                       </select>
                     ) : (
                       <span
                         className={`tipo-badge ${
-                          categoria.tipo ===
-                          "Receita"
-                            ? "receita"
-                            : "despesa"
+                          categoria.tipo === "Receita" ? "receita" : "despesa"
                         }`}
                       >
                         {categoria.tipo}
@@ -186,25 +150,18 @@ function Categorias() {
 
                   <td>
                     <div className="acoes">
-                      {editandoId ===
-                      categoria.id ? (
+                      {editandoId === categoria.id ? (
                         <>
                           <button
                             className="btn-salvar"
-                            onClick={() =>
-                              salvarEdicao(
-                                categoria.id
-                              )
-                            }
+                            onClick={() => salvarEdicao(categoria.id)}
                           >
                             Salvar
                           </button>
 
                           <button
                             className="btn-cancelar"
-                            onClick={
-                              cancelarEdicao
-                            }
+                            onClick={cancelarEdicao}
                           >
                             Cancelar
                           </button>
@@ -213,22 +170,14 @@ function Categorias() {
                         <>
                           <button
                             className="btn-editar"
-                            onClick={() =>
-                              iniciarEdicao(
-                                categoria
-                              )
-                            }
+                            onClick={() => iniciarEdicao(categoria)}
                           >
                             Editar
                           </button>
 
                           <button
                             className="btn-excluir"
-                            onClick={() =>
-                              excluirCategoria(
-                                categoria.id
-                              )
-                            }
+                            onClick={() => excluirCategoria(categoria.id)}
                           >
                             Excluir
                           </button>
@@ -241,7 +190,6 @@ function Categorias() {
             </tbody>
           </table>
         </section>
-
       </main>
     </div>
   );

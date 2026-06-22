@@ -13,20 +13,13 @@
   width: 100%;
   max-width: 520px;
 
-  background:
-    rgba(255, 255, 255, 0.96);
+  background: var(--fundo-card);
 
   border-radius: 32px;
 
   padding: 36px 42px;
 
-  backdrop-filter: blur(16px);
-
-  box-shadow:
-    0 25px 60px rgba(0, 0, 0, 0.12);
-
-  border:
-    1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 25px 60px rgba(6, 38, 35, 0.15);
 }
 
 .reset-password-brand {
@@ -40,28 +33,20 @@
 }
 
 .reset-password-brand-icon {
-  width: 60px;
-  height: 60px;
+  width: 85px;
+  height: 85px;
 
   display: flex;
   justify-content: center;
   align-items: center;
 
-  border-radius: 20px;
+  border-radius: 50%;
 
-  font-size: 1.8rem;
+  background: var(--verde-suave);
 
-  background:
-    linear-gradient(
-      135deg,
-      var(--azul),
-      var(--verde)
-    );
+  border: 1px solid var(--borda-input);
 
-  color: var(--branco);
-
-  box-shadow:
-    0 10px 30px rgba(15, 76, 129, 0.25);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
 .reset-password-brand span {
@@ -91,7 +76,7 @@
 .reset-password-description {
   margin-top: 12px;
 
-  color: #64748B;
+  color: var(--texto-placeholder);
 
   font-size: 1rem;
 
@@ -123,9 +108,9 @@
   width: 100%;
   height: 52px;
 
-  background: #F8FAFC;
+  background: var(--branco);
 
-  border: 1px solid transparent;
+  border: 1px solid var(--borda-input);
 
   border-radius: 16px;
 
@@ -133,22 +118,21 @@
 
   font-size: 1rem;
 
-  transition: 0.2s ease;
+  color: var(--texto-principal);
+
+  transition: var(--transicao-suave);
 }
 
 .reset-password-input::placeholder {
-  color: #94A3B8;
+  color: var(--texto-placeholder);
 }
 
 .reset-password-input:focus {
   outline: none;
 
-  background: var(--branco);
+  border-color: var(--verde-claro);
 
-  border-color: var(--azul);
-
-  box-shadow:
-    0 0 0 5px rgba(15, 76, 129, 0.1);
+  box-shadow: 0 0 0 3px rgba(35, 155, 143, 0.15);
 }
 
 .reset-password-button {
@@ -159,12 +143,7 @@
 
   border-radius: 16px;
 
-  background:
-    linear-gradient(
-      135deg,
-      var(--azul),
-      var(--verde)
-    );
+  background: var(--azul) !important;
 
   color: var(--branco);
 
@@ -173,20 +152,17 @@
 
   cursor: pointer;
 
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: var(--transicao-suave);
 }
 
-.reset-password-button:hover {
-  transform: translateY(-2px);
+.reset-password-button:hover:not(:disabled) {
+  background-color: var(--verde-escuro) !important;
 
-  box-shadow:
-    0 12px 24px rgba(15, 76, 129, 0.2);
+  box-shadow: 0 4px 12px rgba(11, 68, 62, 0.25);
 }
 
 .reset-password-button:disabled {
-  opacity: 0.7;
+  opacity: 0.6;
 
   cursor: not-allowed;
 
@@ -209,15 +185,15 @@
 }
 
 .reset-password-success {
-  background: rgba(34, 197, 94, 0.12);
+  background: rgba(56, 161, 105, 0.12);
 
-  color: #15803D;
+  color: var(--sucesso);
 }
 
 .reset-password-error {
-  background: rgba(239, 68, 68, 0.12);
+  background: rgba(229, 62, 62, 0.12);
 
-  color: #B91C1C;
+  color: var(--erro);
 }
 
 .reset-password-link {
@@ -230,11 +206,12 @@
 
   text-decoration: none;
 
-  transition: 0.2s ease;
+  transition: var(--transicao-suave);
 }
 
 .reset-password-link:hover {
-  opacity: 0.8;
+  color: var(--verde-claro);
+  text-decoration: underline;
 }
 
 @media (max-width: 480px) {
