@@ -27,16 +27,10 @@ def add_category_route(company_id):
 
 @category_bp.route("", methods=["GET"])
 @jwt_required()
-def get_categories_route():
+def get_categories_route(company_id):
     user_id = int(get_jwt_identity())
-    
-    cnpj = request.args.get('cnpj')
-    if not cnpj:
-        return jsonify({"erro": "O parâmetro cnpj é obrigatório na URL."}), 400
         
-    data = {"cnpj": cnpj}
-    answer, status_code = get_categories(user_id, data)
-    
+    answer, status_code = get_categories(user_id=user_id, company_id=company_id)
     if status_code == 200 and "categories" in answer:
         answer["categories"] = category_output_schema.dump(answer["categories"], many=True)
         

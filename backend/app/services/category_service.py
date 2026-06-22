@@ -30,14 +30,15 @@ def add_category(user_id, company_id, data):
         return {"erro": f"Erro interno ao salvar a categoria: {str(e)}"}, 500
 
 
-def get_categories(user_id, data):
-    cnpj = data.get("cnpj")
+def get_categories(user_id, company_id):
 
-    company = Company.query.filter_by(cnpj=cnpj).first()
+    company = CompanyRepository.get_by_id(company_id)
     if not company:
-        return {"erro": "Empresa não encontrada ou você não tem permissão."}, 404
+        raise APIException("Empresa não encontrada", 404)
+    
+    CompanyRepository.check_user_permission(company_id, user_id)
 
-    categories = Category.query.filter_by(company_id=company.company_id).all()
+    categories = CategoryRepository.list_by_company(company_id)
     return {"categories": categories}, 200
 
 
