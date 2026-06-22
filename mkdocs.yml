@@ -91,6 +91,7 @@ nav:
     - Documentação por Tarefa Técnica:
       - qualidade/tasks/index.md
       - Tarefa IV — Integração do Ciclo de Vida: qualidade/tasks/task_4_integracao-ciclo-vida.md
+      - Refatoração - Redesign do Frontend: qualidade/tasks/refactor_redesign-frontend.md
     - Consolidados por Sprint:
       - qualidade/sprints/index.md
       - Sprint 4: qualidade/sprints/sprint-04.md
@@ -126,6 +127,7 @@ nav:
       - task4 — Integração de autenticação: issues/task4.md
       - task5 — DTOs e redesign: issues/task5.md
       - task6 — Repositórios e migrations: issues/task6.md
+      - task7 - Refatoração do fluxo company: issues/task7.md
     - Correções:
       - fix1 — Integração de Transações: issues/fix1.md
       - fix2 — Contas vs. Transações: issues/fix2.md
