@@ -46,7 +46,7 @@ def create_app():
     app.register_blueprint(company_bp, url_prefix="/api/companies")
 
     from app.routes.category_routes import category_bp
-    app.register_blueprint(category_bp, url_prefix="/api/categories")
+    app.register_blueprint(category_bp, url_prefix='/api/companies/<int:company_id>/categories')
 
     # Registro ÚNICO de transações (Removeu a duplicação antiga que causava erro)
     from app.routes.transaction_routes import transaction_bp

@@ -11,14 +11,14 @@ category_output_schema = CategoryRequirements()
 
 @category_bp.route("", methods=["POST"])
 @jwt_required()
-def add_category_route():
+def add_category_route(company_id):
     user_id = int(get_jwt_identity())
     try:
         data = category_schema.load(request.get_json())
     except ValidationError as err:
         return jsonify({"erros_de_validacao": err.messages}), 400
     
-    answer, status_code = add_category(user_id, data)
+    answer, status_code = add_category(user_id=user_id, company_id=company_id, data=data)
     
     if status_code == 201 and "category" in answer:
         answer["category"] = category_output_schema.dump(answer["category"])

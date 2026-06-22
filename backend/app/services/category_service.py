@@ -1,26 +1,32 @@
 from app.models import Category, Company 
+from app.repositories.category_repository import CategoryRepository
+from app.repositories.company_repository import CompanyRepository
+from app.exceptions.api_exception import APIException
 from app.config import db
 
 
-def add_category(user_id, data):
-    cnpj = data.get("cnpj")
+def add_category(user_id, company_id, data):
 
-    company = Company.query.filter_by(cnpj=cnpj).first()
+    company = CompanyRepository.get_by_id(company_id)
     if not company:
-        return {"erro": "Empresa não encontrada ou você não tem permissão para gerenciar as categorias dela."}, 404
+        raise APIException("Empresa não encontrada", 404)
+    
+    CompanyRepository.check_user_permission(company_id, user_id)
 
-    new_category = Category(
-        name=data.get("name"),
-        type=data.get("type"),
-        company_id=company.company_id
-    )
+    name = data.get("name")
+    type = data.get("type")
 
     try:
-        db.session.add(new_category)
-        db.session.commit()
-        return {"msg": "Categoria criada com sucesso!"}, 201
+        new_category = CategoryRepository.create(
+            name=name,
+            type=type,
+            company_id=company_id
+        )
+        CategoryRepository.create(new_category)
+        return {"msg": "Categoria criada com sucesso!", "category": new_category}, 201
     except Exception as e:
         db.session.rollback()
+        print(f"Erro ao criar categoria: {str(e)}")
         return {"erro": f"Erro interno ao salvar a categoria: {str(e)}"}, 500
 
 
