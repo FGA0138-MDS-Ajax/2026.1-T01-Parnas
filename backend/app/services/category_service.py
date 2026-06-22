@@ -42,26 +42,31 @@ def get_categories(user_id, company_id):
     return {"categories": categories}, 200
 
 
-def update_category(user_id, data):
-    category_id = data.get("category_id") or data.get("id")
-    cnpj = data.get("cnpj")
-
-    company = Company.query.filter_by(cnpj=cnpj).first()
+def update_category(user_id, company_id, category_id, data):
+    company = CompanyRepository.get_by_id(company_id)
     if not company:
-        return {"erro": "Empresa não encontrada ou você não tem permissão."}, 404
+        raise APIException("Empresa não encontrada", 404)
+    CompanyRepository.check_user_permission(company_id, user_id)
 
-    category = Category.query.filter_by(category_id=category_id, company_id=company.company_id).first()
+    category = CategoryRepository.get_by_id_and_company(category_id, company_id)
+
     if not category:
-        return {"erro": "Categoria não encontrada para esta empresa."}, 404
-
-    if "name" in data:
-        category.name = data.get("name")
-    if "type" in data:
-        category.type = data.get("type")
+        raise APIException("Categoria não encontrada para esta empresa.", 404)
+    
+    if not data.get("name") or not data.get("type"):
+        raise APIException("Nome e tipo são obrigatórios.", 400)
+    
+    new_name = data.get("name")
+    new_type = data.get("type")
 
     try:
-        db.session.commit()
-        return {"msg": "Categoria actualizada com sucesso!"}, 200
+        updated_category = CategoryRepository.update(
+            category_id=category_id,
+            company_id=company_id,
+            new_name=new_name,
+            new_type=new_type
+        )
+        return {"msg": "Categoria atualizada com sucesso!", "category": updated_category}, 200
     except Exception as e:
         db.session.rollback()
         return {"erro": f"Erro interno ao atualizar: {str(e)}"}, 500

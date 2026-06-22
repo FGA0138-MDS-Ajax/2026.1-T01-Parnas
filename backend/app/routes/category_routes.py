@@ -36,16 +36,22 @@ def get_categories_route(company_id):
         
     return jsonify(answer), status_code
 
-@category_bp.route("", methods=["PUT"])
+@category_bp.route("/<int:category_id>", methods=["PUT"])
 @jwt_required()
-def update_category_route():
+def update_category_route(company_id, category_id):
     user_id = int(get_jwt_identity())
+    
     try:
-        data = category_schema.load(request.get_json(), partial=True)
+        data = category_schema.load(request.get_json())
     except ValidationError as err:
         return jsonify({"erros_de_validacao": err.messages}), 400
-    
-    answer, status_code = update_category(user_id, data)
+
+    answer, status_code = update_category(
+        user_id=user_id,
+        company_id=company_id, 
+        category_id=category_id,
+        data=data
+    )
     
     if status_code == 200 and "category" in answer:
         answer["category"] = category_output_schema.dump(answer["category"])
