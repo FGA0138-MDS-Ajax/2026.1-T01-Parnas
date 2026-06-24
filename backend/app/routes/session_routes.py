@@ -19,7 +19,7 @@ def get_my_companies():
 def set_active_company():
     """Define a empresa ativa e retorna um novo JWT token"""
     current_user_id = get_jwt_identity()
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
     company_id = data.get('company_id')
 
     if not company_id:

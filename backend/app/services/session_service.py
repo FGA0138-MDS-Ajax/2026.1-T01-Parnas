@@ -25,6 +25,13 @@ class SessionService:
     def set_active_company(user_id, company_id):
         """Verifica se o usuário pertence à empresa e gera um novo token com a empresa ativa"""
         user = User.query.get(user_id)
+        if not user:
+            return {"erro": "Usuário não encontrado"}, 404
+
+        try:
+            company_id = int(company_id)
+        except (TypeError, ValueError):
+            return {"erro": "Empresa inválida"}, 400
 
         # Verifica se o company_id solicitado realmente está na lista de empresas do usuário
         company_exists = any(c.company_id == company_id for c in user.companies)
