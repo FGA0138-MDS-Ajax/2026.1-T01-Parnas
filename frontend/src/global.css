@@ -1,27 +1,40 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
 
 :root {
-  --azul: #0F4C81;
-  --verde: #03906C;
-  --gradiente-fundo: linear-gradient(165deg, var(--azul) 20%, var(--verde) 100%);
+  --azul: #177f74;
+  --verde: #1f857a;
 
-  --branco: #FFFFFF;
-  --fundo-card: #FFFFFF;
-  --texto-principal: #1A202C;
+  --verde-claro: #239b8f;
+  --verde-escuro: #0b443e;
+  --verde-profundo: #062623;
+  --verde-suave: #f0f7f6;
+  --verde-mutado: #a3cbd6;
+
+  --gradiente-fundo: linear-gradient(
+    135deg,
+    var(--verde-claro) 0%,
+    var(--azul) 50%,
+    var(--verde-escuro) 100%
+  );
+
+  --branco: #ffffff;
+  --fundo-card: #ffffff;
+  --texto-principal: #0f3b36;
   --texto-placeholder: #718096;
-  --borda-input: #E2E8F0;
-  --erro: #E53E3E;
+  --borda-input: #e2e8f0;
 
-  --fonte-poppins: 'Poppins', sans-serif;
+  --sucesso: #38a169;
+  --alerta: #dd6b20;
+  --erro: #e53e3e;
 
+  --fonte-poppins: "Poppins", sans-serif;
   --arredondamento-card: 24px;
   --arredondamento-input-botao: 10px;
-
   --transicao-suave: all 0.2s ease-in-out;
 }
 
 * {
-    font-family: var(--fonte-poppins), sans-serif;
+  font-family: var(--fonte-poppins), sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;

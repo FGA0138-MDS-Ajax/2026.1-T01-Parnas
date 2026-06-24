@@ -1,8 +1,6 @@
 import React from 'react';
+import formatCurrency from '../../utils/formatCurrency';
 import './Transacoes.css';
-
-const formatarMoeda = (valor) =>
-  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
 
 const ConfirmacaoExclusao = ({ transacao, onConfirmar, onCancelar }) => {
   const handleOverlayClick = (e) => {
@@ -27,7 +25,7 @@ const ConfirmacaoExclusao = ({ transacao, onConfirmar, onCancelar }) => {
 
           <span className={`confirmacao-valor valor--${transacao?.tipo}`}>
             {transacao?.tipo === 'despesa' ? '- ' : '+ '}
-            {formatarMoeda(transacao?.valor || 0)}
+            {formatCurrency(transacao?.valor)}
           </span>
 
           <p className="confirmacao-aviso confirmacao-aviso--erro">

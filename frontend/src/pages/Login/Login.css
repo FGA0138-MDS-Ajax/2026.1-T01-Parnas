@@ -5,49 +5,62 @@
   background-color: var(--fundo-card);
   border-radius: var(--arredondamento-card);
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 60px rgba(6, 38, 35, 0.15);
 }
 
 /* ── Cabeçalho com gradiente ── */
 .login-header {
   background: var(--gradiente-fundo);
-  padding: 36px 30px 32px;
+  padding: 40px 30px 35px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-.login-logo-icon {
-  width: 62px;
-  height: 62px;
+/* ── Container da logo original sem borda ── */
+.login-logo-container {
+  width: 85px;
+  height: 85px;
   background-color: var(--branco);
-  border-radius: 14px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 14px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 18px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  border: none;
+  flex-shrink: 0;
 }
 
+.login-logo-img {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  transform: translate(-1px, 1px);
+}
+
+/* ── Tipografia em branco para contraste no cabeçalho ── */
 .login-brand {
-  font-size: 1.75rem;
+  font-size: 2.3rem;
   font-weight: 800;
   color: var(--branco);
-  letter-spacing: 1px;
-  margin-bottom: 4px;
+  letter-spacing: 2px;
+  margin-bottom: 2px;
+  line-height: 1.1;
 }
 
 .login-brand-sub {
-  font-size: 0.83rem;
+  font-size: 0.85rem;
   color: var(--branco);
-  opacity: 0.9;
+  opacity: 0.85;
+  font-weight: 500;
 }
 
 /* ── Corpo do formulário ── */
 .login-body {
   background-color: var(--fundo-card);
-  padding: 30px 32px 24px;
+  padding: 20px 32px 24px;
   display: flex;
   flex-direction: column;
 }
@@ -64,7 +77,7 @@
   font-size: 0.83rem;
   color: var(--texto-placeholder);
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 /* ── Erro ── */
@@ -80,7 +93,7 @@
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px;
 }
 
 .input-group label {
@@ -88,22 +101,25 @@
   font-size: 0.83rem;
   font-weight: 600;
   color: var(--texto-principal);
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 
 .input-icon-wrapper {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 0 0px;
-  border: 0px solid var(--borda-input);
+  gap: 12px;
+  padding-left: 14px;
+  padding-right: 0;
+  border: 1px solid var(--borda-input);
   border-radius: var(--arredondamento-input-botao);
+  background-color: var(--branco);
   transition: var(--transicao-suave);
+  position: relative;
 }
 
 .input-icon-wrapper:focus-within {
-  border-color: var(--azul);
-  box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1);
+  border-color: var(--verde-claro);
+  box-shadow: 0 0 0 3px rgba(35, 155, 143, 0.15);
 }
 
 .input-icon {
@@ -114,12 +130,13 @@
 
 .input-icon-wrapper input {
   flex: 1;
-  padding: 9px 0;
+  padding: 12px 14px 12px 0;
   border: none;
   outline: none;
   font-size: 0.88rem;
   color: var(--texto-principal);
   background: transparent;
+  width: 100%;
 }
 
 .input-icon-wrapper input::placeholder {
@@ -131,6 +148,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 4px 0;
 }
 
 .remember-label {
@@ -142,7 +160,7 @@
   cursor: pointer;
 }
 
-.remember-label input[type='checkbox'] {
+.remember-label input[type="checkbox"] {
   width: 15px;
   height: 15px;
   accent-color: var(--azul);
@@ -153,29 +171,37 @@
   font-size: 0.83rem;
   color: var(--azul);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
   transition: var(--transicao-suave);
 }
 
 .forgot-link:hover {
+  color: var(--verde-claro);
   text-decoration: underline;
 }
 
 /* ── Botão Entrar ── */
 .btn-submit {
-  padding: 12px;
-  background-color: var(--azul);
+  padding: 15px;
+  background-color: var(--azul) !important;
   color: var(--branco);
   border: none;
   border-radius: var(--arredondamento-input-botao);
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
   transition: var(--transicao-suave);
+  letter-spacing: 0.5px;
 }
 
-.btn-submit:hover {
-  background-color: #0c3d68;
+.btn-submit:hover:not(:disabled) {
+  background-color: var(--verde-escuro) !important;
+  box-shadow: 0 4px 12px rgba(11, 68, 62, 0.25);
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* ── Divisor "ou" ── */
@@ -183,14 +209,14 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 16px 0;
+  margin: 18px 0;
   font-size: 0.83rem;
   color: var(--texto-placeholder);
 }
 
 .divider::before,
 .divider::after {
-  content: '';
+  content: "";
   flex: 1;
   height: 1px;
   background-color: var(--borda-input);
@@ -199,7 +225,7 @@
 /* ── Botão Conta Demo ── */
 .btn-demo {
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   background-color: var(--branco);
   color: var(--texto-principal);
   border: 1.5px solid var(--borda-input);
@@ -210,9 +236,10 @@
   transition: var(--transicao-suave);
 }
 
-.btn-demo:hover {
+.btn-demo:hover:not(:disabled) {
   border-color: var(--azul);
   color: var(--azul);
+  background-color: var(--verde-suave);
 }
 
 /* ── Rodapé ── */
@@ -220,7 +247,7 @@
   text-align: center;
   font-size: 0.82rem;
   color: var(--texto-placeholder);
-  margin-top: 18px;
+  margin-top: 20px;
   white-space: nowrap;
 }
 
@@ -232,6 +259,7 @@
 }
 
 .register-link:hover {
+  color: var(--verde-claro);
   text-decoration: underline;
 }
 
@@ -239,6 +267,7 @@
   text-align: center;
   font-size: 0.73rem;
   color: var(--texto-placeholder);
-  margin-top: 16px;
+  margin-top: 20px;
   opacity: 0.8;
+  line-height: 1.4;
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const ModalConta = ({ contaParaEditar, categorias, onSalvar, onFechar }) => {
+const ModalConta = ({ contaParaEditar, categorias, contasCaixa = [], onSalvar, onFechar }) => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
     descricao: '',
@@ -9,6 +9,7 @@ const ModalConta = ({ contaParaEditar, categorias, onSalvar, onFechar }) => {
     tipo: 'despesa',
     dataVencimento: '',
     categoria: '',
+    contaCaixaId: '',
   });
   const [erros, setErros] = useState({});
   const [salvando, setSalvando] = useState(false);
@@ -21,6 +22,7 @@ const ModalConta = ({ contaParaEditar, categorias, onSalvar, onFechar }) => {
         tipo: contaParaEditar.tipo || 'despesa',
         dataVencimento: contaParaEditar.dataVencimento || '',
         categoria: contaParaEditar.categoria ? String(contaParaEditar.categoria) : '',
+        contaCaixaId: contaParaEditar.contaCaixaId ? String(contaParaEditar.contaCaixaId) : '',
       });
     } else {
       setForm({
@@ -29,6 +31,7 @@ const ModalConta = ({ contaParaEditar, categorias, onSalvar, onFechar }) => {
         tipo: 'despesa',
         dataVencimento: '',
         categoria: '',
+        contaCaixaId: '',
       });
     }
     setErros({});
@@ -50,6 +53,7 @@ const ModalConta = ({ contaParaEditar, categorias, onSalvar, onFechar }) => {
     if (!form.valor || isNaN(form.valor) || parseFloat(form.valor) <= 0)
       novosErros.valor = 'Informe um valor válido maior que zero.';
     if (!form.dataVencimento) novosErros.dataVencimento = 'Data de vencimento é obrigatória.';
+    if (!form.contaCaixaId) novosErros.contaCaixaId = 'Selecione uma Conta/Caixa.';
     setErros(novosErros);
     return Object.keys(novosErros).length === 0;
   };
@@ -144,6 +148,35 @@ const ModalConta = ({ contaParaEditar, categorias, onSalvar, onFechar }) => {
                 />
                 {erros.dataVencimento && <span className="msg-campo-erro">{erros.dataVencimento}</span>}
               </div>
+            </div>
+
+            {/* Conta/Caixa */}
+            <div className="input-group">
+              <div className="campo-label-acoes">
+                <label htmlFor="contaCaixaId">Conta/Caixa</label>
+                <button
+                  type="button"
+                  className="btn-link-categoria"
+                  onClick={() => navigate('/contas-caixa')}
+                >
+                  Cadastrar
+                </button>
+              </div>
+              <select
+                id="contaCaixaId"
+                name="contaCaixaId"
+                value={form.contaCaixaId}
+                onChange={handleChange}
+                className={erros.contaCaixaId ? 'input-erro' : ''}
+              >
+                <option value="">Selecione uma Conta/Caixa...</option>
+                {contasCaixa.map((contaCaixa) => (
+                  <option key={contaCaixa.id} value={contaCaixa.id}>
+                    {contaCaixa.nome}
+                  </option>
+                ))}
+              </select>
+              {erros.contaCaixaId && <span className="msg-campo-erro">{erros.contaCaixaId}</span>}
             </div>
 
             {/* Categoria */}
