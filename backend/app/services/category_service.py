@@ -1,68 +1,105 @@
-from app.repositories.category_repository import CategoryRepository
-from app.repositories.company_repository import CompanyRepository
+from app.repositories import CategoryRepository, CompanyRepository
+from app.config import db
+from app.exceptions.api_exception import APIException
 
-def add_category(user_id, data):
-    cnpj = data.get("cnpj")
 
-    company = CompanyRepository.get_by_cnpj(cnpj)
+def add_category(user_id, company_id, data):
+
+    company = CompanyRepository.get_by_id(company_id)
     if not company:
-        return {"erro": "Empresa não encontrada ou você não tem permissão para gerenciar as categorias dela."}, 404
-
+        raise APIException("Empresa não encontrada", 404)
+    
+    access = CompanyRepository.check_user_permission(company_id, user_id)
+    if not access
+        raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403}
+      
     try:
-        # Criando via Repository
-        CategoryRepository.create(
+        new_category = (
             name=data.get("name"),
             type=data.get("type"),
-            company_id=company.company_id
+            company_id=company_id
         )
-        return {"msg": "Categoria criada com sucesso!"}, 201
+        
+        CategoryRepository.create(new_category)
+        
+        return {"msg": "Categoria criada com sucesso!", "category": new_category}, 201
     except Exception as e:
+        db.session.rollback()
+        print(f"Erro ao criar categoria: {str(e)}")
         return {"erro": f"Erro interno ao salvar a categoria: {str(e)}"}, 500
 
-def get_categories(user_id, data):
-    cnpj = data.get("cnpj")
 
-    company = CompanyRepository.get_by_cnpj(cnpj)
+def get_categories(user_id, company_id):
+
+    company = CompanyRepository.get_by_id(company_id)
     if not company:
-        return {"erro": "Empresa não encontrada ou você não tem permissão."}, 404
+        raise APIException("Empresa não encontrada", 404)
+    
+    access = CompanyRepository.check_user_permission(company_id, user_id)
+    if not access
+        raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403}
+    
+    try:
+        categories = CategoryRepository.list_by_company(company_id)  
+        return {"categories": categories}, 200
+                           
+    except Exception as e:
+        db.session.rollback()
+        print(f"Erro ao acessar categorias: {str(e)}")
+        return {"erro": f"Erro interno ao acessar a categorias: {str(e)}"}, 500
 
-    categories = CategoryRepository.list_by_company(company.company_id)
-    return {"categories": categories}, 200
-
-def update_category(user_id, data):
-    category_id = data.get("category_id") or data.get("id")
-    cnpj = data.get("cnpj")
-
-    company = CompanyRepository.get_by_cnpj(cnpj)
+def update_category(user_id, company_id, category_id, data):
+    company = CompanyRepository.get_by_id(company_id)
     if not company:
-        return {"erro": "Empresa não encontrada ou você não tem permissão."}, 404
-
-    category = CategoryRepository.get_by_id_and_company(category_id, company.company_id)
+        raise APIException("Empresa não encontrada", 404)
+           
+    access = CompanyRepository.check_user_permission(company_id, user_id)
+    if not access
+        raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403}
+                           
+    category = CategoryRepository.get_by_id_and_company(category_id, company_id)
     if not category:
-        return {"erro": "Categoria não encontrada para esta empresa."}, 404
-
-    if "name" in data:
-        category.name = data.get("name")
-    if "type" in data:
-        category.type = data.get("type")
+        raise APIException("Categoria não encontrada para esta empresa.", 404)
+    
+    if not data.get("name") or not data.get("type"):
+        raise APIException("Nome e tipo são obrigatórios.", 400)
+    
+    new_name = data.get("name")
+    new_type = data.get("type")
 
     try:
-        from app.config import db
+        updated_category = CategoryRepository.update(
+            category_id=category_id,
+            company_id=company_id,
+            new_name=new_name,
+            new_type=new_type
+        )
         db.session.commit()
-        return {"msg": "Categoria actualizada com sucesso!"}, 200
+                           
+        return {"msg": "Categoria atualizada com sucesso!", "category": updated_category}, 200
     except Exception as e:
-        return {"erro": f"Erro interno ao atualizar: {str(e)}"}, 500
+        db.session.rollback()
+        print(f"Erro ao atualizar categoria: {str(e)}")
+        return {"erro": f"Erro interno ao atualizar categoria: {str(e)}"}, 500
 
-def delete_category(user_id, data):
-    category_id = data.get("category_id") or data.get("id")
-    cnpj = data.get("cnpj")
-
-    company = CompanyRepository.get_by_cnpj(cnpj)
+def delete_category(user_id, company_id, category_id):
+                           
+    company = CompanyRepository.get_by_id(company_id)
     if not company:
-        return {"erro": "Empresa não encontrada ou você não tem permissão."}, 404
-
-    deleted = CategoryRepository.delete(category_id, company.company_id)
-    if not deleted:
-        return {"erro": "Categoria não encontrada para esta empresa."}, 404
-
-    return {"msg": "Categoria deletada com sucesso!"}, 200
+        raise APIException("Empresa não encontrada", 404)
+    
+    access = CompanyRepository.check_user_permission(company_id, user_id)
+    if not access
+        raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403}
+                           
+    category = CategoryRepository.get_by_id_and_company(category_id, company_id)
+    if not category:
+        raise APIException("Categoria não encontrada para esta empresa.", 404)
+                           
+    try:
+        deleted = CategoryRepository.delete(category_id, company_id)
+        return {"msg": "Categoria deletada com sucesso!", "deleted":deleted}, 200
+    except Exception as e:
+        db.session.rollback()
+        print(f"Erro ao deletar categoria: {str(e)}")
+        return {"erro": f"Erro interno ao deletar: {str(e)}"}, 500
