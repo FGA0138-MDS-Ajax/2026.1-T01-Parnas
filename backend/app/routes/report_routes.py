@@ -8,7 +8,7 @@ report_bp = Blueprint("report_bp", __name__)
 
 relatorio_schema = RelatorioQuerySchema()
 
-@report_bp.route("", methods=["GET"])
+@report_bp.route("/", methods=["GET"])
 @jwt_required()
 def get_relatorio():
     user_id = int(get_jwt_identity())

@@ -9,7 +9,7 @@ category_bp = Blueprint("category_bp", __name__)
 category_schema = CategoryAddSchema()
 category_output_schema = CategoryRequirements()
 
-@category_bp.route("", methods=["POST"])
+@category_bp.route("/", methods=["POST"])
 @jwt_required()
 def add_category_route(company_id):
     user_id = int(get_jwt_identity())
@@ -25,7 +25,7 @@ def add_category_route(company_id):
         
     return jsonify(answer), status_code
 
-@category_bp.route("", methods=["GET"])
+@category_bp.route("/", methods=["GET"])
 @jwt_required()
 def get_categories_route(company_id):
     user_id = int(get_jwt_identity())

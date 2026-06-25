@@ -10,7 +10,7 @@ company_bp = Blueprint("company_bp", __name__)
 company_schema = CompanyRegistrationSchema()
 company_output_schema = CompanyRequirements()
 
-@company_bp.route("", methods=["POST"])
+@company_bp.route("/", methods=["POST"])
 @jwt_required()
 def register_company_route():    
     
@@ -68,7 +68,7 @@ def get_company_route(company_id):
 
     return jsonify(answer), status_code
 
-@company_bp.route("", methods=["GET"])
+@company_bp.route("/", methods=["GET"])
 @jwt_required()
 def get_all_companies_route():
     user_id = int(get_jwt_identity())

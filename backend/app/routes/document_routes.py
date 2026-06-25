@@ -5,9 +5,9 @@ from marshmallow import ValidationError
 from app.services.document_service import DocumentService
 from app.schemas.document_schema import DocumentUploadSchema, DocumentResponseSchema
 
-document_bp = Blueprint('document_dp', __name__)
+document_bp = Blueprint('document_bp', __name__)
 
-@document_bp.route('', methods=['POST'])
+@document_bp.route('/', methods=['POST'])
 @jwt_required()
 def upload_document():
     current_user_id = int(get_jwt_identity())
@@ -53,7 +53,7 @@ def upload_document():
     return jsonify(DocumentResponseSchema().dump(document)), status_code
 
 
-@document_bp.route('', methods=['GET'])
+@document_bp.route('/', methods=['GET'])
 @jwt_required()
 def get_documents():
     current_user_id = int(get_jwt_identity())
