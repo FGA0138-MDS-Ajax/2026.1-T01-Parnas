@@ -66,7 +66,8 @@ def delete_user(user_id):
     if not user:
         return {"erro": "Usuário não encontrado."}, 404
     try:
-        db.session.delete(user)
+        # Aplica o soft delete em vez de deletar fisicamente do banco
+        user.is_active = False
         db.session.commit()
         return {"mensagem": "Usuário excluído com sucesso."}, 200
     except Exception as e:
