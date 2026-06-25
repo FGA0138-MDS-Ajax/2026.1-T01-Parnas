@@ -47,11 +47,11 @@ def delete_company(company_id, user_id):
           if not company:
                raise APIException("Empresa não encontrada.", 404)
           
-          access = CompanyRepository.check_user_permission(company_id, user_id)
+          access = CompanyRepository.check_user_access(company_id, user_id)
           if not access:
                raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
                                   
-          CompanyRepository.delete(company_id)
+          CompanyRepository.delete(company)
           
           return {"mensagem": "Empresa deletada com sucesso."}, 200
      
@@ -69,7 +69,7 @@ def update_company(data, user_id, company_id):
           if not company:
                raise APIException("Empresa não encontrada.", 404)
           
-          access = CompanyRepository.check_user_permission(company_id, user_id)
+          access = CompanyRepository.check_user_access(company_id, user_id)
           if not access:
                raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
 
@@ -102,7 +102,7 @@ def get_company(company_id, user_id):
           if not company:
               raise APIException("Empresa não encontrada.", 404)
 
-          access = CompanyRepository.check_user_permission(company_id, user_id)
+          access = CompanyRepository.check_user_access(company_id, user_id)
           if not access:
               raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
 

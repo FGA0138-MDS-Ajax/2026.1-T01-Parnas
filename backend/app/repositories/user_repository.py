@@ -16,6 +16,17 @@ class UserRepository:
         return User.query.filter_by(cpf=cpf).first()
 
     @staticmethod
+    def save(user):
+        db.session.add(user)
+        db.session.commit()
+        return user
+
+    @staticmethod
+    def delete(user):
+        db.session.delete(user)
+        db.session.commit()
+
+    @staticmethod
     def create(name, email, cpf, password_hash, birth_date, initial_company=None):
         new_user = User(
             name=name,
