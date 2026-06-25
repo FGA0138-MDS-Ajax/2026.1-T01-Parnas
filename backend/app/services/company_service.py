@@ -12,7 +12,8 @@ def register_company(user_id, data):
           email = data.get('email')
           phone = data.get('phone')
 
-          if CompanyRepository.get_by_cnpj(cnpj):
+          cnpj_clean = re.sub(r'\D', '', cnpj)
+          if CompanyRepository.get_by_cnpj(cnpj_clean):
               raise APIException("CNPJ já cadastrado.", 409)
             
           new_company = CompanyRepository.create(
@@ -47,8 +48,8 @@ def delete_company(company_id, user_id):
                raise APIException("Empresa não encontrada.", 404)
           
           access = CompanyRepository.check_user_permission(company_id, user_id)
-          if not access
-               raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403}
+          if not access:
+               raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
                                   
           CompanyRepository.delete(company_id)
           
@@ -69,13 +70,14 @@ def update_company(data, user_id, company_id):
                raise APIException("Empresa não encontrada.", 404)
           
           access = CompanyRepository.check_user_permission(company_id, user_id)
-          if not access
-               raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403}
+          if not access:
+               raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
 
           if 'cnpj' in data:
-               if(CompanyRepository.get_by_cnpj(data['cnpj']) and CompanyRepository.get_by_cnpj(data['cnpj']).company_id != company_id):
+               cnpj_clean = re.sub(r'\D', '', data['cnpj'])
+               if(CompanyRepository.get_by_cnpj(cnpj_clean) and CompanyRepository.get_by_cnpj(cnpj_clean).company_id != company_id):
                     raise APIException("CNPJ já cadastrado.", 409)
-               company.cnpj = data['cnpj']
+               company.cnpj = cnpj_clean
           if 'name' in data:
                company.name = data['name']
           if 'email' in data:
@@ -101,8 +103,8 @@ def get_company(company_id, user_id):
               raise APIException("Empresa não encontrada.", 404)
 
           access = CompanyRepository.check_user_permission(company_id, user_id)
-          if not access
-              raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403}
+          if not access:
+              raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
 
           return {"company": company}, 200
                                  

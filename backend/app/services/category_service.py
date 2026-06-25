@@ -10,17 +10,15 @@ def add_category(user_id, company_id, data):
         raise APIException("Empresa não encontrada", 404)
     
     access = CompanyRepository.check_user_permission(company_id, user_id)
-    if not access
-        raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403}
+    if not access:
+        raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
       
     try:
-        new_category = (
+        new_category = CategoryRepository.create(
             name=data.get("name"),
             type=data.get("type"),
             company_id=company_id
         )
-        
-        CategoryRepository.create(new_category)
         
         return {"msg": "Categoria criada com sucesso!", "category": new_category}, 201
     except Exception as e:
@@ -36,8 +34,8 @@ def get_categories(user_id, company_id):
         raise APIException("Empresa não encontrada", 404)
     
     access = CompanyRepository.check_user_permission(company_id, user_id)
-    if not access
-        raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403}
+    if not access:
+        raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
     
     try:
         categories = CategoryRepository.list_by_company(company_id)  
@@ -54,8 +52,8 @@ def update_category(user_id, company_id, category_id, data):
         raise APIException("Empresa não encontrada", 404)
            
     access = CompanyRepository.check_user_permission(company_id, user_id)
-    if not access
-        raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403}
+    if not access:
+        raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
                            
     category = CategoryRepository.get_by_id_and_company(category_id, company_id)
     if not category:
@@ -89,8 +87,8 @@ def delete_category(user_id, company_id, category_id):
         raise APIException("Empresa não encontrada", 404)
     
     access = CompanyRepository.check_user_permission(company_id, user_id)
-    if not access
-        raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403}
+    if not access:
+        raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
                            
     category = CategoryRepository.get_by_id_and_company(category_id, company_id)
     if not category:
