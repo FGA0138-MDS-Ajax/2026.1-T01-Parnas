@@ -42,8 +42,8 @@ def get_history_filtered(user_id, page, per_page, filtros):
         Transaction.type, func.sum(Transaction.amount)
     ).filter(*condicoes).group_by(Transaction.type).all()
 
-    receitas = sum(valor for tipo, valor in totais if tipo == 'receita') or 0.0
-    despesas = sum(valor for tipo, valor in totais if tipo == 'despesa') or 0.0
+    receitas = sum(float(valor) for tipo, valor in totais if tipo == 'receita')
+    despesas = sum(float(valor) for tipo, valor in totais if tipo == 'despesa')
     saldo = receitas - despesas
 
     paginacao = query_base.order_by(Transaction.date.desc()).paginate(

@@ -64,7 +64,6 @@ def create():
         answer["transaction"] = transaction_output_schema.dump(answer["transaction"])
         
     return jsonify(answer), status_code
-
 @transaction_bp.route('/<int:transaction_id>', methods=['PUT'])
 @jwt_required()
 def update(transaction_id):
@@ -79,7 +78,11 @@ def update(transaction_id):
     except ValidationError as err:
         return jsonify({"erros_de_validacao": err.messages}), 400
 
-    answer, status_code = update_transaction(transaction_id, validated_data, company_id)
+    #recupera o ID do usuário autenticado no token
+    current_user_id = int(get_jwt_identity())
+
+    #envia os parâmetros na ordem exata que o Service espera: id, user_id, dados
+    answer, status_code = update_transaction(transaction_id, current_user_id, validated_data)
     
     if status_code == 200 and "transaction" in answer:
         answer["transaction"] = transaction_output_schema.dump(answer["transaction"])
@@ -94,5 +97,9 @@ def delete(transaction_id):
     if not company_id:
         return jsonify({"erro": "O parâmetro company_id é obrigatório."}), 400
 
-    answer, status_code = delete_transaction(transaction_id, company_id)
+    #recupera o ID do usuário logado
+    current_user_id = int(get_jwt_identity())
+
+    #envia o ID do usuário para o service, e não o da empresa!
+    answer, status_code = delete_transaction(transaction_id, current_user_id)
     return jsonify(answer), status_code
