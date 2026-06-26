@@ -13,7 +13,7 @@ class Transaction(db.Model):
 
     # Foreign Keys
     company_id = db.Column(db.Integer, db.ForeignKey('company.company_id', ondelete='CASCADE'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='SET NULL'), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('category.category_id', ondelete='RESTRICT'), nullable=False)
     bill_id = db.Column(db.Integer, db.ForeignKey('bill.bill_id', ondelete='SET NULL'), nullable=True)
 

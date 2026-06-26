@@ -12,8 +12,6 @@ class User(db.Model):
     password_hash = db.Column(db.String(300), nullable=False)
     birth_date = db.Column(db.Date, nullable=False)
     register_date = db.Column(db.Date, nullable=False, default=date.today)
-    # Adicionei esta linha para conectar o usuário à empresa
-    company_id = db.Column(db.Integer, db.ForeignKey('company.company_id', ondelete='CASCADE'), nullable=True)
     
     companies = db.relationship('Company', secondary=user_company, back_populates='users')
     transactions = db.relationship('Transaction', back_populates='user')
