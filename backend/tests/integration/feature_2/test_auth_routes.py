@@ -26,7 +26,7 @@ def test_login_email_inexistente(client, clean_db):
     )
 
     assert resp.status_code == 401
-    assert resp.get_json() == {"erro": "E-mail ou senha inválidos"}
+    assert resp.get_json() == {"erro": "Conta não encontrada ou desativada"}
 
 def test_login_sem_campos_obrigatorios(client, clean_db):
     resp = client.post('/auth/login', json={'email': 'teste@email.com'})
