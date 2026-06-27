@@ -79,7 +79,7 @@ def create_transaction(data, user_id):
 
     category = Category.query.filter_by(
         category_id=data['category_id'],
-        company_id=data['company_id']
+        company_id=company_id
     ).first()
 
     if not category:
