@@ -1,6 +1,7 @@
 from app.config import db
 from app.models.simulation import Simulation
 from app.models.transaction import Transaction
+from flask_jwt_extended import get_jwt
 
 def calculate_table_price(main, rate, term):
     i = rate/100
@@ -111,11 +112,17 @@ def process_simulation(data, company_id = None):
     return answer
 
 def save_simulation(data, current_user_id):
+    claims = get_jwt()
+    company_id = claims.get("active_company_id")
+
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+
     data_simulation = process_simulation(data)
     summary = data_simulation["resumo"]
 
     new_simulation = Simulation(
-        company_id = data['company_id'],
+        company_id = company_id,
         user_id = current_user_id,
         valor_solicitado = data['requested_amount'],
         prazo_meses = data['deadline_month'],
@@ -134,7 +141,13 @@ def save_simulation(data, current_user_id):
         db.session.rollback()
         return {"erro": "Ocorreu um erro interno ao salvar a simulação."}, 500
 
-def get_simulation(company_id):
+def get_simulation():
+    claims = get_jwt()
+    company_id = claims.get("active_company_id")
+
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+
     simulations = Simulation.query.filter_by(company_id=company_id).all()
     result = []
     for s in simulations:
@@ -152,7 +165,13 @@ def get_simulation(company_id):
 
     return {"simulations": result}, 200
 
-def delete_simulation(simulation_id, company_id):
+def delete_simulation(simulation_id):
+    claims = get_jwt()
+    company_id = claims.get("active_company_id")
+
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+
     simulation = Simulation.query.filter_by(simulation_id=simulation_id, company_id=company_id).first()
 
     if not simulation:

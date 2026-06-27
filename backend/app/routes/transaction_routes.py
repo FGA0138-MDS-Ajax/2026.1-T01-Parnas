@@ -21,10 +21,6 @@ def get_transactions():
     mas escopado obrigatoriamente por empresa para manter a segurança.
     """
     current_user_id = get_jwt_identity()
-    company_id = request.args.get('company_id', type=int)
-
-    if not company_id:
-        return jsonify({"erro": "O parâmetro company_id é obrigatório."}), 400
 
     # Coleta a paginação enviada na URL (com valores padrão seguros)
     page = request.args.get('page', 1, type=int)
@@ -32,7 +28,6 @@ def get_transactions():
 
     # Coleta todos os filtros dinâmicos enviados na URL
     filtros = {
-        'company_id': company_id, # Injetamos a empresa obrigatoriamente nos filtros
         'data_inicio': request.args.get('data_inicio'),
         'data_fim': request.args.get('data_fim'),
         'tipo': request.args.get('tipo'),
@@ -69,10 +64,6 @@ def create():
 @jwt_required()
 def update(transaction_id):
     raw_data = request.get_json()
-    company_id = raw_data.get("company_id")
-
-    if not company_id:
-        return jsonify({"erro": "O company_id é obrigatório no corpo da requisição."}), 400
 
     try:
         validated_data = transaction_schema.load(raw_data, partial=True)
@@ -93,10 +84,6 @@ def update(transaction_id):
 @transaction_bp.route('/<int:transaction_id>', methods=['DELETE'])
 @jwt_required()
 def delete(transaction_id):
-    company_id = request.args.get('company_id')
-
-    if not company_id:
-        return jsonify({"erro": "O parâmetro company_id é obrigatório."}), 400
 
     # daniel: o service espera (transaction_id, user_id); estava passando o company_id
     # no lugar do user_id, escopando a exclusao pelo id errado.

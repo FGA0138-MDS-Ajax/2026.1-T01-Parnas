@@ -1,21 +1,22 @@
 from app.models.bill import Bill
 from app.models.transaction import Transaction
-from app.models.user import User
 from app.config import db
 from datetime import date, datetime
+from flask_jwt_extended import get_jwt
 
 
 class BillService:
 
     @staticmethod
-    def _get_company_id(user_id):
-        """Método auxiliar para descobrir a empresa do usuário logado"""
-        user = User.query.get(user_id)
-        return user.company_id if user else None
+    def _get_company_id():
+        claims = get_jwt()
+        return claims.get("active_company_id")
 
     @staticmethod
-    def create_bill(user_id, data):
-        company_id = BillService._get_company_id(user_id)
+    def create_bill(data):
+        company_id = BillService._get_company_id()
+        if not company_id:
+            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
         nova_conta = Bill(
             description=data['description'],
@@ -31,8 +32,10 @@ class BillService:
         return {"mensagem": "Conta criada com sucesso!", "id": nova_conta.bill_id}, 201
 
     @staticmethod
-    def get_bills(user_id, status=None):
-        company_id = BillService._get_company_id(user_id)
+    def get_bills(status=None):
+        company_id = BillService._get_company_id()
+        if not company_id:
+            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
         query = Bill.query.filter_by(company_id=company_id)
         if status:
@@ -53,8 +56,10 @@ class BillService:
         return resultado, 200
 
     @staticmethod
-    def update_bill(user_id, bill_id, data):
-        company_id = BillService._get_company_id(user_id)
+    def update_bill(bill_id, data):
+        company_id = BillService._get_company_id()
+        if not company_id:
+            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
         conta = Bill.query.filter_by(bill_id=bill_id, company_id=company_id).first()
 
         if not conta:
@@ -73,8 +78,10 @@ class BillService:
         return {"mensagem": "Conta atualizada com sucesso!"}, 200
 
     @staticmethod
-    def delete_bill(user_id, bill_id):
-        company_id = BillService._get_company_id(user_id)
+    def delete_bill(bill_id):
+        company_id = BillService._get_company_id()
+        if not company_id:
+            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
         conta = Bill.query.filter_by(bill_id=bill_id, company_id=company_id).first()
 
         if not conta:
@@ -90,7 +97,9 @@ class BillService:
 
     @staticmethod
     def pay_bill(user_id, bill_id):
-        company_id = BillService._get_company_id(user_id)
+        company_id = BillService._get_company_id()
+        if not company_id:
+            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
         conta = Bill.query.filter_by(bill_id=bill_id, company_id=company_id).first()
 
         if not conta:
@@ -113,7 +122,6 @@ class BillService:
             user_id=user_id,
             category_id=conta.category_id,
             bill_id=conta.bill_id
-            # A linha 'type' foi removida daqui!
         )
 
         db.session.add(nova_transacao)

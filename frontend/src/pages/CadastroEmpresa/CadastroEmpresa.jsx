@@ -14,7 +14,7 @@ const CadastroEmpresa = () => {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { setIdEmpresaLogada } = useEmpresa();
+  const { recarregarEmpresas, selecionarEmpresa } = useEmpresa();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,7 +62,14 @@ const CadastroEmpresa = () => {
         throw new Error(data.erro || 'Erro ao cadastrar empresa.');
       }
 
-      setIdEmpresaLogada(data.company_id);
+      const empresasAtualizadas = await recarregarEmpresas();
+      if (empresasAtualizadas.length !== 1) {
+        await selecionarEmpresa({
+          company_id: data.company_id,
+          name: data.name || formData.nome,
+          cnpj: data.cnpj || cnpjApenasNumeros,
+        });
+      }
       setSuccess(true);
 
       const historicoReal = JSON.parse(localStorage.getItem('credifab_empresas_reais') || '[]');
