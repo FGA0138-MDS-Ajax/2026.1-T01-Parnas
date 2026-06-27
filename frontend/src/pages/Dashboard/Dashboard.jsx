@@ -20,13 +20,13 @@ import useDashboard from '../../hooks/useDashboard';
 import './Dashboard.css';
 
 const CORES_CATEGORIAS = [
-  '#0F4C81',
-  '#03906C',
-  '#e67e22',
-  '#8e44ad',
-  '#c0392b',
-  '#2980b9',
-  '#16a085',
+  '#177f74', // --azul
+  '#239b8f', // --verde-claro
+  '#dd6b20', // --alerta
+  '#8e44ad', // roxo (contraste para gráfico)
+  '#0b443e', // --verde-escuro
+  '#38a169', // --sucesso
+  '#a3cbd6', // --verde-mutado
 ];
 
 const formatarMoeda = (valor) =>

@@ -1,6 +1,6 @@
 /* ================================================================
    Dashboard Financeiro — US16
-   Segue o design system do projeto (variáveis de global.css)
+   Adaptado para o design system do redesign (refactor/redesign-frontend)
    ================================================================ */
 
 /* ── Container principal ── */
@@ -56,7 +56,7 @@
 }
 
 .btn-dash-reload:hover {
-  background-color: rgba(15, 76, 129, 0.06);
+  background-color: var(--verde-suave, #f0f7f6);
 }
 
 /* ── Grid de KPIs ── */
@@ -78,12 +78,12 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(6, 38, 35, 0.04);
   transition: box-shadow 0.2s ease;
 }
 
 .dash-kpi-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 16px rgba(6, 38, 35, 0.08);
 }
 
 /* ícone colorido do KPI */
@@ -100,11 +100,11 @@
   flex-shrink: 0;
 }
 
-.kpi-icon--saldo      { background-color: var(--azul); }
-.kpi-icon--receitas   { background-color: #03906C; }
-.kpi-icon--despesas   { background-color: #c0392b; }
-.kpi-icon--balanco-pos { background-color: #8e44ad; }
-.kpi-icon--balanco-neg { background-color: #e67e22; }
+.kpi-icon--saldo       { background-color: var(--azul); }
+.kpi-icon--receitas    { background-color: var(--verde-claro, #239b8f); }
+.kpi-icon--despesas    { background-color: var(--erro); }
+.kpi-icon--balanco-pos { background-color: var(--verde-escuro, #0b443e); }
+.kpi-icon--balanco-neg { background-color: var(--alerta, #dd6b20); }
 
 .kpi-label {
   font-size: 0.78rem;
@@ -120,8 +120,8 @@
   line-height: 1.2;
 }
 
-.kpi-value--positivo { color: #03906C; }
-.kpi-value--negativo { color: #c0392b; }
+.kpi-value--positivo { color: var(--sucesso, #38a169); }
+.kpi-value--negativo { color: var(--erro); }
 
 .kpi-sub {
   font-size: 0.75rem;
@@ -144,7 +144,7 @@
   border: 1.5px solid var(--borda-input);
   border-radius: var(--arredondamento-card);
   padding: 24px 24px 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(6, 38, 35, 0.04);
   display: flex;
   flex-direction: column;
 }
@@ -181,14 +181,14 @@
   align-items: center;
   gap: 12px;
   padding: 12px 14px;
-  background-color: #f8fafc;
+  background-color: var(--verde-suave, #f8fafc);
   border: 1px solid var(--borda-input);
   border-radius: 10px;
   transition: background-color 0.15s ease;
 }
 
 .dash-bill-item:hover {
-  background-color: #f0f4f8;
+  background-color: #e4f0ef;
 }
 
 .bill-info {
@@ -226,8 +226,8 @@
   font-weight: 700;
 }
 
-.bill-valor--pagar   { color: #c0392b; }
-.bill-valor--receber { color: #03906C; }
+.bill-valor--pagar   { color: var(--erro); }
+.bill-valor--receber { color: var(--sucesso, #38a169); }
 
 .bill-badge {
   display: inline-block;
@@ -238,13 +238,13 @@
 }
 
 .bill-badge--pagar {
-  background-color: #fdecea;
-  color: #c0392b;
+  background-color: rgba(229, 62, 62, 0.1);
+  color: var(--erro);
 }
 
 .bill-badge--receber {
-  background-color: #e8f7ef;
-  color: #03906C;
+  background-color: rgba(56, 161, 105, 0.12);
+  color: var(--sucesso, #38a169);
 }
 
 /* ── Botão "Ver todas as contas" ── */
@@ -296,7 +296,7 @@
   justify-content: center;
   text-align: center;
   gap: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(6, 38, 35, 0.04);
 }
 
 .dash-state-emoji {
@@ -320,7 +320,7 @@
 }
 
 .dash-error-icon {
-  color: #c0392b;
+  color: var(--erro);
 }
 
 /* ── Botões de ação dos estados ── */
@@ -340,7 +340,8 @@
 }
 
 .btn-dash-primary:hover {
-  background-color: #0c3d68;
+  background-color: var(--verde-claro, #239b8f);
+  box-shadow: 0 4px 12px rgba(35, 155, 143, 0.2);
 }
 
 .btn-dash-retry {
@@ -349,9 +350,9 @@
   align-items: center;
   gap: 8px;
   padding: 11px 24px;
-  background-color: #fdecea;
-  color: #c0392b;
-  border: 1.5px solid #f5b7b1;
+  background-color: rgba(229, 62, 62, 0.08);
+  color: var(--erro);
+  border: 1.5px solid rgba(229, 62, 62, 0.3);
   border-radius: var(--arredondamento-input-botao);
   font-size: 0.9rem;
   font-weight: 600;
@@ -361,7 +362,7 @@
 }
 
 .btn-dash-retry:hover {
-  background-color: #f9d8d6;
+  background-color: rgba(229, 62, 62, 0.14);
 }
 
 /* ================================================================
@@ -374,7 +375,7 @@
 }
 
 .skeleton {
-  background-color: #E2E8F0;
+  background-color: var(--borda-input);
   border-radius: 8px;
   animation: skeleton-pulse 1.5s ease-in-out infinite;
 }
