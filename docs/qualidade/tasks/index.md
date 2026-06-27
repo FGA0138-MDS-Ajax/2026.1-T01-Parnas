@@ -10,7 +10,7 @@ apontados - não há "aprovada com pendências".
 
 | Tarefa | Escopo | Sprint | Status |
 |---|---|:--:|---|
-| [Tarefa IV - Integração do Ciclo de Vida](task_4_integracao-ciclo-vida.md) | Usuário / Empresa / Autenticação | 5 | Reprovada |
+| [Tarefa IV - Integração do Ciclo de Vida](task_4_integracao-ciclo-vida.md) | Usuário / Empresa / Autenticação | 5 | Aprovada |
 | [Tarefa V - Redesign do Frontend](task_5_redesign-frontend.md) | Frontend - Autenticação / Categorias / Painel | 8 | Aprovada |
 
 > As correções (`fix`) têm seção própria em

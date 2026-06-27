@@ -10,11 +10,15 @@
 | **Branch de desenvolvimento** | `task/integracao`                                            |
 | **Branch base comparada**     | `develop`                                                    |
 | **Branch de teste (QA)**      | `test/task/integracao-qa`                                    |
-| **Data**                      | 18/06/2026                                                   |
-| **Parecer**                   | **REPROVADA** (ver §6)                                       |
+| **Data**                      | 18/06/2026 (reavaliada em 27/06/2026)                       |
+| **Parecer**                   | **APROVADA** (ver §6)                                        |
 
 > Por ser uma tarefa de **integração/refatoração**, não cabe "aprovada com
 > pendências": ou o fluxo está íntegro, ou é reprovada com os defeitos apontados.
+
+> **Nota de reavaliação (27/06/2026):** os defeitos descritos nas seções §3 e §4 são
+> os achados da avaliação de 18/06/2026. O status atual de cada bloqueante (todos
+> resolvidos) está no **§6 - Parecer final**.
 
 ---
 
@@ -248,16 +252,29 @@ ponta a ponta contra a `develop`:
 
 ## 6. Parecer final
 
-**REPROVADA.**
+**APROVADA** (reavaliada em 27/06/2026).
 
-A integração não pode ser mesclada no estado atual por três motivos bloqueantes:
+Na avaliação de 18/06/2026 a tarefa foi **reprovada** por três motivos bloqueantes.
+Os três foram resolvidos, cada um por uma frente:
 
-1. **DEF-B1** - exclusão e atualização de empresa retornam 500 na `develop`
-   (assinatura de `find_company`); derruba TS-14 e TS-18.
-2. **DEF-B2** - a branch `task/integracao` está atrás da `develop` e seu merge
-   **apaga** as features 10/12/13/14. Precisa ser atualizada antes do PR.
-3. **DEF-F1 + DEF-F2** - o fluxo de redefinição de senha por e-mail está quebrado
-   no front (tela stub + token mal extraído).
+1. **DEF-B1** (exclusão/atualização de empresa em 500) - **resolvido** pelo refactor
+   de repositórios mesclado na `develop` (PR #52, `refactor/contas-transacoes`).
+   `company_service` deixou de usar a `find_company` com assinatura divergente e passou
+   a operar via `CompanyRepository` (`get_by_id`, `check_access`, `delete`), por id.
+2. **DEF-B2** (merge da `task/integracao` apagaria as features 10/12/13/14) -
+   **superado**: a integração ponta a ponta entrou na `develop` pelas features
+   `feature/3,4,8` (mescladas). A `task/integracao` não será mesclada, então a
+   regressão deixou de existir.
+3. **DEF-F1 + DEF-F2** (fluxo de redefinição de senha por e-mail quebrado no front) -
+   **corrigido** na `fix/recuperacao-senha-front` (PR #82 para a `develop`): o token
+   passou a ser lido com `new URL(reset_link).searchParams.get("token")` e a tela órfã
+   `RedefinirSenha` foi removida, deixando `EsqueciSenha` como único fluxo. Coberto por
+   teste de regressão (`npm run test:run`: 90 testes, 0 falhas).
 
-**Para reavaliação, corrigir na ordem:** DEF-B1 → DEF-B2 (atualizar branch) →
-DEF-F2 → DEF-F1/F3 → DEF-B3/B4/F4/F5.
+Permanecem registrados, como itens **não bloqueantes** já apontados na avaliação
+original, os defeitos DEF-B3 (token de reset em 60 min), DEF-B4 (token no corpo da
+resposta), DEF-F4 (chaves do EmailJS no front) e DEF-F5 (proxy `/company` morto). Não
+impediam a aprovação na época e seguem como melhorias para as issues correspondentes.
+
+> Observação de rastreio: a aprovação pressupõe o merge do PR #82 na `develop`. Até lá,
+> os DEF-F1/F2 só estão corrigidos na branch da correção.
