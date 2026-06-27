@@ -37,7 +37,7 @@ const CadastroEmpresa = () => {
     const cnpjApenasNumeros = formData.cnpj.replace(/\D/g, '');
 
     try {
-      const response = await fetch('/api/companies', {
+      const response = await fetch('/api/companies/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

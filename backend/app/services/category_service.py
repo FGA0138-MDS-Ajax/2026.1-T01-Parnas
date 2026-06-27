@@ -1,7 +1,5 @@
 from app.repositories import CategoryRepository, CompanyRepository
-from app.config import db
 from app.exceptions.api_exception import APIException
-
 
 def add_category(user_id, company_id, data):
 
@@ -22,7 +20,6 @@ def add_category(user_id, company_id, data):
         
         return {"msg": "Categoria criada com sucesso!", "category": new_category}, 201
     except Exception as e:
-        db.session.rollback()
         print(f"Erro ao criar categoria: {str(e)}")
         return {"erro": f"Erro interno ao salvar a categoria: {str(e)}"}, 500
 
@@ -71,8 +68,7 @@ def update_category(user_id, company_id, category_id, data):
             company_id=company_id,
             new_name=new_name,
             new_type=new_type
-        )
-        db.session.commit()
+        )      
                            
         return {"msg": "Categoria atualizada com sucesso!", "category": updated_category}, 200
     except Exception as e:

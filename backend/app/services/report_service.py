@@ -1,28 +1,20 @@
-from app.config import db
-from app.models import Transaction, Category
-from sqlalchemy import func, case
-from app.models.company import Company
-from app.models.user_company_association import user_company
-from datetime import date
 import calendar
 import re
+from datetime import date
+from app.repositories.company_repository import CompanyRepository
+from app.repositories.transaction_repository import TransactionRepository
+
 
 class ReportService:
 
     @staticmethod
     def get_period_summary(company_id, start_date, end_date):
-        summary = db.session.query(
-            func.sum(case((Transaction.type == 'ENTRADA', Transaction.amount), else_=0)).label('total_receitas'),
-            func.sum(case((Transaction.type == 'SAIDA', Transaction.amount), else_=0)).label('total_despesas')
-        ).filter(
-            Transaction.company_id == company_id,
-            Transaction.date.between(start_date, end_date)
-        ).first()
-
-        receitas = float(summary.total_receitas or 0)
-        despesas = float(summary.total_despesas or 0)
+        transactions = TransactionRepository.get_by_date_range(company_id, start_date, end_date)
         
-        return{
+        receitas = sum(float(t.amount) for t in transactions if t.type.lower() == 'receita')
+        despesas = sum(float(t.amount) for t in transactions if t.type.lower() == 'despesa')
+        
+        return {
             "total_receitas": receitas,
             "total_despesas": despesas,
             "saldo": receitas - despesas
@@ -30,32 +22,14 @@ class ReportService:
 
     @staticmethod
     def get_category_distribution(company_id, start_date, end_date):
-        results = db.session.query(
-            Category.name, 
-            func.sum(Transaction.amount).label('total')
-        ).join(Transaction).filter(
-            Transaction.company_id == company_id,
-            Transaction.type == 'SAIDA',
-            Transaction.date.between(start_date, end_date)
-        ).group_by(Category.name).all()
-
-        return [{"categoria": name, "total": float(total)} for name, total in results]
+        return TransactionRepository.get_category_distribution(company_id, start_date, end_date)
 
     @staticmethod
     def get_balance_evolution(company_id, start_date, end_date):
-        results = db.session.query(
-            Transaction.date,
-            func.sum(case((Transaction.type == 'ENTRADA', Transaction.amount), else_=-Transaction.amount)).label('fluxo_diario')
-        ).filter(
-            Transaction.company_id == company_id,
-            Transaction.date.between(start_date, end_date)
-        ).group_by(Transaction.date).order_by(Transaction.date).all()
-
-        return [{"data": str(trans_date), "valor": float(valor)} for trans_date, valor in results]
+        return TransactionRepository.get_balance_evolution(company_id, start_date, end_date)
     
     @staticmethod
     def get_period_dates(data):
-
         start = data.get('start_date')
         end = data.get('end_date')
         period = data.get('period')
@@ -84,18 +58,16 @@ class ReportService:
             "ou informe 'start_date' e 'end_date'."
         )
 
+
 def generate_report(user_id, data):
     cnpj = data.get('cnpj')
     cnpj_clean = re.sub(r'\D', '', cnpj)
-    company = db.session.query(Company).filter(Company.cnpj==cnpj_clean).first()
+    company = CompanyRepository.get_by_cnpj(cnpj_clean)
 
     if not company:
         return {"erro": "Empresa não encontrada."}, 404
 
-    has_access = db.session.query(user_company).filter(
-        user_company.c.user_id == user_id,
-        user_company.c.company_id == company.company_id
-    ).first()
+    has_access = CompanyRepository.check_user_access(company.company_id, user_id)
 
     if not has_access:
         return {"erro": "Acesso negado. Você não tem permissão para acessar os relatórios dessa empresa!"}, 403

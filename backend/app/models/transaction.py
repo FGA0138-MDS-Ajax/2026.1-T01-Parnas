@@ -23,5 +23,9 @@ class Transaction(db.Model):
     category = db.relationship('Category', back_populates='transactions')
     bill = db.relationship('Bill', back_populates='transactions')
 
+    __table_args__ = (
+        db.Index('idx_company_id_date', 'company_id', 'date'),
+    )
+    
     def __repr__(self):
         return f'<Transaction {self.description} - {self.amount}>'

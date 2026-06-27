@@ -19,6 +19,6 @@ class Simulation(db.Model):
     
     company = db.relationship('Company', back_populates='simulations')
     user = db.relationship('User', back_populates='simulations')
-
+    
     def __repr__(self):
         return f'<Simulation {self.modality} - {self.loan_amount}>'

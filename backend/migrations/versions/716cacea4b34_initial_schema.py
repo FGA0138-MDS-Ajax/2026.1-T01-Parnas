@@ -1,8 +1,8 @@
-"""initial_migration
+"""initial_schema
 
-Revision ID: 167c7a2f8237
+Revision ID: 716cacea4b34
 Revises: 
-Create Date: 2026-06-25 22:23:03.439322
+Create Date: 2026-06-26 21:38:17.682705
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '167c7a2f8237'
+revision = '716cacea4b34'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,18 +29,6 @@ def upgrade():
     sa.UniqueConstraint('cnpj'),
     sa.UniqueConstraint('email')
     )
-    op.create_table('user',
-    sa.Column('user_id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('name', sa.String(length=120), nullable=False),
-    sa.Column('email', sa.String(length=150), nullable=False),
-    sa.Column('cpf', sa.String(length=11), nullable=False),
-    sa.Column('password_hash', sa.String(length=300), nullable=False),
-    sa.Column('birth_date', sa.Date(), nullable=False),
-    sa.Column('register_date', sa.Date(), nullable=False),
-    sa.PrimaryKeyConstraint('user_id'),
-    sa.UniqueConstraint('cpf'),
-    sa.UniqueConstraint('email')
-    )
     op.create_table('category',
     sa.Column('category_id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(length=100), nullable=False),
@@ -50,6 +38,35 @@ def upgrade():
     sa.ForeignKeyConstraint(['company_id'], ['company.company_id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('category_id'),
     sa.UniqueConstraint('name', 'company_id', name='_name_company_uc')
+    )
+    op.create_table('user',
+    sa.Column('user_id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('name', sa.String(length=120), nullable=False),
+    sa.Column('email', sa.String(length=150), nullable=False),
+    sa.Column('cpf', sa.String(length=11), nullable=False),
+    sa.Column('password_hash', sa.String(length=300), nullable=False),
+    sa.Column('birth_date', sa.Date(), nullable=False),
+    sa.Column('register_date', sa.Date(), nullable=False),
+    sa.Column('active_company_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['active_company_id'], ['company.company_id'], ondelete='SET NULL'),
+    sa.PrimaryKeyConstraint('user_id'),
+    sa.UniqueConstraint('cpf'),
+    sa.UniqueConstraint('email')
+    )
+    op.create_table('bill',
+    sa.Column('bill_id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('description', sa.String(length=255), nullable=False),
+    sa.Column('amount', sa.Numeric(precision=10, scale=2), nullable=False),
+    sa.Column('type', sa.String(length=10), nullable=False),
+    sa.Column('status', sa.String(length=10), nullable=False),
+    sa.Column('due_date', sa.Date(), nullable=False),
+    sa.Column('payment_date', sa.Date(), nullable=True),
+    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('company_id', sa.Integer(), nullable=False),
+    sa.Column('category_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['category_id'], ['category.category_id'], ondelete='RESTRICT'),
+    sa.ForeignKeyConstraint(['company_id'], ['company.company_id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('bill_id')
     )
     op.create_table('comparison',
     sa.Column('comparison_id', sa.Integer(), autoincrement=True, nullable=False),
@@ -98,21 +115,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['user.user_id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('user_id', 'company_id')
     )
-    op.create_table('bill',
-    sa.Column('bill_id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('description', sa.String(length=255), nullable=False),
-    sa.Column('amount', sa.Numeric(precision=10, scale=2), nullable=False),
-    sa.Column('type', sa.String(length=10), nullable=False),
-    sa.Column('status', sa.String(length=10), nullable=False),
-    sa.Column('due_date', sa.Date(), nullable=False),
-    sa.Column('payment_date', sa.Date(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
-    sa.Column('company_id', sa.Integer(), nullable=False),
-    sa.Column('category_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['category_id'], ['category.category_id'], ondelete='RESTRICT'),
-    sa.ForeignKeyConstraint(['company_id'], ['company.company_id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('bill_id')
-    )
     op.create_table('comparison_modality',
     sa.Column('modality_id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('comparison_id', sa.Integer(), nullable=False),
@@ -143,19 +145,25 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['user.user_id'], ondelete='SET NULL'),
     sa.PrimaryKeyConstraint('transaction_id')
     )
+    with op.batch_alter_table('transaction', schema=None) as batch_op:
+        batch_op.create_index('idx_company_id_date', ['company_id', 'date'], unique=False)
+
     # ### end Alembic commands ###
 
 
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
+    with op.batch_alter_table('transaction', schema=None) as batch_op:
+        batch_op.drop_index('idx_company_id_date')
+
     op.drop_table('transaction')
     op.drop_table('comparison_modality')
-    op.drop_table('bill')
     op.drop_table('user_company')
     op.drop_table('simulation')
     op.drop_table('document')
     op.drop_table('comparison')
-    op.drop_table('category')
+    op.drop_table('bill')
     op.drop_table('user')
+    op.drop_table('category')
     op.drop_table('company')
     # ### end Alembic commands ###

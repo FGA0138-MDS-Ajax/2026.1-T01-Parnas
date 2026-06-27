@@ -10,6 +10,10 @@ def register_user(data):
     cpf = ''.join(filter(str.isdigit, raw_cpf)) if raw_cpf else None
     password = data.get('password')
     birth_date_raw = data.get('birth_date')
+
+    if not all([name, email, cpf, password, birth_date_raw]):
+        return {"erro": "Todos os campos são obrigatórios."}, 400
+
     if isinstance(birth_date_raw, str):
         birth_date = datetime.strptime(birth_date_raw, '%Y-%m-%d').date()
     else:

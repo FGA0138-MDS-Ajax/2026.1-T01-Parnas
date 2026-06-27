@@ -13,24 +13,10 @@ def get_history_filtered(user_id, page, per_page, filtros):
     if not _validate_user_company_access(user_id, company_id):
         return {"erro": "Você não tem permissão para acessar os dados desta empresa."}, 403
 
-    condicoes = [
-        TransactionRepository.model.user_id == user_id,  # Referenciando via mapeamento do ORM
-        TransactionRepository.model.company_id == company_id
-    ]
-
-    if filtros.get('data_inicio'):
-        condicoes.append(TransactionRepository.model.date >= filtros['data_inicio'])
-    if filtros.get('data_fim'):
-        condicoes.append(TransactionRepository.model.date <= filtros['data_fim'])
-    if filtros.get('tipo'):
-        condicoes.append(TransactionRepository.model.type == filtros['tipo'])
-    if filtros.get('valor_min') is not None:
-        condicoes.append(TransactionRepository.model.amount >= filtros['valor_min'])
-    if filtros.get('valor_max') is not None:
-        condicoes.append(TransactionRepository.model.amount <= filtros['valor_max'])
+    filtros['user_id'] = user_id
 
     query_base, totais = TransactionRepository.get_filtered_history_query(
-        condicoes,
+        filtros,
         categoria_nome=filtros.get('categoria')
     )
 
@@ -62,7 +48,6 @@ def get_history_filtered(user_id, page, per_page, filtros):
         },
         "transacoes": transacoes_lista
     }, 200
-
 
 def create_transaction(data, user_id):
     category_id = data.get('category_id')

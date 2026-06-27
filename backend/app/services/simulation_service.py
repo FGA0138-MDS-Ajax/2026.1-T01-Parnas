@@ -116,13 +116,13 @@ def save_simulation(data, current_user_id):
         new_simulation = SimulationRepository.create(
             company_id=data['company_id'],
             user_id=current_user_id,
-            valor_solicitado=data['requested_amount'],
-            prazo_meses=data['deadline_month'],
-            modalidade=data['modality'],
-            taxa_juros=data['interest_rate'],
-            valor_parcela=summary['primeira_parcela'],
-            valor_total=summary['total_a_pagar'],
-            total_juros=summary['total_juros']
+            loan_amount=data['requested_amount'],
+            term_months=data['deadline_month'],
+            modality=data['modality'],
+            interest_rate=data['interest_rate'],
+            monthly_payment=summary['primeira_parcela'],
+            total_amount=summary['total_a_pagar'],
+            total_interest=summary['total_juros']
         )
         return {"mensagem": "Simulação salva no histórico com sucesso.",
                 "simulation_id": new_simulation.simulation_id}, 201
@@ -135,14 +135,14 @@ def get_simulation(company_id):
     for s in simulations:
         result.append({
             "simulation_id": s.simulation_id,
-            "valor_solicitado": float(s.valor_solicitado),
-            "prazo_meses": s.prazo_meses,
-            "modalidade": s.modalidade,
-            "taxa_juros": float(s.taxa_juros),
-            "valor_parcela": float(s.valor_parcela),
-            "valor_total": float(s.valor_total),
-            "total_juros": float(s.total_juros),
-            "data_simulacao": s.data_simulacao.strftime('%Y-%m-%d %H:%M')
+            "valor_solicitado": float(s.loan_amount),
+            "prazo_meses": s.term_months,
+            "modalidade": s.modality,
+            "taxa_juros": float(s.interest_rate),
+            "valor_parcela": float(s.monthly_payment),
+            "valor_total": float(s.total_amount),
+            "total_juros": float(s.total_interest),
+            "data_simulacao": s.created_at.strftime('%Y-%m-%d %H:%M')
         })
 
     return {"simulations": result}, 200

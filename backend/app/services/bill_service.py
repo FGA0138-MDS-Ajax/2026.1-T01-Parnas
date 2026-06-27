@@ -1,14 +1,16 @@
 from datetime import date, datetime
 from app.repositories.bill_repository import BillRepository
+from app.repositories.transaction_repository import TransactionRepository
 from app.repositories.user_repository import UserRepository
 
+
 def _get_company_id(user_id):
-    """Método auxiliar para descobrir a empresa do usuário logado"""
     user = UserRepository.get_by_id(user_id)
-    return user.company_id if user else None
+    return user.active_company_id if user else None
+
 
 def create_bill(user_id, data):
-    company_id = _get_company_id(user_id) # Chamada direta sem o prefixo da classe
+    company_id = _get_company_id(user_id)
 
     try:
         nova_conta = BillRepository.create(
@@ -23,9 +25,9 @@ def create_bill(user_id, data):
     except Exception as e:
         return {"erro": "Ocorreu um erro interno ao criar a conta."}, 500
 
+
 def get_bills(user_id, status=None):
     company_id = _get_company_id(user_id)
-
     contas = BillRepository.list_by_company(company_id, status=status)
 
     resultado = [{
@@ -39,6 +41,7 @@ def get_bills(user_id, status=None):
     } for c in contas]
 
     return resultado, 200
+
 
 def update_bill(user_id, bill_id, data):
     company_id = _get_company_id(user_id)
@@ -61,6 +64,7 @@ def update_bill(user_id, bill_id, data):
     except Exception as e:
         return {"erro": "Ocorreu um erro interno ao atualizar a conta."}, 500
 
+
 def delete_bill(user_id, bill_id):
     company_id = _get_company_id(user_id)
     conta = BillRepository.get_by_id_and_company(bill_id, company_id)
@@ -76,6 +80,7 @@ def delete_bill(user_id, bill_id):
         return {"mensagem": "Conta excluída com sucesso!"}, 200
     except Exception as e:
         return {"erro": "Ocorreu um erro ao excluir a conta."}, 500
+
 
 def pay_bill(user_id, bill_id):
     company_id = _get_company_id(user_id)
@@ -93,20 +98,15 @@ def pay_bill(user_id, bill_id):
     try:
         BillRepository.save(conta)
 
-        from app.config import db
-        from app.models.transaction import Transaction
-
-        nova_transacao = Transaction(
+        TransactionRepository.create(
             description=f"Quitação: {conta.description}",
             amount=conta.amount,
             date=conta.payment_date,
+            type='despesa',
             company_id=company_id,
             user_id=user_id,
-            category_id=conta.category_id,
-            bill_id=conta.bill_id
+            category_id=conta.category_id
         )
-        db.session.add(nova_transacao)
-        db.session.commit()
 
         return {"mensagem": "Conta quitada e transação gerada com sucesso!"}, 200
     except Exception as e:

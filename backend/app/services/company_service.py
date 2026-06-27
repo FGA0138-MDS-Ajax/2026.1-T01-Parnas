@@ -1,8 +1,8 @@
 import re
-from app.config import db
 from datetime import date
 from app.exceptions.api_exception import APIException
 from app.repositories.company_repository import CompanyRepository
+from app.repositories.user_repository import UserRepository
 
 
 def register_company(user_id, data):
@@ -25,6 +25,7 @@ def register_company(user_id, data):
           )
           
           CompanyRepository.attach_user(new_company.company_id, user_id)
+          UserRepository.update_active_company(user_id, new_company.company_id)
 
           return {
                "mensagem": "Empresa cadastrada com sucesso",
@@ -36,7 +37,6 @@ def register_company(user_id, data):
      except APIException as ve:
           raise ve
      except Exception as e:
-          db.session.rollback()
           print(f"Erro ao cadastrar empresa: {str(e)}")
           return {"erro": f"Ocorreu um erro interno ao tentar cadastrar a empresa: {str(e)}"}, 500
         
@@ -58,7 +58,6 @@ def delete_company(company_id, user_id):
      except APIException as ve:
           raise ve
      except Exception as e:
-          db.session.rollback()
           print(f"Erro ao deletar empresa: {str(e)}")
           return {"erro": f"Ocorreu um erro interno ao tentar deletar a empresa: {str(e)}"}, 500
 
@@ -84,14 +83,13 @@ def update_company(data, user_id, company_id):
                company.email = data['email']
           if 'phone' in data:
                company.phone = data['phone']
-          db.session.commit()
+          CompanyRepository.save(company)
 
           return {"mensagem": "Dados da empresa atualizados com sucesso.", "company": company}, 200
           
      except APIException as ve:
           raise ve
      except Exception as e:
-          db.session.rollback()
           print(f"Erro ao atualizar empresa: {str(e)}")
           return {"erro": f"Ocorreu um erro interno ao tentar atualizar a empresa: {str(e)}"}, 500
      

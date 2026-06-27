@@ -1,10 +1,11 @@
 import os
 from werkzeug.utils import secure_filename
 from datetime import date
-from app.config import db, Config
-from app.models.company import Company
-from app.models.user import User
+from app.config import Config
 from app.repositories.document_repository import DocumentRepository
+from app.repositories.user_repository import UserRepository
+from app.repositories.company_repository import CompanyRepository
+
 
 class DocumentService:
     ALLOWED_EXTENSIONS = Config.ALLOWED_EXTENSIONS
@@ -39,11 +40,11 @@ class DocumentService:
 
     @staticmethod
     def check_user_company_access(user_id, company_id):
-        user = User.query.get(user_id)
+        user = UserRepository.get_by_id(user_id)
         if not user:
             return False, "Usuário não encontrado", 404
         
-        company = Company.query.get(company_id)
+        company = CompanyRepository.get_by_id(company_id)
         if not company:
             return False, "Empresa não encontrada", 404
         
@@ -95,11 +96,9 @@ class DocumentService:
             }
             
             document = DocumentRepository.create(data)
-            
             return document, None, 201
         
         except Exception as e:
-            db.session.rollback()
             return None, f"Erro ao salvar documento: {str(e)}", 500
 
     @staticmethod
@@ -110,7 +109,6 @@ class DocumentService:
                 return None, error_msg, status_code
             
             query = DocumentRepository.get_by_company(company_id, page, per_page)
-            
             return query, None, 200
         
         except Exception as e:
@@ -119,7 +117,7 @@ class DocumentService:
     @staticmethod
     def delete_document(document_id, user_id):
         try:
-            document = DocumentRepository.get_by_id_and_company(document_id, None)
+            document = DocumentRepository.find_by_id(document_id)
             
             if not document:
                 return False, "Documento não encontrado", 404
@@ -130,18 +128,17 @@ class DocumentService:
         
             if os.path.exists(document.file_path):
                 os.remove(document.file_path)
-            DocumentRepository.delete(document)
             
+            DocumentRepository.delete(document)
             return True, "Documento deletado com sucesso", 200
         
         except Exception as e:
-            db.session.rollback()
             return False, f"Erro ao deletar documento: {str(e)}", 500
         
     @staticmethod
-    def get_document_for_download(document_id: int, user_id: int):
+    def get_document_for_download(document_id, user_id):
         try:
-            document = DocumentRepository.get_by_id(document_id)
+            document = DocumentRepository.find_by_id(document_id)
 
             if not document:
                 return None, None, "Documento não encontrado", 404
