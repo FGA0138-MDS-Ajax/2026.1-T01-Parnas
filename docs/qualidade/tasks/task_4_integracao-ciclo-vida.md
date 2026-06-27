@@ -255,7 +255,9 @@ ponta a ponta contra a `develop`:
 **APROVADA** (reavaliada em 27/06/2026).
 
 Na avaliação de 18/06/2026 a tarefa foi **reprovada** por três motivos bloqueantes.
-Os três foram resolvidos, cada um por uma frente:
+Os bloqueios que impediam o fluxo foram resolvidos, cada um por uma frente (o terceiro
+bloqueio era a combinação DEF-F1 + DEF-F2; o que de fato quebrava o fluxo era o DEF-F2,
+corrigido; o DEF-F1 foi reclassificado como pendência não-bloqueante - ver abaixo):
 
 1. **DEF-B1** (exclusão/atualização de empresa em 500) - **resolvido** pelo refactor
    de repositórios mesclado na `develop` (PR #52, `refactor/contas-transacoes`).
@@ -265,16 +267,20 @@ Os três foram resolvidos, cada um por uma frente:
    **superado**: a integração ponta a ponta entrou na `develop` pelas features
    `feature/3,4,8` (mescladas). A `task/integracao` não será mesclada, então a
    regressão deixou de existir.
-3. **DEF-F1 + DEF-F2** (fluxo de redefinição de senha por e-mail quebrado no front) -
+3. **DEF-F2** (token corrompido no link de redefinição enviado por e-mail) -
    **corrigido** na `fix/recuperacao-senha-front` (PR #82 para a `develop`): o token
-   passou a ser lido com `new URL(reset_link).searchParams.get("token")` e a tela órfã
-   `RedefinirSenha` foi removida, deixando `EsqueciSenha` como único fluxo. Coberto por
-   teste de regressão (`npm run test:run`: 90 testes, 0 falhas).
+   passou a ser lido com `new URL(reset_link).searchParams.get("token")`, fazendo o fluxo
+   real (pedir link -> redefinir) funcionar ponta a ponta em `EsqueciSenha`. Coberto por
+   teste de regressão (`npm run test:run`: 94 testes, 0 falhas).
 
-Permanecem registrados, como itens **não bloqueantes** já apontados na avaliação
-original, os defeitos DEF-B3 (token de reset em 60 min), DEF-B4 (token no corpo da
-resposta), DEF-F4 (chaves do EmailJS no front) e DEF-F5 (proxy `/company` morto). Não
-impediam a aprovação na época e seguem como melhorias para as issues correspondentes.
+Permanecem registrados, como itens **não bloqueantes**:
+- **DEF-F1 / DEF-F3** (tela `RedefinirSenha` é um stub órfão, não alcançado pelo link do
+  backend, que aponta para `/esqueci-senha`). A tela **foi mantida** na branch (não foi
+  removida) - cabe à equipe decidir entre integrá-la de fato ou removê-la. Não quebra o
+  fluxo funcional, que vive em `EsqueciSenha`.
+- DEF-B3 (token de reset em 60 min), DEF-B4 (token no corpo da resposta), DEF-F4 (chaves
+  do EmailJS no front) e DEF-F5 (proxy `/company` morto), já apontados na avaliação
+  original e que não impediam a aprovação na época.
 
 > Observação de rastreio: a aprovação pressupõe o merge do PR #82 na `develop`. Até lá,
-> os DEF-F1/F2 só estão corrigidos na branch da correção.
+> o DEF-F2 só está corrigido na branch da correção.
