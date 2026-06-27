@@ -8,7 +8,7 @@ def test_login_usuario_inexistente(mock_find):
     body, status = AuthService.login('nao@existe.com', 'Senha@123')
 
     assert status == 401
-    assert body == {"erro": "E-mail ou senha inválidos"}
+    assert body == {"erro": "Conta não encontrada ou desativada"}
 
 @patch('app.services.auth_service.bcrypt')
 @patch('app.services.auth_service.find_user_by_email')

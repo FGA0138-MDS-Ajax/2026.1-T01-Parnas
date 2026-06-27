@@ -36,13 +36,13 @@ def upgrade():
     with op.batch_alter_table('transaction', schema=None) as batch_op:
         batch_op.add_column(sa.Column('created_at', sa.DateTime(), nullable=True))
         batch_op.add_column(sa.Column('bill_id', sa.Integer(), nullable=True))
-        batch_op.drop_constraint(batch_op.f('transaction_category_id_fkey'), type_='foreignkey')
-        batch_op.create_foreign_key(None, 'bill', ['bill_id'], ['bill_id'], ondelete='SET NULL')
-        batch_op.create_foreign_key(None, 'category', ['category_id'], ['category_id'], ondelete='RESTRICT')
+        #batch_op.drop_constraint(batch_op.f('transaction_category_id_fkey'), type_='foreignkey')
+        batch_op.create_foreign_key('fk_transaction_bill', 'bill', ['bill_id'], ['bill_id'], ondelete='SET NULL')
+        batch_op.create_foreign_key('fk_transaction_category', 'category', ['category_id'], ['category_id'], ondelete='RESTRICT')
 
     with op.batch_alter_table('user', schema=None) as batch_op:
         batch_op.add_column(sa.Column('company_id', sa.Integer(), nullable=True))
-        batch_op.create_foreign_key(None, 'company', ['company_id'], ['company_id'], ondelete='CASCADE')
+        batch_op.create_foreign_key('fk_user_company', 'company', ['company_id'], ['company_id'], ondelete='CASCADE')
 
     # ### end Alembic commands ###
 
