@@ -41,7 +41,7 @@ Como Gestor de uma Micro-Empresa, quero enviar e organizar documentos fiscais, c
 - [x] Botão de excluir com confirmação
 - [x] Exibir barra de progresso durante upload
 - [x] Exibir mensagem de erro para arquivos inválidos ou muito grandes
-- [x] Integrar todos os endpoints
+- [ ] Integrar todos os endpoints (tela Documentos ainda hardcoded na develop, sem chamada à API)
 
 ## Critérios de teste
 - [x] Caso(s) de teste do Roteiro cobertos: TS-19
