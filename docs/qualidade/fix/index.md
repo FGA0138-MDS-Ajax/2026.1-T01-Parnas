@@ -17,6 +17,7 @@ relatório.
 |---|---|:--:|---|
 | [Contas e Transações (fix1 e fix2)](fix_1_e_2_contas-transacoes.md) | Frontend - Contas / Transações / ContasCaixa | 10 | Aprovada |
 | [Exclusão de Conta e Sessão (fix4)](fix_exclusao-conta-sessao.md) | Backend - Exclusão de usuário / Autenticação | 10 | Aprovada |
+| [Integração real de Transações e Contas](fix_integracao-transacoes.md) | Backend Contas / Frontend Transações e Contas | 10 | Aprovada com pendências |
 
 ---
 ## Status possíveis
