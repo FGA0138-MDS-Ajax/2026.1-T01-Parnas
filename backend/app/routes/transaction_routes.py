@@ -79,7 +79,11 @@ def update(transaction_id):
     except ValidationError as err:
         return jsonify({"erros_de_validacao": err.messages}), 400
 
-    answer, status_code = update_transaction(transaction_id, validated_data, company_id)
+    # daniel: o service espera (transaction_id, user_id, data); estava passando o dict
+    # de dados como user_id e o company_id como data, o que quebrava a edicao.
+    # o identity do JWT vem como string, entao converto pra int (igual as demais rotas).
+    current_user_id = int(get_jwt_identity())
+    answer, status_code = update_transaction(transaction_id, current_user_id, validated_data)
     
     if status_code == 200 and "transaction" in answer:
         answer["transaction"] = transaction_output_schema.dump(answer["transaction"])
@@ -94,5 +98,9 @@ def delete(transaction_id):
     if not company_id:
         return jsonify({"erro": "O parâmetro company_id é obrigatório."}), 400
 
-    answer, status_code = delete_transaction(transaction_id, company_id)
+    # daniel: o service espera (transaction_id, user_id); estava passando o company_id
+    # no lugar do user_id, escopando a exclusao pelo id errado.
+    # o identity do JWT vem como string, entao converto pra int (igual as demais rotas).
+    current_user_id = int(get_jwt_identity())
+    answer, status_code = delete_transaction(transaction_id, current_user_id)
     return jsonify(answer), status_code

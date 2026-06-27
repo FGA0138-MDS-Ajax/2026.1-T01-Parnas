@@ -26,6 +26,9 @@ from app.services.company_service import register_company
 from app.models.company import Company
 from app.models.user import User
 from app.config import db
+from app.exceptions.api_exception import APIException
+
+# daniel: CNPJ duplicado agora levanta APIException(409) (o handler global vira 409 na rota)
 
 
 class TestRegisterCompanyWithDatabase:
@@ -134,11 +137,12 @@ class TestRegisterCompanyConstraints:
         # Action: Segunda empresa com MESMO CNPJ
         company_data['name'] = 'Segunda Empresa'
         company_data['email'] = 'segunda@test.com'
-        result2, status2 = register_company(test_user.user_id, company_data)
-        
-        # Assert: Rejeitado
-        assert status2 == 409
-        assert 'CNPJ já cadastrado' in result2['erro']
+
+        # Assert: Rejeitado (levanta APIException 409)
+        with pytest.raises(APIException) as exc:
+            register_company(test_user.user_id, company_data)
+        assert exc.value.status_code == 409
+        assert 'CNPJ já cadastrado' in exc.value.message
     
     def test_duplicate_email_rejected(self, clean_db, test_user, app_context):
         """
@@ -354,12 +358,10 @@ class TestRegisterCompanyResponseFormat:
             'email': 'segunda@test.com',
             'phone': '1144445555'
         }
-        result, status_code = register_company(test_user.user_id, duplicate_data)
-        
-        # Assert: Status 409
-        assert status_code == 409
-        
-        # Assert: Tem campo 'erro'
-        assert 'erro' in result
-        assert 'CNPJ já cadastrado' in result['erro']
+
+        # Assert: levanta APIException com status 409 e mensagem descritiva
+        with pytest.raises(APIException) as exc:
+            register_company(test_user.user_id, duplicate_data)
+        assert exc.value.status_code == 409
+        assert 'CNPJ já cadastrado' in exc.value.message
 
