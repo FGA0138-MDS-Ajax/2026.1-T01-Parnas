@@ -113,11 +113,13 @@ class BillService:
         conta.payment_date = date.today()
 
         # 2. Regra de negócio: Gera a transação automaticamente
-        # A transação herda o status de receita/despesa automaticamente através da category_id
+        transaction_type = 'receita' if conta.type.lower() == 'receber' else 'despesa'
+
         nova_transacao = Transaction(
             description=f"Quitação: {conta.description}",
             amount=conta.amount,
             date=conta.payment_date,
+            type=transaction_type,
             company_id=company_id,
             user_id=user_id,
             category_id=conta.category_id,
