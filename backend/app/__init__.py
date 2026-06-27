@@ -16,6 +16,30 @@ def create_app():
     migrate.init_app(app, db)
     jwt.init_app(app)
 
+    # --- NOVO BLOCO: Middleware para checar se o usuário está ativo ---
+    @jwt.token_in_blocklist_loader
+    def check_if_user_is_inactive(jwt_header, jwt_payload):
+        from app.models.user import User
+        # O "sub" é onde o JWT guarda a identidade (o user_id)
+        user_id = jwt_payload.get("sub")
+
+        if not user_id:
+            return False
+
+        # Busca o usuário no banco de dados
+        user = db.session.query(User).filter(User.user_id == user_id).first()
+
+        # Se o usuário não existir OU estiver desativado (soft delete), bloqueia!
+        if not user or not user.is_active:
+            return True  # True significa "Sim, o token deve ser bloqueado"
+
+        return False
+
+    @jwt.revoked_token_loader
+    def revoked_token_callback(jwt_header, jwt_payload):
+        # Essa é a resposta que o Frontend vai receber quando cair no bloqueio acima
+        return {"erro": "Conta não encontrada ou desativada"}, 401
+
     # Importação de TODOS os modelos para o Flask-Migrate registrar as tabelas
     from app.models.user import User
     from app.models.company import Company

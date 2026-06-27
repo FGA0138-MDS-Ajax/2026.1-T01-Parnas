@@ -46,9 +46,8 @@ export function EsqueciSenha() {
         throw new Error(data.erro || "Erro ao processar solicitação.");
       }
 
-      const rawToken = data.reset_link.substring(
-        data.reset_link.lastIndexOf("/") + 1,
-      );
+      // daniel: consertei o token quebrado lendo o parametro ?token= da query
+      const rawToken = new URL(data.reset_link).searchParams.get("token");
       const safeToken = encodeURIComponent(rawToken);
       const reactResetLink = `http://localhost:5173/esqueci-senha?token=${safeToken}`;
 
