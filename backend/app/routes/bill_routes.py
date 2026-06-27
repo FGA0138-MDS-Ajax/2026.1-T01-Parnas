@@ -24,7 +24,10 @@ def create_bill():
 @jwt_required()
 def get_bills():
     # Permite filtrar por status passando ?status=pendente na URL
-    status = request.args.get('status')
+    status = request.args.get('status', 'Pendente')
+
+    if status.lower() == 'todas':
+        status = None
 
     resultado, status_code = BillService.get_bills(status)
     return jsonify(resultado), status_code
