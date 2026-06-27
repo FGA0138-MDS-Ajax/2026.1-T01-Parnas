@@ -3,6 +3,7 @@ import useAuth from './hooks/useAuth';
 import Login from './pages/Login/Login';
 import CadastroEmpresa from './pages/CadastroEmpresa/CadastroEmpresa';
 import { EsqueciSenha } from './pages/EsqueciSenha/EsqueciSenha';
+import { RedefinirSenha } from './pages/RedefinirSenha/RedefinirSenha';
 import Categorias from './pages/Categorias/Categorias';
 import Register from './pages/Register/Register';
 import LayoutBase from './components/Layout/LayoutBase';
@@ -30,6 +31,7 @@ export const AppRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/esqueci-senha" element={<EsqueciSenha />} />
+        <Route path="/redefinir-senha" element={<RedefinirSenha />} />
 
         {/* Rotas Privadas */}
         <Route
