@@ -21,7 +21,7 @@ O escopo engloba:
 ### 1. Fluxo de Autenticação do Usuário
 - [x] Conectar os formulários de **Cadastro de Usuário** e **Login** aos endpoints
 - [x] Implementar a captura e o armazenamento seguro do JWT no frontend
-- [ ] Configurar o cabeçalho global de requisições (`Authorization: Bearer <token>`) para todas as rotas privadas do React
+- [x] Configurar o cabeçalho global de requisições (`Authorization: Bearer <token>`) para todas as rotas privadas do React
 
 ### 2. Fluxo de Cadastro de Empresa (Protegido)
 - [x] Reativar e validar o decorador `@jwt_required()` no endpoint `POST /empresas`
@@ -44,14 +44,14 @@ O escopo engloba:
 - [x] Respostas de erro do Flask são interceptadas pelo `catch` do front e exibidas amigavelmente
 
 ## Critérios de teste
-- [ ] Caso(s) de teste do Roteiro cobertos: TS-12, TS-13, TS-14, TS-18
-- [ ] Fluxo homologado de ponta a ponta no ambiente local com a dupla de QA
+- [x] Caso(s) de teste do Roteiro cobertos: TS-12, TS-13, TS-14, TS-18
+- [x] Fluxo homologado de ponta a ponta no ambiente local com a dupla de QA
 
 ## Definição de Done
-- [ ] Código revisado em pair programming
-- [ ] PR aberto integrando as frentes de trabalho para `develop`
-- [ ] Funcionalidade homologada de ponta a ponta no ambiente local com a dupla de QA
-- [ ] Documentação técnica e rotas atualizadas
+- [x] Código revisado em pair programming
+- [x] PR aberto integrando as frentes de trabalho para `develop`
+- [x] Funcionalidade homologada de ponta a ponta no ambiente local com a dupla de QA
+- [x] Documentação técnica e rotas atualizadas
 
 ## Branch
 `task/integracao`
