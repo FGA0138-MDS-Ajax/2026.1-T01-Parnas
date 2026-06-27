@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
+import emailjs from '@emailjs/browser';
 import { EsqueciSenha } from './EsqueciSenha';
 
 // emailjs faz chamada externa; substituimos por um mock que sempre resolve.
@@ -45,7 +46,7 @@ describe('EsqueciSenha (solicitar recuperacao)', () => {
       ok: true,
       json: async () => ({
         email: 'teste@email.com',
-        reset_link: 'http://api/reset/token-abc',
+        reset_link: 'http://localhost:5173/esqueci-senha?token=token-abc',
       }),
     });
     render(<EsqueciSenha />);
@@ -54,6 +55,24 @@ describe('EsqueciSenha (solicitar recuperacao)', () => {
     await userEvent.click(botaoEnviar());
 
     expect(await screen.findByText(/e-mail de recuperação enviado com sucesso/i)).toBeInTheDocument();
+  });
+
+  test('o link enviado por e-mail carrega o token extraido da query', async () => {
+    global.fetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        email: 'teste@email.com',
+        reset_link: 'http://localhost:5173/esqueci-senha?token=token-abc',
+      }),
+    });
+    render(<EsqueciSenha />);
+
+    await userEvent.type(campoEmail(), 'teste@email.com');
+    await userEvent.click(botaoEnviar());
+
+    await screen.findByText(/e-mail de recuperação enviado com sucesso/i);
+    const [, , params] = emailjs.send.mock.calls[0];
+    expect(params.reset_link).toBe('http://localhost:5173/esqueci-senha?token=token-abc');
   });
 });
 
