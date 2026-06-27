@@ -1,13 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 import api from "../services/api";
-import { CONTAS_CAIXA_MOCK } from "../services/contaCaixa.service";
+import { listarContasCaixa } from "../services/contaCaixa.service";
 import { listarCategorias } from "../services/categoria.service";
 import { obterEmpresaAtiva } from "../services/empresa.service";
 
 const useTransacoes = () => {
   const [transacoes, setTransacoes] = useState([]);
   const [categorias, setCategorias] = useState([]);
-
+  const [contasCaixa, setContasCaixa] = useState([]); // Dinâmico!
   const [totais, setTotais] = useState({
     totalReceitas: 0,
     totalDespesas: 0,
@@ -37,19 +37,22 @@ const useTransacoes = () => {
     carregarEmpresa();
   }, []);
 
-  const fetchCategorias = useCallback(async () => {
+  const carregarAuxiliares = useCallback(async () => {
     try {
-      const categoriasApi = await listarCategorias();
-      setCategorias(categoriasApi);
+      const [categoriasApi, caixasApi] = await Promise.all([
+        listarCategorias(),
+        listarContasCaixa(),
+      ]);
+      setCategorias(categoriasApi || []);
+      setContasCaixa(caixasApi || []);
     } catch (error) {
-      console.error("Erro ao buscar categorias:", error);
+      console.error("Erro ao buscar dados auxiliares:", error);
     }
   }, []);
 
   const fetchTransacoes = useCallback(
     async (filtrosAplicados, pagina = 1) => {
       if (!companyId) return;
-
       try {
         const params = {
           company_id: companyId,
@@ -102,9 +105,9 @@ const useTransacoes = () => {
   );
 
   useEffect(() => {
-    fetchCategorias();
+    carregarAuxiliares();
     fetchTransacoes(filtros, 1);
-  }, [fetchCategorias, fetchTransacoes]);
+  }, [carregarAuxiliares, fetchTransacoes]);
 
   const handleFiltroChange = (e) => {
     const { name, value } = e.target;
@@ -135,50 +138,6 @@ const useTransacoes = () => {
 
   const salvarTransacao = async (dadosTransacao, id = null) => {
     if (!companyId) return;
-    if (dadosTransacao.modo === "transferencia") {
-      const catTransferencia =
-        categorias.find((c) => c.nome.toLowerCase().includes("transfer")) ||
-        categorias[0];
-
-      if (!catTransferencia) {
-        alert(
-          "Por favor, cadastre pelo menos uma categoria (ex: 'Transferências') para realizar transferências.",
-        );
-        return;
-      }
-
-      const descricaoBase =
-        dadosTransacao.descricao || "Transferência entre contas";
-
-      const payloadOrigem = {
-        description: `${descricaoBase} (Saída)`,
-        amount: parseFloat(dadosTransacao.valor),
-        date: dadosTransacao.data,
-        type: "despesa",
-        category_id: parseInt(catTransferencia.id),
-        company_id: parseInt(companyId),
-      };
-
-      const payloadDestino = {
-        description: `${descricaoBase} (Entrada)`,
-        amount: parseFloat(dadosTransacao.valor),
-        date: dadosTransacao.data,
-        type: "receita",
-        category_id: parseInt(catTransferencia.id),
-        company_id: parseInt(companyId),
-      };
-
-      try {
-        await api.post("/api/transactions/", payloadOrigem);
-        await api.post("/api/transactions/", payloadDestino);
-        fetchTransacoes(filtros, paginaAtual);
-        return;
-      } catch (error) {
-        alert("Erro ao registrar a transferência.");
-        throw error;
-      }
-    }
-
     const payload = {
       description: dadosTransacao.descricao,
       amount: parseFloat(dadosTransacao.valor),
@@ -226,7 +185,7 @@ const useTransacoes = () => {
     totalPaginas,
     totalTransacoes,
     categorias,
-    contasCaixa: CONTAS_CAIXA_MOCK,
+    contasCaixa,
     handleFiltroChange,
     aplicarFiltros,
     limparFiltros,

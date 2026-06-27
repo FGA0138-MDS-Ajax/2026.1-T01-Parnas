@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import useAppliedFilters from "../../hooks/useAppliedFilters";
-import { CONTAS_CAIXA_MOCK } from "../../services/contaCaixa.service";
+import { listarContasCaixa } from "../../services/contaCaixa.service";
 import {
   listarContas,
   criarConta,
@@ -10,12 +10,7 @@ import {
 } from "../../services/conta.service";
 import { listarCategorias } from "../../services/categoria.service";
 
-const FILTROS_INICIAIS = {
-  status: "",
-  tipo: "",
-  dataInicio: "",
-  dataFim: "",
-};
+const FILTROS_INICIAIS = { status: "", tipo: "", dataInicio: "", dataFim: "" };
 
 const aplicarFiltrosMock = (lista, filtros) => {
   return lista.filter((c) => {
@@ -46,8 +41,7 @@ const normalizarResposta = (conta) => ({
   status: conta.status === "quitado" ? "quitada" : "pendente",
   dataQuitacao: conta.payment_date || conta.dataQuitacao || null,
   categoria: conta.category_id || conta.categoria || null,
-  categoriaNome:
-    conta.categoryName || conta.categoriaNome || conta.category_name || "",
+  categoriaNome: "",
   contaCaixaId: conta.contaCaixaId || null,
   contaCaixaNome: conta.contaCaixaNome || "",
 });
@@ -65,6 +59,7 @@ const useContas = () => {
   const [erro, setErro] = useState(null);
   const [feedback, setFeedback] = useState(null);
   const [categorias, setCategorias] = useState([]);
+  const [contasCaixa, setContasCaixa] = useState([]);
 
   const exibirFeedback = (tipo, mensagem) => {
     setFeedback({ tipo, mensagem });
@@ -75,14 +70,26 @@ const useContas = () => {
     try {
       setCarregando(true);
       setErro(null);
-      const [contasApi, categoriasApi] = await Promise.all([
+      const [contasApi, categoriasApi, caixasApi] = await Promise.all([
         listarContas(),
         listarCategorias(),
+        listarContasCaixa(),
       ]);
-      setTodasContas((contasApi || []).map(normalizarResposta));
+
+      const contasNormalizadas = (contasApi || []).map((conta) => {
+        const norm = normalizarResposta(conta);
+        const cat = categoriasApi?.find(
+          (c) => String(c.id) === String(norm.categoria),
+        );
+        if (cat) norm.categoriaNome = cat.nome;
+        return norm;
+      });
+
+      setTodasContas(contasNormalizadas);
       setCategorias(categoriasApi || []);
+      setContasCaixa(caixasApi || []);
     } catch (error) {
-      setErro(error.message || "Erro ao carregar contas.");
+      setErro(error.message || "Erro ao carregar dados.");
     } finally {
       setCarregando(false);
     }
@@ -153,7 +160,6 @@ const useContas = () => {
   const totalPendentesReceitas = pendentes
     .filter((c) => c.tipo === "receita")
     .reduce((sum, c) => sum + c.valor, 0);
-
   const totalPendentesDespesas = pendentes
     .filter((c) => c.tipo === "despesa")
     .reduce((sum, c) => sum + c.valor, 0);
@@ -164,7 +170,7 @@ const useContas = () => {
     quitadas,
     filtros,
     categorias,
-    contasCaixa: CONTAS_CAIXA_MOCK,
+    contasCaixa,
     carregando,
     erro,
     feedback,
