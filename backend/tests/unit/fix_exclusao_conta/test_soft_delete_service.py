@@ -12,7 +12,7 @@ def test_delete_user_soft_delete(mock_db):
     texto, codigo = delete_user(user_id = 1)
 
     assert codigo == 200
-    assert texto["mensagem"] == "Usuário excluido com sucesso."
+    assert texto["mensagem"] == "Usuário excluído com sucesso."
     assert mock_user.is_active is False
     mock_db.session.delete.assert_not_called()
     mock_db.session.commit.assert_called_once()
@@ -28,7 +28,7 @@ def test_delete_user_inexistent(mock_db):
     mock_db.session.commit.assert_not_called()
     mock_db.session.delete.assert_not_called()
 
-@patch('app.service.auth_service.find_user_by_email')
+@patch('app.services.auth_service.find_user_by_email')
 def test_login_usuario_inactive(mock_user):
     mock_user.return_value = MagicMock(user_id = 1, is_active = False)
 
@@ -37,7 +37,7 @@ def test_login_usuario_inactive(mock_user):
     assert codigo == 401
     assert texto["erro"] == "Conta não encontrada ou desativada"
 
-@patch('app.service.auth_service.find_user_by_email')
+@patch('app.services.auth_service.find_user_by_email')
 def test_login_usuario_inexistent(mock_user):
     mock_user.return_value = None
 
