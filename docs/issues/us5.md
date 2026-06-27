@@ -37,7 +37,7 @@ Como Gestor de uma Micro-Empresa, quero criar categorias personalizadas para min
 - [x] Listar categorias existentes da empresa
 - [x] Botão de editar categoria inline
 - [x] Botão de excluir com confirmação
-- [x] Integrar todos os endpoints
+- [ ] Integrar todos os endpoints (integração real pendente - ver fix1/fix2; tela ainda em mock/hardcoded na develop)
 - [x] Exibir mensagem de erro ao tentar excluir categoria em uso
 
 ## Critérios de teste
