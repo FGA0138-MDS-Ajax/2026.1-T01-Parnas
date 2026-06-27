@@ -1,172 +1,454 @@
-.dashboard-container {
+/* ================================================================
+   Dashboard Financeiro — US16
+   Segue o design system do projeto (variáveis de global.css)
+   ================================================================ */
+
+/* ── Container principal ── */
+
+.dash-container {
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   font-family: var(--fonte-poppins);
 }
 
-.dashboard-header {
-  margin-bottom: 35px;
-}
+/* ── Cabeçalho ── */
 
-.dashboard-header h2 {
-  margin: 0;
-  font-size: 28px;
-  color: var(--texto-principal);
-  font-weight: 600;
-}
-
-.dashboard-header p {
-  margin: 6px 0 0 0;
-  color: var(--texto-placeholder);
-  font-size: 15px;
-}
-
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
-}
-
-.dashboard-card {
-  background-color: var(--fundo-card);
-  border-radius: var(--arredondamento-card);
-  padding: 28px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  border: 1px solid var(--borda-input);
+.dash-header {
   display: flex;
-  flex-direction: column;
   justify-content: space-between;
-  min-height: 220px;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
-.dashboard-card-title {
-  margin: 0 0 12px 0;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.title-empresa {
+.dash-header h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
   color: var(--azul);
 }
 
-.title-config {
-  color: var(--verde);
+.dash-header p {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  color: var(--texto-placeholder);
 }
 
-.dashboard-card-text {
-  margin: 0;
-  color: var(--texto-principal);
-  opacity: 0.8;
-  font-size: 14px;
-  line-height: 1.6;
-}
+/* ── Botão Atualizar ── */
 
-.dashboard-card-button {
-  margin-top: 20px;
-  color: var(--branco);
-  border: none;
-  padding: 10px 20px;
+.btn-dash-reload {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  background-color: transparent;
+  color: var(--azul);
+  border: 1.5px solid var(--azul);
   border-radius: var(--arredondamento-input-botao);
-  cursor: pointer;
-  font-size: 13px;
+  font-size: 0.85rem;
   font-weight: 600;
   font-family: var(--fonte-poppins);
-  align-self: flex-start;
-  transition: var(--transicao-suave);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.btn-empresa {
-  background-color: var(--azul);
-}
-
-.btn-empresa:hover {
-  opacity: 0.9;
-}
-
-.btn-config {
-  background-color: var(--verde);
-}
-
-.btn-config:hover {
-  opacity: 0.9;
-}
-
-/* Card de Transações Financeiras */
-.title-transacoes {
-  color: #1a7a46;
-}
-
-.btn-transacoes {
-  background-color: #1a7a46;
-  color: #ffffff;
-  border: none;
-  border-radius: var(--arredondamento-input-botao);
-  padding: 10px 18px;
-  font-weight: 600;
   cursor: pointer;
   transition: var(--transicao-suave);
+  flex-shrink: 0;
 }
 
-.btn-transacoes:hover {
-  background-color: #145c35;
+.btn-dash-reload:hover {
+  background-color: rgba(15, 76, 129, 0.06);
 }
 
-/* Seção Inferior de Empresas Vinculadas */
-.dashboard-empresas-section {
-  margin-top: 40px;
-  padding-top: 24px;
-  border-top: 1px solid var(--borda-input);
+/* ── Grid de KPIs ── */
+
+.dash-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 28px;
 }
 
-.dashboard-empresas-title {
-  margin: 0 0 16px 0;
-  font-size: 18px;
-  color: var(--texto-principal);
-  font-weight: 600;
-}
+/* ── Card KPI ── */
 
-.dashboard-empresas-list {
+.dash-kpi-card {
+  background-color: var(--branco);
+  border: 1.5px solid var(--borda-input);
+  border-radius: var(--arredondamento-card);
+  padding: 22px 20px 18px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.2s ease;
 }
 
-.dashboard-empresa-row {
-  background-color: var(--fundo-card);
-  border: 1px solid var(--borda-input);
-  border-radius: var(--arredondamento-input-botao);
-  padding: 16px 20px;
+.dash-kpi-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* ícone colorido do KPI */
+
+.kpi-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  color: var(--branco);
+  flex-shrink: 0;
+}
+
+.kpi-icon--saldo      { background-color: var(--azul); }
+.kpi-icon--receitas   { background-color: #03906C; }
+.kpi-icon--despesas   { background-color: #c0392b; }
+.kpi-icon--balanco-pos { background-color: #8e44ad; }
+.kpi-icon--balanco-neg { background-color: #e67e22; }
+
+.kpi-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--texto-placeholder);
+}
+
+.kpi-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.kpi-value--positivo { color: #03906C; }
+.kpi-value--negativo { color: #c0392b; }
+
+.kpi-sub {
+  font-size: 0.75rem;
+  color: var(--texto-placeholder);
+  margin-top: 2px;
+}
+
+/* ── Grid de conteúdo principal (gráfico + contas) ── */
+
+.dash-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* ── Card branco genérico ── */
+
+.dash-card {
+  background-color: var(--branco);
+  border: 1.5px solid var(--borda-input);
+  border-radius: var(--arredondamento-card);
+  padding: 24px 24px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-card-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--texto-principal);
+  margin: 0 0 4px;
+}
+
+.dash-card-sub {
+  font-size: 0.8rem;
+  color: var(--texto-placeholder);
+  margin: 0 0 18px;
+  min-height: 1.2em;
+}
+
+/* ── Lista de contas ── */
+
+.dash-bills-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.dash-bill-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  gap: 12px;
+  padding: 12px 14px;
+  background-color: #f8fafc;
+  border: 1px solid var(--borda-input);
+  border-radius: 10px;
+  transition: background-color 0.15s ease;
 }
 
-.empresa-row-info h4 {
-  margin: 0 0 4px 0;
-  font-size: 15px;
-  color: var(--azul);
-  font-weight: 600;
+.dash-bill-item:hover {
+  background-color: #f0f4f8;
 }
 
-.empresa-row-details {
+.bill-info {
   display: flex;
-  gap: 20px;
-  margin: 0;
-  font-size: 13px;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.bill-desc {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bill-date {
+  font-size: 0.75rem;
   color: var(--texto-placeholder);
 }
 
-.empresa-row-details strong {
-  color: var(--texto-principal);
-  font-weight: 500;
+.bill-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
 }
 
-.badge-id-banco {
-  background-color: rgba(26, 122, 70, 0.1);
-  color: #1a7a46;
-  padding: 4px 10px;
+.bill-valor {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.bill-valor--pagar   { color: #c0392b; }
+.bill-valor--receber { color: #03906C; }
+
+.bill-badge {
+  display: inline-block;
+  padding: 2px 8px;
   border-radius: 20px;
-  font-size: 11px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.bill-badge--pagar {
+  background-color: #fdecea;
+  color: #c0392b;
+}
+
+.bill-badge--receber {
+  background-color: #e8f7ef;
+  color: #03906C;
+}
+
+/* ── Botão "Ver todas as contas" ── */
+
+.btn-dash-ver-todas {
+  margin-top: 16px;
+  background: none;
+  border: none;
+  color: var(--azul);
+  font-size: 0.85rem;
   font-weight: 600;
+  font-family: var(--fonte-poppins);
+  cursor: pointer;
+  padding: 0;
+  align-self: flex-start;
+  transition: opacity 0.2s ease;
+}
+
+.btn-dash-ver-todas:hover {
+  opacity: 0.75;
+}
+
+/* ── Estados de conteúdo vazio dentro do card ── */
+
+.dash-empty-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.dash-empty-section p {
+  font-size: 0.88rem;
+  color: var(--texto-placeholder);
+  text-align: center;
+}
+
+/* ── Estado sem empresa / erro (cards centralizados) ── */
+
+.dash-state-card {
+  background-color: var(--branco);
+  border: 1.5px solid var(--borda-input);
+  border-radius: var(--arredondamento-card);
+  padding: 56px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.dash-state-emoji {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.dash-state-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--texto-principal);
+  margin: 0;
+}
+
+.dash-state-card p {
+  font-size: 0.9rem;
+  color: var(--texto-placeholder);
+  margin: 0;
+  max-width: 380px;
+  line-height: 1.5;
+}
+
+.dash-error-icon {
+  color: #c0392b;
+}
+
+/* ── Botões de ação dos estados ── */
+
+.btn-dash-primary {
+  margin-top: 8px;
+  padding: 11px 28px;
+  background-color: var(--azul);
+  color: var(--branco);
+  border: none;
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: var(--fonte-poppins);
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-dash-primary:hover {
+  background-color: #0c3d68;
+}
+
+.btn-dash-retry {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 24px;
+  background-color: #fdecea;
+  color: #c0392b;
+  border: 1.5px solid #f5b7b1;
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: var(--fonte-poppins);
+  cursor: pointer;
+  transition: var(--transicao-suave);
+}
+
+.btn-dash-retry:hover {
+  background-color: #f9d8d6;
+}
+
+/* ================================================================
+   Skeleton / Loading
+   ================================================================ */
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+.skeleton {
+  background-color: #E2E8F0;
+  border-radius: 8px;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+/* Card KPI skeleton */
+
+.dash-kpi-card--skeleton {
+  gap: 10px;
+  pointer-events: none;
+}
+
+.skeleton--icon  { width: 40px; height: 40px; border-radius: 10px; margin-bottom: 2px; }
+.skeleton--label { width: 65%;  height: 12px; }
+.skeleton--value { width: 85%;  height: 30px; }
+.skeleton--sub   { width: 45%;  height: 10px; }
+
+/* Gráfico skeleton */
+
+.skeleton--chart {
+  width: 100%;
+  height: 290px;
+  border-radius: 14px;
+  flex: 1;
+}
+
+/* Lista de contas skeleton */
+
+.dash-bills-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.skeleton--bill {
+  height: 60px;
+  border-radius: 10px;
+}
+
+/* ================================================================
+   Responsividade
+   ================================================================ */
+
+@media (max-width: 1024px) {
+  .dash-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .dash-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dash-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dash-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-dash-reload {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .dash-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kpi-value {
+    font-size: 1.2rem;
+  }
 }
