@@ -27,3 +27,4 @@ class TransactionRequirements(Schema):
     type = fields.Str(dump_only=True)
     category_id = fields.Int(dump_only=True)
     company_id = fields.Int(dump_only=True)
+    id_conta = fields.Int(attribute="id_conta",allow_none=True, dump_only=True)
