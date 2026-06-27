@@ -10,37 +10,37 @@
 - **Funcionalidade do produto:** C - Cadastro de Transações Financeiras
 
 ## Tarefas Frontend
-- [ ] Remover todos os dados mock do arquivo de `Transacoes/`
-- [ ] Integrar listagem com `GET /transacoes`
-- [ ] Integrar criação com `POST /transacoes`
-- [ ] Integrar edição com `PUT /transacoes/<id>`
-- [ ] Integrar exclusão com `DELETE /transacoes/<id>`
-- [ ] Integrar filtros (período, tipo, categoria) com os query params da API
-- [ ] Integrar totais (receitas, despesas, saldo) retornados pela API
-- [ ] Integrar paginação com os parâmetros `page` e `per_page`
+- [x] Remover todos os dados mock do arquivo de `Transacoes/`
+- [x] Integrar listagem com `GET /transacoes`
+- [x] Integrar criação com `POST /transacoes`
+- [x] Integrar edição com `PUT /transacoes/<id>`
+- [x] Integrar exclusão com `DELETE /transacoes/<id>`
+- [x] Integrar filtros (período, tipo, categoria) com os query params da API
+- [x] Integrar totais (receitas, despesas, saldo) retornados pela API
+- [x] Integrar paginação com os parâmetros `page` e `per_page`
 - [x] Garantir que o `id_empresa` vem do contexto autenticado (`EmpresaContext`)
 - [x] Exibir loading enquanto aguarda resposta da API
 - [x] Exibir mensagem de erro em caso de falha na requisição
 
 ## Tarefas Backend
-- [ ] Verificar se `GET /transacoes` retorna os filtros corretamente
-- [ ] Verificar se os totais (receitas, despesas, saldo) são calculados e retornados junto com a listagem
-- [ ] Verificar se a paginação está funcionando
+- [x] Verificar se `GET /transacoes` retorna os filtros corretamente
+- [x] Verificar se os totais (receitas, despesas, saldo) são calculados e retornados junto com a listagem
+- [x] Verificar se a paginação está funcionando
 
 ## Critérios de conclusão
-- [ ] Nenhum dado mock presente na aba de Transações
-- [ ] Todas as operações CRUD funcionando com dados reais
-- [ ] Filtros e totais refletindo dados do banco
+- [x] Nenhum dado mock presente na aba de Transações
+- [x] Todas as operações CRUD funcionando com dados reais
+- [x] Filtros e totais refletindo dados do banco
 
 ## Critérios de teste
-- [ ] Caso(s) de teste do Roteiro cobertos: TS-16, TS-17
-- [ ] Teste que reproduz o defeito escrito antes do fix
+- [x] Caso(s) de teste do Roteiro cobertos: TS-16, TS-17
+- [x] Teste que reproduz o defeito escrito antes do fix
 - [x] Cobertura mínima mantida
 
 ## Definição de Done
-- [ ] Código revisado em pair programming
-- [ ] PR aberto de `fix/integracao-transacoes` para `develop`
-- [ ] PR revisado pelo par de QA antes do merge na `develop`
+- [x] Código revisado em pair programming
+- [x] PR aberto de `fix/integracao-transacoes` para `develop`
+- [x] PR revisado pelo par de QA antes do merge na `develop`
 
 ## Branch
 `fix/integracao-transacoes`

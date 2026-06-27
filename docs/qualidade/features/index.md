@@ -13,12 +13,12 @@ evidências, defeitos encontrados e o **status final** da feature.
 | [Cadastro de Usuário](feature_1_cadastro-usuario.md) | A | 4 | Aprovada com pendências |
 | [Autenticação e Login](feature_2_autenticacao-login.md) | A | 4 | Aprovada com pendências |
 | [Recuperação de Senha](feature_3_recuperacao-senha.md) | A | 5 | Aprovada com pendências |
-| [Cadastro de Empresa](feature_4_cadastro-empresa.md) | A | 4 | A preencher |
-| [Cadastro de Categoria](feature_5_cadastro-categoria.md) | B | 5 | A preencher |
-| [Cadastro de Transação](feature_6_cadastro-transacao.md) | C | 6 | A preencher |
+| [Cadastro de Empresa](feature_4_cadastro-empresa.md) | A | 4 | Aprovada com pendências |
+| [Cadastro de Categoria](feature_5_cadastro-categoria.md) | B | 5 | Aprovada com pendências |
+| [Cadastro de Transação](feature_6_cadastro-transacao.md) | C | 6 | Aprovada com pendências |
 | [Histórico de Transações](feature_7_historico-transacoes.md) | D | 6 | Reprovada |
 | [Exclusão de Usuário/Empresa](feature_8_exclusao-usuario-empresa.md) | A | 5 | Aprovada com pendências |
-| [Centralização Documental](feature_9_centralizacao-documental.md) | G | 8 | A preencher |
+| [Centralização Documental](feature_9_centralizacao-documental.md) | G | 8 | Aprovada com pendências |
 | [Simulação de Crédito (front + back)](feature_10_e_13_simulacao-credito.md) | H | 9 | Aprovada com pendências |
 | [Cadastro de Contas](feature_11_cadastro-contas.md) | J | 7 | Aprovada com pendências |
 | [Relatórios Financeiros](feature_12_relatorios-financeiros.md) | F | 8 | Aprovada com pendências |

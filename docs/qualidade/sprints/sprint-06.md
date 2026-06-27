@@ -11,7 +11,7 @@
 
 | Feature | Requisito | Status |
 | --- | :--: | --- |
-| [Cadastro de transação](../features/feature_6_cadastro-transacao.md) | R07 | Aprovada |
+| [Cadastro de transação](../features/feature_6_cadastro-transacao.md) | R07 | Aprovada com pendências |
 | [Histórico de transações](../features/feature_7_historico-transacoes.md) | R08 | Reprovada |
 
 ---

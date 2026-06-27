@@ -13,7 +13,7 @@
 | --- | :--: | --- |
 | [Cadastro de usuário](../features/feature_1_cadastro-usuario.md) | R01 | Aprovada com pendências |
 | [Autenticação e login](../features/feature_2_autenticacao-login.md) | R03 | Aprovada com pendências |
-| [Cadastro de empresa](../features/feature_4_cadastro-empresa.md) | R04 | Aprovada |
+| [Cadastro de empresa](../features/feature_4_cadastro-empresa.md) | R04 | Aprovada com pendências |
 
 ---
 ## 2. Casos agregados

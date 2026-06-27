@@ -11,7 +11,7 @@
 
 | Feature | Requisito | Status |
 | --- | :--: | --- |
-| [Centralização documental](../features/feature_9_centralizacao-documental.md) | R10 | Aprovada |
+| [Centralização documental](../features/feature_9_centralizacao-documental.md) | R10 | Aprovada com pendências |
 | [Relatórios financeiros](../features/feature_12_relatorios-financeiros.md) | R11 | Aprovada com pendências |
 
 > A Sprint também concentrou trabalho de **refatoração** transversal (padronização de

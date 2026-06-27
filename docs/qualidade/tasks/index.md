@@ -12,8 +12,9 @@ apontados - não há "aprovada com pendências".
 |---|---|:--:|---|
 | [Tarefa IV - Integração do Ciclo de Vida](task_4_integracao-ciclo-vida.md) | Usuário / Empresa / Autenticação | 5 | Reprovada |
 | [Tarefa V - Redesign do Frontend](task_5_redesign-frontend.md) | Frontend - Autenticação / Categorias / Painel | 8 | Aprovada |
-| [Refatoração - Contas e Transações (fix1 e fix2)](fix_1_e_2_contas-transacoes.md) | Frontend - Contas / Transações / ContasCaixa | 10 | Aprovada |
-| [Fix - Exclusão de Conta e Sessão](fix_exclusao-conta-sessao.md) | Backend - Exclusão de usuário / Autenticação | 10 | Aprovada |
+
+> As correções (`fix`) têm seção própria em
+> [Documentação por Correção (fix)](../fix/index.md).
 
 ---
 ## Status possíveis

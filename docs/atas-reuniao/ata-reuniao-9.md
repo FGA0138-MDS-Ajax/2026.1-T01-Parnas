@@ -2,7 +2,7 @@
 
 ---
 **Data:** 06/06/2026  
-**Horário:** Início: 08h30 — Fim: 09h30  
+**Horário:** Início: 09h — Fim: 09h30  
 **Modalidade:** Online (Discord)
 
 ---

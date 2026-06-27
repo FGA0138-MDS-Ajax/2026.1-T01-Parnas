@@ -11,9 +11,9 @@
 
 | Feature | Requisito | Status |
 | --- | :--: | --- |
-| [Recuperação de senha](../features/feature_3_recuperacao-senha.md) | R05 | Aprovada |
-| [Exclusão de usuário/empresa](../features/feature_8_exclusao-usuario-empresa.md) | R02 | Aprovada |
-| [Cadastro de categoria](../features/feature_5_cadastro-categoria.md) | R06 | Aprovada |
+| [Recuperação de senha](../features/feature_3_recuperacao-senha.md) | R05 | Aprovada com pendências |
+| [Exclusão de usuário/empresa](../features/feature_8_exclusao-usuario-empresa.md) | R02 | Aprovada com pendências |
+| [Cadastro de categoria](../features/feature_5_cadastro-categoria.md) | R06 | Aprovada com pendências |
 
 ---
 ## 2. Casos agregados
