@@ -33,7 +33,7 @@ Como Gestor de uma Micro-Empresa, quero poder excluir minha conta de usuário ou
 - [x] Criar botão de encerrar empresa nas configurações da empresa
 - [x] Criar modal de confirmação com aviso de ação irreversível
 - [x] Redirecionar para tela de login após exclusão bem-sucedida
-- [ ] Integrar com DELETE /empresas e DELETE /usuarios
+- [x] Integrar com DELETE /empresas e DELETE /usuarios
 
 ## Critérios de teste
 - [x] Caso(s) de teste do Roteiro cobertos: TS-14

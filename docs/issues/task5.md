@@ -10,16 +10,16 @@ Tarefa técnica de qualidade (refatoração). Com as funcionalidades principais 
 - **Funcionalidade do produto:** Transversal
 
 ## Tarefas Backend — Padronização com DTOs (Marshmallow)
-- [ ] Criar schema de entrada (load) e saída (dump) para Usuario
-- [ ] Criar schema de entrada (load) e saída (dump) para Empresa
-- [ ] Criar schema de entrada (load) e saída (dump) para Categoria
-- [ ] Criar schema de entrada (load) e saída (dump) para Transacao
-- [ ] Criar schema de entrada (load) e saída (dump) para Conta
-- [ ] Criar schema de entrada (load) e saída (dump) para Simulacao
-- [ ] Criar schema de entrada (load) e saída (dump) para Documento
-- [ ] Aplicar validação via schema em todos os endpoints POST e PUT
-- [ ] Garantir que `senha_hash` nunca é retornada em nenhum endpoint
-- [ ] Garantir que o `id_empresa` do token JWT é sempre usado no lugar do enviado pelo frontend (evita manipulação)
+- [x] Criar schema de entrada (load) e saída (dump) para Usuario
+- [x] Criar schema de entrada (load) e saída (dump) para Empresa
+- [x] Criar schema de entrada (load) e saída (dump) para Categoria
+- [x] Criar schema de entrada (load) e saída (dump) para Transacao
+- [ ] Criar schema de entrada (load) e saída (dump) para Conta (Bill ainda sem schema Marshmallow na develop)
+- [x] Criar schema de entrada (load) e saída (dump) para Simulacao
+- [x] Criar schema de entrada (load) e saída (dump) para Documento
+- [x] Aplicar validação via schema em todos os endpoints POST e PUT
+- [x] Garantir que `senha_hash` nunca é retornada em nenhum endpoint
+- [x] Garantir que o `id_empresa` do token JWT é sempre usado no lugar do enviado pelo frontend (evita manipulação)
 - [ ] Padronizar formato de resposta de erro: `{ "erro": "mensagem", "campo": "nome_do_campo" }`
 - [ ] Padronizar formato de resposta de sucesso: `{ "dados": {}, "mensagem": "mensagem" }`
 
@@ -34,7 +34,7 @@ Tarefa técnica de qualidade (refatoração). Com as funcionalidades principais 
 
 ## Critérios de aceitação
 - [ ] Nenhum endpoint retorna dados sem passar pelo schema
-- [ ] Nenhuma senha ou dado sensível exposto nas respostas da API
+- [x] Nenhuma senha ou dado sensível exposto nas respostas da API
 - [ ] Todos os formulários usam os componentes padronizados
 - [ ] Visual consistente entre todas as páginas implementadas
 
@@ -45,9 +45,11 @@ Tarefa técnica de qualidade (refatoração). Com as funcionalidades principais 
 
 ## Definição de Done
 - [ ] Código revisado em pair programming
-- [ ] PR aberto de `refactor/dtos-redesign` para `develop`
-- [ ] Pull Request revisado pelo par de QA antes do merge na `develop`
+- [x] PR aberto para `develop` (entregue em dois PRs: `refactor/dtos-backend` e `refactor/redesign-frontend` #59)
+- [x] Pull Request revisado pelo par de QA antes do merge na `develop` (QA: Aprovada - ver relatório da Tarefa V)
 - [ ] Documentação técnica atualizada
+
+> **Status (auditoria):** os DTOs (Marshmallow) e boa parte do redesign **já estão na develop** (mesclados). Falta, para fechar: schema de Conta (Bill), padronização do formato de resposta (erro/sucesso), componentes reutilizáveis em `components/ui/` e revisão de responsividade. A issue segue **aberta** apenas pelo que falta.
 
 ## Branch
 `refactor/dtos-redesign`
