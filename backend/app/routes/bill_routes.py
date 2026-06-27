@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services.bill_service import BillService
 
 # Criação do módulo de rotas de contas
@@ -24,7 +24,10 @@ def create_bill():
 @jwt_required()
 def get_bills():
     # Permite filtrar por status passando ?status=pendente na URL
-    status = request.args.get('status')
+    status = request.args.get('status', 'Pendente')
+
+    if status.lower() == 'todas':
+        status = None
 
     resultado, status_code = BillService.get_bills(status)
     return jsonify(resultado), status_code
@@ -51,5 +54,7 @@ def delete_bill(bill_id):
 @jwt_required()
 def pay_bill(bill_id):
 
-    resultado, status_code = BillService.pay_bill(bill_id)
+    current_user_id = int(get_jwt_identity())
+
+    resultado, status_code = BillService.pay_bill(current_user_id, bill_id)
     return jsonify(resultado), status_code
