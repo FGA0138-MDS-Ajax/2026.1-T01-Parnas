@@ -12,11 +12,14 @@ export const listarContas = async (status = "") => {
     throw new Error("Selecione uma empresa para carregar as contas.");
   }
 
-  const params = { company_id: empresa.company_id };
+  const params = {};
   if (status) params.status = status;
 
-  // AQUI: adicionamos a barra no final para evitar o erro 308
-  const { data } = await api.get("/api/contas/", { params });
+  //atualizando rotas de acordo com o novo padrão do backend
+  const { data } = await api.get(
+    `/api/companies/${empresa.company_id}/bills/`,
+    { params },
+  );
   return Array.isArray(data) ? data : data?.contas || [];
 };
 
@@ -32,10 +35,9 @@ export const criarConta = async (dados) => {
     type: dados.tipo === "receita" ? "receber" : "pagar",
     due_date: dados.dataVencimento,
     category_id: Number(dados.categoria),
-    company_id: empresa.company_id,
   };
 
-  return api.post("/api/contas/", payload);
+  return api.post(`/api/companies/${empresa.company_id}/bills/`, payload);
 };
 
 export const atualizarConta = async (id, dados) => {
@@ -50,18 +52,17 @@ export const atualizarConta = async (id, dados) => {
     type: dados.tipo === "receita" ? "receber" : "pagar",
     due_date: dados.dataVencimento,
     category_id: Number(dados.categoria),
-    company_id: empresa.company_id,
   };
 
-  return api.put(`/api/contas/${id}`, payload);
+  return api.put(`/api/companies/${empresa.company_id}/bills/${id}`, payload);
 };
 
 export const excluirConta = async (id) => {
   const empresa = await obterEmpresaAtiva();
-  return api.delete(`/api/contas/${id}?company_id=${empresa.company_id}`);
+  return api.delete(`/api/companies/${empresa.company_id}/bills/${id}`);
 };
 
 export const quitarConta = async (id) => {
   const empresa = await obterEmpresaAtiva();
-  return api.patch(`/api/contas/${id}/quitar?company_id=${empresa.company_id}`);
+  return api.patch(`/api/companies/${empresa.company_id}/bills/${id}/quitar`);
 };
