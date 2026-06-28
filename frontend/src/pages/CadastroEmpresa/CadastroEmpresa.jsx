@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useEmpresa } from '../../context/EmpresaContext';
 import './CadastroEmpresa.css';
 
@@ -11,10 +12,10 @@ const CadastroEmpresa = () => {
   });
 
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const { recarregarEmpresas, selecionarEmpresa } = useEmpresa();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,7 +25,6 @@ const CadastroEmpresa = () => {
   const handleSubmit = async (eventoFormulario) => {
     eventoFormulario.preventDefault();
     setError('');
-    setSuccess(false);
     setLoading(true);
 
     const token = localStorage.getItem('token');
@@ -37,7 +37,7 @@ const CadastroEmpresa = () => {
     const cnpjApenasNumeros = formData.cnpj.replace(/\D/g, '');
 
     try {
-      const response = await fetch('/api/companies', {
+      const response = await fetch('/api/companies/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -55,11 +55,19 @@ const CadastroEmpresa = () => {
       const data = responseText ? JSON.parse(responseText) : {};
 
       if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.removeItem('token');
+          navigate('/login');
+          return;
+        }
+        if (response.status === 409) {
+          throw new Error(data.erro || 'Dado já cadastrado. Verifique o CNPJ e o e-mail informados.');
+        }
         if (data.erros_de_validacao) {
           const mensagensDeErro = Object.values(data.erros_de_validacao).flat().join(' ');
           throw new Error(mensagensDeErro);
         }
-        throw new Error(data.erro || 'Erro ao cadastrar empresa.');
+        throw new Error(data.erro || data.msg || 'Erro ao cadastrar empresa.');
       }
 
       const empresasAtualizadas = await recarregarEmpresas();
@@ -70,17 +78,7 @@ const CadastroEmpresa = () => {
           cnpj: data.cnpj || cnpjApenasNumeros,
         });
       }
-      setSuccess(true);
-
-      const historicoReal = JSON.parse(localStorage.getItem('credifab_empresas_reais') || '[]');
-      historicoReal.push({
-        company_id: data.company_id,
-        name: data.name || formData.nome,
-        cnpj: data.cnpj || cnpjApenasNumeros,
-        email: formData.email,
-        phone: formData.telefone
-      });
-      localStorage.setItem('credifab_empresas_reais', JSON.stringify(historicoReal));
+      navigate('/selecao-empresa');
 
       setFormData({ nome: '', cnpj: '', email: '', telefone: '' });
 
@@ -100,7 +98,6 @@ const CadastroEmpresa = () => {
           </div>
 
           {error && <p className="msg-error">{error}</p>}
-          {success && <p className="msg-success">Empresa cadastrada com sucesso!</p>}
 
           <form onSubmit={handleSubmit} className="form-grid">
             <div className="input-group">

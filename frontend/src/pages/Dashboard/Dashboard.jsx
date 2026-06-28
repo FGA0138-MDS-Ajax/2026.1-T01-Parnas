@@ -1,13 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useEmpresa } from "../../context/EmpresaContext";
 import "./Dashboard.css";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-
-  const empresasCadastradas = JSON.parse(
-    localStorage.getItem("credifab_empresas_reais") || "[]",
-  );
+  const { empresas } = useEmpresa();
 
   return (
     <div className="dashboard-container">
@@ -15,7 +13,6 @@ const Dashboard = () => {
         <h2>Painel de Controle</h2>
         <p>Bem-vindo ao CREDIFAB.</p>
       </div>
-
       <div className="dashboard-grid">
         <div className="dashboard-card">
           <div>
@@ -34,12 +31,11 @@ const Dashboard = () => {
           </button>
         </div>
       </div>
-
-      {empresasCadastradas.length > 0 && (
+      {empresas.length > 0 && (
         <div className="dashboard-empresas-section">
           <h3 className="dashboard-empresas-title">Empresas Cadastradas</h3>
           <div className="dashboard-empresas-list">
-            {empresasCadastradas.map((empresa, index) => (
+            {empresas.map((empresa, index) => (
               <div
                 className="dashboard-empresa-row"
                 key={empresa.company_id || index}
@@ -49,12 +45,6 @@ const Dashboard = () => {
                   <div className="empresa-row-details">
                     <span>
                       <strong>CNPJ:</strong> {empresa.cnpj}
-                    </span>
-                    <span>
-                      <strong>E-mail:</strong> {empresa.email}
-                    </span>
-                    <span>
-                      <strong>Tel:</strong> {empresa.phone}
                     </span>
                   </div>
                 </div>

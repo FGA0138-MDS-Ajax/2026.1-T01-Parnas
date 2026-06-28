@@ -1,8 +1,9 @@
 from marshmallow import Schema, fields, validate, validates, ValidationError
 
+
 class SimulationCalculateDTO(Schema):
     requested_amount = fields.Float(required=True, error_messages={"required": "O valor solicitado é obrigatório."})
-    deadline_month = fields.Int(required=True, error_messages = {"required": "O prazo em meses é obrigatório."})
+    deadline_month = fields.Int(required=True, error_messages={"required": "O prazo em meses é obrigatório."})
     interest_rate = fields.Float(required=True, error_messages={"required": "A taxa de juros é obrigatória."})
     modality = fields.Str(
         required=True,
@@ -19,5 +20,6 @@ class SimulationCalculateDTO(Schema):
         if value <= 0:
             raise ValidationError("O prazo deve ser de pelo menos 1 mês.")
 
+
 class SimulationSaveDTO(SimulationCalculateDTO):
-    company_id = fields.Int(required=True, error_messages={"required": "O ID da empresa é obrigatório."})
+    pass

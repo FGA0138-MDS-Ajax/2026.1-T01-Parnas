@@ -201,13 +201,11 @@ export const EmpresaProvider = ({ children }) => {
     return definirEmpresaAtiva(empresa);
   }, [definirEmpresaAtiva, empresas]);
 
-  const sincronizandoToken = tokenRef.current !== token;
-
   const value = useMemo(() => ({
     empresas,
     empresaAtiva,
     idEmpresaLogada: empresaAtiva?.company_id ?? null,
-    carregandoEmpresas: carregandoEmpresas || sincronizandoToken,
+    carregandoEmpresas,
     erroEmpresas,
     versaoEmpresa,
     selecionarEmpresa,
@@ -220,7 +218,6 @@ export const EmpresaProvider = ({ children }) => {
     empresas,
     erroEmpresas,
     selecionarEmpresa,
-    sincronizandoToken,
     versaoEmpresa,
   ]);
 
