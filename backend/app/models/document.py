@@ -6,7 +6,7 @@ class Document(db.Model):
     
     document_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     company_id = db.Column(db.Integer, db.ForeignKey('company.company_id', ondelete='CASCADE'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='SET NULL'), nullable=False)
     
     name = db.Column(db.String(255), nullable=False)
     type = db.Column(db.String(50), nullable=False)

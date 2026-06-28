@@ -1,99 +1,197 @@
-import { useState } from 'react';
-
-const TRANSACOES_MOCK = [
-  { id: 1, descricao: 'Venda de produtos', valor: 3500.00, tipo: 'receita', categoria: 'Vendas', data: '2025-05-10' },
-  { id: 2, descricao: 'Aluguel do escritório', valor: 1200.00, tipo: 'despesa', categoria: 'Infraestrutura', data: '2025-05-05' },
-  { id: 3, descricao: 'Consultoria prestada', valor: 2000.00, tipo: 'receita', categoria: 'Serviços', data: '2025-05-15' },
-  { id: 4, descricao: 'Conta de energia', valor: 350.00, tipo: 'despesa', categoria: 'Infraestrutura', data: '2025-05-08' },
-  { id: 5, descricao: 'Venda online', valor: 800.00, tipo: 'receita', categoria: 'Vendas', data: '2025-05-20' },
-  { id: 6, descricao: 'Folha de pagamento', valor: 5000.00, tipo: 'despesa', categoria: 'Pessoal', data: '2025-05-30' },
-  { id: 7, descricao: 'Serviço de manutenção', valor: 400.00, tipo: 'despesa', categoria: 'Manutenção', data: '2025-04-18' },
-  { id: 8, descricao: 'Recebimento de cliente', valor: 1500.00, tipo: 'receita', categoria: 'Serviços', data: '2025-04-22' },
-  { id: 9, descricao: 'Compra de equipamentos', valor: 2300.00, tipo: 'despesa', categoria: 'Equipamentos', data: '2025-04-10' },
-  { id: 10, descricao: 'Treinamento de equipe', valor: 600.00, tipo: 'despesa', categoria: 'Pessoal', data: '2025-04-05' },
-  { id: 11, descricao: 'Contrato anual renovado', valor: 8000.00, tipo: 'receita', categoria: 'Serviços', data: '2025-03-01' },
-  { id: 12, descricao: 'Material de escritório', valor: 250.00, tipo: 'despesa', categoria: 'Infraestrutura', data: '2025-03-15' },
-];
-
-const CATEGORIAS_MOCK = ['Vendas', 'Serviços', 'Infraestrutura', 'Pessoal', 'Manutenção', 'Equipamentos'];
-
-const POR_PAGINA = 5;
-
-const FILTROS_INICIAIS = {
-  dataInicio: '',
-  dataFim: '',
-  tipo: '',
-  categoria: '',
-  valorMin: '',
-  valorMax: '',
-};
+import { useState, useEffect, useCallback } from "react";
+import api from "../services/api";
+import { listarContasCaixa } from "../services/contaCaixa.service";
+import { listarCategorias } from "../services/categoria.service";
+import { obterEmpresaAtiva } from "../services/empresa.service";
 
 const useTransacoes = () => {
-  const [filtros, setFiltros] = useState(FILTROS_INICIAIS);
-  const [filtrosAtivos, setFiltrosAtivos] = useState(FILTROS_INICIAIS);
+  const [transacoes, setTransacoes] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+  const [contasCaixa, setContasCaixa] = useState([]); // Dinâmico!
+  const [totais, setTotais] = useState({
+    totalReceitas: 0,
+    totalDespesas: 0,
+    saldo: 0,
+  });
   const [paginaAtual, setPaginaAtual] = useState(1);
+  const [totalPaginas, setTotalPaginas] = useState(1);
+  const [totalTransacoes, setTotalTransacoes] = useState(0);
 
-  const transacoesFiltradas = TRANSACOES_MOCK.filter((t) => {
-    if (filtrosAtivos.tipo && t.tipo !== filtrosAtivos.tipo) return false;
-    if (filtrosAtivos.categoria && t.categoria !== filtrosAtivos.categoria) return false;
-    if (filtrosAtivos.dataInicio && t.data < filtrosAtivos.dataInicio) return false;
-    if (filtrosAtivos.dataFim && t.data > filtrosAtivos.dataFim) return false;
-    if (filtrosAtivos.valorMin && t.valor < parseFloat(filtrosAtivos.valorMin)) return false;
-    if (filtrosAtivos.valorMax && t.valor > parseFloat(filtrosAtivos.valorMax)) return false;
-    return true;
+  const [filtros, setFiltros] = useState({
+    dataInicio: "",
+    dataFim: "",
+    tipo: "",
+    categoria: "",
+    contaCaixaId: "",
+    valorMin: "",
+    valorMax: "",
   });
 
-  const totalReceitas = transacoesFiltradas
-    .filter((t) => t.tipo === 'receita')
-    .reduce((acc, t) => acc + t.valor, 0);
+  const [companyId, setCompanyId] = useState(null);
 
-  const totalDespesas = transacoesFiltradas
-    .filter((t) => t.tipo === 'despesa')
-    .reduce((acc, t) => acc + t.valor, 0);
+  useEffect(() => {
+    const carregarEmpresa = async () => {
+      const empresa = await obterEmpresaAtiva();
+      setCompanyId(empresa?.company_id || null);
+    };
+    carregarEmpresa();
+  }, []);
 
-  const saldo = totalReceitas - totalDespesas;
+  const carregarAuxiliares = useCallback(async () => {
+    try {
+      const [categoriasApi, caixasApi] = await Promise.all([
+        listarCategorias(),
+        listarContasCaixa(),
+      ]);
+      setCategorias(categoriasApi || []);
+      setContasCaixa(caixasApi || []);
+    } catch (error) {
+      console.error("Erro ao buscar dados auxiliares:", error);
+    }
+  }, []);
 
-  const totalPaginas = Math.ceil(transacoesFiltradas.length / POR_PAGINA);
+  const fetchTransacoes = useCallback(
+    async (filtrosAplicados, pagina = 1) => {
+      if (!companyId) return;
+      try {
+        const params = {
+          company_id: companyId,
+          page: pagina,
+          per_page: 20,
+          ...(filtrosAplicados.dataInicio && {
+            data_inicio: filtrosAplicados.dataInicio,
+          }),
+          ...(filtrosAplicados.dataFim && {
+            data_fim: filtrosAplicados.dataFim,
+          }),
+          ...(filtrosAplicados.tipo && { tipo: filtrosAplicados.tipo }),
+          ...(filtrosAplicados.categoria && {
+            categoria: filtrosAplicados.categoria,
+          }),
+          ...(filtrosAplicados.valorMin && {
+            valor_min: filtrosAplicados.valorMin,
+          }),
+          ...(filtrosAplicados.valorMax && {
+            valor_max: filtrosAplicados.valorMax,
+          }),
+        };
 
-  const transacoesPaginadas = transacoesFiltradas.slice(
-    (paginaAtual - 1) * POR_PAGINA,
-    paginaAtual * POR_PAGINA
+        const { data } = await api.get("/api/transactions/", { params });
+
+        const transacoesMapeadas = (data.transacoes || []).map((t) => ({
+          id: t.transaction_id,
+          descricao: t.description,
+          tipo: t.tipo,
+          valor: t.valor,
+          data: t.data,
+          categoriaId: t.categoria_id,
+          contaCaixaNome: "N/A",
+        }));
+
+        setTransacoes(transacoesMapeadas);
+        setTotais({
+          totalReceitas: data.resumo?.total_receitas || 0,
+          totalDespesas: data.resumo?.total_despesas || 0,
+          saldo: data.resumo?.saldo || 0,
+        });
+        setPaginaAtual(data.paginacao?.pagina_atual || 1);
+        setTotalPaginas(data.paginacao?.paginas || 1);
+        setTotalTransacoes(data.paginacao?.total_items || 0);
+      } catch (error) {
+        console.error("Erro ao buscar transações:", error);
+      }
+    },
+    [companyId],
   );
+
+  useEffect(() => {
+    carregarAuxiliares();
+    fetchTransacoes(filtros, 1);
+  }, [carregarAuxiliares, fetchTransacoes]);
 
   const handleFiltroChange = (e) => {
     const { name, value } = e.target;
     setFiltros((prev) => ({ ...prev, [name]: value }));
   };
 
-  const aplicarFiltros = () => {
-    setFiltrosAtivos(filtros);
-    setPaginaAtual(1);
-  };
+  const aplicarFiltros = () => fetchTransacoes(filtros, 1);
 
   const limparFiltros = () => {
-    setFiltros(FILTROS_INICIAIS);
-    setFiltrosAtivos(FILTROS_INICIAIS);
-    setPaginaAtual(1);
+    const reset = {
+      dataInicio: "",
+      dataFim: "",
+      tipo: "",
+      categoria: "",
+      contaCaixaId: "",
+      valorMin: "",
+      valorMax: "",
+    };
+    setFiltros(reset);
+    fetchTransacoes(reset, 1);
   };
 
-  const mudarPagina = (pagina) => {
-    if (pagina >= 1 && pagina <= totalPaginas) {
-      setPaginaAtual(pagina);
+  const mudarPagina = (novaPagina) => {
+    if (novaPagina >= 1 && novaPagina <= totalPaginas) {
+      fetchTransacoes(filtros, novaPagina);
+    }
+  };
+
+  const salvarTransacao = async (dadosTransacao, id = null) => {
+    if (!companyId) return;
+    const payload = {
+      description: dadosTransacao.descricao,
+      amount: parseFloat(dadosTransacao.valor),
+      date: dadosTransacao.data,
+      type: dadosTransacao.tipo,
+      category_id: parseInt(dadosTransacao.categoriaId),
+      company_id: parseInt(companyId),
+    };
+
+    try {
+      if (id) {
+        await api.put(`/api/transactions/${id}`, payload);
+      } else {
+        await api.post("/api/transactions/", payload);
+      }
+      fetchTransacoes(filtros, paginaAtual);
+    } catch (error) {
+      const msgErro =
+        error.response?.data?.erro ||
+        Object.values(error.response?.data?.erros_de_validacao || {}).join(
+          ", ",
+        ) ||
+        "Erro ao salvar transação.";
+      alert(msgErro);
+      throw error;
+    }
+  };
+
+  const excluirTransacao = async (id) => {
+    try {
+      await api.delete(`/api/transactions/${id}?company_id=${companyId}`);
+      fetchTransacoes(filtros, paginaAtual);
+    } catch (error) {
+      alert("Erro ao excluir transação.");
     }
   };
 
   return {
     filtros,
-    transacoes: transacoesPaginadas,
-    totais: { totalReceitas, totalDespesas, saldo },
+    transacoes,
+    totais,
+    saldoContaSelecionada: null,
+    contaCaixaSelecionada: null,
     paginaAtual,
     totalPaginas,
-    totalTransacoes: transacoesFiltradas.length,
-    categorias: CATEGORIAS_MOCK,
+    totalTransacoes,
+    categorias,
+    contasCaixa,
     handleFiltroChange,
     aplicarFiltros,
     limparFiltros,
     mudarPagina,
+    salvarTransacao,
+    excluirTransacao,
   };
 };
 

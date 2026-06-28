@@ -1,22 +1,46 @@
-import React from 'react';
-import { Outlet, Link, useNavigate } from 'react-router-dom';
-import './LayoutBase.css';
+import React, { useState } from "react";
+import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Building2 } from "lucide-react";
+import logoImg from "../../assets/CredifabLogo.png";
+import { useEmpresa } from "../../context/EmpresaContext";
+import "./LayoutBase.css";
 
 const LayoutBase = () => {
   const navigate = useNavigate();
+  const {
+    empresas,
+    empresaAtiva,
+    selecionarEmpresa,
+    versaoEmpresa,
+  } = useEmpresa();
+  const [trocandoEmpresa, setTrocandoEmpresa] = useState(false);
+  const [erroTroca, setErroTroca] = useState("");
+
+  const handleTrocarEmpresa = async (event) => {
+    const companyId = Number(event.target.value);
+    if (!companyId || companyId === Number(empresaAtiva?.company_id)) return;
+
+    setTrocandoEmpresa(true);
+    setErroTroca("");
+    try {
+      await selecionarEmpresa(companyId);
+    } catch (error) {
+      setErroTroca(error.message);
+    } finally {
+      setTrocandoEmpresa(false);
+    }
+  };
 
   return (
     <div className="layout-container">
-
       <header className="layout-header">
-
         <Link to="/dashboard" className="logo-link">
           <div className="logo-section">
-            <div className="logo-icon-wrapper">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3">
-                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-              </svg>
-            </div>
+            <img
+              src={logoImg}
+              alt="Logo CREDIFAB"
+              className="layout-logo-img"
+            />
             <div className="logo-text">
               <h1>CREDIFAB</h1>
               <p>Plataforma de Acesso a Crédito</p>
@@ -25,26 +49,61 @@ const LayoutBase = () => {
         </Link>
 
         <nav className="layout-nav">
+
           <Link to="/dashboard" className="nav-link">Dashboard</Link>
           <Link to="/transacoes" className="nav-link">Transações</Link>
           <Link to="/contas" className="nav-link">Contas</Link>
           <Link to="/simulacoes" className="nav-link">Simulações</Link>
           <Link to="/comparacoes" className="nav-link">Comparações</Link>
           <Link to="/relatorios" className="nav-link">Relatórios</Link>
-        </nav>
+           <Link to="/categorias" className="nav-link">Categorias</Link>
+        
+         </nav>
 
-        <button
-          onClick={() => navigate('/configuracoes')}
-          className="btn-settings"
-        >
-          Configurações
-        </button>
+        <div className="layout-actions">
+          {empresaAtiva && (
+            <div className="empresa-switcher">
+              <Building2 size={17} aria-hidden="true" />
+              <label htmlFor="empresa-ativa">Empresa</label>
+              <select
+                id="empresa-ativa"
+                aria-label="Empresa ativa"
+                value={empresaAtiva.company_id}
+                onChange={handleTrocarEmpresa}
+                disabled={trocandoEmpresa}
+              >
+                {empresas.map((empresa) => (
+                  <option
+                    value={empresa.company_id}
+                    key={empresa.company_id}
+                  >
+                    {empresa.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          <button
+            onClick={() => navigate("/configuracoes")}
+            className="btn-settings"
+          >
+            Configurações
+          </button>
+        </div>
       </header>
 
-      <main className="layout-main">
-        <Outlet />
-      </main>
+      {erroTroca && (
+        <div className="layout-company-error" role="alert">
+          {erroTroca}
+        </div>
+      )}
 
+      <main className="layout-main">
+        <div key={versaoEmpresa}>
+          <Outlet />
+        </div>
+      </main>
     </div>
   );
 };

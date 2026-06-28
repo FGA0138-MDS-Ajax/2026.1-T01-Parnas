@@ -25,11 +25,12 @@ class CategoryRepository:
         return new_category
 
     @staticmethod
-    def update(category_id, company_id, new_name):
-        """Edita o nome de uma categoria existente."""
+    def update(category_id, company_id, new_name, new_type):
+        """Edita o nome e tipo de uma categoria existente."""
         category = CategoryRepository.get_by_id_and_company(category_id, company_id)
         if category:
             category.name = new_name
+            category.type = new_type
             db.session.commit()
         return category
 

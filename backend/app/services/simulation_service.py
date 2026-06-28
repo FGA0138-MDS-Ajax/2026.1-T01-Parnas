@@ -1,6 +1,12 @@
-from app.config import db
-from app.models.simulation import Simulation
-from app.models.transaction import Transaction
+from app.repositories.simulation_repository import SimulationRepository
+from app.repositories.transaction_repository import TransactionRepository
+from app.repositories.user_repository import UserRepository
+
+
+def _get_company_id(user_id):
+    user = UserRepository.get_by_id(user_id)
+    return user.active_company_id if user else None
+
 
 def calculate_table_price(main, rate, term):
     i = rate/100
@@ -27,6 +33,7 @@ def calculate_table_price(main, rate, term):
 
     return installments, pmt
 
+
 def calculate_table_sac(main, rate, term):
     i = rate/100
     amortization = main/term
@@ -48,9 +55,9 @@ def calculate_table_sac(main, rate, term):
 
     return installments, installments[0]["valor_parcela"]
 
-def project_impact_cash_flow(company_id, first_installment_value):
-    transactions = Transaction.query.filter_by(company_id=company_id).all()
 
+def project_impact_cash_flow(company_id, first_installment_value):
+    transactions = TransactionRepository.get_by_company(company_id)
     if not transactions:
         return {
             "status": "Indisponível",
@@ -80,7 +87,8 @@ def project_impact_cash_flow(company_id, first_installment_value):
         "status": "Saudável" if commitment <= 30 else "Atenção"
     }
 
-def process_simulation(data, company_id = None):
+
+def process_simulation(data, company_id=None):
     main = data['requested_amount']
     rate = data['interest_rate']
     term = data['deadline_month']
@@ -110,58 +118,69 @@ def process_simulation(data, company_id = None):
 
     return answer
 
+
 def save_simulation(data, current_user_id):
+    company_id = _get_company_id(current_user_id)
+
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+
     data_simulation = process_simulation(data)
     summary = data_simulation["resumo"]
 
-    new_simulation = Simulation(
-        company_id = data['company_id'],
-        user_id = current_user_id,
-        valor_solicitado = data['requested_amount'],
-        prazo_meses = data['deadline_month'],
-        modalidade=data['modality'],
-        taxa_juros=data['interest_rate'],
-        valor_parcela=summary['primeira_parcela'],
-        valor_total=summary['total_a_pagar'],
-        total_juros=summary['total_juros']
-    )
-
     try:
-        db.session.add(new_simulation)
-        db.session.commit()
-        return {"mensagem": "Simulação salva no histórico com sucesso.", "simulation_id": new_simulation.simulation_id}, 201
+        new_simulation = SimulationRepository.create(
+            company_id=company_id,
+            user_id=current_user_id,
+            loan_amount=data['requested_amount'],
+            term_months=data['deadline_month'],
+            modality=data['modality'],
+            interest_rate=data['interest_rate'],
+            monthly_payment=summary['primeira_parcela'],
+            total_amount=summary['total_a_pagar'],
+            total_interest=summary['total_juros']
+        )
+        return {"mensagem": "Simulação salva no histórico com sucesso.",
+                "simulation_id": new_simulation.simulation_id}, 201
     except Exception as e:
-        db.session.rollback()
         return {"erro": "Ocorreu um erro interno ao salvar a simulação."}, 500
 
-def get_simulation(company_id):
-    simulations = Simulation.query.filter_by(company_id=company_id).all()
+
+def get_simulation(user_id):
+    company_id = _get_company_id(user_id)
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+
+    simulations = SimulationRepository.list_by_company(company_id)
     result = []
     for s in simulations:
         result.append({
             "simulation_id": s.simulation_id,
-            "valor_solicitado": float(s.valor_solicitado),
-            "prazo_meses": s.prazo_meses,
-            "modalidade": s.modalidade,
-            "taxa_juros": float(s.taxa_juros),
-            "valor_parcela": float(s.valor_parcela),
-            "valor_total": float(s.valor_total),
-            "total_juros": float(s.total_juros),
-            "data_simulacao": s.data_simulacao.strftime('%Y-%m-%d %H:%M')
+            "valor_solicitado": float(s.loan_amount),
+            "prazo_meses": s.term_months,
+            "modalidade": s.modality,
+            "taxa_juros": float(s.interest_rate),
+            "valor_parcela": float(s.monthly_payment),
+            "valor_total": float(s.total_amount),
+            "total_juros": float(s.total_interest),
+            "data_simulacao": s.created_at.strftime('%Y-%m-%d %H:%M')
         })
 
     return {"simulations": result}, 200
 
-def delete_simulation(simulation_id, company_id):
-    simulation = Simulation.query.filter_by(simulation_id=simulation_id, company_id=company_id).first()
+
+def delete_simulation(simulation_id, user_id):
+    company_id = _get_company_id(user_id)
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+
+    simulation = SimulationRepository.get_by_id_and_company(simulation_id, company_id)
 
     if not simulation:
         return {"erro": "Simulação não encontrada para esta empresa."}, 404
 
     try:
-        db.session.delete(simulation)
-        db.session.commit()
+        SimulationRepository.delete(simulation)
         return {"mensagem": "Simulação excluída com sucesso."}, 200
     except Exception as e:
-        db.session.rollback()
         return {"erro": "Ocorreu um erro interno ao excluir a simulação."}, 500

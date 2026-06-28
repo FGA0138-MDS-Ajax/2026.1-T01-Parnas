@@ -10,9 +10,9 @@ from app.services.simulation_service import (
 )
 
 simulation_bp = Blueprint("simulation_bp", __name__)
-
 calc_schema = SimulationCalculateDTO()
 save_schema = SimulationSaveDTO()
+
 
 @simulation_bp.route("/calculate", methods=["POST"])
 @jwt_required()
@@ -21,11 +21,9 @@ def calculate():
         data = calc_schema.load(request.get_json())
     except ValidationError as err:
         return jsonify({"erros_de_validacao": err.messages}), 400
-
-    company_id = request.json.get("company_id")
-
-    answer = process_simulation(data, company_id)
+    answer = process_simulation(data)
     return jsonify(answer), 200
+
 
 @simulation_bp.route("/", methods=["POST"])
 @jwt_required()
@@ -34,29 +32,22 @@ def create():
         data = save_schema.load(request.get_json())
     except ValidationError as err:
         return jsonify({"erros_de_validacao": err.messages}), 400
-
-    current_user = get_jwt_identity()
-    answer, status_code = save_simulation(data, current_user)
+    current_user_id = int(get_jwt_identity())
+    answer, status_code = save_simulation(data, current_user_id)
     return jsonify(answer), status_code
+
 
 @simulation_bp.route("/", methods=["GET"])
 @jwt_required()
 def get_all():
-    company_id = request.args.get("company_id")
-
-    if not company_id:
-        return jsonify({"erro": "O parâmetro company_id é obrigatório."}), 400
-
-    answer, status_code = get_simulation(company_id)
+    current_user_id = int(get_jwt_identity())
+    answer, status_code = get_simulation(current_user_id)
     return jsonify(answer), status_code
 
 
 @simulation_bp.route("/<int:simulation_id>", methods=["DELETE"])
 @jwt_required()
 def delete(simulation_id):
-    company_id = request.args.get("company_id")
-    if not company_id:
-        return jsonify({"erro": "O parâmetro company_id é obrigatório."}), 400
-
-    answer, status_code = delete_simulation(simulation_id, company_id)
+    current_user_id = int(get_jwt_identity())
+    answer, status_code = delete_simulation(simulation_id, current_user_id)
     return jsonify(answer), status_code

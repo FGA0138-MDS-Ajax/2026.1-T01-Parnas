@@ -14,8 +14,8 @@ class Comparison(db.Model):
     created_at = db.Column(db.DateTime, default=date.today)
 
     # Relacionamento simples (o Comparison pertence a UMA empresa e FOI CRIADO POR UM usuário)
-    company = db.relationship('Company', backref='credit_comparisons')
-    user = db.relationship('User', backref='credit_comparisons')
+    company = db.relationship('Company', back_populates='credit_comparisons')
+    user = db.relationship('User', back_populates='credit_comparisons')
     modalities = db.relationship('ComparisonModality', back_populates='comparison', cascade='all, delete-orphan')
 
 class ComparisonModality(db.Model):

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, send_file
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 from app.services.comparison_service import ComparisonService
 
 comparison_bp = Blueprint('comparisons', __name__)
@@ -18,9 +18,8 @@ def calculate():
 @jwt_required()
 def save_comparison():
     """Calcula e salva no banco de dados"""
-    current_user_id = get_jwt_identity()
     data = request.get_json()
-    resultado, status_code = ComparisonService.save_comparison(current_user_id, data)
+    resultado, status_code = ComparisonService.save_comparison(data)
     return jsonify(resultado), status_code
 
 
@@ -28,8 +27,7 @@ def save_comparison():
 @jwt_required()
 def get_comparisons():
     """Lista o histórico de comparações da empresa"""
-    current_user_id = get_jwt_identity()
-    resultado, status_code = ComparisonService.get_comparisons(current_user_id)
+    resultado, status_code = ComparisonService.get_comparisons()
     return jsonify(resultado), status_code
 
 
@@ -37,8 +35,7 @@ def get_comparisons():
 @jwt_required()
 def delete_comparison(comparison_id):
     """Exclui uma comparação do histórico"""
-    current_user_id = get_jwt_identity()
-    resultado, status_code = ComparisonService.delete_comparison(current_user_id, comparison_id)
+    resultado, status_code = ComparisonService.delete_comparison(comparison_id)
     return jsonify(resultado), status_code
 
 
@@ -46,8 +43,7 @@ def delete_comparison(comparison_id):
 @jwt_required()
 def export_pdf(comparison_id):
     """Gera e faz o download do PDF da comparação"""
-    current_user_id = get_jwt_identity()
-    buffer, status_code = ComparisonService.generate_pdf_report(current_user_id, comparison_id)
+    buffer, status_code = ComparisonService.generate_pdf_report(comparison_id)
 
     # Se retornou erro, devolve o JSON de erro
     if status_code != 200:

@@ -27,6 +27,7 @@ Fixtures usadas (do conftest.py):
 import pytest
 import json
 from app.models.company import Company
+# daniel: atualizei a URL de cadastro para POST /api/companies (era .../register)
 
 
 class TestCompanyRoutesAuthentication:
@@ -34,7 +35,7 @@ class TestCompanyRoutesAuthentication:
 
     def test_register_without_token_returns_401(self, client, clean_db):
         """
-        CENÁRIO: POST /api/companies/register SEM token JWT
+        CENÁRIO: POST /api/companies SEM token JWT
         ESPERADO: Status 401 Unauthorized
         """
 
@@ -47,7 +48,7 @@ class TestCompanyRoutesAuthentication:
 
         # Action: Fazer requisição SEM headers de autenticação
         response = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=company_data,
             headers={'Content-Type': 'application/json'}
         )
@@ -80,7 +81,7 @@ class TestCompanyRoutesAuthentication:
 
         # Action
         response = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=company_data,
             headers=invalid_headers
         )
@@ -105,7 +106,7 @@ class TestCompanyRoutesAuthentication:
 
         # Action: Com token válido
         response = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=company_data,
             headers=auth_headers
         )
@@ -133,7 +134,7 @@ class TestCompanyRoutesValidationErrors:
 
         # Action
         response = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=company_data,
             headers=auth_headers
         )
@@ -161,7 +162,7 @@ class TestCompanyRoutesValidationErrors:
 
         # Action
         response = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=company_data,
             headers=auth_headers
         )
@@ -187,7 +188,7 @@ class TestCompanyRoutesValidationErrors:
 
         # Action
         response = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=company_data,
             headers=auth_headers
         )
@@ -213,7 +214,7 @@ class TestCompanyRoutesValidationErrors:
 
         # Action
         response = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=company_data,
             headers=auth_headers
         )
@@ -242,7 +243,7 @@ class TestCompanyRoutesSuccess:
 
         # Action
         response = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=company_data,
             headers=auth_headers
         )
@@ -282,7 +283,7 @@ class TestCompanyRoutesSuccess:
 
         # Action
         response = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=company_data,
             headers=auth_headers
         )
@@ -309,7 +310,7 @@ class TestCompanyRoutesDuplicateCNPJ:
 
         # Action: Primeira requisição (sucesso)
         response1 = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=company_data,
             headers=auth_headers
         )
@@ -319,7 +320,7 @@ class TestCompanyRoutesDuplicateCNPJ:
         company_data['name'] = 'Segunda Empresa'
         company_data['email'] = 'segunda@empresa.com'
         response2 = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=company_data,
             headers=auth_headers
         )
@@ -340,7 +341,7 @@ class TestCompanyRoutesDuplicateCNPJ:
 
         # Primeira: Com formatação
         response1 = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json={
                 'name': 'Empresa 1',
                 'cnpj': '11.222.333/0001-81',  # Com formatação
@@ -353,7 +354,7 @@ class TestCompanyRoutesDuplicateCNPJ:
 
         # Segunda: Sem formatação (mas CNPJ igual)
         response2 = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json={
                 'name': 'Empresa 2',
                 'cnpj': '11222333000181',  # Sem formatação
@@ -378,7 +379,7 @@ class TestCompanyRoutesContentNegotiation:
 
         # Action: Sem JSON
         response = client.post(
-            '/api/companies/register',
+            '/api/companies',
             data='not json',
             headers={
                 'Authorization': f'Bearer {auth_headers["Authorization"].split()[-1]}',
@@ -397,7 +398,7 @@ class TestCompanyRoutesContentNegotiation:
 
         # Action
         response = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json={},  # Vazio!
             headers=auth_headers
         )
@@ -443,7 +444,7 @@ class TestCompanyRoutesIntegration:
         # Action: Registrar 3 empresas
         for company_data in companies:
             response = client.post(
-                '/api/companies/register',
+                '/api/companies',
                 json=company_data,
                 headers=auth_headers
             )
@@ -470,7 +471,7 @@ class TestCompanyRoutesIntegration:
 
         # Action
         response = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=company_data,
             headers=auth_headers
         )

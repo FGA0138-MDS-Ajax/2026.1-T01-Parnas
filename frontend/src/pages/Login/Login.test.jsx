@@ -12,7 +12,6 @@ vi.mock('react-router-dom', async (importOriginal) => {
   return { ...actual, useNavigate: () => mockNavigate };
 });
 
-// Login.jsx usa fetch nativo (não axios); mockamos o fetch global
 function renderLogin() {
   return render(
     <MemoryRouter>
@@ -26,7 +25,7 @@ function renderLogin() {
 // Labels não estão associados aos inputs -> buscamos pelos placeholders
 const campoEmail = () => screen.getByPlaceholderText('seu@email.com.br');
 const campoSenha = () => screen.getByPlaceholderText('••••••••');
-const botaoEntrar = () => screen.getByRole('button', { name: /entrar/i });
+const botaoEntrar = () => screen.getByRole('button', { name: /^entrar$/i });
 
 // localStorage de verdade aqui é um stub do Node (quebrado); usamos um em memória
 function criarLocalStorageMock() {
@@ -45,7 +44,7 @@ beforeEach(() => {
   global.fetch = vi.fn();
 });
 
-test('renderiza os campos de e-mail, senha e o botão Entrar', () => {
+test('renderiza os campos de e-mail, senha e o botao Entrar', () => {
   renderLogin();
 
   expect(campoEmail()).toBeInTheDocument();
@@ -53,20 +52,17 @@ test('renderiza os campos de e-mail, senha e o botão Entrar', () => {
   expect(botaoEntrar()).toBeInTheDocument();
 });
 
-test('login com sucesso salva o token e redireciona para o dashboard', async () => {
-  // Arrange: API responde com um JWT
+test('login com sucesso salva o token e redireciona para a seleção de empresa', async () => {
   global.fetch.mockResolvedValue({
     ok: true,
     json: async () => ({ token: 'jwt-abc' }),
   });
   renderLogin();
 
-  // Act: preenche e envia
   await userEvent.type(campoEmail(), 'teste@email.com');
   await userEvent.type(campoSenha(), 'Senha@123');
   await userEvent.click(botaoEntrar());
 
-  // Assert: enviou as credenciais, guardou o token e navegou
   await waitFor(() => {
     expect(global.fetch).toHaveBeenCalledWith(
       '/auth/login',
@@ -77,23 +73,20 @@ test('login com sucesso salva o token e redireciona para o dashboard', async () 
     );
   });
   expect(localStorage.getItem('token')).toBe('jwt-abc');
-  expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
+  expect(mockNavigate).toHaveBeenCalledWith('/selecao-empresa');
 });
 
-test('credenciais inválidas exibem a mensagem de erro vinda da API', async () => {
-  // Arrange: API responde 401 com mensagem clara
+test('credenciais invalidas exibem a mensagem de erro vinda da API', async () => {
   global.fetch.mockResolvedValue({
     ok: false,
     json: async () => ({ erro: 'E-mail ou senha inválidos' }),
   });
   renderLogin();
 
-  // Act
   await userEvent.type(campoEmail(), 'teste@email.com');
   await userEvent.type(campoSenha(), 'senha-errada');
   await userEvent.click(botaoEntrar());
 
-  // Assert: mostra o erro e não redireciona nem guarda token
   expect(await screen.findByText('E-mail ou senha inválidos')).toBeInTheDocument();
   expect(localStorage.getItem('token')).toBeNull();
   expect(mockNavigate).not.toHaveBeenCalled();
@@ -102,12 +95,20 @@ test('credenciais inválidas exibem a mensagem de erro vinda da API', async () =
 test('senha com menos de 8 caracteres barra antes de chamar a API', async () => {
   renderLogin();
 
-  // Act: senha curta
   await userEvent.type(campoEmail(), 'teste@email.com');
   await userEvent.type(campoSenha(), '123');
   await userEvent.click(botaoEntrar());
 
-  // Assert: validação local mostra erro e não chega a chamar o fetch
   expect(await screen.findByText(/credenciais inválidas/i)).toBeInTheDocument();
+  expect(global.fetch).not.toHaveBeenCalled();
+});
+
+test('acesso demo gera um token e leva para a seleção sem chamar a API', async () => {
+  renderLogin();
+
+  await userEvent.click(screen.getByRole('button', { name: /acessar conta demo/i }));
+
+  expect(localStorage.getItem('token')).toMatch(/^mock_demo_/);
+  expect(mockNavigate).toHaveBeenCalledWith('/selecao-empresa');
   expect(global.fetch).not.toHaveBeenCalled();
 });
