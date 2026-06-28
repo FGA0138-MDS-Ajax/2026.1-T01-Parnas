@@ -71,6 +71,9 @@ def create_app():
     from app.routes.report_routes import report_bp
     app.register_blueprint(report_bp, url_prefix='/api/reports')
 
+    # Registra o Blueprint do Dashboard Financeiro
+    from app.routes.dashboard_routes import dashboard_bp
+    app.register_blueprint(dashboard_bp, url_prefix='/api/dashboard')
     # Registra o Blueprint de sessões e empresas
     from app.routes.session_routes import session_bp
     app.register_blueprint(session_bp, url_prefix='/api')
