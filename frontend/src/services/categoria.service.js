@@ -26,15 +26,13 @@ const formatarTipoParaExibicao = (tipo) => {
 
 export const listarCategorias = async () => {
   const empresa = await obterEmpresaAtiva();
-  if (!empresa?.company_id) {
+  if (!empresa?.company_id)
     throw new Error("Selecione uma empresa para carregar as categorias.");
-  }
 
-  // Rota atualizada para o padrão da nova branch
+  //rota atualizada para o padrão do backend
   const { data } = await api.get(
     `/api/companies/${empresa.company_id}/categories/`,
   );
-
   const categorias = Array.isArray(data?.categories) ? data.categories : [];
   return categorias.map((categoria) => ({
     id: categoria.category_id || categoria.id,
@@ -46,11 +44,9 @@ export const listarCategorias = async () => {
 
 export const criarCategoria = async (dados) => {
   const empresa = await obterEmpresaAtiva();
-  if (!empresa?.company_id) {
+  if (!empresa?.company_id)
     throw new Error("Selecione uma empresa para criar a categoria.");
-  }
 
-  //correções feitas abaixo para o novo padrão de rotas do backend
   return api.post(`/api/companies/${empresa.company_id}/categories/`, {
     name: dados.nome,
     type: normalizarTipo(dados.tipo),
@@ -59,9 +55,8 @@ export const criarCategoria = async (dados) => {
 
 export const atualizarCategoria = async (id, dados) => {
   const empresa = await obterEmpresaAtiva();
-  if (!empresa?.company_id) {
+  if (!empresa?.company_id)
     throw new Error("Selecione uma empresa para atualizar a categoria.");
-  }
 
   return api.put(`/api/companies/${empresa.company_id}/categories/${id}`, {
     name: dados.nome,
@@ -71,9 +66,8 @@ export const atualizarCategoria = async (id, dados) => {
 
 export const excluirCategoria = async (id) => {
   const empresa = await obterEmpresaAtiva();
-  if (!empresa?.company_id) {
+  if (!empresa?.company_id)
     throw new Error("Selecione uma empresa para excluir a categoria.");
-  }
 
   return api.delete(`/api/companies/${empresa.company_id}/categories/${id}`);
 };

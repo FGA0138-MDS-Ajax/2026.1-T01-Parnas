@@ -82,6 +82,11 @@ const useContas = () => {
           (c) => String(c.id) === String(norm.categoria),
         );
         if (cat) norm.categoriaNome = cat.nome;
+        const caixa = caixasApi?.find(
+          (cx) => String(cx.id) === String(norm.contaCaixaId),
+        );
+        if (caixa) norm.contaCaixaNome = caixa.nome;
+
         return norm;
       });
 
