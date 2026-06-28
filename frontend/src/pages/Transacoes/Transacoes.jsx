@@ -1,27 +1,28 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import PageHeader from '../../components/Finance/PageHeader';
+import SummaryCards from '../../components/Finance/SummaryCards';
+import FilterPanel from '../../components/Finance/FilterPanel';
 import useTransacoes from '../../hooks/useTransacoes';
 import ModalTransacao from './ModalTransacao'; // Agora estão na mesma pasta!
 import ConfirmacaoExclusao from './ConfirmacaoExclusao'; // Agora estão na mesma pasta!
+import formatCurrency from '../../utils/formatCurrency';
+import formatDate from '../../utils/formatDate';
 import './Transacoes.css'; // Nome do CSS atualizado
 
-const formatarMoeda = (valor) =>
-  valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-const formatarData = (dataStr) => {
-  if (!dataStr) return '';
-  const [ano, mes, dia] = dataStr.split('-');
-  return `${dia}/${mes}/${ano}`;
-};
-
 const Transacoes = () => { // Nome do componente alterado
+  const navigate = useNavigate();
   const {
     filtros,
     transacoes,
     totais,
+    saldoContaSelecionada,
+    contaCaixaSelecionada,
     paginaAtual,
     totalPaginas,
     totalTransacoes,
     categorias,
+    contasCaixa,
     handleFiltroChange,
     aplicarFiltros,
     limparFiltros,
@@ -84,73 +85,95 @@ const Transacoes = () => { // Nome do componente alterado
   return (
     <div className="transacoes-container"> {/* Classe base atualizada */}
 
-      <div className="transacoes-header">
-        <div>
-          <h2>Transações Financeiras</h2> {/* Título mais limpo e direto */}
-          <p>Cadastre, consulte e filtre as movimentações financeiras da sua empresa.</p>
-        </div>
-        <button className="btn-nova-transacao" onClick={abrirModalNova}>
-          <span className="btn-icon">+</span>
-          Nova Transação
-        </button>
-      </div>
+      <PageHeader
+        className="transacoes-header"
+        title="Transações Financeiras"
+        description="Cadastre, consulte e filtre as movimentações financeiras da sua empresa."
+        actionLabel="Nova Transação"
+        onAction={abrirModalNova}
+      />
 
-      <div className="transacoes-totais">
-        <div className="total-card total-receita">
-          <span className="total-label">Total de Receitas</span>
-          <span className="total-valor">{formatarMoeda(totais.totalReceitas || 0)}</span>
-        </div>
-        <div className="total-card total-despesa">
-          <span className="total-label">Total de Despesas</span>
-          <span className="total-valor">{formatarMoeda(totais.totalDespesas || 0)}</span>
-        </div>
-        <div className={`total-card ${(totais.saldo || 0) >= 0 ? 'saldo-positivo' : 'saldo-negativo'}`}>
-          <span className="total-label">Saldo</span>
-          <span className="total-valor">{formatarMoeda(totais.saldo || 0)}</span>
-        </div>
-      </div>
+      <SummaryCards
+        items={[
+          { label: 'Total de Receitas', value: formatCurrency(totais.totalReceitas), className: 'total-receita' },
+          { label: 'Total de Despesas', value: formatCurrency(totais.totalDespesas), className: 'total-despesa' },
+          {
+            label: 'Saldo',
+            value: formatCurrency(totais.saldo),
+            className: (totais.saldo || 0) >= 0 ? 'saldo-positivo' : 'saldo-negativo',
+          },
+          ...(saldoContaSelecionada !== null ? [{
+            label: `Saldo Atual - ${contaCaixaSelecionada?.nome || 'Conta/Caixa'}`,
+            value: formatCurrency(saldoContaSelecionada),
+            className: saldoContaSelecionada >= 0 ? 'saldo-positivo' : 'saldo-negativo',
+          }] : []),
+        ]}
+      />
 
-      <div className="transacoes-filtros">
-        <div className="filtros-grid">
-          <div className="filtro-group">
-            <label>Data inicial</label>
-            <input type="date" name="dataInicio" value={filtros.dataInicio} onChange={handleFiltroChange} />
-          </div>
-          <div className="filtro-group">
-            <label>Data final</label>
-            <input type="date" name="dataFim" value={filtros.dataFim} onChange={handleFiltroChange} />
-          </div>
-          <div className="filtro-group">
-            <label>Tipo</label>
-            <select name="tipo" value={filtros.tipo} onChange={handleFiltroChange}>
-              <option value="">Todos</option>
-              <option value="receita">Receita</option>
-              <option value="despesa">Despesa</option>
-            </select>
-          </div>
-          <div className="filtro-group">
+      <FilterPanel onClear={limparFiltros} onApply={aplicarFiltros}>
+        <div className="filtro-group">
+          <label>Data inicial</label>
+          <input type="date" name="dataInicio" value={filtros.dataInicio} onChange={handleFiltroChange} />
+        </div>
+        <div className="filtro-group">
+          <label>Data final</label>
+          <input type="date" name="dataFim" value={filtros.dataFim} onChange={handleFiltroChange} />
+        </div>
+        <div className="filtro-group">
+          <label>Tipo</label>
+          <select name="tipo" value={filtros.tipo} onChange={handleFiltroChange}>
+            <option value="">Todos</option>
+            <option value="receita">Receita</option>
+            <option value="despesa">Despesa</option>
+          </select>
+        </div>
+        <div className="filtro-group">
+          <div className="campo-label-acoes">
             <label>Categoria</label>
-            <select name="categoria" value={filtros.categoria} onChange={handleFiltroChange}>
-              <option value="">Todas</option>
-              {categorias.map((cat) => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
+            <button
+              type="button"
+              className="btn-link-categoria"
+              onClick={() => navigate('/categorias')}
+            >
+              Cadastrar
+            </button>
           </div>
-          <div className="filtro-group">
-            <label>Valor mínimo (R$)</label>
-            <input type="number" name="valorMin" placeholder="0,00" value={filtros.valorMin} onChange={handleFiltroChange} min="0" />
-          </div>
-          <div className="filtro-group">
-            <label>Valor máximo (R$)</label>
-            <input type="number" name="valorMax" placeholder="0,00" value={filtros.valorMax} onChange={handleFiltroChange} min="0" />
-          </div>
+          <select name="categoria" value={filtros.categoria} onChange={handleFiltroChange}>
+            <option value="">Todas</option>
+            {categorias.map((cat) => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
         </div>
-        <div className="filtros-acoes">
-          <button className="btn-limpar" onClick={limparFiltros}>Limpar filtros</button>
-          <button className="btn-aplicar" onClick={aplicarFiltros}>Aplicar filtros</button>
+        <div className="filtro-group">
+          <div className="campo-label-acoes">
+            <label>Conta/Caixa</label>
+            <button
+              type="button"
+              className="btn-link-categoria"
+              onClick={() => navigate('/contas-caixa')}
+            >
+              Cadastrar
+            </button>
+          </div>
+          <select name="contaCaixaId" value={filtros.contaCaixaId} onChange={handleFiltroChange}>
+            <option value="">Todas</option>
+            {contasCaixa.map((contaCaixa) => (
+              <option key={contaCaixa.id} value={contaCaixa.id}>
+                {contaCaixa.nome}
+              </option>
+            ))}
+          </select>
         </div>
-      </div>
+        <div className="filtro-group">
+          <label>Valor mínimo (R$)</label>
+          <input type="number" name="valorMin" placeholder="0,00" value={filtros.valorMin} onChange={handleFiltroChange} min="0" />
+        </div>
+        <div className="filtro-group">
+          <label>Valor máximo (R$)</label>
+          <input type="number" name="valorMax" placeholder="0,00" value={filtros.valorMax} onChange={handleFiltroChange} min="0" />
+        </div>
+      </FilterPanel>
 
       <div className="transacoes-tabela-wrapper">
         <div className="tabela-info">
@@ -168,6 +191,7 @@ const Transacoes = () => { // Nome do componente alterado
                 <th>Data</th>
                 <th>Descrição</th>
                 <th>Categoria</th>
+                <th>Conta/Caixa</th>
                 <th>Tipo</th>
                 <th>Valor</th>
                 <th className="col-acoes" style={{ textAlign: 'center' }}>Ações</th>
@@ -176,9 +200,10 @@ const Transacoes = () => { // Nome do componente alterado
             <tbody>
               {transacoes.map((t) => (
                 <tr key={t.id}>
-                  <td>{formatarData(t.data)}</td>
+                  <td>{formatDate(t.data)}</td>
                   <td>{t.descricao}</td>
                   <td>{t.categoria || t.categoriaNome}</td>
+                  <td>{t.contaCaixaNome || 'Sem conta/caixa'}</td>
                   <td>
                     <span className={`badge badge-${t.tipo}`}>
                       {t.tipo === 'receita' ? '↑ Receita' : '↓ Despesa'}
@@ -186,22 +211,22 @@ const Transacoes = () => { // Nome do componente alterado
                   </td>
                   <td className={`valor-${t.tipo}`}>
                     {t.tipo === 'despesa' ? '- ' : '+ '}
-                    {formatarMoeda(t.valor)}
+                    {formatCurrency(t.valor)}
                   </td>
                   <td className="col-acoes" style={{ textAlign: 'center' }}>
-                    <button
-                      className="btn-acao btn-editar"
-                      onClick={() => abrirModalEditar(t)}
-                      title="Editar transação"
-                      style={{ marginRight: '8px', background: 'none', border: 'none', cursor: 'pointer' }}
-                    >
-                      ✎
-                    </button>
+                    {!t.transferenciaId && (
+                      <button
+                        className="btn-acao btn-editar"
+                        onClick={() => abrirModalEditar(t)}
+                        title="Editar transação"
+                      >
+                        ✎
+                      </button>
+                    )}
                     <button
                       className="btn-acao btn-excluir"
                       onClick={() => abrirConfirmacaoExclusao(t)}
                       title="Excluir transação"
-                      style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                     >
                       ✕
                     </button>
@@ -237,6 +262,7 @@ const Transacoes = () => { // Nome do componente alterado
         <ModalTransacao
           transacaoParaEditar={transacaoParaEditar}
           categorias={categoriesMapeadas}
+          contasCaixa={contasCaixa}
           onSalvar={handleSalvar}
           onFechar={fecharModal}
         />

@@ -1,0 +1,211 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 1200px;
+  padding: 2rem;
+}
+
+.form-categoria {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 1rem;
+}
+
+.categorias-page {
+  min-height: auto;
+  background: transparent;
+}
+
+.header-content {
+  font-size: 0.83rem;
+  color: var(--branco);
+  opacity: 0.9;
+}
+
+.header-content h1 {
+  margin: 0;
+  color: white;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.header-content p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+}
+
+.categorias-content {
+  padding-top: 0;
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 2rem;
+  width: 100%;
+}
+
+.categorias-card {
+  width: 100%;
+  background: var(--fundo-card);
+  border-radius: var(--arredondamento-card);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(6, 38, 35, 0.04);
+  border: 1px solid var(--borda-input);
+}
+
+.categorias-card h2 {
+  margin-bottom: 1.5rem;
+  color: var(--texto-principal);
+  font-size: 1.45rem;
+  font-weight: 700;
+}
+
+.categorias-form {
+  display: grid;
+  grid-template-columns: minmax(300px, 3fr) minmax(150px, 1fr) auto;
+  gap: 1rem;
+}
+
+.categorias-form input,
+.categorias-form select,
+.table-input,
+.table-select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
+  font-size: 0.88rem;
+  color: var(--texto-principal);
+  background-color: var(--branco);
+  outline: none;
+  transition: var(--transicao-suave);
+}
+
+.categorias-form input:focus,
+.categorias-form select:focus,
+.table-input:focus,
+.table-select:focus {
+  border-color: var(--verde-claro);
+  box-shadow: 0 0 0 3px rgba(35, 155, 143, 0.15);
+}
+
+.categorias-form input {
+  flex: 1;
+}
+
+.btn-adicionar {
+  background: var(--azul) !important;
+  color: var(--branco);
+  border: none;
+  border-radius: var(--arredondamento-input-botao);
+  padding: 12px 24px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: var(--transicao-suave);
+  letter-spacing: 0.5px;
+}
+
+.btn-adicionar:hover {
+  background: var(--verde-claro) !important;
+  box-shadow: 0 4px 12px rgba(35, 155, 143, 0.2);
+}
+
+.categorias-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.categorias-table th {
+  background: var(--verde-suave);
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--texto-principal);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.categorias-table th,
+.categorias-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--borda-input);
+  font-size: 0.9rem;
+  color: var(--texto-principal);
+}
+
+.tipo-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.receita {
+  background: #dcfce7;
+  color: var(--sucesso);
+}
+
+.despesa {
+  background: #fee2e2;
+  color: var(--erro);
+}
+
+.acoes {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-editar,
+.btn-salvar {
+  background: var(--azul) !important;
+  color: var(--branco);
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--arredondamento-input-botao);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: var(--transicao-suave);
+}
+
+.btn-editar:hover,
+.btn-salvar:hover {
+  background: var(--verde-claro) !important;
+  box-shadow: 0 4px 10px rgba(35, 155, 143, 0.15);
+}
+
+.btn-excluir {
+  background: var(--erro) !important;
+  color: var(--branco) !important;
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--arredondamento-input-botao);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: var(--transicao-suave);
+}
+
+.btn-excluir:hover {
+  color: var(--branco) !important;
+  background: #bd2121 !important;
+  box-shadow: 0 4px 10px rgba(229, 62, 62, 0.2);
+}
+
+.btn-cancelar {
+  background: #6b7280;
+  color: var(--branco);
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--arredondamento-input-botao);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: var(--transicao-suave);
+}
+
+.btn-cancelar:hover {
+  background: #4b5563;
+}

@@ -1,21 +1,31 @@
 from marshmallow import Schema, fields, validates, ValidationError
 from datetime import date
 
+
 class TransactionSchema(Schema):
     description = fields.Str(required=True, error_messages={"required": "A descrição é obrigatória."})
     amount = fields.Float(required=True, error_messages={"required": "O valor é obrigatório."})
     date = fields.Date(required=True, error_messages={"required": "A data é obrigatória."})
     type = fields.Str(required=True, error_messages={"required": "O tipo (entrada/saída) é obrigatório."})
-
-    category_id = fields.Int(required=True, error_messages={"required":"A categoria é obrigatória."})
-    company_id = fields.Int(required=True, error_messages={"required":"O ID da empresa é obrigatório"})
+    category_id = fields.Int(required=True, error_messages={"required": "A categoria é obrigatória."})
 
     @validates('amount')
-    def validate_amount(self, value):
+    def validate_amount(self, value, **kwargs):
         if value <= 0:
             raise ValidationError("O valor da transação deve ser estritamente positivo.")
 
     @validates('date')
-    def validate_date(self, value):
+    def validate_date(self, value, **kwargs):
         if value > date.today():
             raise ValidationError("A data de transação não pode ser futura.")
+
+
+class TransactionRequirements(Schema):
+    id = fields.Int(attribute="transaction_id", dump_only=True)
+    description = fields.Str(dump_only=True)
+    amount = fields.Float(dump_only=True)
+    date = fields.Date(dump_only=True)
+    type = fields.Str(dump_only=True)
+    category_id = fields.Int(dump_only=True)
+    company_id = fields.Int(dump_only=True)
+    id_conta = fields.Int(attribute="id_conta", allow_none=True, dump_only=True)

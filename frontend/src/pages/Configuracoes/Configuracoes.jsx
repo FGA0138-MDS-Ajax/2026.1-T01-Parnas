@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Configuracoes.css';
+import useAuth from "../../hooks/useAuth.js";
 
 const Configuracoes = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState(null);
@@ -18,16 +20,21 @@ const Configuracoes = () => {
     setModalType(null);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    if (logout) {
+      logout();
+    }
+    window.location.href = '/';
+  };
+
   const handleConfirmAction = () => {
     if (modalType === 'company') {
       console.log("Executando integração para: Excluir Empresa");
-
       handleCloseModal();
     } else if (modalType === 'user') {
       console.log("Executando integração para: Excluir Conta");
-
       handleCloseModal();
-
       navigate('/login', { replace: true });
     }
   };
@@ -41,6 +48,17 @@ const Configuracoes = () => {
 
       <div className="config-card">
         <div className="admin-actions">
+
+          <div className="admin-row">
+            <div className="admin-info">
+              <h4>Sair do Sistema</h4>
+              <p>Encerra sua sessão atual com segurança e remove suas credenciais temporárias do navegador.</p>
+            </div>
+            <button onClick={handleLogout} className="btn-action-danger" >
+              Sair da Conta
+            </button>
+          </div>
+
           <div className="admin-row">
             <div className="admin-info">
               <h4>Excluir Empresa</h4>
@@ -63,7 +81,6 @@ const Configuracoes = () => {
         </div>
       </div>
 
-      {/* Modal de Confirmação Irreversível */}
       {isModalOpen && (
         <div className="modal-overlay" onClick={handleCloseModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>

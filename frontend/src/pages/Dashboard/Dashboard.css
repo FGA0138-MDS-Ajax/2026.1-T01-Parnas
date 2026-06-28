@@ -30,12 +30,14 @@
   background-color: var(--fundo-card);
   border-radius: var(--arredondamento-card);
   padding: 28px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 30px rgba(6, 38, 35, 0.04);
   border: 1px solid var(--borda-input);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   min-height: 220px;
+  max-width: 480px;
+  width: 100%;
 }
 
 .dashboard-card-title {
@@ -64,23 +66,24 @@
   margin-top: 20px;
   color: var(--branco);
   border: none;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border-radius: var(--arredondamento-input-botao);
   cursor: pointer;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   font-family: var(--fonte-poppins);
   align-self: flex-start;
   transition: var(--transicao-suave);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.5px;
 }
 
 .btn-empresa {
-  background-color: var(--azul);
+  background-color: var(--azul) !important;
 }
 
 .btn-empresa:hover {
-  opacity: 0.9;
+  background-color: var(--verde-claro) !important;
+  box-shadow: 0 4px 12px rgba(35, 155, 143, 0.2);
 }
 
 .btn-config {
@@ -91,7 +94,6 @@
   opacity: 0.9;
 }
 
-/* Card de Transações Financeiras */
 .title-transacoes {
   color: #1a7a46;
 }
@@ -109,4 +111,64 @@
 
 .btn-transacoes:hover {
   background-color: #145c35;
+}
+
+/* Seção Inferior de Empresas Vinculadas */
+.dashboard-empresas-section {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--borda-input);
+}
+
+.dashboard-empresas-title {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  color: var(--texto-principal);
+  font-weight: 600;
+}
+
+.dashboard-empresas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dashboard-empresa-row {
+  background-color: var(--fundo-card);
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-card);
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(6, 38, 35, 0.02);
+}
+
+.empresa-row-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  color: var(--azul);
+  font-weight: 600;
+}
+
+.empresa-row-details {
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  font-size: 13px;
+  color: var(--texto-placeholder);
+}
+
+.empresa-row-details strong {
+  color: var(--texto-principal);
+  font-weight: 500;
+}
+
+.badge-id-banco {
+  background-color: rgba(26, 122, 70, 0.1);
+  color: #1a7a46;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
 }

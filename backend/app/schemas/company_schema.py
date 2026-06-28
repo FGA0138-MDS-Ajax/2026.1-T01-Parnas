@@ -26,13 +26,10 @@ class CompanyRegistrationSchema(Schema):
         if not cnpj_validator.validate(value):
             raise ValidationError("CNPJ inválido")
 
-class CompanyDeleteSchema(Schema):
-    cnpj = fields.String(
-        required=True,
-        error_messages={"required": "CNPJ é obrigatório"}
-    )
-    @validates('cnpj')
-    def validate_cnpj_format(self, value, **kwargs):
-        cnpj_validator = CNPJ()
-        if not cnpj_validator.validate(value):
-            raise ValidationError("CNPJ inválido")
+class CompanyRequirements(Schema):
+    id = fields.Int(attribute="company_id", dump_only=True)
+    name = fields.Str(dump_only=True)
+    cnpj = fields.Str(dump_only=True)
+    email = fields.Email(dump_only=True)
+    phone = fields.Str(dump_only=True)
+    register_date = fields.Date(dump_only=True)

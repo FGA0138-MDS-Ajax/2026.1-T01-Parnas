@@ -51,7 +51,7 @@
 }
 
 .btn-nova-transacao:hover {
-  background-color: #0c3d68;
+  background-color: var(--verde-escuro);
   transform: translateY(-1px);
 }
 
@@ -142,7 +142,7 @@
 
 .filtros-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   gap: 16px;
   margin-bottom: 16px;
   width: 100%;
@@ -152,6 +152,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 0;
 }
 
 .filtro-group label {
@@ -160,6 +161,34 @@
   color: var(--texto-principal);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+
+.campo-label-acoes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.campo-label-acoes label {
+  margin: 0;
+}
+
+.btn-link-categoria {
+  background: transparent;
+  border: none;
+  color: var(--azul);
+  cursor: pointer;
+  font-family: var(--fonte-poppins);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.btn-link-categoria:hover {
+  text-decoration: underline;
 }
 
 .filtro-group input,
@@ -316,15 +345,45 @@
 /* botoes de acao na tabela */
 
 .btn-acao {
+  background: none;
+  border: none;
   color: var(--texto-placeholder);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 6px 10px;
+  border-radius: var(--arredondamento-input-botao);
   transition: var(--transicao-suave);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.transacoes-tabela .col-acoes {
+  white-space: nowrap;
+}
+
+.transacoes-tabela .col-acoes .btn-acao + .btn-acao {
+  margin-left: 8px;
+}
+
+.transacoes-tabela .btn-editar:hover {
+  background-color: var(--azul) !important;
+  color: var(--branco) !important;
+}
+
+.transacoes-tabela .btn-excluir:hover {
+  background-color: var(--erro) !important;
+  color: var(--branco) !important;
 }
 
 .btn-editar:hover {
+  background-color: rgba(15, 76, 129, 0.08);
   color: var(--azul) !important;
 }
 
 .btn-excluir:hover {
+  background-color: #fdecea;
   color: var(--erro) !important;
 }
 
@@ -373,6 +432,11 @@
 .tipo-btn--despesa.ativo {
   background-color: #fdecea;
   color: #c0392b;
+}
+
+.tipo-btn.ativo:not(.tipo-btn--receita):not(.tipo-btn--despesa) {
+  background-color: rgba(15, 76, 129, 0.1);
+  color: var(--azul);
 }
 
 .tipo-btn:not(.ativo):hover {
@@ -514,11 +578,18 @@
   border-radius: var(--arredondamento-card, 12px);
   width: 100%;
   max-width: 520px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   animation: slideUp 0.2s ease;
+}
+
+.modal-container--confirmacao,
+.modal-container--sm {
+  max-width: 420px;
 }
 
 /* cabecalho do modal alinhando titulo e fechar */
@@ -575,15 +646,91 @@
   background-color: #f8fafc;
 }
 
+/* confirmacoes de exclusao e quitacao */
+.confirmacao-icone {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 auto 16px;
+}
+
+.confirmacao-icone--excluir {
+  background-color: #fdecea;
+  color: #c0392b;
+}
+
+.confirmacao-icone--quitar {
+  background-color: #e8f7ef;
+  color: #1a7a46;
+}
+
+.confirmacao-texto {
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--texto-principal);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.confirmacao-valor {
+  display: block;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.valor--receita {
+  color: var(--verde);
+}
+
+.valor--despesa {
+  color: var(--erro);
+}
+
+.confirmacao-aviso {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--texto-placeholder);
+  margin: 0;
+}
+
+.confirmacao-aviso--erro {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+.btn-submit--excluir {
+  background-color: var(--erro);
+}
+
+.btn-submit--excluir:hover:not(:disabled) {
+  background-color: #a93226;
+}
+
 /* animacoes para suavizar a abertura */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { transform: translateY(16px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 /* paginacao e responsividade */
 
@@ -676,7 +823,8 @@
     text-align: right;
   }
 
-  .valor-receita, .valor-despesa {
+  .valor-receita,
+  .valor-despesa {
     text-align: left;
   }
 
