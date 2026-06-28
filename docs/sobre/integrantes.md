@@ -22,8 +22,8 @@ O Grupo Parnas é composto por **12 integrantes**, organizados em duplas por
 
 ## Orientação
 
-| Nome | Papel |
-| --- | --- |
+| Nome                       | Papel                                     |
+|----------------------------|-------------------------------------------|
 | Ricardo Ajax Dias Kosloski | Docente da disciplina (MDS — T01, 2026.1) |
 
 ## Dupla de Qualidade

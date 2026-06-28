@@ -87,18 +87,18 @@ npm run test:run
 
 ## 5. Cobertura (frontend - módulos refatorados)
 
-| Módulo                         | % Stmts | % Branch |
-|--------------------------------|:-------:|:--------:|
-| `components/Finance/*`         | 100     | 100      |
-| `hooks/useAppliedFilters.js`   | 100     | 100      |
-| `pages/Contas/Usecontas.jsx`   | 91.79   | 66.00    |
-| `pages/Contas/Contas.jsx`      | 88.85   | 51.61    |
-| `pages/Contas/Modalconta.jsx`  | 93.96   | 82.05    |
-| `pages/ContasCaixa/*`          | 100     | 100      |
-| `pages/Transacoes/ModalTransacao.jsx` | 93.14 | 78.48 |
-| `pages/Transacoes/Transacoes.jsx`     | 82.25 | 63.63 |
-| `utils/formatCurrency.js`      | 100     | 100      |
-| `utils/formatDate.js`          | 100     | 100      |
+| Módulo                                | % Stmts   |  % Branch |
+|---------------------------------------|:---------:|:---------:|
+| `components/Finance/*`                |    100    |    100    |
+| `hooks/useAppliedFilters.js`          |    100    |    100    |
+| `pages/Contas/Usecontas.jsx`          |   91.79   |   66.00   |
+| `pages/Contas/Contas.jsx`             |   88.85   |   51.61   |
+| `pages/Contas/Modalconta.jsx`         |   93.96   |   82.05   |
+| `pages/ContasCaixa/*`                 |    100    |    100    |
+| `pages/Transacoes/ModalTransacao.jsx` |   93.14   |   78.48   |
+| `pages/Transacoes/Transacoes.jsx`     |   82.25   |   63.63   |
+| `utils/formatCurrency.js`             |    100    |    100    |
+| `utils/formatDate.js`                 |    100    |    100    |
 
 > Total do projeto: 59.03% de linhas - puxado para baixo por módulos fora do
 > escopo (Comparacoes, Relatorios, Simulacoes, `services/`), sem teste.

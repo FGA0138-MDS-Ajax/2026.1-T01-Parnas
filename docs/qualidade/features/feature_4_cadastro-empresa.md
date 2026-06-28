@@ -3,16 +3,16 @@
 ---
 ## 1. Identificação
 
-| Campo | Valor |
-|---|---|
-| **Feature** | Cadastro de Empresa |
-| **Cenário** | CEN-00 |
-| **Requisito(s)** | R04 |
-| **Branch de desenvolvimento** | `feature/4-cadastro-empresa` |
-| **Branch de teste** | `test/feature/4-cadastro-empresa-qa` (recriada a partir da develop) |
-| **Sprint(s)** | 4 |
-| **Responsáveis** | Daniel Filipe / Matheus Moretti |
-| **Data** | 23/05/2026 |
+| Campo                         | Valor                                                               |
+|-------------------------------|---------------------------------------------------------------------|
+| **Feature**                   | Cadastro de Empresa                                                 |
+| **Cenário**                   | CEN-00                                                              |
+| **Requisito(s)**              | R04                                                                 |
+| **Branch de desenvolvimento** | `feature/4-cadastro-empresa`                                        |
+| **Branch de teste**           | `test/feature/4-cadastro-empresa-qa` (recriada a partir da develop) |
+| **Sprint(s)**                 | 4                                                                   |
+| **Responsáveis**              | Daniel Filipe / Matheus Moretti                                     |
+| **Data**                      | 23/05/2026                                                          |
 
 ---
 ## 2. Critérios de aceitação testáveis
@@ -29,16 +29,16 @@
 
 > 60 casos no total (agrupados por arquivo/camada). Detalhe completo nos artifacts da pipeline.
 
-| Caso | Descrição | Nível | Esperado | Observado | Status |
-| :--: | --- | --- | --- | --- | :--: |
-| TS-01 | Schema: validação de nome/CNPJ/email/telefone (19 casos) | Unitário | aceita válidos, rejeita inválidos/ausentes | Conforme | OK |
-| TS-02 | `register_company`: sucesso, CNPJ duplicado (409), erro de BD (500), vínculo (7 casos) | Unitário | status e efeitos corretos | Conforme | OK |
-| TS-03 | Validação de CNPJ (formato e dígitos verificadores) (5 casos) | Unitário | rejeita CNPJ inválido | Conforme | OK |
-| TS-04 | Rota `POST /api/companies/register`: sucesso, validação, duplicado, content-type, integração (15 casos) | Integração | 201/400/409 conforme cenário | Conforme (1 xfail) | OK |
-| TS-05 | Service + BD real: persistência, associação user-company, constraints, rollback, múltiplas empresas (10 casos) | Integração | grava e vincula corretamente | Conforme | OK |
-| TS-06 | E2E: fluxo completo cadastro→login→empresa, múltiplos usuários/CNPJs (7 casos) | E2E | fluxo ponta a ponta funciona | Conforme | OK |
-| TS-18 | (roteiro) Isolamento/vínculo usuário-empresa | Integração/E2E | cada usuário associado só à sua empresa | Conforme | OK |
-| - | Token JWT malformado → deveria 401 | Integração | `401` | `422` (default flask-jwt) | xfail (DEF-01) |
+| Caso  | Descrição                                                                                                      | Nível          | Esperado                                   | Observado                       |     Status      |
+|:-----:|----------------------------------------------------------------------------------------------------------------|----------------|--------------------------------------------|---------------------------------|:---------------:|
+| TS-01 | Schema: validação de nome/CNPJ/email/telefone (19 casos)                                                       | Unitário       | aceita válidos, rejeita inválidos/ausentes | Conforme                        |       OK        |
+| TS-02 | `register_company`: sucesso, CNPJ duplicado (409), erro de BD (500), vínculo (7 casos)                         | Unitário       | status e efeitos corretos                  | Conforme                        |       OK        |
+| TS-03 | Validação de CNPJ (formato e dígitos verificadores) (5 casos)                                                  | Unitário       | rejeita CNPJ inválido                      | Conforme                        |       OK        |
+| TS-04 | Rota `POST /api/companies/register`: sucesso, validação, duplicado, content-type, integração (15 casos)        | Integração     | 201/400/409 conforme cenário               | Conforme (1 xfail)              |       OK        |
+| TS-05 | Service + BD real: persistência, associação user-company, constraints, rollback, múltiplas empresas (10 casos) | Integração     | grava e vincula corretamente               | Conforme                        |       OK        |
+| TS-06 | E2E: fluxo completo cadastro→login→empresa, múltiplos usuários/CNPJs (7 casos)                                 | E2E            | fluxo ponta a ponta funciona               | Conforme                        |       OK        |
+| TS-18 | (roteiro) Isolamento/vínculo usuário-empresa                                                                   | Integração/E2E | cada usuário associado só à sua empresa    | Conforme                        |       OK        |
+|   -   | Token JWT malformado → deveria 401                                                                             | Integração     | `401`                                      | `422` (default flask-jwt)       | xfail (DEF-01)  |
 
 ---
 ## 4. Evidências
@@ -87,13 +87,13 @@ pytest tests/unit/feature_4 tests/integration/feature_4 tests/e2e/feature_4 \
   --cov=app.schemas.company_schema --cov=app.utils.validators --cov-report=term-missing
 ```
 
-| Métrica | Valor |
-|---|---|
-| `app/schemas/company_schema.py` | 88% |
-| `app/routes/company_routes.py` | 55% (rota de registro coberta; `delete`/`update` fora do escopo) |
-| `app/services/company_service.py` | 42% (`register_company` coberto; `delete`/`update`/`find` fora do escopo) |
-| `app/utils/validators.py` | 15% (só a validação de **CNPJ** é desta feature; o resto são validadores de usuário/senha) |
-| **TOTAL (recorte por módulo)** | **49%** |
+| Métrica                           | Valor                                                                                      |
+|-----------------------------------|--------------------------------------------------------------------------------------------|
+| `app/schemas/company_schema.py`   | 88%                                                                                        |
+| `app/routes/company_routes.py`    | 55% (rota de registro coberta; `delete`/`update` fora do escopo)                           |
+| `app/services/company_service.py` | 42% (`register_company` coberto; `delete`/`update`/`find` fora do escopo)                  |
+| `app/utils/validators.py`         | 15% (só a validação de **CNPJ** é desta feature; o resto são validadores de usuário/senha) |
+| **TOTAL (recorte por módulo)**    | **49%**                                                                                    |
 
 > A cobertura por módulo fica **abaixo da meta de 60%** porque esses módulos
 > contêm muito código de **outras features** (exclusão/edição de empresa,

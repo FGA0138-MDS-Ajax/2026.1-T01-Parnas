@@ -2,17 +2,17 @@
 
 ## 1. Identificação
 
-| Campo | Valor |
-|---|---|
-| **Feature** | US14 - Comparação de modalidades de crédito |
-| **Cenário** | CEN-04 - Diagnóstico e simulação de crédito |
-| **Requisito** | R13 |
-| **Sprint** | 9 |
-| **Branch de desenvolvimento** | `feature/14-modalidades-credito` |
-| **Branch de teste (QA)** | `test/feature/14-modalidades-credito` (a partir da `develop`) |
-| **PR / Pipeline** | GitHub Actions `tests` (run 27777463269) - **success** |
-| **Responsáveis (QA)** | Daniel Filipe / Matheus Moretti |
-| **Data** | 26/06/2026 |
+| Campo                         | Valor                                                         |
+|-------------------------------|---------------------------------------------------------------|
+| **Feature**                   | US14 - Comparação de modalidades de crédito                   |
+| **Cenário**                   | CEN-04 - Diagnóstico e simulação de crédito                   |
+| **Requisito**                 | R13                                                           |
+| **Sprint**                    | 9                                                             |
+| **Branch de desenvolvimento** | `feature/14-modalidades-credito`                              |
+| **Branch de teste (QA)**      | `test/feature/14-modalidades-credito` (a partir da `develop`) |
+| **PR / Pipeline**             | GitHub Actions `tests` (run 27777463269) - **success**        |
+| **Responsáveis (QA)**         | Daniel Filipe / Matheus Moretti                               |
+| **Data**                      | 26/06/2026                                                    |
 
 > **Reavaliação.** Esta feature havia sido **reprovada** por 3 defeitos (DEF-01 blueprint
 > não registrado, DEF-02 mappers, DEF-03 `reportlab` não declarado). Todos foram
@@ -32,27 +32,27 @@
 
 ## 3. Casos executados
 
-| Caso | Descrição | Nível | Esperado | Observado | Status |
-| :--: | --- | --- | --- | --- | :--: |
-| TS-01 | `_calculate_price_table` com taxa 0 | Unitário | parcela = valor/prazo, juros 0 | Conforme | OK |
-| TS-02 | `_calculate_price_table` com juros | Unitário | juros > 0 e total > valor | Conforme | OK |
-| TS-03 | `calculate_simulation` marca a de menor custo como melhor | Unitário | uma `is_best_option=True` (a mais barata) | Conforme | OK |
-| TS-04 | `calculate_simulation` sinaliza modalidade PF | Unitário | `warning_pf=True`, `type='PF'` | Conforme | OK |
-| TS-05 | `calculate_simulation` PJ não dispara alerta | Unitário | `warning_pf=False` | Conforme | OK |
-| TS-06 | `calculate_simulation` sem modalidades | Unitário | `400` | Conforme | OK |
-| TS-07 | `calculate_simulation` com 5 modalidades | Unitário | `400` (limite de 4) | Conforme | OK |
-| TS-08 | `POST /api/comparacoes/calcular` retorna comparação, melhor opção e alerta PF | Integração | `200` + métricas por modalidade | Conforme | OK |
-| TS-09 | `POST /calcular` com mais de 4 modalidades | Integração | `400` | Conforme | OK |
-| TS-10 | `POST /calcular` sem token | Integração | `401` | Conforme | OK |
-| TS-11 | `POST /api/comparacoes` salva a comparação | Integração | `201` + `id` | Conforme | OK |
-| TS-12 | `GET /api/comparacoes` lista as da empresa | Integração | `200` + comparação salva | Conforme | OK |
-| TS-13 | `DELETE /api/comparacoes/<id>` existente | Integração | `200`, some da lista | Conforme | OK |
-| TS-14 | `DELETE /api/comparacoes/<id>` inexistente | Integração | `404` | Conforme | OK |
-| TS-15 | `GET /api/comparacoes/<id>/exportar` existente | Integração | `200` + `application/pdf` | Conforme | OK |
-| TS-16 | `GET /api/comparacoes/<id>/exportar` inexistente | Integração | `404` | Conforme | OK |
-| TS-17 | Front começa com 1 modalidade e adiciona outra | Unitário (front) | "Modalidade 2" aparece | Conforme | OK |
-| TS-18 | Front: calcular sem valor não chama o serviço | Unitário (front) | serviço não chamado (feedback de erro) | Conforme | OK |
-| TS-19 | Front: calcular com dados válidos chama o serviço | Unitário (front) | `calcularComparacao` chamado | Conforme | OK |
+| Caso   | Descrição                                                                     | Nível            | Esperado                                  | Observado   | Status |
+|:------:|-------------------------------------------------------------------------------|------------------|-------------------------------------------|-------------|:------:|
+| TS-01  | `_calculate_price_table` com taxa 0                                           | Unitário         | parcela = valor/prazo, juros 0            | Conforme    |   OK   |
+| TS-02  | `_calculate_price_table` com juros                                            | Unitário         | juros > 0 e total > valor                 | Conforme    |   OK   |
+| TS-03  | `calculate_simulation` marca a de menor custo como melhor                     | Unitário         | uma `is_best_option=True` (a mais barata) | Conforme    |   OK   |
+| TS-04  | `calculate_simulation` sinaliza modalidade PF                                 | Unitário         | `warning_pf=True`, `type='PF'`            | Conforme    |   OK   |
+| TS-05  | `calculate_simulation` PJ não dispara alerta                                  | Unitário         | `warning_pf=False`                        | Conforme    |   OK   |
+| TS-06  | `calculate_simulation` sem modalidades                                        | Unitário         | `400`                                     | Conforme    |   OK   |
+| TS-07  | `calculate_simulation` com 5 modalidades                                      | Unitário         | `400` (limite de 4)                       | Conforme    |   OK   |
+| TS-08  | `POST /api/comparacoes/calcular` retorna comparação, melhor opção e alerta PF | Integração       | `200` + métricas por modalidade           | Conforme    |   OK   |
+| TS-09  | `POST /calcular` com mais de 4 modalidades                                    | Integração       | `400`                                     | Conforme    |   OK   |
+| TS-10  | `POST /calcular` sem token                                                    | Integração       | `401`                                     | Conforme    |   OK   |
+| TS-11  | `POST /api/comparacoes` salva a comparação                                    | Integração       | `201` + `id`                              | Conforme    |   OK   |
+| TS-12  | `GET /api/comparacoes` lista as da empresa                                    | Integração       | `200` + comparação salva                  | Conforme    |   OK   |
+| TS-13  | `DELETE /api/comparacoes/<id>` existente                                      | Integração       | `200`, some da lista                      | Conforme    |   OK   |
+| TS-14  | `DELETE /api/comparacoes/<id>` inexistente                                    | Integração       | `404`                                     | Conforme    |   OK   |
+| TS-15  | `GET /api/comparacoes/<id>/exportar` existente                                | Integração       | `200` + `application/pdf`                 | Conforme    |   OK   |
+| TS-16  | `GET /api/comparacoes/<id>/exportar` inexistente                              | Integração       | `404`                                     | Conforme    |   OK   |
+| TS-17  | Front começa com 1 modalidade e adiciona outra                                | Unitário (front) | "Modalidade 2" aparece                    | Conforme    |   OK   |
+| TS-18  | Front: calcular sem valor não chama o serviço                                 | Unitário (front) | serviço não chamado (feedback de erro)    | Conforme    |   OK   |
+| TS-19  | Front: calcular com dados válidos chama o serviço                             | Unitário (front) | `calcularComparacao` chamado              | Conforme    |   OK   |
 
 ## 4. Evidências
 
@@ -85,28 +85,28 @@ src/pages/Comparacoes/Comparacoes.test.jsx (3 tests) 587ms
 Nenhum defeito **novo**. Os três defeitos que reprovaram a feature na avaliação anterior
 foram corrigidos e **reverificados**:
 
-| ID | Descrição (anterior) | Status |
-|---|---|---|
-| DEF-01 | `comparison_bp` não registrado → API toda 404 | Resolvido (blueprint registrado em `/api/comparacoes`) |
-| DEF-02 | `back_populates='comparisons'` sem Company/User declararem → quebra de mappers e contaminação da `feature_7` | Resolvido (`backref='credit_comparisons'`) |
-| DEF-03 | `reportlab` importado mas não declarado | Resolvido (`reportlab==4.5.1` no `requirements.txt`) |
+| ID     |  Descrição (anterior)                                                                                        | Status                                                 |
+|--------|--------------------------------------------------------------------------------------------------------------|--------------------------------------------------------|
+| DEF-01 | `comparison_bp` não registrado → API toda 404                                                                | Resolvido (blueprint registrado em `/api/comparacoes`) |
+| DEF-02 | `back_populates='comparisons'` sem Company/User declararem → quebra de mappers e contaminação da `feature_7` | Resolvido (`backref='credit_comparisons'`)             |
+| DEF-03 | `reportlab` importado mas não declarado                                                                      | Resolvido (`reportlab==4.5.1` no `requirements.txt`)   |
 
 ## 6. Cobertura
 
 ### Backend - `coverage.xml` (artefato da pipeline)
 
-| Módulo | Cobertura (linhas) |
-|---|---|
-| `app/models/comparison.py` | **100%** |
-| `app/routes/comparison_routes.py` | **100%** |
-| `app/services/comparison_service.py` | **99%** |
+| Módulo                                      |  Cobertura (linhas)                                  |
+|---------------------------------------------|------------------------------------------------------|
+| `app/models/comparison.py`                  | **100%**                                             |
+| `app/routes/comparison_routes.py`           | **100%**                                             |
+| `app/services/comparison_service.py`        | **99%**                                              |
 | `app/repositories/comparison_repository.py` | **0%** (não utilizado pelo service - ver pendências) |
 
 ### Frontend - `coverage/` (artefato da pipeline)
 
-| Módulo | Cobertura (linhas) | Observação |
-|---|---|---|
-| `src/pages/Comparacoes/Comparacoes.jsx` | **86,0%** | não cobertos: ramos de salvar/exportar e renderização do gráfico |
+| Módulo                                  |  Cobertura (linhas) | Observação                                                       |
+|-----------------------------------------|---------------------|------------------------------------------------------------------|
+| `src/pages/Comparacoes/Comparacoes.jsx` | **86,0%**           | não cobertos: ramos de salvar/exportar e renderização do gráfico |
 
 Núcleo da feature (service 99%, página 86%) bem acima da meta de **≥ 60%**.
 

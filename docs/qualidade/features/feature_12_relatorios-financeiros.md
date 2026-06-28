@@ -3,17 +3,17 @@
 ---
 ## 1. Identificação
 
-| Campo | Valor |
-|---|---|
-| **Feature** | Relatórios Financeiros (US12) |
-| **Cenário** | CEN-03 - Geração de relatório financeiro |
-| **Requisito(s)** | R11 |
-| **Branch de desenvolvimento** | `feature/12-relatorios-financeiros` |
-| **Branch de teste (QA)** | `test/feature/12-relatorios-financeiros` (a partir da `develop`) |
-| **PR / Pipeline** | GitHub Actions `tests` (run 27774589808) - **success** |
-| **Sprint(s)** | 8 |
-| **Responsáveis** | Daniel Filipe / Matheus Moretti |
-| **Data** | 19/06/2026 |
+| Campo                         |  Valor                                                           |
+|-------------------------------|------------------------------------------------------------------|
+| **Feature**                   | Relatórios Financeiros (US12)                                    |
+| **Cenário**                   | CEN-03 - Geração de relatório financeiro                         |
+| **Requisito(s)**              | R11                                                              |
+| **Branch de desenvolvimento** | `feature/12-relatorios-financeiros`                              |
+| **Branch de teste (QA)**      | `test/feature/12-relatorios-financeiros` (a partir da `develop`) |
+| **PR / Pipeline**             | GitHub Actions `tests` (run 27774589808) - **success**           |
+| **Sprint(s)**                 | 8                                                                |
+| **Responsáveis**              | Daniel Filipe / Matheus Moretti                                  |
+| **Data**                      | 19/06/2026                                                       |
 
 > A branch de teste foi baseada na `develop` e o código de relatórios (`report_routes/
 > schema/service` + página `Relatorios/`) foi trazido da `feature/12` (que estava 49
@@ -33,28 +33,28 @@
 ---
 ## 3. Casos executados
 
-| Caso | Descrição | Nível | Esperado | Observado | Status |
-| :--: | --- | --- | --- | --- | :--: |
-| TS-01 | `get_period_dates` período mensal | Unitário | 1º ao último dia do mês | Conforme | OK |
-| TS-02 | `get_period_dates` período anual | Unitário | 01/01 a 31/12 | Conforme | OK |
-| TS-03 | `get_period_dates` período personalizado | Unitário | usa `start`/`end` informados | Conforme | OK |
-| TS-04 | `get_period_dates` mensal sem mês/ano | Unitário | `ValueError` | Conforme | OK |
-| TS-05 | `get_period_dates` `start` > `end` | Unitário | `ValueError` | Conforme | OK |
-| TS-06 | `get_period_dates` sem parâmetros | Unitário | `ValueError` | Conforme | OK |
-| TS-07 | `GET /api/reports` sem token | Integração | `401` | Conforme | OK |
-| TS-08 | `GET /api/reports` sem `cnpj` | Integração | `400` | Conforme | OK |
-| TS-09 | `GET /api/reports` com `period` inválido | Integração | `400` | Conforme | OK |
-| TS-10 | `GET /api/reports` empresa inexistente | Integração | `404` | Conforme | OK |
-| TS-11 | `GET /api/reports` usuário sem acesso à empresa | Integração | `403` | Conforme | OK |
-| TS-12 | `GET /api/reports` mensal sem mês/ano | Integração | `400` | Conforme | OK |
-| TS-13 | `GET /api/reports` período invertido (`start`>`end`) | Integração | `400` | Conforme | OK |
-| TS-14 | `GET /api/reports` mensal retorna estrutura e período | Integração | `200` + `periodo/totais/distribuicao/evolucao` | Conforme | OK |
-| TS-15 | `GET /api/reports` período personalizado | Integração | `200` + datas corretas | Conforme | OK |
-| TS-16 | Totais refletem as transações do período | Integração | receitas/despesas/saldo corretos | Totais zerados (filtro `ENTRADA/SAIDA`) | xfail (DEF-02) |
-| TS-17 | Front exibe cards de Receitas, Despesas e Saldo | Unitário (front) | três cards na tela | Conforme | OK |
-| TS-18 | Front (mensal) exibe campo de mês | Unitário (front) | `input[type=month]` | Conforme | OK |
-| TS-19 | Front (personalizado) exibe dois campos de data | Unitário (front) | dois `input[type=date]` | Conforme | OK |
-| TS-20 | Front (anual) exibe campo de ano | Unitário (front) | campo "Ano" | Conforme | OK |
+| Caso   | Descrição                                             | Nível            | Esperado                                       | Observado                               |     Status     |
+|:------:|-------------------------------------------------------|------------------|------------------------------------------------|-----------------------------------------|:--------------:|
+| TS-01  | `get_period_dates` período mensal                     | Unitário         | 1º ao último dia do mês                        | Conforme                                |       OK       |
+| TS-02  | `get_period_dates` período anual                      | Unitário         | 01/01 a 31/12                                  | Conforme                                |       OK       |
+| TS-03  | `get_period_dates` período personalizado              | Unitário         | usa `start`/`end` informados                   | Conforme                                |       OK       |
+| TS-04  | `get_period_dates` mensal sem mês/ano                 | Unitário         | `ValueError`                                   | Conforme                                |       OK       |
+| TS-05  | `get_period_dates` `start` > `end`                    | Unitário         | `ValueError`                                   | Conforme                                |       OK       |
+| TS-06  | `get_period_dates` sem parâmetros                     | Unitário         | `ValueError`                                   | Conforme                                |       OK       |
+| TS-07  | `GET /api/reports` sem token                          | Integração       | `401`                                          | Conforme                                |       OK       |
+| TS-08  | `GET /api/reports` sem `cnpj`                         | Integração       | `400`                                          | Conforme                                |       OK       |
+| TS-09  | `GET /api/reports` com `period` inválido              | Integração       | `400`                                          | Conforme                                |       OK       |
+| TS-10  | `GET /api/reports` empresa inexistente                | Integração       | `404`                                          | Conforme                                |       OK       |
+| TS-11  | `GET /api/reports` usuário sem acesso à empresa       | Integração       | `403`                                          | Conforme                                |       OK       |
+| TS-12  | `GET /api/reports` mensal sem mês/ano                 | Integração       | `400`                                          | Conforme                                |       OK       |
+| TS-13  | `GET /api/reports` período invertido (`start`>`end`)  | Integração       | `400`                                          | Conforme                                |       OK       |
+| TS-14  | `GET /api/reports` mensal retorna estrutura e período | Integração       | `200` + `periodo/totais/distribuicao/evolucao` | Conforme                                |       OK       |
+| TS-15  | `GET /api/reports` período personalizado              | Integração       | `200` + datas corretas                         | Conforme                                |       OK       |
+| TS-16  | Totais refletem as transações do período              | Integração       | receitas/despesas/saldo corretos               | Totais zerados (filtro `ENTRADA/SAIDA`) | xfail (DEF-02) |
+| TS-17  | Front exibe cards de Receitas, Despesas e Saldo       | Unitário (front) | três cards na tela                             | Conforme                                |       OK       |
+| TS-18  | Front (mensal) exibe campo de mês                     | Unitário (front) | `input[type=month]`                            | Conforme                                |       OK       |
+| TS-19  | Front (personalizado) exibe dois campos de data       | Unitário (front) | dois `input[type=date]`                        | Conforme                                |       OK       |
+| TS-20  | Front (anual) exibe campo de ano                      | Unitário (front) | campo "Ano"                                    | Conforme                                |       OK       |
 
 > **Observação de integração:** a página `Relatorios/` é **estática/mock** (dados
 > hardcoded, sem chamadas à API). Os casos de front (`TS-17`…`TS-20`) validam o componente
@@ -90,11 +90,11 @@ src/pages/Relatorios/Relatorios.test.jsx (4 tests) 334ms
 ---
 ## 5. Defeitos encontrados
 
-| Issue | Descrição | Branch de correção | Status |
-|---|---|---|---|
-| DEF-01 | `report_service.py` tinha `from datetime import date, calendar` - `calendar` não existe em `datetime` → **`ImportError`**, impedindo o módulo de carregar (e derrubando o `create_app`). **Corrigido nesta entrega** (`import calendar` / `from datetime import date`) para viabilizar a execução. | (aplicado) | Corrigido |
-| DEF-02 | `report_service` agrega filtrando `Transaction.type == 'ENTRADA'/'SAIDA'`, mas as transações do sistema usam `'receita'/'despesa'`. Resultado: `totais`, `distribuicao_categorias` e `evolucao` vêm **sempre zerados/vazios**, mesmo com transações no período (CA-02/CA-03/CA-04). | `fix/report-tipo-transacao` | Aberto |
-| DEF-03 | A página `Relatorios/` não está integrada à API: usa dados **hardcoded** (sem seletor de período funcional nem chamada a `/api/reports`). Sem consulta real. | `fix/relatorios-integra-api` | Aberto |
+| Issue   | Descrição                                                                                                                                                                                                                                                                                          | Branch de correção           | Status    |
+|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------|-----------|
+| DEF-01  | `report_service.py` tinha `from datetime import date, calendar` - `calendar` não existe em `datetime` → **`ImportError`**, impedindo o módulo de carregar (e derrubando o `create_app`). **Corrigido nesta entrega** (`import calendar` / `from datetime import date`) para viabilizar a execução. | (aplicado)                   | Corrigido |
+| DEF-02  | `report_service` agrega filtrando `Transaction.type == 'ENTRADA'/'SAIDA'`, mas as transações do sistema usam `'receita'/'despesa'`. Resultado: `totais`, `distribuicao_categorias` e `evolucao` vêm **sempre zerados/vazios**, mesmo com transações no período (CA-02/CA-03/CA-04).                | `fix/report-tipo-transacao`  | Aberto    |
+| DEF-03  | A página `Relatorios/` não está integrada à API: usa dados **hardcoded** (sem seletor de período funcional nem chamada a `/api/reports`). Sem consulta real.                                                                                                                                       | `fix/relatorios-integra-api` | Aberto    |
 
 > Fora do escopo entregue: o **export em PDF** (tarefa da issue) não foi implementado.
 
@@ -103,17 +103,17 @@ src/pages/Relatorios/Relatorios.test.jsx (4 tests) 334ms
 
 ### Backend - `coverage.xml` (artefato da pipeline)
 
-| Módulo | Cobertura (linhas) |
-|---|---|
-| `app/routes/report_routes.py` | **100%** |
-| `app/schemas/report_schema.py` | **100%** |
-| `app/services/report_service.py` | **93,9%** |
+| Módulo                           | Cobertura (linhas)   |
+|----------------------------------|----------------------|
+| `app/routes/report_routes.py`    | **100%**             |
+| `app/schemas/report_schema.py`   | **100%**             |
+| `app/services/report_service.py` | **93,9%**            |
 
 ### Frontend - `coverage/` (artefato da pipeline)
 
-| Módulo | Cobertura (linhas) | Observação |
-|---|---|---|
-| `src/pages/Relatorios/Relatorios.jsx` | **100%** | componente estático, totalmente renderizado por `TS-17`…`TS-20` |
+| Módulo                                | Cobertura (linhas)   |  Observação                                                     |
+|---------------------------------------|----------------------|-----------------------------------------------------------------|
+| `src/pages/Relatorios/Relatorios.jsx` | **100%**             | componente estático, totalmente renderizado por `TS-17`…`TS-20` |
 
 Backend bem acima da meta de **≥ 60%**.
 

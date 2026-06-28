@@ -3,17 +3,17 @@
 ---
 ## 1. Identificação
 
-| Campo | Valor |
-|---|---|
-| **Feature** | Cadastro de Contas a Pagar e a Receber (US11) |
-| **Cenário** | CEN-01 - Registro de dados financeiros |
-| **Requisito(s)** | R15 |
-| **Branch de desenvolvimento** | `feature/11-cadastro-contas` |
-| **Branch de teste (QA)** | `test/feature/11-cadastro-contas` (a partir da `develop`) |
-| **PR / Pipeline** | GitHub Actions `tests` (run 27772038130) - **success** |
-| **Sprint(s)** | 7 |
-| **Responsáveis** | Daniel Filipe / Matheus Moretti |
-| **Data** | 09/06/2026 |
+| Campo                         | Valor                                                     |
+|-------------------------------|-----------------------------------------------------------|
+| **Feature**                   | Cadastro de Contas a Pagar e a Receber (US11)             |
+| **Cenário**                   | CEN-01 - Registro de dados financeiros                    |
+| **Requisito(s)**              | R15                                                       |
+| **Branch de desenvolvimento** | `feature/11-cadastro-contas`                              |
+| **Branch de teste (QA)**      | `test/feature/11-cadastro-contas` (a partir da `develop`) |
+| **PR / Pipeline**             | GitHub Actions `tests` (run 27772038130) - **success**    |
+| **Sprint(s)**                 | 7                                                         |
+| **Responsáveis**              | Daniel Filipe / Matheus Moretti                           |
+| **Data**                      | 09/06/2026                                                |
 
 > A branch de teste foi baseada na `develop` (que já contém o código de Contas idêntico ao
 > da `feature/11`, além da infraestrutura de testes); a `feature/11-cadastro-contas` original
@@ -107,21 +107,21 @@ src/pages/Contas/Contas.test.jsx (4 tests) 562ms
 
 ### Backend - `coverage.xml` (artefato da pipeline)
 
-| Módulo | Cobertura (linhas) |
-|---|---|
-| `app/routes/bill_routes.py` | **100%** |
-| `app/services/bill_service.py` | **96,9%** |
-| `app/models/bill.py` | **94,7%** |
+| Módulo                                | Cobertura (linhas)                                     |
+|---------------------------------------|--------------------------------------------------------|
+| `app/routes/bill_routes.py`           | **100%**                                               |
+| `app/services/bill_service.py`        | **96,9%**                                              |
+| `app/models/bill.py`                  | **94,7%**                                              |
 | `app/repositories/bill_repository.py` | **0%** (código morto - o service não usa o repository) |
 
 ### Frontend - `coverage/` (artefato da pipeline)
 
-| Módulo | Cobertura (linhas) | Observação |
-|---|---|---|
-| `src/pages/Contas/Contas.jsx` | **89,5%** | exercitado por `TS-22`…`TS-25` |
-| `src/pages/Contas/Modalconta.jsx` | **2,4%** | formulário do modal de nova/editar conta - sem teste dedicado |
-| `src/pages/Contas/Usecontas.jsx` | **0%** | hook mockado nos testes de componente |
-| `src/pages/Contas/` (pasta) | **44,0%** | puxada para baixo pelo `Modalconta` e `Usecontas` |
+| Módulo                            |  Cobertura (linhas) | Observação                                                    |
+|-----------------------------------|---------------------|---------------------------------------------------------------|
+| `src/pages/Contas/Contas.jsx`     | **89,5%**           | exercitado por `TS-22`…`TS-25`                                |
+| `src/pages/Contas/Modalconta.jsx` | **2,4%**            | formulário do modal de nova/editar conta - sem teste dedicado |
+| `src/pages/Contas/Usecontas.jsx`  | **0%**              | hook mockado nos testes de componente                         |
+| `src/pages/Contas/` (pasta)       | **44,0%**           | puxada para baixo pelo `Modalconta` e `Usecontas`             |
 
 O núcleo do backend fica bem acima da meta de **≥ 60%**; no front, o componente principal
 (`Contas.jsx`) também, mas o hook (não integrado) e o modal derrubam a média da pasta.

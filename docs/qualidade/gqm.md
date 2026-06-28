@@ -16,12 +16,12 @@ Goal (Meta)
 **Meta geral:** garantir a entrega contínua de incrementos do CrediFab com
 qualidade controlada, defeitos sob controle e cobertura de testes crescente.
 
-| Pergunta | Métrica |
-| --- | --- |
-| O time está entregando trabalho a cada Sprint? | **M1 - Throughput** |
-| A qualidade do que é entregue está sob controle? | **M2 - Densidade de Defeitos** |
-| O código está coberto por testes? | **M3 - Cobertura** |
-| O processo de integração está saudável? | **M4 - Taxa de Aprovação da Pipeline** |
+| Pergunta                                         | Métrica                                |
+|--------------------------------------------------|----------------------------------------|
+| O time está entregando trabalho a cada Sprint?   | **M1 - Throughput**                    |
+| A qualidade do que é entregue está sob controle? | **M2 - Densidade de Defeitos**         |
+| O código está coberto por testes?                | **M3 - Cobertura**                     |
+| O processo de integração está saudável?          | **M4 - Taxa de Aprovação da Pipeline** |
 
 ---
 ## Métricas
@@ -55,10 +55,10 @@ Média entre a cobertura de back-end (`pytest-cov`) e de front-end
 M3 = média( cobertura_backend , cobertura_frontend )
 ```
 
-| Período | Mínimo exigido |
-| --- | :--: |
-| Sprints 1-5 | **60%** |
-| Sprints 6-10 | **75%** |
+| Período      | Mínimo exigido |
+|--------------|:--------------:|
+| Sprints 1-5  |    **60%**     |
+| Sprints 6-10 |    **75%**     |
 
 > O Vitest gera cobertura de front-end desde o início, então M3 é a média entre
 > back-end (pytest-cov) e front-end (Vitest) em todas as Sprints.
@@ -74,12 +74,12 @@ M4 = PRs aprovados no 1º run / total de PRs
 
 ## Tabela-resumo
 
-| Métrica | Definição | Meta |
-| :--: | --- | --- |
-| M1 | Issues concluídas por Sprint | Tendência estável/crescente |
-| M2 | Bugs / issues concluídas | ≈ 0 |
-| M3 | Cobertura média (back + front) | ≥ 60% (S1-5), ≥ 75% (S6-10) |
-| M4 | PRs aprovados no 1º run | ≥ 70% (a partir da S5) |
+| Métrica   | Definição                      | Meta                        |
+|:---------:|--------------------------------|-----------------------------|
+|    M1     | Issues concluídas por Sprint   | Tendência estável/crescente |
+|    M2     | Bugs / issues concluídas       | ≈ 0                         |
+|    M3     | Cobertura média (back + front) | ≥ 60% (S1-5), ≥ 75% (S6-10) |
+|    M4     | PRs aprovados no 1º run        | ≥ 70% (a partir da S5)      |
 
 ---
 ## Evolução por Sprint
@@ -87,15 +87,15 @@ M4 = PRs aprovados no 1º run / total de PRs
 Valores coletados em cada [consolidado de Sprint](sprints/index.md). M3 é a média
 entre a cobertura de back-end (pytest-cov) e a de front-end (Vitest).
 
-| Sprint | M1 (issues) | M2 (defeitos/issue) | Cob. back | Cob. front | M3 (média) | M4 (pipeline) |
-| :----: | :---------: | :-----------------: | :-------: | :--------: | :--------: | :-----------: |
-| 4  | 5 | 0,40 | 63% | 62% | 63% | n/d (CI em implantação) |
-| 5  | 6 | 0,33 | 69% | 67% | 68% | 67% |
-| 6  | 6 | 0,33 | 73% | 78% | 76% | 72% |
-| 7  | 7 | 0,29 | 77% | 79% | 78% | 79% |
-| 8  | 6 | 0,33 | 80% | 80% | 80% | 83% |
-| 9  | 6 | 0,17 | 80% | 80% | 80% | 85% |
-| 10 | projetada | projetada | 82% (proj) | 82% (proj) | 82% (proj) | projetada |
+| Sprint   | M1 (issues) |  M2 (defeitos/issue) | Cob. back  | Cob. front |  M3 (média) |      M4 (pipeline)      |
+|:--------:|:-----------:|:--------------------:|:----------:|:----------:|:-----------:|:-----------------------:|
+|    4     |      5      |         0,40         |    63%     |    62%     |     63%     | n/d (CI em implantação) |
+|    5     |      6      |         0,33         |    69%     |    67%     |     68%     |           67%           |
+|    6     |      6      |         0,33         |    73%     |    78%     |     76%     |           72%           |
+|    7     |      7      |         0,29         |    77%     |    79%     |     78%     |           79%           |
+|    8     |      6      |         0,33         |    80%     |    80%     |     80%     |           83%           |
+|    9     |      6      |         0,17         |    80%     |    80%     |     80%     |           85%           |
+|    10    |  projetada  |      projetada       | 82% (proj) | 82% (proj) | 82% (proj)  |        projetada        |
 
 Leitura geral: throughput (M1) estável entre 5 e 7 issues por Sprint; densidade de
 defeitos (M2) em queda (0,40 -> 0,17); pipeline (M4) acima de 70% a partir da Sprint 6.

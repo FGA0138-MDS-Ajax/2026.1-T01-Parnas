@@ -34,10 +34,10 @@ flowchart LR
 
 ## Documentos formais
 
-| Documento | Conteúdo |
-| --- | --- |
-| [Documento de Visão](visao.md) | Problema, objetivos, requisitos, entidades e roadmap |
-| [Documento de Arquitetura](arquitetura.md) | Stack, camadas, modelo de dados e endpoints |
+| Documento                                  | Conteúdo                                             |
+|--------------------------------------------|------------------------------------------------------|
+| [Documento de Visão](visao.md)             | Problema, objetivos, requisitos, entidades e roadmap |
+| [Documento de Arquitetura](arquitetura.md) | Stack, camadas, modelo de dados e endpoints          |
 
 ---
 ## Stack 

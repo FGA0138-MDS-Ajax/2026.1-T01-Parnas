@@ -27,34 +27,34 @@
 
 ## 3. Casos executados
 
-| Caso  | Descrição                                                        | Nível      | Esperado                                           | Observado                           | Status |
-|-------|------------------------------------------------------------------|------------|----------------------------------------------------|-------------------------------------|--------|
-| TS-01 | `GET /api/transactions/` sem `company_id`                        | Integração | `400` + "company_id é obrigatório"                 | Conforme                            | OK      |
-| TS-02 | `GET /api/transactions/` sem token                               | Integração | `401`                                              | Conforme                            | OK      |
-| TS-03 | Lista escopada por empresa/usuário (ignora ruído)                | Integração | só as 4 da empresa A do usuário                    | Conforme                            | OK      |
-| TS-04 | Listagem em ordem cronológica (mais recente primeiro)            | Integração | datas em ordem decrescente                         | Conforme                            | OK      |
-| TS-05 | Filtro por período (`data_inicio`/`data_fim`)                    | Integração | só itens dentro do intervalo                       | Conforme                            | OK      |
-| TS-06 | Filtro por tipo `receita`                                        | Integração | `200` + só receitas                                | `TypeError` `Decimal - float` (500) | Falhou      |
-| TS-07 | Filtro por categoria (`Vendas`)                                  | Integração | só itens da categoria                              | Conforme                            | OK      |
-| TS-08 | Filtro por valor mínimo e máximo                                 | Integração | só itens na faixa                                  | Conforme                            | OK      |
-| TS-09 | Resumo de totais sem filtro                                      | Integração | receitas/despesas/saldo corretos                   | Conforme                            | OK      |
-| TS-10 | Totais respeitando filtro que isola um tipo                      | Integração | receitas corretas, despesas `0`                    | `TypeError` `Decimal - float` (500) | Falhou      |
-| TS-11 | Paginação limita itens (`per_page=2`)                            | Integração | 2 itens, 2 páginas                                 | Conforme                            | OK      |
-| TS-12 | Segunda página continua a ordem                                  | Integração | itens restantes em ordem decrescente               | Conforme                            | OK      |
-| TS-13 | Estado inicial do hook (1ª página, totais de página)             | Unitário   | 12 itens, 5 por página, 3 páginas                  | Conforme                            | OK      |
-| TS-14 | Totais somam receitas, despesas e saldo de tudo                  | Unitário   | 15800 / 10100 / 5700                               | Conforme                            | OK      |
-| TS-15 | Filtro por tipo `receita` (hook)                                 | Unitário   | só receitas, despesas `0`                          | Conforme                            | OK      |
-| TS-16 | Filtro por categoria (hook)                                      | Unitário   | só a categoria escolhida                           | Conforme                            | OK      |
-| TS-17 | Filtro por período (hook)                                        | Unitário   | só itens no intervalo                              | Conforme                            | OK      |
-| TS-18 | Filtro por valor mín/máx (hook)                                  | Unitário   | só itens na faixa                                  | Conforme                            | OK      |
-| TS-19 | Aplicar filtros volta para a 1ª página                           | Unitário   | `paginaAtual = 1`                                  | Conforme                            | OK      |
-| TS-20 | Limpar filtros restaura a listagem completa                      | Unitário   | volta a 12 itens, filtros vazios                   | Conforme                            | OK      |
-| TS-21 | Mudar página avança dentro dos limites                           | Unitário   | `paginaAtual = 2`                                  | Conforme                            | OK      |
-| TS-22 | Mudar página ignora valores fora do intervalo                    | Unitário   | permanece em 1                                     | Conforme                            | OK      |
-| TS-23 | Página exibe os cartões de totais no topo                        | Unitário   | Receitas/Despesas/Saldo na tela                    | Conforme                            | OK      |
-| TS-24 | Página lista a 1ª página (cabeçalho + 5 linhas)                  | Unitário   | "12 transação(ões)" + 6 linhas                     | Conforme                            | OK      |
-| TS-25 | Aplicar filtro de tipo atualiza a listagem                       | Unitário   | "5 transação(ões) encontrada(s)"                   | Conforme                            | OK      |
-| TS-26 | Limpar filtros restaura a listagem na UI                         | Unitário   | volta a "12 transação(ões)"                        | Conforme                            | OK      |
+| Caso  | Descrição                                                        | Nível      | Esperado                                           | Observado                            |  Status |
+|-------|------------------------------------------------------------------|------------|----------------------------------------------------|--------------------------------------|---------|
+| TS-01 | `GET /api/transactions/` sem `company_id`                        | Integração | `400` + "company_id é obrigatório"                 | Conforme                             | OK      |
+| TS-02 | `GET /api/transactions/` sem token                               | Integração | `401`                                              | Conforme                             | OK      |
+| TS-03 | Lista escopada por empresa/usuário (ignora ruído)                | Integração | só as 4 da empresa A do usuário                    | Conforme                             | OK      |
+| TS-04 | Listagem em ordem cronológica (mais recente primeiro)            | Integração | datas em ordem decrescente                         | Conforme                             | OK      |
+| TS-05 | Filtro por período (`data_inicio`/`data_fim`)                    | Integração | só itens dentro do intervalo                       | Conforme                             | OK      |
+| TS-06 | Filtro por tipo `receita`                                        | Integração | `200` + só receitas                                | `TypeError` `Decimal - float` (500)  | Falhou  |
+| TS-07 | Filtro por categoria (`Vendas`)                                  | Integração | só itens da categoria                              | Conforme                             | OK      |
+| TS-08 | Filtro por valor mínimo e máximo                                 | Integração | só itens na faixa                                  | Conforme                             | OK      |
+| TS-09 | Resumo de totais sem filtro                                      | Integração | receitas/despesas/saldo corretos                   | Conforme                             | OK      |
+| TS-10 | Totais respeitando filtro que isola um tipo                      | Integração | receitas corretas, despesas `0`                    | `TypeError` `Decimal - float` (500)  | Falhou  |
+| TS-11 | Paginação limita itens (`per_page=2`)                            | Integração | 2 itens, 2 páginas                                 | Conforme                             | OK      |
+| TS-12 | Segunda página continua a ordem                                  | Integração | itens restantes em ordem decrescente               | Conforme                             | OK      |
+| TS-13 | Estado inicial do hook (1ª página, totais de página)             | Unitário   | 12 itens, 5 por página, 3 páginas                  | Conforme                             | OK      |
+| TS-14 | Totais somam receitas, despesas e saldo de tudo                  | Unitário   | 15800 / 10100 / 5700                               | Conforme                             | OK      |
+| TS-15 | Filtro por tipo `receita` (hook)                                 | Unitário   | só receitas, despesas `0`                          | Conforme                             | OK      |
+| TS-16 | Filtro por categoria (hook)                                      | Unitário   | só a categoria escolhida                           | Conforme                             | OK      |
+| TS-17 | Filtro por período (hook)                                        | Unitário   | só itens no intervalo                              | Conforme                             | OK      |
+| TS-18 | Filtro por valor mín/máx (hook)                                  | Unitário   | só itens na faixa                                  | Conforme                             | OK      |
+| TS-19 | Aplicar filtros volta para a 1ª página                           | Unitário   | `paginaAtual = 1`                                  | Conforme                             | OK      |
+| TS-20 | Limpar filtros restaura a listagem completa                      | Unitário   | volta a 12 itens, filtros vazios                   | Conforme                             | OK      |
+| TS-21 | Mudar página avança dentro dos limites                           | Unitário   | `paginaAtual = 2`                                  | Conforme                             | OK      |
+| TS-22 | Mudar página ignora valores fora do intervalo                    | Unitário   | permanece em 1                                     | Conforme                             | OK      |
+| TS-23 | Página exibe os cartões de totais no topo                        | Unitário   | Receitas/Despesas/Saldo na tela                    | Conforme                             | OK      |
+| TS-24 | Página lista a 1ª página (cabeçalho + 5 linhas)                  | Unitário   | "12 transação(ões)" + 6 linhas                     | Conforme                             | OK      |
+| TS-25 | Aplicar filtro de tipo atualiza a listagem                       | Unitário   | "5 transação(ões) encontrada(s)"                   | Conforme                             | OK      |
+| TS-26 | Limpar filtros restaura a listagem na UI                         | Unitário   | volta a "12 transação(ões)"                        | Conforme                             | OK      |
 
 ## 4. Evidências
 

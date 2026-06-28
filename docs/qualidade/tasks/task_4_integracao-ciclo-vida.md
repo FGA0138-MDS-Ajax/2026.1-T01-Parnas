@@ -2,16 +2,16 @@
 
 ## 1. Identificação
 
-| Campo                         | Valor                                                        |
-|-------------------------------|--------------------------------------------------------------111|
-| **Tarefa**                    | Tarefa IV - Integração ponta a ponta (issue #26)             |
-| **Requisitos**                | R01, R02, R03, R04, R05                                      |
-| **Casos do roteiro**          | TS-12, TS-13, TS-14, TS-18                                   |
-| **Branch de desenvolvimento** | `task/integracao`                                            |
-| **Branch base comparada**     | `develop`                                                    |
-| **Branch de teste (QA)**      | `test/task/integracao-qa`                                    |
-| **Data**                      | 18/06/2026 (reavaliada em 27/06/2026)                       |
-| **Parecer**                   | **APROVADA** (ver §6)                                        |
+| Campo                         |  Valor                                           |
+|-------------------------------|--------------------------------------------------|
+| **Tarefa**                    | Tarefa IV - Integração ponta a ponta (issue #26) |
+| **Requisitos**                | R01, R02, R03, R04, R05                          |
+| **Casos do roteiro**          | TS-12, TS-13, TS-14, TS-18                       |
+| **Branch de desenvolvimento** | `task/integracao`                                |
+| **Branch base comparada**     | `develop`                                        |
+| **Branch de teste (QA)**      | `test/task/integracao-qa`                        |
+| **Data**                      | 18/06/2026 (reavaliada em 27/06/2026)            |
+| **Parecer**                   | **APROVADA** (ver §6)                            |
 
 > Por ser uma tarefa de **integração/refatoração**, não cabe "aprovada com
 > pendências": ou o fluxo está íntegro, ou é reprovada com os defeitos apontados.

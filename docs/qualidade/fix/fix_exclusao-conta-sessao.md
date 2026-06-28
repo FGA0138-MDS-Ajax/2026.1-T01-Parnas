@@ -2,18 +2,18 @@
 
 ## 1. Identificação
 
-| Campo                         | Valor                                                                          |
-|-------------------------------|--------------------------------------------------------------------------------|
-| **Tarefa**                    | Correção da exclusão de conta (soft delete) e bloqueio de sessões/login ativos |
-| **Issue relacionada**         | Feature 8 - Exclusão de usuário (complemento de backend)                        |
-| **Escopo deste relatório**    | Somente backend (model, migrations, services, auth e rotas)                     |
-| **Branch de desenvolvimento** | `fix/exclusao-conta-sessao`                                                      |
-| **Branch base comparada**     | `develop`                                                                        |
-| **Sprint**                    | 10                                                                               |
-| **Responsáveis (QA)**         | Daniel Filipe / Matheus Moretti                                                  |
-| **Data**                      | 27/06/2026                                                                       |
-| **Evidências**                | Suíte `pytest` (job `backend`) - testes `fix_exclusao_conta`                     |
-| **Parecer**                   | **APROVADA** (ver §6)                                                            |
+| Campo                          | Valor                                                                          |
+|--------------------------------|--------------------------------------------------------------------------------|
+| **Tarefa**                     | Correção da exclusão de conta (soft delete) e bloqueio de sessões/login ativos |
+| **Issue relacionada**          | Feature 8 - Exclusão de usuário (complemento de backend)                       |
+| **Escopo deste relatório**     | Somente backend (model, migrations, services, auth e rotas)                    |
+| **Branch de desenvolvimento**  | `fix/exclusao-conta-sessao`                                                    |
+| **Branch base comparada**      | `develop`                                                                      |
+| **Sprint**                     | 10                                                                             |
+| **Responsáveis (QA)**          | Daniel Filipe / Matheus Moretti                                                |
+| **Data**                       | 27/06/2026                                                                     |
+| **Evidências**                 | Suíte `pytest` (job `backend`) - testes `fix_exclusao_conta`                   |
+| **Parecer**                    | **APROVADA** (ver §6)                                                          |
 
 ---
 
@@ -42,15 +42,15 @@ introduzidas por esta branch (ver §4).
 Suíte `pytest` nos diretórios `tests/unit/fix_exclusao_conta` e
 `tests/integration/fix_exclusao_conta`. **7 testes, 0 falhas.**
 
-| Caso  | Descrição                                                                  | Nível      | Esperado                                              | Status |
-|-------|----------------------------------------------------------------------------|------------|-------------------------------------------------------|:------:|
-| TS-01 | `delete_user` faz soft delete (marca `is_active=False`, não apaga, commit) | Unitário   | `200`, mensagem de sucesso, sem `delete()` no banco   | Passou |
-| TS-02 | `delete_user` em usuário inexistente                                        | Unitário   | `404`, "Usuário não encontrado.", sem commit          | Passou |
-| TS-03 | `login` de usuário inativo                                                  | Unitário   | `401`, "Conta não encontrada ou desativada"           | Passou |
-| TS-04 | `login` de usuário inexistente                                              | Unitário   | `401`, "Conta não encontrada ou desativada"           | Passou |
-| TS-05 | Token de conta excluída é bloqueado ao reutilizar                          | Integração | `DELETE` 1ª vez `200`; reuso do token `401` bloqueado | Passou |
-| TS-06 | Login após exclusão da própria conta                                        | Integração | Re-login retorna `401` desativada                     | Passou |
-| TS-07 | Preservação dos dados após soft delete                                      | Integração | Registro permanece no banco com `is_active=False`     | Passou |
+| Caso  | Descrição                                                                   | Nível       | Esperado                                              | Status |
+|-------|-----------------------------------------------------------------------------|-------------|-------------------------------------------------------|:------:|
+| TS-01 | `delete_user` faz soft delete (marca `is_active=False`, não apaga, commit)  | Unitário    | `200`, mensagem de sucesso, sem `delete()` no banco   | Passou |
+| TS-02 | `delete_user` em usuário inexistente                                        | Unitário    | `404`, "Usuário não encontrado.", sem commit          | Passou |
+| TS-03 | `login` de usuário inativo                                                  | Unitário    | `401`, "Conta não encontrada ou desativada"           | Passou |
+| TS-04 | `login` de usuário inexistente                                              | Unitário    | `401`, "Conta não encontrada ou desativada"           | Passou |
+| TS-05 | Token de conta excluída é bloqueado ao reutilizar                           | Integração  | `DELETE` 1ª vez `200`; reuso do token `401` bloqueado | Passou |
+| TS-06 | Login após exclusão da própria conta                                        | Integração  | Re-login retorna `401` desativada                     | Passou |
+| TS-07 | Preservação dos dados após soft delete                                      | Integração  | Registro permanece no banco com `is_active=False`     | Passou |
 
 ---
 

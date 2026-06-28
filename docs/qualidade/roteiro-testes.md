@@ -79,10 +79,10 @@ testes** adotada pelo grupo (ver [Estratégia](index.md)).
 ## Convenção de status de execução
 Ao executar o roteiro em cada Sprint, cada caso recebe um status:
 
-|      Status      | Significado                                    |
-|:----------------:|------------------------------------------------|
-|     Passou     | Resultado observado igual ao esperado          |
-|     Falhou     | Divergência → abrir issue `bug` + `fix/<nome>` |
+|    Status     | Significado                                    |
+|:-------------:|------------------------------------------------|
+|    Passou     | Resultado observado igual ao esperado          |
+|    Falhou     | Divergência → abrir issue `bug` + `fix/<nome>` |
 | Não executado | Fora do escopo da Sprint ou bloqueado          |
 |   Pendente    | Caso depende de feature ainda não entregue     |
 

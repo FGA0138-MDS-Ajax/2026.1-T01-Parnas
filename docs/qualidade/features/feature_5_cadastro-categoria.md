@@ -30,33 +30,33 @@
 ---
 ## 3. Casos executados
 
-| Caso  | Descrição                                                   | Nível            | Esperado                         | Observado                          |      Status       |
-|:-----:|-------------------------------------------------------------|------------------|----------------------------------|------------------------------------|:-----------------:|
-| TS-01 | `POST /api/categories` com dados válidos                    | Integração       | `201` + mensagem de sucesso      | Conforme                           |         OK         |
-| TS-02 | `POST /api/categories` sem token                            | Integração       | `401`                            | Conforme                           |         OK         |
-| TS-03 | `POST` com CNPJ válido de empresa não cadastrada            | Integração       | `404` + "Empresa não encontrada" | Conforme                           |         OK         |
-| TS-04 | `POST` com CNPJ fora de formato                             | Integração       | `400` (barrado pelo schema)      | Conforme                           |         OK         |
-| TS-05 | `GET /api/categories?cnpj=` lista categorias da empresa     | Integração       | só as categorias daquela empresa | Conforme                           |         OK         |
-| TS-06 | Listagem não inclui categorias de outra empresa             | Integração       | categoria da empresa B ausente   | Conforme                           |         OK         |
-| TS-07 | `PUT /api/categories` edita o nome de categoria existente   | Integração       | `200` + nome atualizado          | Conforme                           |         OK         |
-| TS-08 | `PUT` em categoria inexistente                              | Integração       | `404`                            | Conforme                           |         OK         |
-| TS-09 | `DELETE /api/categories` de categoria sem transações        | Integração       | `200` + some da listagem         | Conforme                           |         OK         |
-| TS-10 | Nome duplicado na mesma empresa não cria 2ª categoria       | Integração       | duplicata bloqueada (1 registro) | Bloqueada pela constraint `UNIQUE` |         OK         |
-| TS-11 | Nome duplicado retorna status amigável (400/409)            | Integração       | `400` ou `409`                   | `500` (IntegrityError vazado)      | xfail (DEF-01) |
-| TS-12 | Exclusão de categoria com transações vinculadas é bloqueada | Integração       | `400`/`409` recusando a exclusão | Exclusão não é bloqueada           | xfail (DEF-02) |
-| TS-13 | Usuário sem vínculo não gerencia categoria de outra empresa | Integração       | `403`                            | `201` - `user_id` ignorado         | xfail (DEF-03) |
-| TS-14 | `add_category` com empresa inexistente                      | Unitário         | `404`                            | Conforme                           |         OK         |
-| TS-15 | `add_category` com empresa válida persiste a categoria      | Unitário         | `201` + `db.session.add/commit`  | Conforme                           |         OK         |
-| TS-16 | `get_categories` com empresa inexistente                    | Unitário         | `404`                            | Conforme                           |         OK         |
-| TS-17 | `update_category` com categoria inexistente                 | Unitário         | `404`                            | Conforme                           |         OK         |
-| TS-18 | `delete_category` com categoria inexistente                 | Unitário         | `404`                            | Conforme                           |         OK         |
-| TS-19 | Página lista as categorias iniciais                         | Unitário (front) | Salário e Alimentação na tela    | Conforme                           |         OK         |
-| TS-20 | Adicionar nova categoria pelo formulário                    | Unitário (front) | nova categoria aparece na tabela | Conforme                           |         OK         |
-| TS-21 | Formulário limpa o nome após adicionar                      | Unitário (front) | campo de nome volta a vazio      | Conforme                           |         OK         |
-| TS-22 | Editar nome de categoria inline                             | Unitário (front) | nome trocado, antigo some        | Conforme                           |         OK         |
-| TS-23 | Cancelar edição mantém o nome original                      | Unitário (front) | nome original preservado         | Conforme                           |         OK         |
-| TS-24 | Excluir categoria após confirmação                          | Unitário (front) | categoria removida da tabela     | Conforme                           |         OK         |
-| TS-25 | Não excluir quando a confirmação é cancelada                | Unitário (front) | categoria permanece              | Conforme                           |         OK         |
+|  Caso  | Descrição                                                    | Nível             | Esperado                         | Observado                          |       Status       |
+|:------:|--------------------------------------------------------------|-------------------|----------------------------------|------------------------------------|:------------------:|
+| TS-01  | `POST /api/categories` com dados válidos                     | Integração        | `201` + mensagem de sucesso      | Conforme                           |         OK         |
+| TS-02  | `POST /api/categories` sem token                             | Integração        | `401`                            | Conforme                           |         OK         |
+| TS-03  | `POST` com CNPJ válido de empresa não cadastrada             | Integração        | `404` + "Empresa não encontrada" | Conforme                           |         OK         |
+| TS-04  | `POST` com CNPJ fora de formato                              | Integração        | `400` (barrado pelo schema)      | Conforme                           |         OK         |
+| TS-05  | `GET /api/categories?cnpj=` lista categorias da empresa      | Integração        | só as categorias daquela empresa | Conforme                           |         OK         |
+| TS-06  | Listagem não inclui categorias de outra empresa              | Integração        | categoria da empresa B ausente   | Conforme                           |         OK         |
+| TS-07  | `PUT /api/categories` edita o nome de categoria existente    | Integração        | `200` + nome atualizado          | Conforme                           |         OK         |
+| TS-08  | `PUT` em categoria inexistente                               | Integração        | `404`                            | Conforme                           |         OK         |
+| TS-09  | `DELETE /api/categories` de categoria sem transações         | Integração        | `200` + some da listagem         | Conforme                           |         OK         |
+| TS-10  | Nome duplicado na mesma empresa não cria 2ª categoria        | Integração        | duplicata bloqueada (1 registro) | Bloqueada pela constraint `UNIQUE` |         OK         |
+| TS-11  | Nome duplicado retorna status amigável (400/409)             | Integração        | `400` ou `409`                   | `500` (IntegrityError vazado)      |   xfail (DEF-01)   |
+| TS-12  | Exclusão de categoria com transações vinculadas é bloqueada  | Integração        | `400`/`409` recusando a exclusão | Exclusão não é bloqueada           |   xfail (DEF-02)   |
+| TS-13  | Usuário sem vínculo não gerencia categoria de outra empresa  | Integração        | `403`                            | `201` - `user_id` ignorado         |   xfail (DEF-03)   |
+| TS-14  | `add_category` com empresa inexistente                       | Unitário          | `404`                            | Conforme                           |         OK         |
+| TS-15  | `add_category` com empresa válida persiste a categoria       | Unitário          | `201` + `db.session.add/commit`  | Conforme                           |         OK         |
+| TS-16  | `get_categories` com empresa inexistente                     | Unitário          | `404`                            | Conforme                           |         OK         |
+| TS-17  | `update_category` com categoria inexistente                  | Unitário          | `404`                            | Conforme                           |         OK         |
+| TS-18  | `delete_category` com categoria inexistente                  | Unitário          | `404`                            | Conforme                           |         OK         |
+| TS-19  | Página lista as categorias iniciais                          | Unitário (front)  | Salário e Alimentação na tela    | Conforme                           |         OK         |
+| TS-20  | Adicionar nova categoria pelo formulário                     | Unitário (front)  | nova categoria aparece na tabela | Conforme                           |         OK         |
+| TS-21  | Formulário limpa o nome após adicionar                       | Unitário (front)  | campo de nome volta a vazio      | Conforme                           |         OK         |
+| TS-22  | Editar nome de categoria inline                              | Unitário (front)  | nome trocado, antigo some        | Conforme                           |         OK         |
+| TS-23  | Cancelar edição mantém o nome original                       | Unitário (front)  | nome original preservado         | Conforme                           |         OK         |
+| TS-24  | Excluir categoria após confirmação                           | Unitário (front)  | categoria removida da tabela     | Conforme                           |         OK         |
+| TS-25  | Não excluir quando a confirmação é cancelada                 | Unitário (front)  | categoria permanece              | Conforme                           |         OK         |
 
 ---
 ## 4. Evidências

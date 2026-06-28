@@ -23,8 +23,8 @@
 
 ## 3. Casos executados
 
-| Caso  | Descrição                                                            | Nível      | Esperado                                  | Observado | Status |
-|-------|----------------------------------------------------------------------|------------|-------------------------------------------|-----------|--------|
+| Caso  | Descrição                                                            | Nível      | Esperado                                  | Observado | Status  |
+|-------|----------------------------------------------------------------------|------------|-------------------------------------------|-----------|---------|
 | TS-01 | `login` com e-mail inexistente                                       | Unitário   | `401` + "E-mail ou senha inválidos"       | Conforme  | OK      |
 | TS-02 | `login` com senha incorreta                                          | Unitário   | `401` + "E-mail ou senha inválidos"       | Conforme  | OK      |
 | TS-03 | `login` com credenciais válidas                                      | Unitário   | `200` + token, JWT com `str(user_id)`     | Conforme  | OK      |

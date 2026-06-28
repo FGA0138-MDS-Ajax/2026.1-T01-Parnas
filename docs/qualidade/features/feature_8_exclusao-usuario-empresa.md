@@ -2,18 +2,18 @@
 
 ## 1. Identificação
 
-| Campo                         | Valor                                              |
-|-------------------------------|----------------------------------------------------|
-| **Feature**                   | Exclusão de Usuário/Empresa                        |
-| **Cenário**                   | CEN-00                                              |
-| **Requisito**                 | R02                                                |
-| **Prioridade**                | Should                                             |
-| **Branch de desenvolvimento** | `feature/8-exclusao-usuario-empresa`               |
-| **Branch de teste (QA)**      | `test/feature/8-deletar-usuario-e-empresa-qa`      |
-| **Sprint**                    | 5                                                  |
-| **Responsáveis (QA)**         | Daniel Filipe / Matheus Moretti                    |
-| **Data**                      | 27/05/2026                                         |
-| **Parecer**                   | Aprovada com pendências (ver secao 7)              |
+| Campo                          | Valor                                               |
+|--------------------------------|-----------------------------------------------------|
+| **Feature**                    | Exclusão de Usuário/Empresa                         |
+| **Cenário**                    | CEN-00                                              |
+| **Requisito**                  | R02                                                 |
+| **Prioridade**                 | Should                                              |
+| **Branch de desenvolvimento**  | `feature/8-exclusao-usuario-empresa`                |
+| **Branch de teste (QA)**       | `test/feature/8-deletar-usuario-e-empresa-qa`       |
+| **Sprint**                     | 5                                                   |
+| **Responsáveis (QA)**          | Daniel Filipe / Matheus Moretti                     |
+| **Data**                       | 27/05/2026                                          |
+| **Parecer**                    | Aprovada com pendências (ver secao 7)               |
 
 ## 2. Critérios de aceitação testáveis
 
@@ -26,18 +26,18 @@
 
 ## 3. Casos executados
 
-| Caso   | Descrição                                                                 | Nível    | Esperado                                  | Observado | Status |
-|--------|---------------------------------------------------------------------------|----------|-------------------------------------------|-----------|--------|
-| TS-14a | `delete_company` pelo dono                                                 | Unitário | `200` + "Empresa excluída com sucesso."   | Conforme  | OK      |
-| TS-14b | `delete_company` por quem nao e dono                                       | Unitário | `403` "Acesso negado", banco intacto      | Conforme  | OK      |
-| TS-14c | `delete_user` de usuario existente                                         | Unitário | `200` + "Usuário excluído com sucesso."   | Conforme  | OK      |
-| TS-14f | `delete_user` de usuario inexistente                                       | Unitário | `404` "Usuário não encontrado."           | Conforme  | OK      |
-| TS-14d | Botao "Excluir Empresa" abre modal com aviso de empresa                    | Front    | modal + aviso de empresa na tela          | Conforme  | OK      |
-| TS-14e | Botao "Excluir Conta" abre modal com aviso de usuario                      | Front    | modal + aviso de usuario na tela          | Conforme  | OK      |
-| TS-14g | "Cancelar" fecha o modal                                                   | Front    | modal some                                | Conforme  | OK      |
-| TS-14h | Clique fora (overlay) fecha o modal                                        | Front    | modal some                                | Conforme  | OK      |
-| TS-14i | Confirmar exclusao de conta redireciona para `/login`                      | Front    | `navigate('/login')` e modal some         | Conforme  | OK      |
-| TS-14j | Confirmar exclusao de empresa fecha o modal sem redirecionar              | Front    | modal some, sem navegacao                 | Conforme  | OK      |
+| Caso   | Descrição                                                        | Nível      | Esperado                                | Observado   |  Status |
+|--------|------------------------------------------------------------------|------------|-----------------------------------------|-------------|---------|
+| TS-14a | `delete_company` pelo dono                                       | Unitário   | `200` + "Empresa excluída com sucesso." | Conforme    | OK      |
+| TS-14b | `delete_company` por quem nao e dono                             | Unitário   | `403` "Acesso negado", banco intacto    | Conforme    | OK      |
+| TS-14c | `delete_user` de usuario existente                               | Unitário   | `200` + "Usuário excluído com sucesso." | Conforme    | OK      |
+| TS-14f | `delete_user` de usuario inexistente                             | Unitário   | `404` "Usuário não encontrado."         | Conforme    | OK      |
+| TS-14d | Botao "Excluir Empresa" abre modal com aviso de empresa          | Front      | modal + aviso de empresa na tela        | Conforme    | OK      |
+| TS-14e | Botao "Excluir Conta" abre modal com aviso de usuario            | Front      | modal + aviso de usuario na tela        | Conforme    | OK      |
+| TS-14g | "Cancelar" fecha o modal                                         | Front      | modal some                              | Conforme    | OK      |
+| TS-14h | Clique fora (overlay) fecha o modal                              | Front      | modal some                              | Conforme    | OK      |
+| TS-14i | Confirmar exclusao de conta redireciona para `/login`            | Front      | `navigate('/login')` e modal some       | Conforme    | OK      |
+| TS-14j | Confirmar exclusao de empresa fecha o modal sem redirecionar     | Front      | modal some, sem navegacao               | Conforme    | OK      |
 
 > Importante: os casos de front confirmam apenas o **comportamento de tela** (modal e
 > navegacao). Eles **nao** garantem exclusao real porque a tela nao chama a API (**DEF-01**).
@@ -76,20 +76,20 @@ Executando integração para: Excluir Empresa
 
 ## 5. Defeitos encontrados
 
-| ID     | Descrição                                                                                                                                                                                                                                                            | Status |
-|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
-| DEF-01 | **Front nao integrado (stub).** `frontend/src/pages/Configuracoes/Configuracoes.jsx:31-40` - `handleConfirmAction` apenas faz `console.log` e fecha o modal (no caso de usuario, navega para `/login`). **Nenhuma chamada a `DELETE /api/companies/delete` nem `DELETE /api/profile`.** A tarefa "Integrar com DELETE /empresas e /usuarios" esta marcada como concluida na issue, mas nao foi feita. | Aberto |
-| DEF-02 | **Endpoint real de exclusao de empresa quebrado (500).** `backend/app/services/company_service.py:45` declara `find_company(company_CNPJ, user_id)` (2 parametros), mas e chamada com 1 nas linhas 52, 75 e 93 -> `TypeError` -> HTTP 500. Os testes unitarios passam apenas porque **mockam** `find_company`. Mesmo defeito apontado no relatorio da Tarefa IV. | Aberto |
-| DEF-03 | **Cascata (TS-14) nao verificada.** Os testes de backend sao unitarios com `db` mockado, entao a remocao em cascata de categorias, transacoes e do vinculo usuario-empresa nunca e exercitada. Nao existe teste de integracao da feature 8 (`tests/integration/feature_8/`). | Aberto |
+| ID     | Descrição                                                                                                                                                                                                                                                                                                                                                                                             |  Status |
+|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
+| DEF-01 | **Front nao integrado (stub).** `frontend/src/pages/Configuracoes/Configuracoes.jsx:31-40` - `handleConfirmAction` apenas faz `console.log` e fecha o modal (no caso de usuario, navega para `/login`). **Nenhuma chamada a `DELETE /api/companies/delete` nem `DELETE /api/profile`.** A tarefa "Integrar com DELETE /empresas e /usuarios" esta marcada como concluida na issue, mas nao foi feita. | Aberto  |
+| DEF-02 | **Endpoint real de exclusao de empresa quebrado (500).** `backend/app/services/company_service.py:45` declara `find_company(company_CNPJ, user_id)` (2 parametros), mas e chamada com 1 nas linhas 52, 75 e 93 -> `TypeError` -> HTTP 500. Os testes unitarios passam apenas porque **mockam** `find_company`. Mesmo defeito apontado no relatorio da Tarefa IV.                                      | Aberto  |
+| DEF-03 | **Cascata (TS-14) nao verificada.** Os testes de backend sao unitarios com `db` mockado, entao a remocao em cascata de categorias, transacoes e do vinculo usuario-empresa nunca e exercitada. Nao existe teste de integracao da feature 8 (`tests/integration/feature_8/`).                                                                                                                          | Aberto  |
 
 ## 6. Cobertura
 
 **Backend** (valores da pipeline, `--cov=app`):
 
-| Módulo                            | Cobertura | Observação                                                                          |
+| Módulo                            | Cobertura | Observação                                                                         |
 |-----------------------------------|-----------|------------------------------------------------------------------------------------|
-| `app/services/company_service.py` | 57%       | nao coberto: `46-48` (`find_company`), `54`, `68-70`, `74-105` (`delete`/`update`)  |
-| `app/services/user_service.py`    | 59%       | nao coberto: `18`, `72-110` (parte real de `delete_user`/`update_user`)             |
+| `app/services/company_service.py` | 57%       | nao coberto: `46-48` (`find_company`), `54`, `68-70`, `74-105` (`delete`/`update`) |
+| `app/services/user_service.py`    | 59%       | nao coberto: `18`, `72-110` (parte real de `delete_user`/`update_user`)            |
 
 **Frontend** (pipeline):
 

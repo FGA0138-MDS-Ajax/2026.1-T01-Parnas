@@ -2,17 +2,17 @@
 
 ## 1. Identificação
 
-| Campo | Valor |
-|---|---|
-| **Tarefa** | Integração real das telas de Transações e Contas (remoção dos mocks) |
-| **Escopo deste relatório** | Backend (Contas a pagar/receber e rota de transações) e frontend (integração) |
-| **Branch de desenvolvimento** | `fix/integracao-transacoes` |
-| **Branch base comparada** | `develop` |
-| **PR** | #81 (para `develop`) |
-| **Sprint** | 10 |
-| **Responsáveis (QA)** | Daniel Filipe / Matheus Moretti |
-| **Data** | 27/06/2026 |
-| **Parecer** | **APROVADA com pendências** (ver §6) |
+| Campo                         |  Valor                                                                        |
+|-------------------------------|-------------------------------------------------------------------------------|
+| **Tarefa**                    | Integração real das telas de Transações e Contas (remoção dos mocks)          |
+| **Escopo deste relatório**    | Backend (Contas a pagar/receber e rota de transações) e frontend (integração) |
+| **Branch de desenvolvimento** | `fix/integracao-transacoes`                                                   |
+| **Branch base comparada**     | `develop`                                                                     |
+| **PR**                        | #81 (para `develop`)                                                          |
+| **Sprint**                    | 10                                                                            |
+| **Responsáveis (QA)**         | Daniel Filipe / Matheus Moretti                                               |
+| **Data**                      | 27/06/2026                                                                    |
+| **Parecer**                   | **APROVADA com pendências** (ver §6)                                          |
 
 ---
 ## 2. Escopo
@@ -26,16 +26,16 @@ rota de transações.
 
 Suíte `tests/integration/feature_11/test_contas_qa.py` (CRUD de contas + quitação + acesso).
 
-| Caso | Descrição | Esperado | Status |
-|---|---|---|:--:|
-| QA-01 | Criar conta | 201 + `id` | Passou |
-| QA-02 | Criar sem token | 401 | Passou |
-| QA-03 | Criar faltando campo obrigatório | 400 | Passou |
-| QA-04 | Listar contas da empresa | 200 + lista | Passou |
-| QA-05 | Listar sem `company_id` | 400 | Passou |
-| QA-06 | Quitar conta marca `quitado` (e gera transação) | 200 + status quitado | Passou |
-| QA-07 | Não editar conta quitada | 400 | Passou |
-| QA-08 | Acesso negado a empresa sem vínculo | 403 | Passou |
+| Caso   | Descrição                                       | Esperado             |  Status |
+|--------|-------------------------------------------------|----------------------|:-------:|
+| QA-01  | Criar conta                                     | 201 + `id`           | Passou  |
+| QA-02  | Criar sem token                                 | 401                  | Passou  |
+| QA-03  | Criar faltando campo obrigatório                | 400                  | Passou  |
+| QA-04  | Listar contas da empresa                        | 200 + lista          | Passou  |
+| QA-05  | Listar sem `company_id`                         | 400                  | Passou  |
+| QA-06  | Quitar conta marca `quitado` (e gera transação) | 200 + status quitado | Passou  |
+| QA-07  | Não editar conta quitada                        | 400                  | Passou  |
+| QA-08  | Acesso negado a empresa sem vínculo             | 403                  | Passou  |
 
 **8 testes, 0 falhas.** Além disso, esta branch já corrige (de forma independente) o bug
 das rotas de `update`/`delete` de transação (passagem de argumentos na ordem errada para
@@ -55,10 +55,10 @@ npm run test:run   # frontend
 ---
 ## 5. Defeitos / pendências
 
-| Item | Descrição | Status |
-|---|---|---|
+| Item           | Descrição                                                                                                                                                                                                                                                                                                                                                                                                         | Status |
+|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
 | PEND-1 (front) | A reescrita para integração real deixou **28 testes de frontend desatualizados** nos módulos reescritos: `useTransacoes` (10), `Usecontas` (6), `Categorias` (7), `Transacoes` (3), `ContasCaixa` (2). Os testes ainda exercitam as versões antigas (com mocks locais); os hooks/páginas agora dependem de chamadas reais à API e do `EmpresaContext`. São testes desatualizados, não defeitos de funcionalidade. | Aberto |
-| PEND-2 (back) | A branch herda da `develop` as falhas pré-existentes de feature_4/6/8 (escopo da task7). | Aberto |
+| PEND-2 (back)  | A branch herda da `develop` as falhas pré-existentes de feature_4/6/8 (escopo da task7).                                                                                                                                                                                                                                                                                                                          | Aberto |
 
 **Como ajeitar rápido (frontend):** nos testes dos módulos reescritos, mockar os
 `services` novos (`categoria.service`, `conta.service`, etc.) e prover o `EmpresaContext`

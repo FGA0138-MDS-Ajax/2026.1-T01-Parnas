@@ -7,14 +7,14 @@ qualidade produzida pela dupla de Qualidade (**Daniel Filipe** e
 
 ## Nesta seção
 
-| Página | Conteúdo |
-| --- | --- |
-| [Roteiro de Testes](roteiro-testes.md) | Casos planejados TS-01 a TS-14 e rastreabilidade com os requisitos |
-| [Modelo GQM](gqm.md) | Metas, perguntas e métricas (M1-M4) que medem a qualidade |
-| [Documentação por Feature](features/index.md) | Um relatório de teste para cada feature testada |
-| [Documentação por Tarefa Técnica](tasks/index.md) | Relatórios de QA das tarefas de integração/refatoração |
-| [Documentação por Correção (fix)](fix/index.md) | Relatórios de QA das correções de defeitos |
-| [Consolidados por Sprint](sprints/index.md) | Visão agregada de testes e GQM por Sprint |
+| Página                                            | Conteúdo                                                           |
+|---------------------------------------------------|--------------------------------------------------------------------|
+| [Roteiro de Testes](roteiro-testes.md)            | Casos planejados TS-01 a TS-14 e rastreabilidade com os requisitos |
+| [Modelo GQM](gqm.md)                              | Metas, perguntas e métricas (M1-M4) que medem a qualidade          |
+| [Documentação por Feature](features/index.md)     | Um relatório de teste para cada feature testada                    |
+| [Documentação por Tarefa Técnica](tasks/index.md) | Relatórios de QA das tarefas de integração/refatoração             |
+| [Documentação por Correção (fix)](fix/index.md)   | Relatórios de QA das correções de defeitos                         |
+| [Consolidados por Sprint](sprints/index.md)       | Visão agregada de testes e GQM por Sprint                          |
 
 ---
 ## Estratégia em resumo
@@ -74,12 +74,12 @@ Fixtures globais em `conftest.py`: `app`
 ---
 ## Documentos de Qualidade Produzidos
 
-| Documento                            | Frequência  | Onde                                            |
-|--------------------------------------|-------------|-------------------------------------------------|
-| **Documentação de Testes - Feature** | Por feature | [Documentação por Feature](features/index.md)   |
-| **Documentação de Testes - Tarefa**  | Por tarefa  | [Documentação por Tarefa Técnica](tasks/index.md) |
-| **Documentação de Testes - Correção** | Por fix    | [Documentação por Correção (fix)](fix/index.md) |
-| **Consolidado de Testes - Sprint**   | Por Sprint  | [Consolidados por Sprint](sprints/index.md)     |
-| **Análise GQM - Sprint**             | Por Sprint  | Dentro de cada consolidado                      |
+| Documento                              | Frequência  | Onde                                              |
+|----------------------------------------|-------------|---------------------------------------------------|
+| **Documentação de Testes - Feature**   | Por feature | [Documentação por Feature](features/index.md)     |
+| **Documentação de Testes - Tarefa**    | Por tarefa  | [Documentação por Tarefa Técnica](tasks/index.md) |
+| **Documentação de Testes - Correção**  | Por fix     | [Documentação por Correção (fix)](fix/index.md)   |
+| **Consolidado de Testes - Sprint**     | Por Sprint  | [Consolidados por Sprint](sprints/index.md)       |
+| **Análise GQM - Sprint**               | Por Sprint  | Dentro de cada consolidado                        |
 
 ---

@@ -8,11 +8,11 @@ apontados - não há "aprovada com pendências".
 ---
 ## Relatórios disponíveis
 
-| Tarefa | Escopo | Sprint | Status |
-|---|---|:--:|---|
-| [Tarefa IV - Integração do Ciclo de Vida](task_4_integracao-ciclo-vida.md) | Usuário / Empresa / Autenticação | 5 | Aprovada |
-| [Tarefa V - Redesign do Frontend](task_5_redesign-frontend.md) | Frontend - Autenticação / Categorias / Painel | 8 | Aprovada |
-| [Tarefa VI - Refactor de Bancos e Rotas](task_6_refactor-banco-rotas.md) | Backend - Persistência / Migrations / Rotas | 8 | Reprovada |
+| Tarefa                                                                     | Escopo                                        | Sprint   | Status    |
+|----------------------------------------------------------------------------|-----------------------------------------------|:--------:|-----------|
+| [Tarefa IV - Integração do Ciclo de Vida](task_4_integracao-ciclo-vida.md) | Usuário / Empresa / Autenticação              |    5     | Aprovada  |
+| [Tarefa V - Redesign do Frontend](task_5_redesign-frontend.md)             | Frontend - Autenticação / Categorias / Painel |    8     | Aprovada  |
+| [Tarefa VI - Refactor de Bancos e Rotas](task_6_refactor-banco-rotas.md)   | Backend - Persistência / Migrations / Rotas   |    8     | Reprovada |
 
 > As correções (`fix`) têm seção própria em
 > [Documentação por Correção (fix)](../fix/index.md).
@@ -20,7 +20,7 @@ apontados - não há "aprovada com pendências".
 ---
 ## Status possíveis
 
-| Status            | Significado                                                        |
-|-------------------|-------------------------------------------------------------------|
-| **Aprovada**    | Integração íntegra; pode ser mesclada                             |
-| **Reprovada**   | Há defeito bloqueante; volta para desenvolvimento com os apontamentos |
+| Status             | Significado                                                           |
+|--------------------|-----------------------------------------------------------------------|
+| **Aprovada**       | Integração íntegra; pode ser mesclada                                 |
+| **Reprovada**      | Há defeito bloqueante; volta para desenvolvimento com os apontamentos |

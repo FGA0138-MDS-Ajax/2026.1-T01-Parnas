@@ -33,35 +33,35 @@
 ---
 ## 3. Casos executados
 
-| Caso | Descrição | Nível | Esperado | Observado | Status |
-| :--: | --- | --- | --- | --- | :--: |
-| TS-01 | `POST /api/transactions/` com dados válidos | Integração | `201` + `transaction_id` | Conforme | OK |
-| TS-02 | `POST` sem token | Integração | `401` | Conforme | OK |
-| TS-03 | `POST` com valor negativo | Integração | `400` (validação) | Conforme | OK |
-| TS-04 | `POST` com valor zero | Integração | `400` (valor estritamente positivo) | Conforme | OK |
-| TS-05 | `POST` com data futura | Integração | `400` (data não futura) | Conforme | OK |
-| TS-06 | `POST` sem categoria | Integração | `400` (categoria obrigatória) | Conforme | OK |
-| TS-07 | `POST` com categoria de outra empresa | Integração | `400` (não pertence à empresa) | Conforme | OK |
-| TS-08 | Transação recém-criada aparece no histórico | Integração | `200` + transação listada | `500` `Decimal - float` (DEF-01) | xfail |
-| TS-09 | `PUT` edita transação existente | Integração | `200` + persistência confirmada | Conforme (relido do banco) | OK |
-| TS-10 | `PUT` em transação inexistente | Integração | `404` | Conforme | OK |
-| TS-11 | `PUT` sem `company_id` no corpo | Integração | `400` | Conforme | OK |
-| TS-12 | `DELETE` exclui transação | Integração | `200` + sai do histórico | Conforme | OK |
-| TS-13 | `DELETE` em transação inexistente | Integração | `404` | Conforme | OK |
-| TS-14 | `DELETE` sem `company_id` | Integração | `400` | Conforme | OK |
-| TS-15 | Usuário sem vínculo cria transação em empresa alheia | Integração | `403` | `201` - `user_id` ignorado (DEF-02) | xfail |
-| TS-16 | `create_transaction` com categoria inexistente | Unitário | `400` | Conforme | OK |
-| TS-17 | `create_transaction` com dados válidos | Unitário | `201` + `add`/`commit` | Conforme | OK |
-| TS-18 | `update_transaction` em transação inexistente | Unitário | `404` | Conforme | OK |
-| TS-19 | `delete_transaction` em transação inexistente | Unitário | `404` | Conforme | OK |
-| TS-20 | Modal exibe título "Nova Transação" | Unitário (front) | título de criação | Conforme | OK |
-| TS-21 | Modal exibe título "Editar Transação" ao editar | Unitário (front) | título de edição | Conforme | OK |
-| TS-22 | Submeter formulário válido chama `onSalvar` | Unitário (front) | `valor`/`categoriaId` numéricos | Conforme | OK |
-| TS-23 | Valor negativo bloqueia envio | Unitário (front) | erro + `onSalvar` não chamado | Conforme | OK |
-| TS-24 | Data futura bloqueia envio | Unitário (front) | erro + `onSalvar` não chamado | Conforme | OK |
-| TS-25 | Categoria obrigatória bloqueia envio | Unitário (front) | erro + `onSalvar` não chamado | Conforme | OK |
-| TS-26 | Select de categoria filtra pelo tipo selecionado | Unitário (front) | só categorias do tipo | Conforme | OK |
-| TS-27 | Botão Cancelar chama `onFechar` | Unitário (front) | `onFechar` chamado | Conforme | OK |
+| Caso  | Descrição                                            | Nível            | Esperado                            | Observado                           | Status |
+|:-----:|------------------------------------------------------|------------------|-------------------------------------|-------------------------------------|:------:|
+| TS-01 | `POST /api/transactions/` com dados válidos          | Integração       | `201` + `transaction_id`            | Conforme                            |   OK   |
+| TS-02 | `POST` sem token                                     | Integração       | `401`                               | Conforme                            |   OK   |
+| TS-03 | `POST` com valor negativo                            | Integração       | `400` (validação)                   | Conforme                            |   OK   |
+| TS-04 | `POST` com valor zero                                | Integração       | `400` (valor estritamente positivo) | Conforme                            |   OK   |
+| TS-05 | `POST` com data futura                               | Integração       | `400` (data não futura)             | Conforme                            |   OK   |
+| TS-06 | `POST` sem categoria                                 | Integração       | `400` (categoria obrigatória)       | Conforme                            |   OK   |
+| TS-07 | `POST` com categoria de outra empresa                | Integração       | `400` (não pertence à empresa)      | Conforme                            |   OK   |
+| TS-08 | Transação recém-criada aparece no histórico          | Integração       | `200` + transação listada           | `500` `Decimal - float` (DEF-01)    | xfail  |
+| TS-09 | `PUT` edita transação existente                      | Integração       | `200` + persistência confirmada     | Conforme (relido do banco)          |   OK   |
+| TS-10 | `PUT` em transação inexistente                       | Integração       | `404`                               | Conforme                            |   OK   |
+| TS-11 | `PUT` sem `company_id` no corpo                      | Integração       | `400`                               | Conforme                            |   OK   |
+| TS-12 | `DELETE` exclui transação                            | Integração       | `200` + sai do histórico            | Conforme                            |   OK   |
+| TS-13 | `DELETE` em transação inexistente                    | Integração       | `404`                               | Conforme                            |   OK   |
+| TS-14 | `DELETE` sem `company_id`                            | Integração       | `400`                               | Conforme                            |   OK   |
+| TS-15 | Usuário sem vínculo cria transação em empresa alheia | Integração       | `403`                               | `201` - `user_id` ignorado (DEF-02) | xfail  |
+| TS-16 | `create_transaction` com categoria inexistente       | Unitário         | `400`                               | Conforme                            |   OK   |
+| TS-17 | `create_transaction` com dados válidos               | Unitário         | `201` + `add`/`commit`              | Conforme                            |   OK   |
+| TS-18 | `update_transaction` em transação inexistente        | Unitário         | `404`                               | Conforme                            |   OK   |
+| TS-19 | `delete_transaction` em transação inexistente        | Unitário         | `404`                               | Conforme                            |   OK   |
+| TS-20 | Modal exibe título "Nova Transação"                  | Unitário (front) | título de criação                   | Conforme                            |   OK   |
+| TS-21 | Modal exibe título "Editar Transação" ao editar      | Unitário (front) | título de edição                    | Conforme                            |   OK   |
+| TS-22 | Submeter formulário válido chama `onSalvar`          | Unitário (front) | `valor`/`categoriaId` numéricos     | Conforme                            |   OK   |
+| TS-23 | Valor negativo bloqueia envio                        | Unitário (front) | erro + `onSalvar` não chamado       | Conforme                            |   OK   |
+| TS-24 | Data futura bloqueia envio                           | Unitário (front) | erro + `onSalvar` não chamado       | Conforme                            |   OK   |
+| TS-25 | Categoria obrigatória bloqueia envio                 | Unitário (front) | erro + `onSalvar` não chamado       | Conforme                            |   OK   |
+| TS-26 | Select de categoria filtra pelo tipo selecionado     | Unitário (front) | só categorias do tipo               | Conforme                            |   OK   |
+| TS-27 | Botão Cancelar chama `onFechar`                      | Unitário (front) | `onFechar` chamado                  | Conforme                            |   OK   |
 
 ---
 ## 4. Evidências
@@ -103,11 +103,11 @@ TS-15  test_usuario_sem_vinculo_cria_transacao_em_empresa_alheia    -> DEF-02
 > diferenciação contas/transações e correções do histórico), **#56** (Fix III -
 > integração entre classes) e **#35** (Tarefa V - refatoração).
 
-| Issue | Descrição | Status |
-|---|---|---|
+| Issue          | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Status |
+|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
 | DEF-01 (→ #54) | `get_history_filtered` (`transaction_service.py:39`) estoura `TypeError: unsupported operand type(s) for -: 'decimal.Decimal' and 'float'` quando o histórico tem **só um tipo** de transação (`receitas`/`despesas` vazio vira `0.0` float vs `Decimal`). Como uma transação recém-criada costuma ser o único registro, **não foi possível confirmar "aparece imediatamente no histórico"** via API (HTTP 500). Bug pré-existente, herdado da feature 7 (não é regressão da feature 6). Branch sugerida: `fix/historico-totais-decimal`. | Aberto |
-| DEF-02 (→ #56) | `create_transaction` valida que a categoria pertence ao `company_id` informado, mas **não verifica se o usuário autenticado está vinculado à empresa** (`user_id` é apenas carimbado). Um usuário sem vínculo registra transação em empresa alheia (deveria `403`). Espelha o DEF-03 da feature 5. **Impacto de autorização.** Branch sugerida: `fix/transacao-autorizacao-empresa`. | Aberto |
-| DEF-03 (→ #35) | `app/repositories/transaction_repository.py` é **código morto** (cobertura 0%, nunca importado); o service consulta os models diretamente. Candidato à refatoração. Branch sugerida: `refactor/transacao-usa-repository`. | Aberto |
+| DEF-02 (→ #56) | `create_transaction` valida que a categoria pertence ao `company_id` informado, mas **não verifica se o usuário autenticado está vinculado à empresa** (`user_id` é apenas carimbado). Um usuário sem vínculo registra transação em empresa alheia (deveria `403`). Espelha o DEF-03 da feature 5. **Impacto de autorização.** Branch sugerida: `fix/transacao-autorizacao-empresa`.                                                                                                                                                      | Aberto |
+| DEF-03 (→ #35) | `app/repositories/transaction_repository.py` é **código morto** (cobertura 0%, nunca importado); o service consulta os models diretamente. Candidato à refatoração. Branch sugerida: `refactor/transacao-usa-repository`.                                                                                                                                                                                                                                                                                                                 | Aberto |
 
 ---
 ## 6. Cobertura
@@ -123,15 +123,15 @@ pytest tests/unit/feature_6 tests/integration/feature_6 \
 npm run test:run -- src/pages/Transacoes/ModalTransacao.test.jsx --coverage
 ```
 
-| Métrica | Valor |
-|---|---|
-| `app/schemas/transaction_schema.py` | 100% |
-| `app/models/transaction.py` | 95% |
-| `app/routes/transaction_routes.py` | 89% |
-| `app/services/transaction_service.py` | 69% (o não-coberto é `get_history_filtered` - escopo da feature 7 - e ramos de erro) |
-| `app/repositories/transaction_repository.py` | 0% (código morto - ver DEF-03) |
-| **Backend - total (módulos importados)** | **83%** |
-| `src/pages/Transacoes/ModalTransacao.jsx` (front) | núcleo do formulário coberto pelos 8 testes |
+| Métrica                                           | Valor                                                                                |
+|---------------------------------------------------|--------------------------------------------------------------------------------------|
+| `app/schemas/transaction_schema.py`               | 100%                                                                                 |
+| `app/models/transaction.py`                       | 95%                                                                                  |
+| `app/routes/transaction_routes.py`                | 89%                                                                                  |
+| `app/services/transaction_service.py`             | 69% (o não-coberto é `get_history_filtered` - escopo da feature 7 - e ramos de erro) |
+| `app/repositories/transaction_repository.py`      | 0% (código morto - ver DEF-03)                                                       |
+| **Backend - total (módulos importados)**          | **83%**                                                                              |
+| `src/pages/Transacoes/ModalTransacao.jsx` (front) | núcleo do formulário coberto pelos 8 testes                                          |
 
 Núcleo do cadastro (criar/editar/excluir + validações) acima da meta de **≥ 60%**.
 

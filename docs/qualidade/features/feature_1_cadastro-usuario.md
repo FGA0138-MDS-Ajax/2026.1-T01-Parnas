@@ -30,22 +30,22 @@
 ---
 ## 3. Casos executados
 
-| Caso  | Descrição                                                   | Nível    | Esperado                           | Observado             | Status |
-|:-----:|-------------------------------------------------------------|----------|------------------------------------|-----------------------|:------:|
-| TS-01 | `register_user` com e-mail duplicado                        | Unitário | `{erro: ...}`, 409                 | Conforme              |   OK    |
-| TS-02 | `register_user` com CPF duplicado                           | Unitário | `{erro: ...}`, 409                 | Conforme              |   OK    |
-| TS-03 | `register_user` com dados válidos                           | Unitário | mensagem + token, 201              | Conforme              |   OK    |
-| TS-04 | `register_user` com erro no commit                          | Unitário | rollback + 500                     | Conforme              |   OK    |
-| TS-05 | `is_valid_password` - vazio/curta/sem letra/número/especial | Unitário | `False`                            | Conforme              |   OK    |
-| TS-06 | `is_valid_password` - senha válida                          | Unitário | `True`                             | Conforme              |   OK    |
-| TS-07 | `is_valid_password` - senha com espaços                     | Unitário | `False`                            | Retorna `True`        |   Falhou    |
-| TS-08 | `is_valid_birth_date` - data inválida/futura/idade/formato  | Unitário | `False`                            | Conforme              |   OK    |
-| TS-09 | `is_valid_birth_date` - data válida                         | Unitário | `True`                             | Conforme              |   OK    |
-| TS-10 | UI cadastro - tela renderiza (título e botão)               | Unitário | Elementos na tela                  | Conforme              |   OK    |
-| TS-11 | UI cadastro - data de nascimento no futuro                  | Unitário | Erro "Data de nascimento inválida" | Conforme              |   OK    |
-| TS-12 | UI cadastro - menor de 18 anos                              | Unitário | Erro "pelo menos 18 anos"          | Conforme              |   OK    |
-| TS-13 | UI cadastro - adulto não acusa erro de data/idade           | Unitário | Sem erro de data/idade             | Conforme              |   OK    |
-| TS-14 | UI cadastro - envio válido chama `POST /auth/register`      | Unitário | `fetch` chamado                    | `fetch` não é chamado |   Nao executado   |
+|  Caso  | Descrição                                                    | Nível     | Esperado                            | Observado             |    Status     |
+|:------:|--------------------------------------------------------------|-----------|-------------------------------------|-----------------------|:-------------:|
+| TS-01  | `register_user` com e-mail duplicado                         | Unitário  | `{erro: ...}`, 409                  | Conforme              |      OK       |
+| TS-02  | `register_user` com CPF duplicado                            | Unitário  | `{erro: ...}`, 409                  | Conforme              |      OK       |
+| TS-03  | `register_user` com dados válidos                            | Unitário  | mensagem + token, 201               | Conforme              |      OK       |
+| TS-04  | `register_user` com erro no commit                           | Unitário  | rollback + 500                      | Conforme              |      OK       |
+| TS-05  | `is_valid_password` - vazio/curta/sem letra/número/especial  | Unitário  | `False`                             | Conforme              |      OK       |
+| TS-06  | `is_valid_password` - senha válida                           | Unitário  | `True`                              | Conforme              |      OK       |
+| TS-07  | `is_valid_password` - senha com espaços                      | Unitário  | `False`                             | Retorna `True`        |    Falhou     |
+| TS-08  | `is_valid_birth_date` - data inválida/futura/idade/formato   | Unitário  | `False`                             | Conforme              |      OK       |
+| TS-09  | `is_valid_birth_date` - data válida                          | Unitário  | `True`                              | Conforme              |      OK       |
+| TS-10  | UI cadastro - tela renderiza (título e botão)                | Unitário  | Elementos na tela                   | Conforme              |      OK       |
+| TS-11  | UI cadastro - data de nascimento no futuro                   | Unitário  | Erro "Data de nascimento inválida"  | Conforme              |      OK       |
+| TS-12  | UI cadastro - menor de 18 anos                               | Unitário  | Erro "pelo menos 18 anos"           | Conforme              |      OK       |
+| TS-13  | UI cadastro - adulto não acusa erro de data/idade            | Unitário  | Sem erro de data/idade              | Conforme              |      OK       |
+| TS-14  | UI cadastro - envio válido chama `POST /auth/register`       | Unitário  | `fetch` chamado                     | `fetch` não é chamado | Nao executado |
 
 > TS-14 está marcado como `test.skip` no código por causa do DEF-02 (caminho feliz
 > bloqueado). Reativar quando o defeito for corrigido.

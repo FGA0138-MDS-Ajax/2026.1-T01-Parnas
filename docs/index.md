@@ -30,15 +30,15 @@ histórico e relatórios — para que ele chegue mais bem preparado ao banco.
 O projeto está alinhado à meta **ODS 9.3** da ONU, que trata de *ampliar o
 acesso das pequenas empresas a serviços financeiros e crédito acessível*.
 
-| | |
-| --- | --- |
-| **Disciplina** | Métodos de Desenvolvimento de Software (MDS) |
-| **Instituição** | Universidade de Brasília — FGA |
-| **Semestre** | 2026.1 |
-| **Turma** | T01 |
-| **Docente** | Ricardo Ajax Dias Kosloski |
-| **Grupo** | Parnas (12 integrantes) |
-| **ODS** | 9.3 — Acesso a crédito para pequenas empresas |
+|                 |                                               |
+|-----------------|-----------------------------------------------|
+| **Disciplina**  | Métodos de Desenvolvimento de Software (MDS)  |
+| **Instituição** | Universidade de Brasília — FGA                |
+| **Semestre**    | 2026.1                                        |
+| **Turma**       | T01                                           |
+| **Docente**     | Ricardo Ajax Dias Kosloski                    |
+| **Grupo**       | Parnas (12 integrantes)                       |
+| **ODS**         | 9.3 — Acesso a crédito para pequenas empresas |
 
 ---
 
@@ -60,14 +60,14 @@ Esta documentação tem três objetivos:
 
 ## Por onde navegar
 
-| Seção | O que você encontra |
-| --- | --- |
-| [O Grupo](sobre/index.md) | Quem é o Grupo Parnas, a disciplina e os integrantes |
-| [Produto](produto/index.md) | O CrediFab, o Documento de Visão e o de Arquitetura |
-| [Qualidade](qualidade/index.md) | Estratégia de testes, roteiro, docs por feature, consolidados de Sprint e GQM |
-| [Issues](issues/index.md) | Histórias de usuário, tarefas técnicas e correções (fixes) |
-| [Atas de Reunião](atas-reuniao/index.md) | Registros das reuniões do grupo |
-| [Presenças (gov.br)](presencas/index.md) | Listas de presença assinadas digitalmente |
+| Seção                                    |  O que você encontra                                                          |
+|------------------------------------------|-------------------------------------------------------------------------------|
+| [O Grupo](sobre/index.md)                | Quem é o Grupo Parnas, a disciplina e os integrantes                          |
+| [Produto](produto/index.md)              | O CrediFab, o Documento de Visão e o de Arquitetura                           |
+| [Qualidade](qualidade/index.md)          | Estratégia de testes, roteiro, docs por feature, consolidados de Sprint e GQM |
+| [Issues](issues/index.md)                | Histórias de usuário, tarefas técnicas e correções (fixes)                    |
+| [Atas de Reunião](atas-reuniao/index.md) | Registros das reuniões do grupo                                               |
+| [Presenças (gov.br)](presencas/index.md) | Listas de presença assinadas digitalmente                                     |
 
 ---
 
@@ -77,14 +77,14 @@ O projeto é desenvolvido em ciclos semanais (Sprints), do cadastro de
 usuário/empresa até a simulação de crédito. O acompanhamento detalhado de cada
 ciclo está em [Consolidados por Sprint](qualidade/sprints/index.md).
 
-| Sprint | Período | Foco | Cenário |
-| :----: | :-----: | --- | :-----: |
-| 4 | 17–23/mai | Cadastro e autenticação de usuário/empresa | CEN-00 |
-| 5 | 24–30/mai | Registro de dados financeiros (categorias, transações, histórico) | CEN-01 |
-| 6 | 31/mai–06/jun | Centralização documental | CEN-02 |
-| 7 | 07–13/jun | Relatórios financeiros | CEN-03 |
-| 8–9 | 14–27/jun | Diagnóstico e simulação de crédito | CEN-04 |
-| 10 | 28/jun–04/jul | Produto final | — |
+| Sprint  |    Período    |  Foco                                                             |  Cenário |
+|:-------:|:-------------:|-------------------------------------------------------------------|:--------:|
+|    4    |   17–23/mai   | Cadastro e autenticação de usuário/empresa                        |  CEN-00  |
+|    5    |   24–30/mai   | Registro de dados financeiros (categorias, transações, histórico) |  CEN-01  |
+|    6    | 31/mai–06/jun | Centralização documental                                          |  CEN-02  |
+|    7    |   07–13/jun   | Relatórios financeiros                                            |  CEN-03  |
+|   8–9   |   14–27/jun   | Diagnóstico e simulação de crédito                                |  CEN-04  |
+|   10    | 28/jun–04/jul | Produto final                                                     |    —     |
 
 ---
 

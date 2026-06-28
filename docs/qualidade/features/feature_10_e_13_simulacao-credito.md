@@ -7,18 +7,18 @@
 
 ## 1. Identificação
 
-| Campo                          | Valor                                                       |
-|--------------------------------|-------------------------------------------------------------|
-| **Feature**                    | Simulação de Crédito (frontend + backend)                   |
-| **US**                         | us10 (frontend) + us13 (backend)                            |
-| **Cenário**                    | CEN-04 - Diagnóstico e simulação de crédito                 |
-| **Requisito**                  | R12                                                         |
-| **Sprint**                     | 9                                                           |
-| **Branch de desenvolvimento**  | `feature/10-e-13-simulacao-credito` (integração, a partir da `develop`) |
-| **Branches de origem**         | `feature/10-simulacao-credito` (front) · `feature/13-simulacao-creditos` (back) |
-| **PR / Pipeline**              | PR #67 → `develop` · GitHub Actions `tests` (run 27767281384) - **success** |
-| **Responsáveis (QA)**          | Daniel Filipe / Matheus Moretti                             |
-| **Data**                       | 23/06/2026                                                  |
+| Campo                         | Valor                                                                           |
+|-------------------------------|---------------------------------------------------------------------------------|
+| **Feature**                   | Simulação de Crédito (frontend + backend)                                       |
+| **US**                        | us10 (frontend) + us13 (backend)                                                |
+| **Cenário**                   | CEN-04 - Diagnóstico e simulação de crédito                                     |
+| **Requisito**                 | R12                                                                             |
+| **Sprint**                    | 9                                                                               |
+| **Branch de desenvolvimento** | `feature/10-e-13-simulacao-credito` (integração, a partir da `develop`)         |
+| **Branches de origem**        | `feature/10-simulacao-credito` (front) · `feature/13-simulacao-creditos` (back) |
+| **PR / Pipeline**             | PR #67 → `develop` · GitHub Actions `tests` (run 27767281384) - **success**     |
+| **Responsáveis (QA)**         | Daniel Filipe / Matheus Moretti                                                 |
+| **Data**                      | 23/06/2026                                                                      |
 
 ## 2. Critérios de aceitação testáveis
 

@@ -3,17 +3,17 @@
 ---
 ## 1. Identificação
 
-| Campo | Valor |
-|---|---|
-| **Feature** | Seleção de Empresa Ativa |
-| **Cenário** | CEN-00 |
-| **Requisito(s)** | R04 |
-| **Branch de desenvolvimento** | `feature/15-selecao-empresa-ativa` |
-| **Branch de teste** | `feature/15-selecao-empresa-ativa` (testes de QA commitados na própria branch) |
-| **PR** | #76 (para `develop`) |
-| **Sprint(s)** | 7 |
-| **Responsáveis** | Daniel Filipe / Matheus Moretti |
-| **Data** | 27/06/2026 |
+| Campo                         |  Valor                                                                         |
+|-------------------------------|--------------------------------------------------------------------------------|
+| **Feature**                   | Seleção de Empresa Ativa                                                       |
+| **Cenário**                   | CEN-00                                                                         |
+| **Requisito(s)**              | R04                                                                            |
+| **Branch de desenvolvimento** | `feature/15-selecao-empresa-ativa`                                             |
+| **Branch de teste**           | `feature/15-selecao-empresa-ativa` (testes de QA commitados na própria branch) |
+| **PR**                        | #76 (para `develop`)                                                           |
+| **Sprint(s)**                 | 7                                                                              |
+| **Responsáveis**              | Daniel Filipe / Matheus Moretti                                                |
+| **Data**                      | 27/06/2026                                                                     |
 
 ---
 ## 2. Critérios de aceitação testáveis
@@ -31,14 +31,14 @@
 
 Backend: `tests/integration/feature_15/test_session.py`. Frontend: suíte Vitest da branch.
 
-| Caso | Descrição | Nível | Esperado | Observado | Status |
-| :--: | --- | --- | --- | --- | :--: |
-| QA-01 | Listar empresas sem token | Integração | 401 | 401 | Passou |
-| QA-02 | Listar empresas do usuário | Integração | 200 + empresa vinculada | 200 | Passou |
-| QA-03 | Definir empresa ativa sem `company_id` | Integração | 400 | 400 | Passou |
-| QA-04 | Definir empresa sem vínculo | Integração | 403 | 403 | Passou |
-| QA-05 | Definir empresa ativa válida | Integração | 200 + token + `active_company_id` | 200 | Passou |
-| QA-F | `EmpresaContext` / `SelecaoEmpresa` / `Login` (Vitest) | Front | suíte verde | 98 testes verdes | Passou |
+| Caso   | Descrição                                              | Nível      | Esperado                          | Observado        | Status |
+|:------:|--------------------------------------------------------|------------|-----------------------------------|------------------|:------:|
+| QA-01  | Listar empresas sem token                              | Integração | 401                               | 401              | Passou |
+| QA-02  | Listar empresas do usuário                             | Integração | 200 + empresa vinculada           | 200              | Passou |
+| QA-03  | Definir empresa ativa sem `company_id`                 | Integração | 400                               | 400              | Passou |
+| QA-04  | Definir empresa sem vínculo                            | Integração | 403                               | 403              | Passou |
+| QA-05  | Definir empresa ativa válida                           | Integração | 200 + token + `active_company_id` | 200              | Passou |
+|  QA-F  | `EmpresaContext` / `SelecaoEmpresa` / `Login` (Vitest) | Front      | suíte verde                       | 98 testes verdes | Passou |
 
 ---
 ## 4. Evidências
@@ -54,15 +54,15 @@ npm run test:run   # frontend
 ---
 ## 5. Defeitos encontrados
 
-| Issue | Descrição | Status |
-|---|---|---|
-| PEND-1 | A branch está 7 commits à frente da `develop` e refatorou vários services; a suíte de backend da branch acusa **99 testes falhando** (feature_4, 5, 6, 7, 9, 10, 11, 12, 14). São testes desatualizados frente aos refactors (mesma natureza da task7/fix3), não defeitos da feature de seleção de empresa. | Aberto |
+| Issue   | Descrição                                                                                                                                                                                                                                                                                                   |  Status |
+|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
+| PEND-1  | A branch está 7 commits à frente da `develop` e refatorou vários services; a suíte de backend da branch acusa **99 testes falhando** (feature_4, 5, 6, 7, 9, 10, 11, 12, 14). São testes desatualizados frente aos refactors (mesma natureza da task7/fix3), não defeitos da feature de seleção de empresa. | Aberto  |
 
 ---
 ## 6. Cobertura
 
-| Métrica | Valor |
-|---|---|
+| Métrica              |  Valor                                                                 |
+|----------------------|------------------------------------------------------------------------|
 | Cobertura da feature | Endpoints de sessão (lista + empresa ativa) cobertos; frontend coberto |
 
 ---
