@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import PageHeader from '../../components/Finance/PageHeader';
-import SummaryCards from '../../components/Finance/SummaryCards';
-import FilterPanel from '../../components/Finance/FilterPanel';
-import useTransacoes from '../../hooks/useTransacoes';
-import ModalTransacao from './ModalTransacao'; // Agora estão na mesma pasta!
-import ConfirmacaoExclusao from './ConfirmacaoExclusao'; // Agora estão na mesma pasta!
-import formatCurrency from '../../utils/formatCurrency';
-import formatDate from '../../utils/formatDate';
-import './Transacoes.css'; // Nome do CSS atualizado
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import PageHeader from "../../components/Finance/PageHeader";
+import SummaryCards from "../../components/Finance/SummaryCards";
+import FilterPanel from "../../components/Finance/FilterPanel";
+import useTransacoes from "../../hooks/useTransacoes";
+import ModalTransacao from "./ModalTransacao";
+import ConfirmacaoExclusao from "./ConfirmacaoExclusao";
+import formatCurrency from "../../utils/formatCurrency";
+import formatDate from "../../utils/formatDate";
+import "./Transacoes.css";
 
-const Transacoes = () => { // Nome do componente alterado
+const Transacoes = () => {
   const navigate = useNavigate();
   const {
     filtros,
@@ -27,20 +27,14 @@ const Transacoes = () => { // Nome do componente alterado
     aplicarFiltros,
     limparFiltros,
     mudarPagina,
-    salvarTransacao, 
-    excluirTransacao 
+    salvarTransacao,
+    excluirTransacao,
   } = useTransacoes();
 
   const [modalAberto, setModalAberto] = useState(false);
   const [transacaoParaEditar, setTransacaoParaEditar] = useState(null);
   const [confirmacaoAberta, setConfirmacaoAberta] = useState(false);
   const [transacaoParaExcluir, setTransacaoParaExcluir] = useState(null);
-
-  const categoriesMapeadas = categorias.map((cat, index) => ({
-    id: index + 1,
-    nome: cat,
-    tipo: ''
-  }));
 
   const abrirModalNova = () => {
     setTransacaoParaEditar(null);
@@ -58,7 +52,7 @@ const Transacoes = () => { // Nome do componente alterado
   };
 
   const handleSalvar = async (dadosFormulario) => {
-    if (typeof salvarTransacao === 'function') {
+    if (typeof salvarTransacao === "function") {
       await salvarTransacao(dadosFormulario, transacaoParaEditar?.id);
     }
     fecharModal();
@@ -70,7 +64,7 @@ const Transacoes = () => { // Nome do componente alterado
   };
 
   const confirmarExclusao = async () => {
-    if (typeof excluirTransacao === 'function') {
+    if (typeof excluirTransacao === "function") {
       await excluirTransacao(transacaoParaExcluir.id);
     }
     setConfirmacaoAberta(false);
@@ -83,8 +77,8 @@ const Transacoes = () => { // Nome do componente alterado
   };
 
   return (
-    <div className="transacoes-container"> {/* Classe base atualizada */}
-
+    <div className="transacoes-container">
+      {" "}
       <PageHeader
         className="transacoes-header"
         title="Transações Financeiras"
@@ -92,36 +86,64 @@ const Transacoes = () => { // Nome do componente alterado
         actionLabel="Nova Transação"
         onAction={abrirModalNova}
       />
-
       <SummaryCards
         items={[
-          { label: 'Total de Receitas', value: formatCurrency(totais.totalReceitas), className: 'total-receita' },
-          { label: 'Total de Despesas', value: formatCurrency(totais.totalDespesas), className: 'total-despesa' },
           {
-            label: 'Saldo',
-            value: formatCurrency(totais.saldo),
-            className: (totais.saldo || 0) >= 0 ? 'saldo-positivo' : 'saldo-negativo',
+            label: "Total de Receitas",
+            value: formatCurrency(totais.totalReceitas),
+            className: "total-receita",
           },
-          ...(saldoContaSelecionada !== null ? [{
-            label: `Saldo Atual - ${contaCaixaSelecionada?.nome || 'Conta/Caixa'}`,
-            value: formatCurrency(saldoContaSelecionada),
-            className: saldoContaSelecionada >= 0 ? 'saldo-positivo' : 'saldo-negativo',
-          }] : []),
+          {
+            label: "Total de Despesas",
+            value: formatCurrency(totais.totalDespesas),
+            className: "total-despesa",
+          },
+          {
+            label: "Saldo",
+            value: formatCurrency(totais.saldo),
+            className:
+              (totais.saldo || 0) >= 0 ? "saldo-positivo" : "saldo-negativo",
+          },
+          ...(saldoContaSelecionada !== null
+            ? [
+                {
+                  label: `Saldo Atual - ${contaCaixaSelecionada?.nome || "Conta/Caixa"}`,
+                  value: formatCurrency(saldoContaSelecionada),
+                  className:
+                    saldoContaSelecionada >= 0
+                      ? "saldo-positivo"
+                      : "saldo-negativo",
+                },
+              ]
+            : []),
         ]}
       />
-
       <FilterPanel onClear={limparFiltros} onApply={aplicarFiltros}>
         <div className="filtro-group">
           <label>Data inicial</label>
-          <input type="date" name="dataInicio" value={filtros.dataInicio} onChange={handleFiltroChange} />
+          <input
+            type="date"
+            name="dataInicio"
+            value={filtros.dataInicio}
+            onChange={handleFiltroChange}
+          />
         </div>
         <div className="filtro-group">
           <label>Data final</label>
-          <input type="date" name="dataFim" value={filtros.dataFim} onChange={handleFiltroChange} />
+          <input
+            type="date"
+            name="dataFim"
+            value={filtros.dataFim}
+            onChange={handleFiltroChange}
+          />
         </div>
         <div className="filtro-group">
           <label>Tipo</label>
-          <select name="tipo" value={filtros.tipo} onChange={handleFiltroChange}>
+          <select
+            name="tipo"
+            value={filtros.tipo}
+            onChange={handleFiltroChange}
+          >
             <option value="">Todos</option>
             <option value="receita">Receita</option>
             <option value="despesa">Despesa</option>
@@ -133,15 +155,21 @@ const Transacoes = () => { // Nome do componente alterado
             <button
               type="button"
               className="btn-link-categoria"
-              onClick={() => navigate('/categorias')}
+              onClick={() => navigate("/categorias")}
             >
               Cadastrar
             </button>
           </div>
-          <select name="categoria" value={filtros.categoria} onChange={handleFiltroChange}>
+          <select
+            name="categoria"
+            value={filtros.categoria}
+            onChange={handleFiltroChange}
+          >
             <option value="">Todas</option>
             {categorias.map((cat) => (
-              <option key={cat} value={cat}>{cat}</option>
+              <option key={cat.id} value={cat.nome}>
+                {cat.nome}
+              </option>
             ))}
           </select>
         </div>
@@ -151,12 +179,16 @@ const Transacoes = () => { // Nome do componente alterado
             <button
               type="button"
               className="btn-link-categoria"
-              onClick={() => navigate('/contas-caixa')}
+              onClick={() => navigate("/contas-caixa")}
             >
               Cadastrar
             </button>
           </div>
-          <select name="contaCaixaId" value={filtros.contaCaixaId} onChange={handleFiltroChange}>
+          <select
+            name="contaCaixaId"
+            value={filtros.contaCaixaId}
+            onChange={handleFiltroChange}
+          >
             <option value="">Todas</option>
             {contasCaixa.map((contaCaixa) => (
               <option key={contaCaixa.id} value={contaCaixa.id}>
@@ -167,14 +199,27 @@ const Transacoes = () => { // Nome do componente alterado
         </div>
         <div className="filtro-group">
           <label>Valor mínimo (R$)</label>
-          <input type="number" name="valorMin" placeholder="0,00" value={filtros.valorMin} onChange={handleFiltroChange} min="0" />
+          <input
+            type="number"
+            name="valorMin"
+            placeholder="0,00"
+            value={filtros.valorMin}
+            onChange={handleFiltroChange}
+            min="0"
+          />
         </div>
         <div className="filtro-group">
           <label>Valor máximo (R$)</label>
-          <input type="number" name="valorMax" placeholder="0,00" value={filtros.valorMax} onChange={handleFiltroChange} min="0" />
+          <input
+            type="number"
+            name="valorMax"
+            placeholder="0,00"
+            value={filtros.valorMax}
+            onChange={handleFiltroChange}
+            min="0"
+          />
         </div>
       </FilterPanel>
-
       <div className="transacoes-tabela-wrapper">
         <div className="tabela-info">
           <span>{totalTransacoes} transação(ões) encontrada(s)</span>
@@ -194,7 +239,9 @@ const Transacoes = () => { // Nome do componente alterado
                 <th>Conta/Caixa</th>
                 <th>Tipo</th>
                 <th>Valor</th>
-                <th className="col-acoes" style={{ textAlign: 'center' }}>Ações</th>
+                <th className="col-acoes" style={{ textAlign: "center" }}>
+                  Ações
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -202,18 +249,22 @@ const Transacoes = () => { // Nome do componente alterado
                 <tr key={t.id}>
                   <td>{formatDate(t.data)}</td>
                   <td>{t.descricao}</td>
-                  <td>{t.categoria || t.categoriaNome}</td>
-                  <td>{t.contaCaixaNome || 'Sem conta/caixa'}</td>
+                  <td>
+                    {categorias.find(
+                      (c) => String(c.id) === String(t.categoriaId),
+                    )?.nome || "Sem categoria"}
+                  </td>
+                  <td>{t.contaCaixaNome || "Sem conta/caixa"}</td>
                   <td>
                     <span className={`badge badge-${t.tipo}`}>
-                      {t.tipo === 'receita' ? '↑ Receita' : '↓ Despesa'}
+                      {t.tipo === "receita" ? "↑ Receita" : "↓ Despesa"}
                     </span>
                   </td>
                   <td className={`valor-${t.tipo}`}>
-                    {t.tipo === 'despesa' ? '- ' : '+ '}
+                    {t.tipo === "despesa" ? "- " : "+ "}
                     {formatCurrency(t.valor)}
                   </td>
-                  <td className="col-acoes" style={{ textAlign: 'center' }}>
+                  <td className="col-acoes" style={{ textAlign: "center" }}>
                     {!t.transferenciaId && (
                       <button
                         className="btn-acao btn-editar"
@@ -237,37 +288,44 @@ const Transacoes = () => { // Nome do componente alterado
           </table>
         )}
       </div>
-
       {totalPaginas > 1 && (
         <div className="transacoes-paginacao">
-          <button className="btn-pagina btn-pagina-nav" onClick={() => mudarPagina(paginaAtual - 1)} disabled={paginaAtual === 1}>
+          <button
+            className="btn-pagina btn-pagina-nav"
+            onClick={() => mudarPagina(paginaAtual - 1)}
+            disabled={paginaAtual === 1}
+          >
             Anterior
           </button>
-          {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((pagina) => (
-            <button
-              key={pagina}
-              className={`btn-pagina ${pagina === paginaAtual ? 'btn-pagina-ativa' : ''}`}
-              onClick={() => mudarPagina(pagina)}
-            >
-              {pagina}
-            </button>
-          ))}
-          <button className="btn-pagina btn-pagina-nav" onClick={() => mudarPagina(paginaAtual + 1)} disabled={paginaAtual === totalPaginas}>
+          {Array.from({ length: totalPaginas }, (_, i) => i + 1).map(
+            (pagina) => (
+              <button
+                key={pagina}
+                className={`btn-pagina ${pagina === paginaAtual ? "btn-pagina-ativa" : ""}`}
+                onClick={() => mudarPagina(pagina)}
+              >
+                {pagina}
+              </button>
+            ),
+          )}
+          <button
+            className="btn-pagina btn-pagina-nav"
+            onClick={() => mudarPagina(paginaAtual + 1)}
+            disabled={paginaAtual === totalPaginas}
+          >
             Próxima
           </button>
         </div>
       )}
-
       {modalAberto && (
         <ModalTransacao
           transacaoParaEditar={transacaoParaEditar}
-          categorias={categoriesMapeadas}
+          categorias={categorias} 
           contasCaixa={contasCaixa}
           onSalvar={handleSalvar}
           onFechar={fecharModal}
         />
       )}
-
       {confirmacaoAberta && (
         <ConfirmacaoExclusao
           transacao={transacaoParaExcluir}
@@ -275,9 +333,8 @@ const Transacoes = () => { // Nome do componente alterado
           onCancelar={cancelarExclusao}
         />
       )}
-
     </div>
   );
 };
 
-export default Transacoes; // Exportação atualizada
+export default Transacoes;

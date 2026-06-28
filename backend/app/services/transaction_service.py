@@ -20,8 +20,8 @@ def get_history_filtered(user_id, page, per_page, filtros):
         categoria_nome=filtros.get('categoria')
     )
 
-    receitas = sum(valor for tipo, valor in totais if tipo == 'receita') or 0.0
-    despesas = sum(valor for tipo, valor in totais if tipo == 'despesa') or 0.0
+    receitas = sum(float(valor) for tipo, valor in totais if tipo == 'receita')
+    despesas = sum(float(valor) for tipo, valor in totais if tipo == 'despesa')
     saldo = receitas - despesas
 
     paginacao = query_base.order_by(TransactionRepository.model.date.desc()).paginate(page=page, per_page=per_page, error_out=False)

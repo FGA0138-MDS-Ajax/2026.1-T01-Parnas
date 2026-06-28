@@ -49,7 +49,6 @@ def create():
         answer["transaction"] = transaction_output_schema.dump(answer["transaction"])
         
     return jsonify(answer), status_code
-
 @transaction_bp.route('/<int:transaction_id>', methods=['PUT'])
 @jwt_required()
 def update(transaction_id):
