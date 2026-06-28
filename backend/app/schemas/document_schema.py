@@ -1,5 +1,6 @@
 from marshmallow import Schema, fields, validate
 
+
 class DocumentUploadSchema(Schema):
     name = fields.Str(
         required=True,
@@ -16,10 +17,7 @@ class DocumentUploadSchema(Schema):
         allow_none=True,
         validate=validate.Length(max=500)
     )
-    company_id = fields.Int(
-        required=True,
-        error_messages={"required": "ID da empresa é obrigatório"}
-    )
+
 
 class DocumentResponseSchema(Schema):
     document_id = fields.Int()

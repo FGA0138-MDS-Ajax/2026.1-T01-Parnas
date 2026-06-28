@@ -20,13 +20,9 @@ def get_transactions():
     Endpoint unificado: Retorna o histórico de transações paginado e filtrado,
     mas escopado obrigatoriamente por empresa para manter a segurança.
     """
-    current_user_id = get_jwt_identity()
-
-    # Coleta a paginação enviada na URL (com valores padrão seguros)
+    current_user_id = int(get_jwt_identity())
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 20, type=int)
-
-    # Coleta todos os filtros dinâmicos enviados na URL
     filtros = {
         'data_inicio': request.args.get('data_inicio'),
         'data_fim': request.args.get('data_fim'),
@@ -35,13 +31,7 @@ def get_transactions():
         'valor_min': request.args.get('valor_min', type=float),
         'valor_max': request.args.get('valor_max', type=float)
     }
-
-    # Chama a service de histórico que veio da branch 7
     resultado, status_code = get_history_filtered(current_user_id, page, per_page, filtros)
-
-    if status_code == 200 and "transactions" in resultado:
-        resultado["transactions"] = transaction_output_schema.dump(resultado["transactions"], many=True)
-
     return jsonify(resultado), status_code
 
 @transaction_bp.route("/", methods=["POST"])
@@ -59,7 +49,6 @@ def create():
         answer["transaction"] = transaction_output_schema.dump(answer["transaction"])
         
     return jsonify(answer), status_code
-
 @transaction_bp.route('/<int:transaction_id>', methods=['PUT'])
 @jwt_required()
 def update(transaction_id):
