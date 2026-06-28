@@ -1,15 +1,26 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from marshmallow import ValidationError
 from app.services.bill_service import BillService
+from app.schemas.bill_schema import BillSchema
 
 # Criação do módulo de rotas de contas
 bill_bp = Blueprint('bills', __name__)
 
 
+bill_schema = BillSchema()
+bills_schema = BillSchema(many=True)
+
 @bill_bp.route('/', methods=['POST'])
 @jwt_required()
 def create_bill():
-    data = request.get_json()
+    try:
+        data = bill_schema.load(request.get_json())
+    except ValidationError as err:
+        return jsonify({"erros": err.messages}), 400
+
+    resultado, status_code = BillService.create_bill(data)
+    return jsonify(resultado), status_code
 
     # Validação básica de campos obrigatórios
     required_fields = ['description', 'amount', 'type', 'due_date', 'category_id']
@@ -36,7 +47,10 @@ def get_bills():
 @bill_bp.route('/<int:bill_id>', methods=['PUT'])
 @jwt_required()
 def update_bill(bill_id):
-    data = request.get_json()
+    try:
+        data = bill_schema.load(request.get_json(), partial=True)
+    except ValidationError as err:
+        return jsonify({"erros": err.messages}), 400
 
     resultado, status_code = BillService.update_bill(bill_id, data)
     return jsonify(resultado), status_code
