@@ -2,12 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.schemas.transaction_schema import TransactionSchema, TransactionRequirements
 from marshmallow import ValidationError
-from app.services.transaction_service import (
-    get_history_filtered, # Para o método get_history do histórico
-    create_transaction,
-    update_transaction,
-    delete_transaction
-)
+from app.services.transaction_service import TransactionService
 
 transaction_bp = Blueprint("transaction_bp", __name__)
 transaction_schema = TransactionSchema()
@@ -31,7 +26,7 @@ def get_transactions(company_id):
         'valor_min': request.args.get('valor_min', type=float),
         'valor_max': request.args.get('valor_max', type=float)
     }
-    resultado, status_code = get_history_filtered(current_user_id, company_id, page, per_page, filtros)
+    resultado, status_code = TransactionService.get_history_filtered(current_user_id, company_id, page, per_page, filtros)
     return jsonify(resultado), status_code
 
 @transaction_bp.route("/", methods=["POST"])
@@ -43,7 +38,7 @@ def create(company_id):
         return jsonify({"erros_de_validacao": err.messages}), 400
 
     current_user_id = get_jwt_identity()
-    answer, status_code = create_transaction(current_user_id, company_id, data)
+    answer, status_code = TransactionService.create_transaction(current_user_id, company_id, data)
     
     if status_code == 201 and "transaction" in answer:
         answer["transaction"] = transaction_output_schema.dump(answer["transaction"])
@@ -64,7 +59,7 @@ def update(company_id, transaction_id):
     # de dados como user_id e o company_id como data, o que quebrava a edicao.
     # o identity do JWT vem como string, entao converto pra int (igual as demais rotas).
     current_user_id = int(get_jwt_identity())
-    answer, status_code = update_transaction(current_user_id, company_id, transaction_id, validated_data)
+    answer, status_code = TransactionService.update_transaction(current_user_id, company_id, transaction_id, validated_data)
     
     if status_code == 200 and "transaction" in answer:
         answer["transaction"] = transaction_output_schema.dump(answer["transaction"])
@@ -79,5 +74,5 @@ def delete(transaction_id):
     # no lugar do user_id, escopando a exclusao pelo id errado.
     # o identity do JWT vem como string, entao converto pra int (igual as demais rotas).
     current_user_id = int(get_jwt_identity())
-    answer, status_code = delete_transaction(current_user_id, transaction_id)
+    answer, status_code = TransactionService.delete_transaction(current_user_id, transaction_id)
     return jsonify(answer), status_code

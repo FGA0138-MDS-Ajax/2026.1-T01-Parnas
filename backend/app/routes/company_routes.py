@@ -6,13 +6,7 @@ from app.schemas.company_schema import (
     CompanyRegistrationSchema,
     CompanyRequirements,
 )
-from app.services.company_service import (
-    delete_company,
-    get_all_companies,
-    get_company,
-    register_company,
-    update_company,
-)
+from app.services.company_service import CompanyService
 
 company_bp = Blueprint("company_bp", __name__)
 company_schema = CompanyRegistrationSchema()
@@ -27,7 +21,7 @@ def register_company_route():
     except ValidationError as error:
         return jsonify({"erros_de_validacao": error.messages}), 400
     try:
-        answer, status_code = register_company(user_id=user_id, data=data)
+        answer, status_code = CompanyService.register_company(user_id=user_id, data=data)
     except APIException as e:
         return jsonify({"erro": e.message}), e.status_code
     if status_code == 201 and "company" in answer:
@@ -40,7 +34,7 @@ def register_company_route():
 def delete_company_route(company_id):
     user_id = int(get_jwt_identity())
     try:
-        answer, status_code = delete_company(
+        answer, status_code = CompanyService.delete_company(
             company_id=company_id,
             user_id=user_id,
         )
@@ -58,7 +52,7 @@ def update_company_route(company_id):
     except ValidationError as error:
         return jsonify({"erros_de_validacao": error.messages}), 400
     try:
-        answer, status_code = update_company(
+        answer, status_code = CompanyService.update_company(
             data=data,
             user_id=user_id,
             company_id=company_id,
@@ -75,7 +69,7 @@ def update_company_route(company_id):
 def get_company_route(company_id):
     user_id = int(get_jwt_identity())
     try:
-        answer, status_code = get_company(
+        answer, status_code = CompanyService.get_company(
             user_id=user_id,
             company_id=company_id,
         )
@@ -90,7 +84,7 @@ def get_company_route(company_id):
 @jwt_required()
 def get_all_companies_route():
     user_id = int(get_jwt_identity())
-    answer, status_code = get_all_companies(user_id=user_id)
+    answer, status_code = CompanyService.get_all_companies(user_id=user_id)
     if "companies" in answer:
         answer["companies"] = company_output_schema.dump(
             answer["companies"],

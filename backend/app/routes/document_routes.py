@@ -29,7 +29,7 @@ def upload_document():
         file=file,
         user_id=current_user_id,
         name=validated['name'],
-        tipo=validated['type'],
+        type=validated['type'],
         description=validated.get('description')
     )
     if error:
@@ -51,11 +51,11 @@ def get_documents():
     if error:
         return jsonify({"erro": error}), status_code
     return jsonify({
-        "documentos":   DocumentResponseSchema(many=True).dump(pagination.items),
+        "documents":   DocumentResponseSchema(many=True).dump(pagination.items),
         "total":        pagination.total,
-        "paginas":      pagination.pages,
-        "pagina_atual": pagination.page,
-        "por_pagina":   pagination.per_page,
+        "pages":      pagination.pages,
+        "page": pagination.page,
+        "per_page":   pagination.per_page,
     }), status_code
 
 

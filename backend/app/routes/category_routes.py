@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.services.category_service import add_category, get_categories, update_category, delete_category
+from app.services.category_service import CategoryService
 from app.schemas.category_schema import CategoryAddSchema, CategoryRequirements
 from marshmallow import ValidationError
 
@@ -18,7 +18,7 @@ def add_category_route(company_id):
     except ValidationError as err:
         return jsonify({"erros_de_validacao": err.messages}), 400
 
-    answer, status_code = add_category(user_id=user_id, company_id=company_id, data=data)
+    answer, status_code = CategoryService.add_category(user_id=user_id, company_id=company_id, data=data)
 
     if status_code == 201 and "category" in answer:
         answer["category"] = category_output_schema.dump(answer["category"])
@@ -31,7 +31,7 @@ def add_category_route(company_id):
 def get_categories_route(company_id):
     user_id = int(get_jwt_identity())
 
-    answer, status_code = get_categories(user_id=user_id, company_id=company_id)
+    answer, status_code = CategoryService.get_categories(user_id=user_id, company_id=company_id)
 
     if status_code == 200 and "categories" in answer:
         answer["categories"] = category_output_schema.dump(answer["categories"], many=True)
@@ -49,7 +49,7 @@ def update_category_route(company_id, category_id):
     except ValidationError as err:
         return jsonify({"erros_de_validacao": err.messages}), 400
 
-    answer, status_code = update_category(
+    answer, status_code = CategoryService.update_category(
         user_id=user_id,
         company_id=company_id,
         category_id=category_id,
@@ -67,7 +67,7 @@ def update_category_route(company_id, category_id):
 def delete_category_route(company_id, category_id):
     user_id = int(get_jwt_identity())
 
-    answer, status_code = delete_category(
+    answer, status_code = CategoryService.delete_category(
         user_id=user_id,
         company_id=company_id,
         category_id=category_id,
