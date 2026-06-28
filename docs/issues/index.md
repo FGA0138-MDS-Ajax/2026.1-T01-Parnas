@@ -47,6 +47,7 @@ Sprint, prioridade, funcionalidade), **critérios de aceitação**, **tarefas**,
 | [task6](task6.md) | Repositórios e consolidação de migrations | refactor | 6 | Aberta |
 | [task5](task5.md) | DTOs (Marshmallow) e redesign do frontend | refactor | 8 | Em andamento |
 | [task7](task7.md) | Refatoração do fluxo company (rotas/DTOs) | refactor | 9 | Aberta |
+| [task8](task8.md) | Purificação da Develop (pendências antigas) | refactor / qualidade | 10 | Aberta |
 
 ---
 ## Correções (fix)
