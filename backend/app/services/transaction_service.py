@@ -32,7 +32,8 @@ def get_history_filtered(user_id, page, per_page, filtros):
         "tipo": t.type,
         "categoria_id": t.category_id,
         "valor": float(t.amount),
-        "data": t.date.strftime("%Y-%m-%d") if t.date else None
+        "data": t.date.strftime("%Y-%m-%d") if t.date else None,
+        "id_conta": t.bill_id
     } for t in paginacao.items]
 
     return {
