@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Configuracoes.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Configuracoes.css";
 import useAuth from "../../hooks/useAuth.js";
 
 const Configuracoes = () => {
@@ -21,21 +21,21 @@ const Configuracoes = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
     if (logout) {
       logout();
     }
-    window.location.href = '/';
+    window.location.href = "/";
   };
 
   const handleConfirmAction = () => {
-    if (modalType === 'company') {
+    if (modalType === "company") {
       console.log("Executando integração para: Excluir Empresa");
       handleCloseModal();
-    } else if (modalType === 'user') {
+    } else if (modalType === "user") {
       console.log("Executando integração para: Excluir Conta");
       handleCloseModal();
-      navigate('/login', { replace: true });
+      navigate("/login", { replace: true });
     }
   };
 
@@ -48,13 +48,28 @@ const Configuracoes = () => {
 
       <div className="config-card">
         <div className="admin-actions">
+          <div className="admin-row">
+            <div className="admin-info">
+              <h4>Dados do Perfil</h4>
+              <p>Atualize suas informações pessoais.</p>
+            </div>
+            <button
+              onClick={() => navigate("/editar-perfil")}
+              className="btn-action-primary"
+            >
+              Editar Perfil
+            </button>
+          </div>
 
           <div className="admin-row">
             <div className="admin-info">
               <h4>Sair do Sistema</h4>
-              <p>Encerra sua sessão atual com segurança e remove suas credenciais temporárias do navegador.</p>
+              <p>
+                Encerra sua sessão atual com segurança e remove suas credenciais
+                temporárias do navegador.
+              </p>
             </div>
-            <button onClick={handleLogout} className="btn-action-danger" >
+            <button onClick={handleLogout} className="btn-action-danger">
               Sair da Conta
             </button>
           </div>
@@ -62,9 +77,15 @@ const Configuracoes = () => {
           <div className="admin-row">
             <div className="admin-info">
               <h4>Excluir Empresa</h4>
-              <p>Deleta a Empresa, históricos e remove os registros e dados vinculados à plataforma.</p>
+              <p>
+                Deleta a Empresa, históricos e remove os registros e dados
+                vinculados à plataforma.
+              </p>
             </div>
-            <button onClick={() => handleOpenModal('company')} className="btn-action-danger">
+            <button
+              onClick={() => handleOpenModal("company")}
+              className="btn-action-danger"
+            >
               Excluir Empresa
             </button>
           </div>
@@ -72,9 +93,15 @@ const Configuracoes = () => {
           <div className="admin-row">
             <div className="admin-info">
               <h4>Excluir minha conta</h4>
-              <p>Desativa seu acesso à plataforma CREDIFAB e encerra suas credenciais de usuário.</p>
+              <p>
+                Desativa seu acesso à plataforma CREDIFAB e encerra suas
+                credenciais de usuário.
+              </p>
             </div>
-            <button onClick={() => handleOpenModal('user')} className="btn-action-danger">
+            <button
+              onClick={() => handleOpenModal("user")}
+              className="btn-action-danger"
+            >
               Excluir Conta
             </button>
           </div>
@@ -90,11 +117,11 @@ const Configuracoes = () => {
 
             <div className="modal-body">
               <p>
-                Você tem certeza que deseja prosseguir?
-                Esta ação é <strong>definitiva e totalmente irreversível</strong>.
+                Você tem certeza que deseja prosseguir? Esta ação é{" "}
+                <strong>definitiva e totalmente irreversível</strong>.
               </p>
               <p className="modal-warning-text">
-                {modalType === 'company'
+                {modalType === "company"
                   ? "Aviso: A empresa, os históricos de crédito e todos os dados associados serão apagados permanentemente."
                   : "Aviso: Sua conta será excluída e você perderá o acesso à plataforma CREDIFAB imediatamente."}
               </p>
@@ -104,7 +131,10 @@ const Configuracoes = () => {
               <button className="btn-modal-cancel" onClick={handleCloseModal}>
                 Cancelar
               </button>
-              <button className="btn-modal-confirm" onClick={handleConfirmAction}>
+              <button
+                className="btn-modal-confirm"
+                onClick={handleConfirmAction}
+              >
                 Confirmar e Excluir
               </button>
             </div>
