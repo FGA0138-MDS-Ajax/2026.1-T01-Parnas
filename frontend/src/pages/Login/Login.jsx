@@ -59,11 +59,12 @@ const Login = () => {
         throw new Error(data.erro || "Erro ao realizar o login.");
       }
 
-      // Passa o token JWT real retornado pelo AuthService para o seu hook global
-      if (data.token) {
-        login(data.token);
-      } else if (data.access_token) {
-        login(data.access_token);
+      const tokenRecebido = data.token || data.access_token || data.jwt;
+
+      if (tokenRecebido) {
+        login(tokenRecebido, formData.email);
+      } else {
+        throw new Error("Token de autenticação não recebido pelo servidor.");
       }
 
       navigate("/selecao-empresa");

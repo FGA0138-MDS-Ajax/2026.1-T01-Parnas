@@ -32,52 +32,106 @@ O **Credifab** é uma plataforma de controle e gestão financeira voltada para m
 ---
  
 ## Como Executar o Projeto Localmente
- 
+
 O projeto é desacoplado — backend e frontend rodam em terminais separados.
- 
+
 ### Pré-requisitos
 - Python 3.12+
 - Node.js 18+
-- PostgreSQL rodando localmente
-### 1. Backend
- 
+- PostgreSQL rodando localmente (instalado e com o serviço ativo antes de qualquer comando abaixo)
+
+### 1. Banco de Dados (PostgreSQL)
+
+Antes de tocar no backend, crie o banco localmente. Os comandos abaixo assumem um usuário `postgres` com senha `postgres` — ajuste conforme a configuração da sua máquina.
+
+```bash
+# Cria o banco (rode uma única vez)
+createdb -U postgres parnas_db
+
+# Caso o comando acima dê erro de permissão, use:
+sudo -u postgres psql -c "CREATE DATABASE parnas_db;"
+```
+
+> **Atenção:** o nome do banco (`parnas_db`) precisa ser o mesmo configurado em `DATABASE_URL` no seu `.env` (próximo passo). Se já existir um banco antigo com schema desatualizado, prefira recriá-lo do zero (`dropdb` + `createdb`) em vez de tentar consertar manualmente — é mais rápido e evita inconsistência de migrations.
+
+### 2. Backend
+
 ```bash
 cd backend
- 
-# Criar e ativar ambiente virtual
-python -m venv .venv
-source .venv/bin/activate       # Linux/macOS
-.venv\Scripts\activate          # Windows
- 
+
+# Criar e ativar ambiente virtual — sempre dentro de backend/, nunca na raiz do projeto
+python -m venv venv
+source venv/bin/activate         # Linux/macOS
+venv\Scripts\activate            # Windows
+
 # Instalar dependências
 pip install -r requirements.txt
- 
+
 # Configurar variáveis de ambiente
 cp .env.example .env
-# Edite o .env com suas credenciais do PostgreSQL
- 
-# Aplicar migrações e subir o servidor
+# Abra o .env e edite os valores reais (veja a seção "Variáveis de Ambiente" abaixo)
+
+# Aplicar migrações no banco que você criou no passo 1
 flask db upgrade
+
+# Subir o servidor
 flask run
 ```
- 
+
 O backend estará disponível em `http://localhost:5000`.
- 
-### 2. Frontend
- 
+
+> **Importante sobre migrations:** se você trocar de branch (ex: `develop` ↔ `integration/...`) e o schema de banco for diferente entre elas, vai aparecer erro de coluna inexistente (`UndefinedColumn`). Nesse caso, **não tente misturar** — escolha uma branch, recrie o banco do zero (`dropdb`/`createdb`) e rode `flask db upgrade` de novo antes de testar.
+
+> **Cuidado com ambientes virtuais duplicados:** crie o `venv` **somente** dentro da pasta `backend/`. Se você tiver um `venv` na raiz do projeto também, o `flask run` pode acabar usando o errado (dependências desatualizadas) sem nenhum aviso claro. Se isso já aconteceu, remova o venv da raiz e ative explicitamente o de `backend/venv`.
+
+### 3. Frontend
+
 ```bash
 cd frontend
- 
+
 # Instalar dependências
 npm install
- 
+
 # Subir o servidor de desenvolvimento
 npm run dev
 ```
- 
+
 O frontend estará disponível em `http://localhost:5173`.
- 
+
 ---
+
+## Variáveis de Ambiente
+
+O backend não vem com um `.env` pronto — você precisa criá-lo a partir do exemplo:
+
+```bash
+cd backend
+cp .env.example .env
+```
+
+Depois, abra o `.env` e ajuste os valores reais. O `.env.example` traz esta estrutura:
+
+```env
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/parnas_db
+FRONTEND_URL=http://localhost:5173/
+MAIL_SERVER=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USE_TLS=true
+MAIL_USE_SSL=false
+MAIL_USERNAME=seu-email@gmail.com
+MAIL_PASSWORD=sua-senha-ou-app-password
+MAIL_DEFAULT_SENDER=seu-email@gmail.com
+```
+
+Detalhes por variável:
+
+| Variável | Obrigatória? | Observação |
+|---|---|---|
+| `DATABASE_URL` | Sim | Precisa apontar para o banco PostgreSQL que você criou no passo anterior. Usuário/senha/porta devem bater com sua instalação local. |
+| `FRONTEND_URL` | Sim | Mantenha `http://localhost:5173/` se não alterou a porta padrão do Vite. |
+| `MAIL_*` | Não, para uso geral | Só é necessário se for testar o fluxo de recuperação de senha (envio de e-mail real). Pode deixar os valores de exemplo se não for testar isso — o restante do sistema funciona normalmente sem credenciais de e-mail válidas. Se for testar, `MAIL_PASSWORD` precisa ser uma **App Password** do Gmail (não a senha normal da conta), exigindo 2FA habilitado. |
+
+Não comite o `.env` real — apenas o `.env.example` deve ir para o repositório.
  
 ## Variáveis de Ambiente
  
