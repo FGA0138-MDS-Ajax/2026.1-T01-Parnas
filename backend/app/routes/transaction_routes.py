@@ -18,7 +18,11 @@ def get_transactions(company_id):
     current_user_id = int(get_jwt_identity())
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 20, type=int)
+    
+    # adicionado user_id e company_id aos filtros para o repositório conseguir encontrar os dados
     filtros = {
+        'user_id': current_user_id,
+        'company_id': company_id,
         'data_inicio': request.args.get('data_inicio'),
         'data_fim': request.args.get('data_fim'),
         'tipo': request.args.get('tipo'),
@@ -37,7 +41,7 @@ def create(company_id):
     except ValidationError as err:
         return jsonify({"erros_de_validacao": err.messages}), 400
 
-    current_user_id = get_jwt_identity()
+    current_user_id = int(get_jwt_identity())
     answer, status_code = TransactionService.create_transaction(current_user_id, company_id, data)
     
     if status_code == 201 and "transaction" in answer:
@@ -68,7 +72,7 @@ def update(company_id, transaction_id):
 
 @transaction_bp.route('/<int:transaction_id>', methods=['DELETE'])
 @jwt_required()
-def delete(transaction_id):
+def delete(company_id, transaction_id): # adicionado o company_id para evitar o TypeError (Erro 500)
 
     # daniel: o service espera (transaction_id, user_id); estava passando o company_id
     # no lugar do user_id, escopando a exclusao pelo id errado.

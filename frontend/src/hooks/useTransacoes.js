@@ -1,13 +1,32 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import api from "../services/api";
 import { listarContasCaixa } from "../services/contaCaixa.service";
 import { listarCategorias } from "../services/categoria.service";
 import { obterEmpresaAtiva } from "../services/empresa.service";
 
+// adaptando contas/caixa 
+const getCaixaMappingKey = (empresaId) =>
+  `credifab_trans_caixa_mapping_${empresaId || "default"}`;
+
+const getCaixaMapping = (empresaId) => {
+  const map = localStorage.getItem(getCaixaMappingKey(empresaId));
+  return map ? JSON.parse(map) : {};
+};
+
+const saveCaixaMapping = (empresaId, transactionId, caixaId) => {
+  if (!transactionId || !caixaId) return;
+  const key = getCaixaMappingKey(empresaId);
+  const map = getCaixaMapping(empresaId);
+  map[transactionId] = caixaId;
+  localStorage.setItem(key, JSON.stringify(map));
+};
+
 const useTransacoes = () => {
   const [transacoes, setTransacoes] = useState([]);
   const [categorias, setCategorias] = useState([]);
-  const [contasCaixa, setContasCaixa] = useState([]); // Dinâmico!
+  const [contasCaixa, setContasCaixa] = useState([]);
+  const contasCaixaRef = useRef([]); 
+
   const [totais, setTotais] = useState({
     totalReceitas: 0,
     totalDespesas: 0,
@@ -45,6 +64,7 @@ const useTransacoes = () => {
       ]);
       setCategorias(categoriasApi || []);
       setContasCaixa(caixasApi || []);
+      contasCaixaRef.current = caixasApi || [];
     } catch (error) {
       console.error("Erro ao buscar dados auxiliares:", error);
     }
@@ -55,7 +75,6 @@ const useTransacoes = () => {
       if (!companyId) return;
       try {
         const params = {
-          company_id: companyId,
           page: pagina,
           per_page: 20,
           ...(filtrosAplicados.dataInicio && {
@@ -76,19 +95,40 @@ const useTransacoes = () => {
           }),
         };
 
-        const { data } = await api.get("/api/transactions/", { params });
+        const { data } = await api.get(
+          `/api/companies/${companyId}/transactions/`,
+          { params },
+        );
+        const caixaMapping = getCaixaMapping(companyId);
 
-        const transacoesMapeadas = (data.transacoes || []).map((t) => ({
-          id: t.transaction_id,
-          descricao: t.description,
-          tipo: t.tipo,
-          valor: t.valor,
-          data: t.data,
-          categoriaId: t.categoria_id,
-          contaCaixaNome: "N/A",
-        }));
+        const transacoesMapeadas = (data.transacoes || []).map((t) => {
+          const caixaId = caixaMapping[t.transaction_id];
+          const caixaObj = contasCaixaRef.current.find(
+            (c) => String(c.id) === String(caixaId),
+          );
 
-        setTransacoes(transacoesMapeadas);
+          return {
+            id: t.transaction_id,
+            descricao: t.description,
+            tipo: t.type,
+            valor: t.amount,
+            data: t.date,
+            categoriaId: t.category_id,
+            contaCaixaId: caixaId || null,
+            contaCaixaNome: caixaObj ? caixaObj.nome : "N/A",
+          };
+        });
+
+        // aplica o filtro de Conta/Caixa localmente (o backend não suporta)
+        let transacoesFinais = transacoesMapeadas;
+        if (filtrosAplicados.contaCaixaId) {
+          transacoesFinais = transacoesMapeadas.filter(
+            (t) =>
+              String(t.contaCaixaId) === String(filtrosAplicados.contaCaixaId),
+          );
+        }
+
+        setTransacoes(transacoesFinais);
         setTotais({
           totalReceitas: data.resumo?.total_receitas || 0,
           totalDespesas: data.resumo?.total_despesas || 0,
@@ -144,15 +184,30 @@ const useTransacoes = () => {
       date: dadosTransacao.data,
       type: dadosTransacao.tipo,
       category_id: parseInt(dadosTransacao.categoriaId),
-      company_id: parseInt(companyId),
     };
 
     try {
+      let response;
       if (id) {
-        await api.put(`/api/transactions/${id}`, payload);
+        response = await api.put(
+          `/api/companies/${companyId}/transactions/${id}`,
+          payload,
+        );
       } else {
-        await api.post("/api/transactions/", payload);
+        response = await api.post(
+          `/api/companies/${companyId}/transactions/`,
+          payload,
+        );
       }
+
+      const newId =
+        response.data?.transaction_id ||
+        response.data?.transaction?.transaction_id ||
+        id;
+      if (newId && dadosTransacao.contaCaixaId) {
+        saveCaixaMapping(companyId, newId, dadosTransacao.contaCaixaId);
+      }
+
       fetchTransacoes(filtros, paginaAtual);
     } catch (error) {
       const msgErro =
@@ -168,7 +223,7 @@ const useTransacoes = () => {
 
   const excluirTransacao = async (id) => {
     try {
-      await api.delete(`/api/transactions/${id}?company_id=${companyId}`);
+      await api.delete(`/api/companies/${companyId}/transactions/${id}`);
       fetchTransacoes(filtros, paginaAtual);
     } catch (error) {
       alert("Erro ao excluir transação.");

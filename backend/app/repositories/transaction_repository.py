@@ -2,9 +2,9 @@ from datetime import date as dt_date
 from app.config import db
 from app.models.transaction import Transaction
 from app.models.category import Category
-from sqlalchemy import func
 from app.repositories.base_repository import BaseRepository
 from sqlalchemy import func, case
+from sqlalchemy.exc import SQLAlchemyError
 
 
 class TransactionRepository(BaseRepository):
@@ -41,8 +41,6 @@ class TransactionRepository(BaseRepository):
     def create(description, amount, date, type, company_id, user_id, category_id):
         if amount <= 0:
             raise ValueError("O valor da transação deve ser positivo.")
-        if date > dt_date.today():
-            raise ValueError("A data da transação não pode ser futura.")
         
         new_transaction = Transaction(
             description=description,
@@ -53,7 +51,15 @@ class TransactionRepository(BaseRepository):
             user_id=user_id,
             category_id=category_id
         )
-        return TransactionRepository._base.save(new_transaction)
+        
+        # força o commit imediato no banco de dados para evitar transações fantasma
+        try:
+            db.session.add(new_transaction)
+            db.session.commit()
+            return new_transaction
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            raise e
     
     @staticmethod
     def get_filtered_history_query(filtros, categoria_nome=None):
@@ -97,7 +103,14 @@ class TransactionRepository(BaseRepository):
     
     @staticmethod
     def save(transaction):
-        return TransactionRepository._base.save(transaction)
+        #blinda o save com commit para permitir edições reais
+        try:
+            db.session.add(transaction)
+            db.session.commit()
+            return transaction
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            raise e
     
     @staticmethod
     def get_category_distribution(company_id, start_date, end_date):
@@ -129,4 +142,10 @@ class TransactionRepository(BaseRepository):
     
     @staticmethod
     def delete_instance(transaction):
-        TransactionRepository._base.delete(transaction)
+        #blinda a exclusão com commit
+        try:
+            db.session.delete(transaction)
+            db.session.commit()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            raise e
