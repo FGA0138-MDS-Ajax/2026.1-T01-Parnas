@@ -67,7 +67,7 @@ const Login = () => {
         throw new Error("Token de autenticação não recebido pelo servidor.");
       }
 
-      navigate("/dashboard");
+      navigate("/selecao-empresa");
     } catch (err) {
       setError(err.message || "Erro ao conectar ao servidor.");
     } finally {
@@ -76,8 +76,8 @@ const Login = () => {
   };
 
   const handleDemoAccess = () => {
-    login(`mock_demo_${Date.now()}`, "demo@credifab.com");
-    navigate("/dashboard");
+    login(`mock_demo_${Date.now()}`);
+    navigate("/selecao-empresa");
   };
 
   return (

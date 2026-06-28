@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 
@@ -11,6 +12,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY', 'uma-chave-secreta-muito-segura')
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'chave-super-secreta-do-jwt')
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=8)
 
     # Se existir a variável DATABASE_URL (no .env ou na Render), usa ela.
     # Caso contrário, usa o SQLite local para não travar o sistema.

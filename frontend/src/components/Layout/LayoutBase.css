@@ -20,6 +20,7 @@
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 4px 12px rgba(11, 68, 62, 0.12);
+  gap: 18px;
 }
 
 .logo-section {
@@ -69,6 +70,53 @@
   margin-right: 20px;
 }
 
+.layout-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.empresa-switcher {
+  min-width: 190px;
+  padding: 7px 10px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: var(--arredondamento-input-botao);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.empresa-switcher label {
+  font-size: 10px;
+  line-height: 1;
+  opacity: 0.72;
+}
+
+.empresa-switcher select {
+  min-width: 0;
+  grid-column: 2;
+  border: 0;
+  outline: 0;
+  color: var(--branco);
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.empresa-switcher select option {
+  color: #263936;
+  background: var(--branco);
+}
+
+.empresa-switcher select:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 .nav-link {
   color: var(--branco);
   opacity: 0.85;
@@ -108,4 +156,58 @@
   padding: 40px;
   width: 100%;
   box-sizing: border-box;
+}
+
+.layout-company-error {
+  padding: 10px 40px;
+  color: #8c2424;
+  background: #fff0f0;
+  text-align: right;
+  font-size: 13px;
+}
+
+.app-loading {
+  min-height: 60vh;
+  display: grid;
+  place-items: center;
+  color: var(--azul);
+  font-weight: 600;
+}
+
+@media (max-width: 1180px) {
+  .layout-header {
+    flex-wrap: wrap;
+    padding: 16px 24px;
+  }
+
+  .layout-nav {
+    order: 3;
+    width: 100%;
+    margin-right: 0;
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 680px) {
+  .logo-text p {
+    display: none;
+  }
+
+  .layout-actions {
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  .empresa-switcher {
+    min-width: 150px;
+  }
+
+  .btn-settings {
+    padding-inline: 10px;
+  }
+
+  .layout-main {
+    padding: 24px 16px;
+  }
 }

@@ -8,7 +8,7 @@ def test_delete_user_success(mock_db):
     """Cobre o Critério: Usuário consegue excluir sua própria conta"""
 
     # 1. Simula que o usuário existe no banco de dados
-    mock_user = MagicMock(user_id=1, email="usuario@teste.com")
+    mock_user = MagicMock(user_id=1, email="usuario@teste.com", is_active = True)
     mock_db.session.query.return_value.filter.return_value.first.return_value = mock_user
 
     # 2. Chama a função de exclusão
@@ -18,8 +18,9 @@ def test_delete_user_success(mock_db):
     assert status_code == 200
     assert response["mensagem"] == "Usuário excluído com sucesso."
 
-    # 4. Garante que o comando de deletar foi enviado ao banco (acionando os cascades de vínculo)
-    mock_db.session.delete.assert_called_once_with(mock_user)
+    # 4. por conta do soft delete não apaga direto do banco
+    mock_db.session.delete.assert_not_called(mock_user)
+    assert mock_user.is_active() is False
     mock_db.session.commit.assert_called_once()
 
 

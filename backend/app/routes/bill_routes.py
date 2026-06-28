@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.services.bill_service import BillService
+from app.services import bill_service
 
 bill_bp = Blueprint('bills', __name__)
 

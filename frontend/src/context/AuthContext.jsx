@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useCallback, useMemo, useState } from 'react';
 
 export const AuthContext = createContext(null);
 
@@ -26,28 +26,27 @@ const readStoredToken = () => {
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => readStoredToken());
 
-  const login = (newToken, userEmail = null) => {
-    clearCompanyState();
-    if (userEmail) {
-      localStorage.setItem(USER_EMAIL_KEY, userEmail);
+  const login = useCallback((newToken, { preservarEmpresa = false } = {}) => {
+    if (!preservarEmpresa) {
+      localStorage.removeItem('empresaAtiva');
     }
-    localStorage.setItem("token", newToken);
-    localStorage.setItem("access_token", newToken);
+    localStorage.setItem('token', newToken);
     setToken(newToken);
-  };
+  }, []);
 
-  const logout = () => {
-    clearCompanyState();
-    localStorage.removeItem(USER_EMAIL_KEY);
-    localStorage.removeItem("token");
-    localStorage.removeItem("access_token");
+  const logout = useCallback(() => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('empresaAtiva');
     setToken(null);
-  };
+  }, []);
+
+  const value = useMemo(
+    () => ({ token, login, logout, isAuthenticated: !!token }),
+    [token, login, logout],
+  );
 
   return (
-    <AuthContext.Provider
-      value={{ token, login, logout, isAuthenticated: !!token }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,8 +1,7 @@
-from app.models.bill import Bill
-from app.models.transaction import Transaction
-from app.models.user import User
-from app.config import db
 from datetime import date, datetime
+from app.repositories.bill_repository import BillRepository
+from app.repositories.transaction_repository import TransactionRepository
+from app.repositories.user_repository import UserRepository
 
 class BillService:
 
@@ -20,29 +19,39 @@ class BillService:
         if not BillService._validate_user_company_access(user_id, company_id):
             return {"erro": "Acesso negado a esta empresa."}, 403
 
-        nova_conta = Bill(
+    try:
+        nova_conta = BillRepository.create(
+            company_id=company_id,
             description=data['description'],
             amount=data['amount'],
             type=data['type'],
             due_date=datetime.strptime(data['due_date'], '%Y-%m-%d').date(),
-            category_id=data['category_id'],
-            company_id=company_id
+            category_id=data['category_id']
         )
-
-        db.session.add(nova_conta)
-        db.session.commit()
         return {"mensagem": "Conta criada com sucesso!", "id": nova_conta.bill_id}, 201
+    except Exception as e:
+        return {"erro": "Ocorreu um erro interno ao criar a conta."}, 500
 
     @staticmethod
     def get_bills(user_id, company_id, status=None):
         if not BillService._validate_user_company_access(user_id, company_id):
             return {"erro": "Acesso negado a esta empresa."}, 403
 
-        query = Bill.query.filter_by(company_id=company_id)
-        if status:
-            query = query.filter_by(status=status)
+def get_bills(user_id, status=None):
+    company_id = _get_company_id(user_id)
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+    contas = BillRepository.list_by_company(company_id, status=status)
 
-        contas = query.order_by(Bill.due_date.asc()).all()
+    resultado = [{
+        "id": c.bill_id,
+        "description": c.description,
+        "amount": float(c.amount),
+        "type": c.type,
+        "status": c.status,
+        "due_date": c.due_date.isoformat(),
+        "payment_date": c.payment_date.isoformat() if c.payment_date else None
+    } for c in contas]
 
         resultado = [{
             "id": c.bill_id,
@@ -55,7 +64,6 @@ class BillService:
             "category_id": c.category_id
         } for c in contas]
 
-        return resultado, 200
 
     @staticmethod
     def update_bill(user_id, company_id, bill_id, data):
@@ -64,8 +72,8 @@ class BillService:
 
         conta = Bill.query.filter_by(bill_id=bill_id, company_id=company_id).first()
 
-        if not conta:
-            return {"erro": "Conta não encontrada"}, 404
+    if not conta:
+        return {"erro": "Conta não encontrada"}, 404
 
         if conta.status == 'quitado':
             return {"erro": "Não é possível editar uma conta que já foi quitada."}, 400
@@ -77,8 +85,12 @@ class BillService:
         if 'category_id' in data:
             conta.category_id = data['category_id']
 
-        db.session.commit()
+    try:
+        BillRepository.save(conta)
         return {"mensagem": "Conta atualizada com sucesso!"}, 200
+    except Exception as e:
+        return {"erro": "Ocorreu um erro interno ao atualizar a conta."}, 500
+
 
     @staticmethod
     def delete_bill(user_id, company_id, bill_id):
@@ -87,15 +99,17 @@ class BillService:
 
         conta = Bill.query.filter_by(bill_id=bill_id, company_id=company_id).first()
 
-        if not conta:
-            return {"erro": "Conta não encontrada"}, 404
+    if not conta:
+        return {"erro": "Conta não encontrada"}, 404
 
         if conta.status == 'quitado':
             return {"erro": "Não é possível excluir uma conta que já foi quitada."}, 400
 
-        db.session.delete(conta)
-        db.session.commit()
+    try:
+        BillRepository.delete(conta)
         return {"mensagem": "Conta excluída com sucesso!"}, 200
+    except Exception as e:
+        return {"erro": "Ocorreu um erro ao excluir a conta."}, 500
 
     @staticmethod
     def pay_bill(user_id, company_id, bill_id):
@@ -104,21 +118,29 @@ class BillService:
 
         conta = Bill.query.filter_by(bill_id=bill_id, company_id=company_id).first()
 
-        if not conta:
-            return {"erro": "Conta não encontrada"}, 404
+def pay_bill(user_id, bill_id):
+    company_id = _get_company_id(user_id)
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+    conta = BillRepository.get_by_id_and_company(bill_id, company_id)
 
-        if conta.status == 'quitado':
-            return {"erro": "Esta conta já está quitada."}, 400
+    if not conta:
+        return {"erro": "Conta não encontrada"}, 404
 
-        # atualiza a conta para quitada
-        conta.status = 'quitado'
-        conta.payment_date = date.today()
+    if conta.status == 'quitado':
+        return {"erro": "Esta conta já está quitada."}, 400
 
-        # gera a transação apontando o TIPO corretamente 
-        nova_transacao = Transaction(
+    conta.status = 'quitado'
+    conta.payment_date = date.today()
+
+    try:
+        BillRepository.save(conta)
+
+        TransactionRepository.create(
             description=f"Quitação: {conta.description}",
             amount=conta.amount,
             date=conta.payment_date,
+            type='despesa',
             company_id=company_id,
             user_id=user_id,
             category_id=conta.category_id,
@@ -126,7 +148,6 @@ class BillService:
             type='despesa' if conta.type == 'pagar' else 'receita'
         )
 
-        db.session.add(nova_transacao)
-        db.session.commit()
-
         return {"mensagem": "Conta quitada e transação gerada com sucesso!"}, 200
+    except Exception as e:
+        return {"erro": "Ocorreu um erro interno ao processar o pagamento."}, 500

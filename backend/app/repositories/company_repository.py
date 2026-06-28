@@ -1,58 +1,59 @@
-from app.models.user_company_association import user_company
-from app.models.company import Company
-from app.config import db
-from app.exceptions.api_exception import APIException
 import re
+from app.config import db
+from app.models.company import Company
+from app.models.user_company_association import user_company
+from app.repositories.base_repository import BaseRepository
 
-class CompanyRepository:
+
+class CompanyRepository(BaseRepository):
+    
+    _base = BaseRepository(Company)
+    
     @staticmethod
     def get_by_id(company_id):
-        return Company.query.filter_by(company_id=company_id).first()
+        return Company.query.get(company_id)
     
     @staticmethod
     def get_by_cnpj(cnpj):
         cnpj_clean = re.sub(r'\D', '', cnpj)
-        company = Company.query.filter_by(cnpj=cnpj_clean).first()
-        return company
+        return Company.query.filter_by(cnpj=cnpj_clean).first()
+
+    @staticmethod
+    def get_by_email(email):
+        return Company.query.filter_by(email=email).first()
     
     @staticmethod
-    def check_access(company_id, user_id):
-        if not (db.session.query(user_company).filter_by(user_id=user_id, company_id=company_id).first()):
-            raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
-        
+    def create(name, cnpj, email, phone, register_date):
+        new_company = Company(
+            name=name,
+            cnpj=cnpj,
+            email=email,
+            phone=phone,
+            register_date=register_date
+        )
+        return CompanyRepository._base.save(new_company)
+    
+    @staticmethod
+    def save(company):
+        return CompanyRepository._base.save(company)
+    
+    @staticmethod
+    def delete(company):
+        CompanyRepository._base.delete(company)
+    
+    @staticmethod
+    def attach_user(company_id, user_id):
+        stmt = user_company.insert().values(user_id=user_id, company_id=company_id)
+        db.session.execute(stmt)
+        db.session.commit()
+    
+    @staticmethod
+    def check_user_access(company_id, user_id):
+        return db.session.query(user_company).filter(
+            user_company.c.user_id == user_id,
+            user_company.c.company_id == company_id
+        ).first() is not None
+    
     @staticmethod
     def get_all_by_user(user_id):
         return Company.query.join(user_company).filter(user_company.c.user_id == user_id).all()
-    
-    @staticmethod
-    def create(name, cnpj, email, phone, user_id):
-        cnpj_clean = re.sub(r'\D', '', cnpj)
-
-        if(CompanyRepository.get_by_cnpj(cnpj_clean)):
-            raise APIException("CNPJ já cadastrado.", 409)
-        
-        new_company = Company(
-            name=name,
-            cnpj=cnpj_clean,
-            email=email,
-            phone=phone
-        )
-        db.session.add(new_company)
-        db.session.flush()
-
-        UserCompany = user_company.insert().values(
-            user_id=user_id,
-            company_id=new_company.company_id,
-        )
-        db.session.execute(UserCompany)
-        db.session.commit()
-
-        return new_company
-
-    @staticmethod
-    def delete(company_id):
-        company = CompanyRepository.get_by_id(company_id)
-        
-        db.session.delete(company)
-        db.session.commit()
-    
