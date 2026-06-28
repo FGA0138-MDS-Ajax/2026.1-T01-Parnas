@@ -1,40 +1,45 @@
-from app.config import db
 from app.models.bill import Bill
-from sqlalchemy.exc import SQLAlchemyError
+from app.repositories.base_repository import BaseRepository
 
-class BillRepository:
 
+class BillRepository(BaseRepository):
+    
+    _base = BaseRepository(Bill)
+    
+    @staticmethod
+    def get_by_id_and_company(bill_id, company_id):
+        return Bill.query.filter_by(bill_id=bill_id, company_id=company_id).first()
+    
+    @staticmethod
+    def list_by_company(company_id, status=None):
+        query = Bill.query.filter_by(company_id=company_id)
+        if status:
+            query = query.filter_by(status=status)
+        return query.order_by(Bill.due_date.asc()).all()
+    
     @staticmethod
     def get_by_status_and_due_date(company_id, status, due_date_start, due_date_end):
-        """Lista faturas (bills) por status em um intervalo de datas, ordenadas por vencimento."""
         return Bill.query.filter_by(company_id=company_id, status=status)\
             .filter(Bill.due_date.between(due_date_start, due_date_end))\
             .order_by(Bill.due_date.asc())\
             .all()
-
+    
     @staticmethod
-    def create(data):
-        """Cria e persiste uma nova fatura (bill)."""
-        try:
-            bill = Bill(**data)
-            db.session.add(bill)
-            db.session.commit()
-            return bill
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            raise e 
-
+    def create(company_id, description, amount, type, due_date, category_id):
+        bill = Bill(
+            company_id=company_id,
+            description=description,
+            amount=amount,
+            type=type,
+            due_date=due_date,
+            category_id=category_id
+        )
+        return BillRepository._base.save(bill)
+    
     @staticmethod
-    def update_status(bill_id, status, payment_date):
-        """Atualiza o status e a data de quitação de uma fatura existente."""
-        bill = Bill.query.get(bill_id)
-        if bill:
-            try:
-                bill.status = status
-                bill.payment_date = payment_date
-                db.session.commit()
-                return bill
-            except SQLAlchemyError as e:
-                db.session.rollback()
-                raise e
-        return None
+    def save(bill):
+        return BillRepository._base.save(bill)
+    
+    @staticmethod
+    def delete(bill):
+        BillRepository._base.delete(bill)

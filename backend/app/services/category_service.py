@@ -1,82 +1,62 @@
-from app.models import Category, Company 
-from app.config import db
-from flask_jwt_extended import get_jwt
+from app.repositories.category_repository import CategoryRepository
+from app.repositories.user_repository import UserRepository
 
 
-def add_category(data):
-    claims = get_jwt()
-    company_id = claims.get("active_company_id")
+def _user_has_access(user_id, company_id):
+    user = UserRepository.get_by_id(user_id)
+    if not user:
+        return False
+    return any(c.company_id == company_id for c in user.companies)
 
-    if not company_id:
-        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
-    new_category = Category(
-        name=data.get("name"),
-        type=data.get("type"),
-        company_id=company_id
-    )
+def add_category(user_id, company_id, data):
+    if not _user_has_access(user_id, company_id):
+        return {"erro": "Usuário não tem acesso a esta empresa."}, 403
 
     try:
-        db.session.add(new_category)
-        db.session.commit()
-        return {"msg": "Categoria criada com sucesso!"}, 201
+        new_category = CategoryRepository.create(
+            name=data.get("name"),
+            type=data.get("type"),
+            company_id=company_id
+        )
+        return {"category": new_category}, 201
     except Exception as e:
-        db.session.rollback()
         return {"erro": f"Erro interno ao salvar a categoria: {str(e)}"}, 500
 
 
-def get_categories():
-    claims = get_jwt()
-    company_id = claims.get("active_company_id")
+def get_categories(user_id, company_id):
+    if not _user_has_access(user_id, company_id):
+        return {"erro": "Usuário não tem acesso a esta empresa."}, 403
 
-    if not company_id:
-        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
-
-    categories = Category.query.filter_by(company_id=company_id).all()
+    categories = CategoryRepository.list_by_company(company_id)
     return {"categories": categories}, 200
 
 
-def update_category(data):
-    category_id = data.get("category_id") or data.get("id")
-    claims = get_jwt()
-    company_id = claims.get("active_company_id")
+def update_category(user_id, company_id, category_id, data):
+    if not _user_has_access(user_id, company_id):
+        return {"erro": "Usuário não tem acesso a esta empresa."}, 403
 
-    if not company_id:
-        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
-
-    category = Category.query.filter_by(category_id=category_id, company_id=company_id).first()
+    category = CategoryRepository.get_by_id_and_company(category_id, company_id)
     if not category:
         return {"erro": "Categoria não encontrada para esta empresa."}, 404
 
-    if "name" in data:
-        category.name = data.get("name")
-    if "type" in data:
-        category.type = data.get("type")
+    # update() sobrescreve sempre, então preenche com o valor atual se não vier no data
+    new_name = data.get("name", category.name)
+    new_type = data.get("type", category.type)
 
     try:
-        db.session.commit()
-        return {"msg": "Categoria actualizada com sucesso!"}, 200
+        updated = CategoryRepository.update(category_id, company_id, new_name, new_type)
+        return {"category": updated}, 200
     except Exception as e:
-        db.session.rollback()
         return {"erro": f"Erro interno ao atualizar: {str(e)}"}, 500
 
 
-def delete_category(data):
-    category_id = data.get("category_id") or data.get("id")
-    claims = get_jwt()
-    company_id = claims.get("active_company_id")
+def delete_category(user_id, company_id, category_id):
+    if not _user_has_access(user_id, company_id):
+        return {"erro": "Usuário não tem acesso a esta empresa."}, 403
 
-    if not company_id:
-        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
-
-    category = Category.query.filter_by(category_id=category_id, company_id=company_id).first()
-    if not category:
+    success = CategoryRepository.delete(category_id, company_id)
+    if not success:
         return {"erro": "Categoria não encontrada para esta empresa."}, 404
 
-    try:
-        db.session.delete(category)
-        db.session.commit()
-        return {"msg": "Categoria deletada com sucesso!"}, 200
-    except Exception as e:
-        db.session.rollback()
-        return {"erro": f"Erro interno ao deletar: {str(e)}"}, 500
+    return {"msg": "Categoria deletada com sucesso!"}, 200
