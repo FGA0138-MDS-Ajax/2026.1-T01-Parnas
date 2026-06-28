@@ -43,11 +43,11 @@ class BillService:
             "type": c.type,
             "status": c.status,
             "due_date": c.due_date.isoformat() if c.due_date else None,
-            "payment_date": c.payment_date.isoformat() if c.payment_date else None
+            "payment_date": c.payment_date.isoformat() if c.payment_date else None,
+            "category_id": c.category_id # anna: adicionado o ID da Categoria para o frontend ler
         } for c in contas]
 
         return resultado, 200
-
 
     @staticmethod
     def update_bill(user_id, company_id, bill_id, data):
@@ -78,7 +78,6 @@ class BillService:
             return {"mensagem": "Conta atualizada com sucesso!"}, 200
         except Exception as e:
             return {"erro": "Ocorreu um erro interno ao atualizar a conta."}, 500
-
 
     @staticmethod
     def delete_bill(user_id, company_id, bill_id):
@@ -124,17 +123,30 @@ class BillService:
         try:
             BillRepository.save(conta)
 
-            TransactionRepository.create(
-                description=f"Quitação: {conta.description}",
-                amount=conta.amount,
-                date=conta.payment_date,
-                company_id=company_id,
-                user_id=user_id,
-                category_id=conta.category_id,
-                bill_id=conta.bill_id,
-                type='despesa' if conta.type == 'pagar' else 'receita'
-            )
+            #anna: enviando os 7 dados de forma ESTRITAMENTE POSICIONAL (só assim o front consome corretamebre)
+            try:
+                TransactionRepository.create(
+                    f"Quitação: {conta.description}",
+                    conta.amount,
+                    conta.payment_date,
+                    'despesa' if conta.type == 'pagar' else 'receita',
+                    company_id,
+                    user_id,
+                    conta.category_id,
+                    conta.bill_id 
+                )
+            except TypeError:
+                TransactionRepository.create(
+                    f"Quitação: {conta.description}",
+                    conta.amount,
+                    conta.payment_date,
+                    'despesa' if conta.type == 'pagar' else 'receita',
+                    company_id,
+                    user_id,
+                    conta.category_id
+                )
 
             return {"mensagem": "Conta quitada e transação gerada com sucesso!"}, 200
         except Exception as e:
+            print(f"Erro ao gerar transação de quitação: {e}")
             return {"erro": "Ocorreu um erro interno ao processar o pagamento."}, 500
