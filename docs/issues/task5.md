@@ -52,4 +52,4 @@ Tarefa técnica de qualidade (refatoração). Com as funcionalidades principais 
 > **Status (auditoria):** os DTOs (Marshmallow) e boa parte do redesign **já estão na develop** (mesclados). Falta, para fechar: schema de Conta (Bill), padronização do formato de resposta (erro/sucesso), componentes reutilizáveis em `components/ui/` e revisão de responsividade. A issue segue **aberta** apenas pelo que falta.
 
 ## Branch
-`refactor/dtos-redesign`
+`refactor/dtos`

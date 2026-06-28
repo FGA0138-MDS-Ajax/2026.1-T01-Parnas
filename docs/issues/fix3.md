@@ -29,8 +29,8 @@ Tarefa técnica de qualidade (refatoração/correção). Diversas integrações 
 
 ## Definição de Done
 - [ ] Código revisado em pair programming
-- [ ] PR aberto de `refactor/integracao-classes` para `develop`
+- [ ] PR aberto de `fix/3-integracao-classes` para `develop`
 - [ ] PR revisado pelo par de QA antes do merge na `develop`
 
 ## Branch
-`refactor/integracao-classes`
+`fix/3-integracao-classes`

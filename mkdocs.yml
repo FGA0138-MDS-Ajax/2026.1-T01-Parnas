@@ -92,7 +92,7 @@ nav:
       - qualidade/tasks/index.md
       - Tarefa IV — Integração do Ciclo de Vida: qualidade/tasks/task_4_integracao-ciclo-vida.md
       - Tarefa V - Redesign do Frontend: qualidade/tasks/task_5_redesign-frontend.md
-      - Tarefa VI - Refatoração de Banco, Repositórios e Rotas: qualidade/tasks/task_6_refactor-banco-rotas.md
+      - Tarefa VI - Refactor de Bancos e Rotas: qualidade/tasks/task_6_refactor-banco-rotas.md
     - Documentação por Correção (fix):
       - qualidade/fix/index.md
       - Contas e Transações (fix1 e fix2): qualidade/fix/fix_1_e_2_contas-transacoes.md

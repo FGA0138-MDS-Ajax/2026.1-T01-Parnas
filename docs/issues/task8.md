@@ -1,7 +1,7 @@
 ## Descrição técnica
 **Tarefa VIII - Purificação da Develop.** Consolidar e concluir **todas as pendências antigas** que foram para a develop e que ninguém está corrigindo: integrações de frontend que ficaram em mock/hardcoded/stub, o backend ausente de Contas/Caixas e a higienização da suíte de testes.
 
-Esta issue **não duplica** o que já está rastreado em issues abertas: #35 (Tarefa V - DTOs/redesign), #49 (Fix I - integração de Transações), #54 (Fix II - diferenciação Contas/Transações), #56 (Fix III - integração entre classes), #57 (US16 - Dashboard) e #58 (Tarefa VI - repositórios/migrations).
+Esta issue **não duplica** o que já está rastreado em issues abertas: #35 (Tarefa V - DTOs/redesign), #49 (Fix I - integração de Transações), #54 (Fix II - diferenciação Contas/Transações), #56 (Fix III - integração entre classes), #57 (US16 - Dashboard) e #58 (Tarefa VI - Refactor de Bancos e Rotas).
 
 > **Legenda:** itens marcados com `*` **já foram implementados** em um PR recente que foi **negado** (o **#81** - integração de frontend, negado por conflito com a develop); estão aqui apenas porque ainda não chegaram à develop.
 
@@ -38,4 +38,4 @@ Esta issue **não duplica** o que já está rastreado em issues abertas: #35 (Ta
 - [ ] PR aberto para a `develop` e revisado pela dupla de QA
 
 ## Branch
-`refactor/purificacao-develop` (sugestão)
+`task/8-purificacao-develop`

@@ -10,12 +10,11 @@ Tarefa técnica de qualidade (refatoração). Para suportar o crescimento das pr
 - **Funcionalidade do produto:** Transversal
 
 ## Status (reavaliação 27/06/2026)
-Feita, com ressalvas. A implementação foi entregue no **PR #79**
-(`integration/refactor-banco-rotas`), que ainda **não foi mesclado** e aponta para a
-`main` (e não para a `develop`, nem usa a branch `refactor/repositorios-migrations`
-prevista nesta issue). Ressalvas remanescentes: os services `category` e `comparison`
-ainda acessam `db.session` diretamente; e a suíte de testes pós-refactor segue
-pendente (escopo da task7/fix3). Os itens abaixo refletem o que está pronto no #79.
+Feita, com ressalvas. A implementação está na branch **`integration/refactor-banco-rotas`**
+(PR **#84** para a `develop`), ainda **não mesclada**. Ressalvas remanescentes: os
+services `category` e `comparison` ainda acessam `db.session` diretamente; e a suíte de
+testes pós-refactor segue pendente (escopo da task7/task8). Os itens abaixo refletem o
+que está pronto na branch.
 
 ## Critérios de aceitação
 - [x] Camada de `repositories/` criada e estruturada no backend
@@ -43,8 +42,8 @@ pendente (escopo da task7/fix3). Os itens abaixo refletem o que está pronto no 
 
 ## Definição de Done
 - [ ] Código revisado em pair programming
-- [ ] PR aberto de `refactor/repositorios-migrations` para `develop` (o PR aberto é o **#79**, de `integration/refactor-banco-rotas` para a `main`)
+- [x] PR aberto de `integration/refactor-banco-rotas` para `develop` (PR **#84**)
 - [ ] Documentação técnica atualizada
 
 ## Branch
-`refactor/repositorios-migrations`
+`integration/refactor-banco-rotas`

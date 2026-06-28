@@ -44,8 +44,8 @@
 
 ## Definição de Done
 - [ ] Código revisado em pair programming
-- [ ] PR aberto de `fix/diferenciacao-contas-transacoes` para `develop` (branch não existe; só o backend de vínculo entrou pelo refactor de contas/transações)
+- [ ] PR aberto de `fix/2-diferenciacao-contas-front` para `develop` (branch criada para concluir o frontend; o backend de vínculo já entrou pelo refactor de contas/transações)
 - [ ] PR revisado pelo par de QA antes do merge na `develop`
 
 ## Branch
-`fix/diferenciacao-contas-transacoes`
+`fix/2-diferenciacao-contas-front`

@@ -44,7 +44,7 @@ Sprint, prioridade, funcionalidade), **critérios de aceitação**, **tarefas**,
 | [task3](task3.md) | Estrutura base de testes | infra | 3 | Fechada |
 | [task1](task1.md) | Modelagem Usuário-Empresa (ORM) | infra | 4 | Fechada |
 | [task4](task4.md) | Integração de autenticação e ciclo de vida | integração | 5 | Aberta |
-| [task6](task6.md) | Repositórios e consolidação de migrations | refactor | 6 | Aberta |
+| [task6](task6.md) | Refactor de Bancos e Rotas | refactor | 6 | Aberta |
 | [task5](task5.md) | DTOs (Marshmallow) e redesign do frontend | refactor | 8 | Em andamento |
 | [task7](task7.md) | Refatoração do fluxo company (rotas/DTOs) | refactor | 9 | Aberta |
 | [task8](task8.md) | Purificação da Develop (pendências antigas) | refactor / qualidade | 10 | Aberta |
