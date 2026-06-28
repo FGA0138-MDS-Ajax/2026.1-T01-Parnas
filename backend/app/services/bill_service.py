@@ -11,6 +11,8 @@ def _get_company_id(user_id):
 
 def create_bill(user_id, data):
     company_id = _get_company_id(user_id)
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
     try:
         nova_conta = BillRepository.create(
@@ -28,6 +30,8 @@ def create_bill(user_id, data):
 
 def get_bills(user_id, status=None):
     company_id = _get_company_id(user_id)
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
     contas = BillRepository.list_by_company(company_id, status=status)
 
     resultado = [{
@@ -45,6 +49,8 @@ def get_bills(user_id, status=None):
 
 def update_bill(user_id, bill_id, data):
     company_id = _get_company_id(user_id)
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
     conta = BillRepository.get_by_id_and_company(bill_id, company_id)
 
     if not conta:
@@ -67,6 +73,8 @@ def update_bill(user_id, bill_id, data):
 
 def delete_bill(user_id, bill_id):
     company_id = _get_company_id(user_id)
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
     conta = BillRepository.get_by_id_and_company(bill_id, company_id)
 
     if not conta:
@@ -84,6 +92,8 @@ def delete_bill(user_id, bill_id):
 
 def pay_bill(user_id, bill_id):
     company_id = _get_company_id(user_id)
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
     conta = BillRepository.get_by_id_and_company(bill_id, company_id)
 
     if not conta:
@@ -105,7 +115,8 @@ def pay_bill(user_id, bill_id):
             type='despesa',
             company_id=company_id,
             user_id=user_id,
-            category_id=conta.category_id
+            category_id=conta.category_id,
+            bill_id=conta.bill_id
         )
 
         return {"mensagem": "Conta quitada e transação gerada com sucesso!"}, 200

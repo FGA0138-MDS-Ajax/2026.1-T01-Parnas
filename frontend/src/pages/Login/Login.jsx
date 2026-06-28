@@ -66,7 +66,7 @@ const Login = () => {
         login(data.access_token);
       }
 
-      navigate("/dashboard");
+      navigate("/selecao-empresa");
     } catch (err) {
       setError(err.message || "Erro ao conectar ao servidor.");
     } finally {
@@ -76,7 +76,7 @@ const Login = () => {
 
   const handleDemoAccess = () => {
     login(`mock_demo_${Date.now()}`);
-    navigate("/dashboard");
+    navigate("/selecao-empresa");
   };
 
   return (

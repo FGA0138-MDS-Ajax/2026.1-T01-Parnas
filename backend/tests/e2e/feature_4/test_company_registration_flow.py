@@ -22,6 +22,7 @@ Diferença dos testes anteriores:
 
 import pytest
 from app.models.company import Company
+# daniel: atualizei a URL de cadastro para POST /api/companies (era .../register)
 from app.models.user import User
 import bcrypt
 
@@ -81,7 +82,7 @@ class TestCompanyRegistrationFlow:
         }
 
         register_response = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=company_data,
             headers=auth_headers
         )
@@ -150,7 +151,7 @@ class TestCompanyRegistrationFlow:
         }
 
         response1 = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=first_company,
             headers=auth_headers
         )
@@ -166,7 +167,7 @@ class TestCompanyRegistrationFlow:
         }
 
         response2 = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=second_company,
             headers=auth_headers
         )
@@ -244,7 +245,7 @@ class TestCompanyRegistrationFlow:
         }
 
         response_a = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=company_a,
             headers=auth_headers_a
         )
@@ -266,7 +267,7 @@ class TestCompanyRegistrationFlow:
         }
 
         response_b = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=company_b,
             headers=auth_headers_b
         )
@@ -336,7 +337,7 @@ class TestCompanyRegistrationErrorRecovery:
         }
 
         response1 = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=invalid_company,
             headers=auth_headers
         )
@@ -352,7 +353,7 @@ class TestCompanyRegistrationErrorRecovery:
         }
 
         response2 = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=valid_company,
             headers=auth_headers
         )
@@ -412,7 +413,7 @@ class TestCompanyRegistrationErrorRecovery:
         }
 
         response = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=company,
             headers=auth_headers
         )
@@ -438,7 +439,7 @@ class TestCompanyRegistrationValidationFilters:
         }
 
         response = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=company_data,
             headers=auth_headers
         )
@@ -461,7 +462,7 @@ class TestCompanyRegistrationValidationFilters:
         }
 
         response = client.post(
-            '/api/companies/register',
+            '/api/companies',
             json=company_data,
             headers=auth_headers
         )

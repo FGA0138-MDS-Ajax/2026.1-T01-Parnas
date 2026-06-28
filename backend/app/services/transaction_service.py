@@ -1,17 +1,17 @@
 from app.repositories.transaction_repository import TransactionRepository
 from app.repositories.category_repository import CategoryRepository
-from app.repositories.user_repository import UserRepository  # Se houver um UserRepository para carregar o usuário
+from app.repositories.user_repository import UserRepository
 
-def _validate_user_company_access(user_id, company_id):
-    """Verifica se o usuário tem acesso à empresa informada."""
+
+def _get_company_id(user_id):
     user = UserRepository.get_by_id(user_id)
-    user_companies_ids = [c.company_id for c in user.companies] if user else []
-    return company_id in user_companies_ids
+    return user.active_company_id if user else None
+
 
 def get_history_filtered(user_id, page, per_page, filtros):
-    company_id = filtros.get('company_id')
-    if not _validate_user_company_access(user_id, company_id):
-        return {"erro": "Você não tem permissão para acessar os dados desta empresa."}, 403
+    company_id = _get_company_id(user_id)
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
     filtros['user_id'] = user_id
 
@@ -49,12 +49,12 @@ def get_history_filtered(user_id, page, per_page, filtros):
         "transacoes": transacoes_lista
     }, 200
 
+
 def create_transaction(data, user_id):
     category_id = data.get('category_id')
-    company_id = data.get('company_id')
-
-    if not _validate_user_company_access(user_id, company_id):
-        return {"erro": "Você não tem permissão para lançar transações nesta empresa."}, 403
+    company_id = _get_company_id(user_id)
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
     category = CategoryRepository.get_by_id_and_company(category_id, company_id)
     if not category:
@@ -80,12 +80,14 @@ def create_transaction(data, user_id):
         return {"erro": "Ocorreu um erro interno ao registrar transação."}, 500
 
 
-def get_company_transactions(company_id, user_id):
-    if not _validate_user_company_access(user_id, company_id):
-        return {"erro": "Você não tem permissão para visualizar transações nesta empresa."}, 403
+def get_company_transactions(user_id):
+    company_id = _get_company_id(user_id)
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
     transactions = TransactionRepository.list_by_company_and_user(company_id, user_id)
     return {"transactions_objects": transactions}, 200
+
 
 def update_transaction(transaction_id, user_id, data):
     transaction = TransactionRepository.get_by_id_and_user(transaction_id, user_id)

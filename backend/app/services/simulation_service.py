@@ -1,5 +1,12 @@
 from app.repositories.simulation_repository import SimulationRepository
 from app.repositories.transaction_repository import TransactionRepository
+from app.repositories.user_repository import UserRepository
+
+
+def _get_company_id(user_id):
+    user = UserRepository.get_by_id(user_id)
+    return user.active_company_id if user else None
+
 
 def calculate_table_price(main, rate, term):
     i = rate/100
@@ -26,6 +33,7 @@ def calculate_table_price(main, rate, term):
 
     return installments, pmt
 
+
 def calculate_table_sac(main, rate, term):
     i = rate/100
     amortization = main/term
@@ -46,6 +54,7 @@ def calculate_table_sac(main, rate, term):
         })
 
     return installments, installments[0]["valor_parcela"]
+
 
 def project_impact_cash_flow(company_id, first_installment_value):
     transactions = TransactionRepository.get_by_company(company_id)
@@ -78,7 +87,8 @@ def project_impact_cash_flow(company_id, first_installment_value):
         "status": "Saudável" if commitment <= 30 else "Atenção"
     }
 
-def process_simulation(data, company_id = None):
+
+def process_simulation(data, company_id=None):
     main = data['requested_amount']
     rate = data['interest_rate']
     term = data['deadline_month']
@@ -108,13 +118,19 @@ def process_simulation(data, company_id = None):
 
     return answer
 
+
 def save_simulation(data, current_user_id):
+    company_id = _get_company_id(current_user_id)
+
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+
     data_simulation = process_simulation(data)
     summary = data_simulation["resumo"]
 
     try:
         new_simulation = SimulationRepository.create(
-            company_id=data['company_id'],
+            company_id=company_id,
             user_id=current_user_id,
             loan_amount=data['requested_amount'],
             term_months=data['deadline_month'],
@@ -129,7 +145,12 @@ def save_simulation(data, current_user_id):
     except Exception as e:
         return {"erro": "Ocorreu um erro interno ao salvar a simulação."}, 500
 
-def get_simulation(company_id):
+
+def get_simulation(user_id):
+    company_id = _get_company_id(user_id)
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+
     simulations = SimulationRepository.list_by_company(company_id)
     result = []
     for s in simulations:
@@ -147,7 +168,12 @@ def get_simulation(company_id):
 
     return {"simulations": result}, 200
 
-def delete_simulation(simulation_id, company_id):
+
+def delete_simulation(simulation_id, user_id):
+    company_id = _get_company_id(user_id)
+    if not company_id:
+        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+
     simulation = SimulationRepository.get_by_id_and_company(simulation_id, company_id)
 
     if not simulation:

@@ -52,7 +52,7 @@ test('renderiza os campos de e-mail, senha e o botao Entrar', () => {
   expect(botaoEntrar()).toBeInTheDocument();
 });
 
-test('login com sucesso salva o token e redireciona para o dashboard', async () => {
+test('login com sucesso salva o token e redireciona para a seleção de empresa', async () => {
   global.fetch.mockResolvedValue({
     ok: true,
     json: async () => ({ token: 'jwt-abc' }),
@@ -73,7 +73,7 @@ test('login com sucesso salva o token e redireciona para o dashboard', async () 
     );
   });
   expect(localStorage.getItem('token')).toBe('jwt-abc');
-  expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
+  expect(mockNavigate).toHaveBeenCalledWith('/selecao-empresa');
 });
 
 test('credenciais invalidas exibem a mensagem de erro vinda da API', async () => {
@@ -103,12 +103,12 @@ test('senha com menos de 8 caracteres barra antes de chamar a API', async () => 
   expect(global.fetch).not.toHaveBeenCalled();
 });
 
-test('acesso demo gera um token e leva ao dashboard sem chamar a API', async () => {
+test('acesso demo gera um token e leva para a seleção sem chamar a API', async () => {
   renderLogin();
 
   await userEvent.click(screen.getByRole('button', { name: /acessar conta demo/i }));
 
   expect(localStorage.getItem('token')).toMatch(/^mock_demo_/);
-  expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
+  expect(mockNavigate).toHaveBeenCalledWith('/selecao-empresa');
   expect(global.fetch).not.toHaveBeenCalled();
 });

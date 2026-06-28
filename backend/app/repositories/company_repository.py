@@ -17,6 +17,10 @@ class CompanyRepository(BaseRepository):
     def get_by_cnpj(cnpj):
         cnpj_clean = re.sub(r'\D', '', cnpj)
         return Company.query.filter_by(cnpj=cnpj_clean).first()
+
+    @staticmethod
+    def get_by_email(email):
+        return Company.query.filter_by(email=email).first()
     
     @staticmethod
     def create(name, cnpj, email, phone, register_date):
