@@ -41,31 +41,32 @@ class DashboardService:
             } for b in bills
         ]
 
-def build_dashboard(company_id):
-    today = date.today()
-    last_day = calendar.monthrange(today.year, today.month)[1]
-    start_date = date(today.year, today.month, 1)
-    end_date = date(today.year, today.month, last_day)
+    @staticmethod
+    def build_dashboard(company_id):
+        today = date.today()
+        last_day = calendar.monthrange(today.year, today.month)[1]
+        start_date = date(today.year, today.month, 1)
+        end_date = date(today.year, today.month, last_day)
 
-    consolidated_balance = DashboardService.get_consolidated_balance(company_id)
+        consolidated_balance = DashboardService.get_consolidated_balance(company_id)
 
-    try:
-        monthly_summary = ReportService.get_period_summary(company_id, start_date, end_date)
-        category_distribution = ReportService.get_category_distribution(company_id, start_date, end_date)
-    except Exception as e:
-        print(f"Erro ao acessar ReportService: {e}")
-        return {"erro": "Erro ao compilar dados matemáticos do mês atual."}, 500
+        try:
+            monthly_summary = ReportService.get_period_summary(company_id, start_date, end_date)
+            category_distribution = ReportService.get_category_distribution(company_id, start_date, end_date)
+        except Exception as e:
+            print(f"Erro ao acessar ReportService: {e}")
+            return {"erro": "Erro ao compilar dados matemáticos do mês atual."}, 500
 
-    pending_bills = DashboardService.get_upcoming_bills(company_id)
+        pending_bills = DashboardService.get_upcoming_bills(company_id)
 
-    return {
-        "saldo_consolidado_atual": consolidated_balance,
-        "mes_referencia": today.strftime("%m/%Y"),
-        "totais_mes_atual": {
-            "receitas": monthly_summary["total_receitas"],
-            "despesas": monthly_summary["total_despesas"],
-            "balanco_mensal": monthly_summary["saldo"]
-        },
-        "grafico_categorias_mes": category_distribution,
-        "contas_proximas_vencimento": pending_bills
-    }, 200
+        return {
+            "saldo_consolidado_atual": consolidated_balance,
+            "mes_referencia": today.strftime("%m/%Y"),
+            "totais_mes_atual": {
+                "receitas": monthly_summary["total_receitas"],
+                "despesas": monthly_summary["total_despesas"],
+                "balanco_mensal": monthly_summary["saldo"]
+            },
+            "grafico_categorias_mes": category_distribution,
+            "contas_proximas_vencimento": pending_bills
+        }, 200
