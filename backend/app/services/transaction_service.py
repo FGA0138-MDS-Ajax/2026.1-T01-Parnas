@@ -1,19 +1,18 @@
 from app.repositories.transaction_repository import TransactionRepository
 from app.repositories.category_repository import CategoryRepository
-from app.repositories.user_repository import UserRepository
+from app.repositories.company_repository import CompanyRepository
+from app.exceptions.api_exception import APIException
 
 
-def _get_company_id(user_id):
-    user = UserRepository.get_by_id(user_id)
-    return user.active_company_id if user else None
+def get_history_filtered(user_id, company_id, page, per_page, filtros):
 
+    company = CompanyRepository.get_by_id(company_id)
+    if not company:
+        raise APIException("Empresa não encontrada.", 404)
 
-def get_history_filtered(user_id, page, per_page, filtros):
-    company_id = _get_company_id(user_id)
-    if not company_id:
-        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
-
-    filtros['user_id'] = user_id
+    access = CompanyRepository.check_user_access(company_id, user_id)
+    if not access:
+        raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
 
     query_base, totais = TransactionRepository.get_filtered_history_query(
         filtros,
@@ -29,11 +28,11 @@ def get_history_filtered(user_id, page, per_page, filtros):
     transacoes_lista = [{
         "transaction_id": t.transaction_id,
         "description": t.description,
-        "tipo": t.type,
-        "categoria_id": t.category_id,
-        "valor": float(t.amount),
-        "data": t.date.strftime("%Y-%m-%d") if t.date else None,
-        "id_conta": t.bill_id
+        "type": t.type,
+        "category_id": t.category_id,
+        "amount": float(t.amount),
+        "date": t.date.strftime("%Y-%m-%d") if t.date else None,
+        "bill_id": t.bill_id
     } for t in paginacao.items]
 
     return {
@@ -51,11 +50,8 @@ def get_history_filtered(user_id, page, per_page, filtros):
     }, 200
 
 
-def create_transaction(data, user_id):
+def create_transaction(user_id, company_id, data):
     category_id = data.get('category_id')
-    company_id = _get_company_id(user_id)
-    if not company_id:
-        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
     category = CategoryRepository.get_by_id_and_company(category_id, company_id)
     if not category:
@@ -81,22 +77,27 @@ def create_transaction(data, user_id):
         return {"erro": "Ocorreu um erro interno ao registrar transação."}, 500
 
 
-def get_company_transactions(user_id):
-    company_id = _get_company_id(user_id)
-    if not company_id:
-        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+def get_company_transactions(user_id, company_id):
+
+    company = CompanyRepository.get_by_id(company_id)
+    if not company:
+        raise APIException("Empresa não encontrada.", 404)
+
+    access = CompanyRepository.check_user_access(company_id, user_id)
+    if not access:
+        raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
 
     transactions = TransactionRepository.list_by_company_and_user(company_id, user_id)
     return {"transactions_objects": transactions}, 200
 
 
-def update_transaction(transaction_id, user_id, data):
+def update_transaction(user_id, company_id, transaction_id, data):
     transaction = TransactionRepository.get_by_id_and_user(transaction_id, user_id)
     if not transaction:
         return {"erro": "Transação não encontrada ou você não possui permissão para alterá-la."}, 404
 
     if 'category_id' in data:
-        category = CategoryRepository.get_by_id_and_company(data['category_id'], transaction.company_id)
+        category = CategoryRepository.get_by_id_and_company(data['category_id'], company_id)
         if not category:
             return {"erro": "A categoria informada não pertence à empresa desta transação."}, 400
         transaction.category_id = data['category_id']
@@ -120,7 +121,7 @@ def update_transaction(transaction_id, user_id, data):
         return {"erro": "Ocorreu um erro interno ao atualizar a transação."}, 500
 
 
-def delete_transaction(transaction_id, user_id):
+def delete_transaction(user_id, transaction_id):
     transaction = TransactionRepository.get_by_id_and_user(transaction_id, user_id)
     if not transaction:
         return {"erro": "Transação não encontrada ou você não possui permissão para excluí-la."}, 404

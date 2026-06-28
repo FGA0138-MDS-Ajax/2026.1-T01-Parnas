@@ -1,11 +1,8 @@
 from app.repositories.simulation_repository import SimulationRepository
 from app.repositories.transaction_repository import TransactionRepository
 from app.repositories.user_repository import UserRepository
-
-
-def _get_company_id(user_id):
-    user = UserRepository.get_by_id(user_id)
-    return user.active_company_id if user else None
+from app.exceptions.api_exception import APIException
+from app.repositories.company_repository import CompanyRepository
 
 
 def calculate_table_price(main, rate, term):
@@ -88,7 +85,15 @@ def project_impact_cash_flow(company_id, first_installment_value):
     }
 
 
-def process_simulation(data, company_id=None):
+def process_simulation(user_id, company_id, data):
+    company = CompanyRepository.get_by_id(company_id)
+    if not company:
+        raise APIException("Empresa não encontrada.", 404)
+
+    access = CompanyRepository.check_user_access(company_id, user_id)
+    if not access:
+        raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
+    
     main = data['requested_amount']
     rate = data['interest_rate']
     term = data['deadline_month']
@@ -119,19 +124,22 @@ def process_simulation(data, company_id=None):
     return answer
 
 
-def save_simulation(data, current_user_id):
-    company_id = _get_company_id(current_user_id)
+def save_simulation(user_id, company_id, data):
+    company = CompanyRepository.get_by_id(company_id)
+    if not company:
+        raise APIException("Empresa não encontrada.", 404)
 
-    if not company_id:
-        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+    access = CompanyRepository.check_user_access(company_id, user_id)
+    if not access:
+        raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
 
-    data_simulation = process_simulation(data)
+    data_simulation = process_simulation(user_id, company_id, data)
     summary = data_simulation["resumo"]
 
     try:
         new_simulation = SimulationRepository.create(
             company_id=company_id,
-            user_id=current_user_id,
+            user_id=user_id,
             loan_amount=data['requested_amount'],
             term_months=data['deadline_month'],
             modality=data['modality'],
@@ -146,10 +154,14 @@ def save_simulation(data, current_user_id):
         return {"erro": "Ocorreu um erro interno ao salvar a simulação."}, 500
 
 
-def get_simulation(user_id):
-    company_id = _get_company_id(user_id)
-    if not company_id:
-        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+def get_simulation(user_id, company_id):
+    company = CompanyRepository.get_by_id(company_id)
+    if not company:
+        raise APIException("Empresa não encontrada.", 404)
+
+    access = CompanyRepository.check_user_access(company_id, user_id)
+    if not access:
+        raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
 
     simulations = SimulationRepository.list_by_company(company_id)
     result = []
@@ -169,15 +181,18 @@ def get_simulation(user_id):
     return {"simulations": result}, 200
 
 
-def delete_simulation(simulation_id, user_id):
-    company_id = _get_company_id(user_id)
-    if not company_id:
-        return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+def delete_simulation(user_id, company_id, simulation_id):
+    company = CompanyRepository.get_by_id(company_id)
+    if not company:
+        raise APIException("Empresa não encontrada.", 404)
 
+    access = CompanyRepository.check_user_access(company_id, user_id)
+    if not access:
+        raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
+    
     simulation = SimulationRepository.get_by_id_and_company(simulation_id, company_id)
-
     if not simulation:
-        return {"erro": "Simulação não encontrada para esta empresa."}, 404
+        raise APIException("Simulação não encontrada para esta empresa.", 404)
 
     try:
         SimulationRepository.delete(simulation)

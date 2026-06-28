@@ -9,13 +9,7 @@ dashboard_schema = DashboardQuerySchema()
 
 @dashboard_bp.route("", methods=["GET"])
 @jwt_required()
-def get_dashboard():
-    try:
-        data = dashboard_schema.load(request.args)
-    except ValidationError as err:
-        return jsonify({"erros_de_validacao": err.messages}), 400
-
-    company_id = data.get("company_id")
+def get_dashboard(company_id):
 
     answer, status_code = build_dashboard(company_id)
     return jsonify(answer), status_code
