@@ -20,14 +20,14 @@
 - [x] Garantir que requisições com token de usuário excluído retornam 401
 
 ## Tarefas Frontend
-- [x] Tratar resposta 401 de "conta desativada" no interceptor do Axios
-- [x] Redirecionar para a tela de login ao receber esse 401
-- [x] Limpar token do `localStorage` ao detectar conta desativada
+- [ ] Tratar resposta 401 de "conta desativada" no interceptor do Axios
+- [ ] Redirecionar para a tela de login ao receber esse 401
+- [ ] Limpar token do `localStorage` ao detectar conta desativada
 
 ## Critérios de conclusão
 - [x] Login com conta excluída retorna erro 401
 - [x] Token de usuário excluído é rejeitado em todas as rotas protegidas
-- [x] Frontend redireciona corretamente ao detectar conta inativa
+- [ ] Frontend redireciona corretamente ao detectar conta inativa
 
 ## Critérios de teste
 - [x] Caso(s) de teste do Roteiro cobertos: TS-14

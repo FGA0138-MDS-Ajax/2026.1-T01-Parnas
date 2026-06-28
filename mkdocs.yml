@@ -151,11 +151,13 @@ nav:
     - Ata nº 8: atas-reuniao/ata-reuniao-8.md
     - Ata nº 9: atas-reuniao/ata-reuniao-9.md
     - Ata nº 10: atas-reuniao/ata-reuniao-10.md
+    - Ata nº 11: atas-reuniao/ata-reuniao-11.md
   - Presenças (gov.br):
     - presencas/index.md
     - Lista de Presença nº 1: presencas/lista-presenca-1.md
     - Lista de Presença nº 2: presencas/lista-presenca-2.md
     - Lista de Presença nº 3: presencas/lista-presenca-3.md
+    - Lista de Presença nº 4: presencas/lista-presenca-4.md
 
 markdown_extensions:
   - admonition

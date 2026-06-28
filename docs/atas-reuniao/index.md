@@ -23,5 +23,6 @@ migradas para Markdown).
 | 8   | *30/05/2026* | [Ata nº 8](ata-reuniao-8.md)   |
 | 9   | *06/06/2026* | [Ata nº 9](ata-reuniao-9.md)   |
 | 10  | *13/06/2026* | [Ata nº 10](ata-reuniao-10.md) |
+| 11  | *27/06/2026* | [Ata nº 11](ata-reuniao-11.md) |
 
 ---
