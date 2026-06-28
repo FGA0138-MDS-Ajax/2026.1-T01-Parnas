@@ -8,7 +8,7 @@ class BillSchema(Schema):
         error_messages={"required": "A descrição é obrigatória."}
     )
 
-    amount = fields.Str(
+    amount = fields.Float(
         required=True,
         error_messages={"required": "O valor é obrigatório."}
     )
