@@ -15,12 +15,14 @@ class Transaction(db.Model):
     company_id = db.Column(db.Integer, db.ForeignKey('company.company_id', ondelete='CASCADE'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='SET NULL'), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('category.category_id', ondelete='RESTRICT'), nullable=False)
+    payment_id = db.Column(db.Integer, db.ForeignKey('payment.payment_id', ondelete='RESTRICT'), nullable=False)
     bill_id = db.Column(db.Integer, db.ForeignKey('bill.bill_id', ondelete='SET NULL'), nullable=True)
 
     # Relacionamentos 
     company = db.relationship('Company', back_populates='transactions')
     user = db.relationship('User', back_populates='transactions')
     category = db.relationship('Category', back_populates='transactions')
+    payment = db.relationship('Payment', back_populates='transactions')
     bill = db.relationship('Bill', back_populates='transactions')
 
     __table_args__ = (

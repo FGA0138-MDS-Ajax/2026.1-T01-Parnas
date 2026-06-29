@@ -40,6 +40,7 @@ def create_app():
     from app.models.company import Company
     from app.models.user_company_association import user_company
     from app.models.category import Category
+    from app.models.payment import Payment
     from app.models.transaction import Transaction
     from app.models.bill import Bill
     from app.models.document import Document
@@ -61,6 +62,9 @@ def create_app():
 
     from app.routes.category_routes import category_bp
     app.register_blueprint(category_bp, url_prefix='/api/companies/<int:company_id>/categories')
+
+    from app.routes.payment_routes import payment_bp
+    app.register_blueprint(payment_bp, url_prefix='/api/companies/<int:company_id>/payments')
 
     from app.routes.transaction_routes import transaction_bp
     app.register_blueprint(transaction_bp, url_prefix="/api/companies/<int:company_id>/transactions")
