@@ -12,7 +12,7 @@ class Payment(db.Model):
 
     # Restrição: Não permitir o mesmo nome dentro da mesma empresa
     __table_args__ = (
-        UniqueConstraint('name', 'company_id', name='_name_company_uc'),
+        UniqueConstraint('name', 'company_id', name='_payment_name_company_uc'),
     )
 
     company = db.relationship('Company', back_populates='payments')
