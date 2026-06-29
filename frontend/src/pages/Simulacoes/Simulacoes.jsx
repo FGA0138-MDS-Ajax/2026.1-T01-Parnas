@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -10,29 +10,32 @@ import {
   Tooltip,
   Legend,
   ReferenceLine,
-} from 'recharts';
-import { useEmpresa } from '../../context/EmpresaContext';
+} from "recharts";
+import { useEmpresa } from "../../context/EmpresaContext";
+import api from "../../services/api"; // Importante: Adicionamos o axios
 import {
   listarSimulacoes,
   salvarSimulacao as salvarSimulacaoAPI,
   excluirSimulacao as excluirSimulacaoAPI,
-} from '../../services/simulacao.service';
-import ConfirmacaoExclusaoSimulacao from './ConfirmacaoExclusaoSimulacao';
-import './Simulacoes.css';
+} from "../../services/simulacao.service";
+import ConfirmacaoExclusaoSimulacao from "./ConfirmacaoExclusaoSimulacao";
+import "./Simulacoes.css";
 
 const FORM_INICIAL = {
-  valor_solicitado: '',
-  prazo_meses: '',
-  modalidade: 'PRICE',
-  taxa_juros: '',
+  valor_solicitado: "",
+  prazo_meses: "",
+  modalidade: "PRICE",
+  taxa_juros: "",
 };
 
 const formatarMoeda = (valor) =>
-  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor || 0);
+  new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
+    valor || 0,
+  );
 
 const formatarData = (dataStr) => {
-  if (!dataStr) return '';
-  return new Date(dataStr).toLocaleDateString('pt-BR');
+  if (!dataStr) return "";
+  return new Date(dataStr).toLocaleDateString("pt-BR");
 };
 
 const calcularTabela = (valor, prazo, taxa, modalidade) => {
@@ -44,7 +47,7 @@ const calcularTabela = (valor, prazo, taxa, modalidade) => {
 
   const tabela = [];
 
-  if (modalidade === 'PRICE') {
+  if (modalidade === "PRICE") {
     const parcela = (v * i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
     let saldo = v;
     for (let k = 1; k <= n; k++) {
@@ -94,29 +97,36 @@ const amostrarDados = (tabela) => {
   if (!tabela) return [];
   if (tabela.length <= 60) return tabela;
   const passo = Math.ceil(tabela.length / 60);
-  return tabela.filter((_, idx) => idx % passo === 0 || idx === tabela.length - 1);
+  return tabela.filter(
+    (_, idx) => idx % passo === 0 || idx === tabela.length - 1,
+  );
 };
 
 const calcularViabilidade = (mediaSaldo, parcela) => {
-  if (mediaSaldo <= 0) return {
-    status: 'risco',
-    label: 'Saldo Negativo',
-    descricao: 'A empresa opera com saldo negativo. Captar crédito representa alto risco financeiro.',
-  };
+  if (mediaSaldo <= 0)
+    return {
+      status: "risco",
+      label: "Saldo Negativo",
+      descricao:
+        "A empresa opera com saldo negativo. Captar crédito representa alto risco financeiro.",
+    };
   const ratio = mediaSaldo / parcela;
-  if (ratio >= 1.5) return {
-    status: 'viavel',
-    label: 'Operação Viável',
-    descricao: `O saldo disponível cobre ${(ratio * 100).toFixed(0)}% da parcela. Há folga financeira confortável.`,
-  };
-  if (ratio >= 1.0) return {
-    status: 'atencao',
-    label: 'Atenção — Margem Reduzida',
-    descricao: 'O saldo cobre a parcela, mas com margem reduzida. Avalie com cuidado antes de decidir.',
-  };
+  if (ratio >= 1.5)
+    return {
+      status: "viavel",
+      label: "Operação Viável",
+      descricao: `O saldo disponível cobre ${(ratio * 100).toFixed(0)}% da parcela. Há folga financeira confortável.`,
+    };
+  if (ratio >= 1.0)
+    return {
+      status: "atencao",
+      label: "Atenção — Margem Reduzida",
+      descricao:
+        "O saldo cobre a parcela, mas com margem reduzida. Avalie com cuidado antes de decidir.",
+    };
   return {
-    status: 'risco',
-    label: 'Risco Alto',
+    status: "risco",
+    label: "Risco Alto",
     descricao: `A parcela representa ${((parcela / mediaSaldo) * 100).toFixed(0)}% do saldo médio disponível.`,
   };
 };
@@ -158,12 +168,12 @@ const Simulacoes = () => {
   const [resumo, setResumo] = useState(null);
 
   const [salvando, setSalvando] = useState(false);
-  const [mensagemSalvo, setMensagemSalvo] = useState('');
-  const [erroSalvar, setErroSalvar] = useState('');
+  const [mensagemSalvo, setMensagemSalvo] = useState("");
+  const [erroSalvar, setErroSalvar] = useState("");
 
   const [simulacoes, setSimulacoes] = useState([]);
   const [carregando, setCarregando] = useState(false);
-  const [erroLista, setErroLista] = useState('');
+  const [erroLista, setErroLista] = useState("");
 
   const [fluxoCaixa, setFluxoCaixa] = useState(null);
   const [carregandoFluxo, setCarregandoFluxo] = useState(false);
@@ -174,10 +184,11 @@ const Simulacoes = () => {
   const carregarSimulacoes = useCallback(async () => {
     if (!idEmpresaLogada) return;
     setCarregando(true);
-    setErroLista('');
+    setErroLista("");
     try {
-      const dados = await listarSimulacoes(idEmpresaLogada);
-      setSimulacoes(Array.isArray(dados) ? dados : (dados.simulacoes || []));
+      const dados = await listarSimulacoes();
+      //o backend devolve {"simulations": []}
+      setSimulacoes(Array.isArray(dados) ? dados : dados.simulations || []);
     } catch (err) {
       setErroLista(err.message);
     } finally {
@@ -191,23 +202,18 @@ const Simulacoes = () => {
     try {
       const hoje = new Date();
       const seisAtras = new Date(hoje.getFullYear(), hoje.getMonth() - 5, 1);
-      const dataFim = hoje.toISOString().split('T')[0];
-      const dataInicio = seisAtras.toISOString().split('T')[0];
-      const token = localStorage.getItem('token');
+      const dataFim = hoje.toISOString().split("T")[0];
+      const dataInicio = seisAtras.toISOString().split("T")[0];
 
-      const response = await fetch(
-        `/api/transactions?company_id=${idEmpresaLogada}&data_inicio=${dataInicio}&data_fim=${dataFim}&per_page=500`,
-        { headers: { Authorization: `Bearer ${token}` } }
+      //usando o axios API para pegar as transações corretamente
+      const { data } = await api.get(
+        `/api/companies/${idEmpresaLogada}/transactions/`,
+        {
+          params: { data_inicio: dataInicio, data_fim: dataFim, per_page: 500 },
+        },
       );
 
-      if (!response.ok) {
-        setFluxoCaixa({ semDados: true });
-        return;
-      }
-
-      const text = await response.text();
-      const data = text ? JSON.parse(text) : {};
-      const lista = data.transactions || data.transacoes || (Array.isArray(data) ? data : []);
+      const lista = data.transacoes || data.transactions || [];
 
       if (lista.length === 0) {
         setFluxoCaixa({ semDados: true });
@@ -216,30 +222,34 @@ const Simulacoes = () => {
 
       const porMes = {};
       lista.forEach((t) => {
-        const dataT = t.date || t.data || '';
+        const dataT = t.date || t.data || "";
         const mes = dataT.substring(0, 7);
         if (!mes) return;
         if (!porMes[mes]) porMes[mes] = { receita: 0, despesa: 0 };
         const valor = parseFloat(t.amount ?? t.valor ?? 0);
-        const tipo = t.type || t.tipo || '';
-        if (tipo === 'receita') porMes[mes].receita += valor;
-        else if (tipo === 'despesa') porMes[mes].despesa += valor;
+        const tipo = t.type || t.tipo || "";
+        if (tipo === "receita") porMes[mes].receita += valor;
+        else if (tipo === "despesa") porMes[mes].despesa += valor;
       });
 
-      const meses = Object.keys(porMes).sort().map((m) => ({
-        mes: m,
-        receita: parseFloat(porMes[m].receita.toFixed(2)),
-        despesa: parseFloat(porMes[m].despesa.toFixed(2)),
-        saldo: parseFloat((porMes[m].receita - porMes[m].despesa).toFixed(2)),
-      }));
+      const meses = Object.keys(porMes)
+        .sort()
+        .map((m) => ({
+          mes: m,
+          receita: parseFloat(porMes[m].receita.toFixed(2)),
+          despesa: parseFloat(porMes[m].despesa.toFixed(2)),
+          saldo: parseFloat((porMes[m].receita - porMes[m].despesa).toFixed(2)),
+        }));
 
       if (meses.length === 0) {
         setFluxoCaixa({ semDados: true });
         return;
       }
 
-      const mediaReceita = meses.reduce((a, m) => a + m.receita, 0) / meses.length;
-      const mediaDespesa = meses.reduce((a, m) => a + m.despesa, 0) / meses.length;
+      const mediaReceita =
+        meses.reduce((a, m) => a + m.receita, 0) / meses.length;
+      const mediaDespesa =
+        meses.reduce((a, m) => a + m.despesa, 0) / meses.length;
       const mediaSaldo = meses.reduce((a, m) => a + m.saldo, 0) / meses.length;
 
       setFluxoCaixa({
@@ -266,18 +276,23 @@ const Simulacoes = () => {
       form.valor_solicitado,
       form.prazo_meses,
       form.taxa_juros,
-      form.modalidade
+      form.modalidade,
     );
     setTabela(novaTabela);
     setResumo(calcularResumo(novaTabela, form.valor_solicitado));
-  }, [form.valor_solicitado, form.prazo_meses, form.taxa_juros, form.modalidade]);
+  }, [
+    form.valor_solicitado,
+    form.prazo_meses,
+    form.taxa_juros,
+    form.modalidade,
+  ]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-    if (erros[name]) setErros((prev) => ({ ...prev, [name]: '' }));
-    setMensagemSalvo('');
-    setErroSalvar('');
+    if (erros[name]) setErros((prev) => ({ ...prev, [name]: "" }));
+    setMensagemSalvo("");
+    setErroSalvar("");
   };
 
   const validar = () => {
@@ -287,11 +302,11 @@ const Simulacoes = () => {
     const taxa = parseFloat(form.taxa_juros);
 
     if (!form.valor_solicitado || isNaN(valor) || valor <= 0)
-      novosErros.valor_solicitado = 'Informe um valor válido e positivo.';
+      novosErros.valor_solicitado = "Informe um valor válido e positivo.";
     if (!form.prazo_meses || isNaN(prazo) || prazo < 1 || prazo > 360)
-      novosErros.prazo_meses = 'Prazo deve ser entre 1 e 360 meses.';
+      novosErros.prazo_meses = "Prazo deve ser entre 1 e 360 meses.";
     if (!form.taxa_juros || isNaN(taxa) || taxa <= 0 || taxa > 100)
-      novosErros.taxa_juros = 'Informe uma taxa entre 0,01% e 100%.';
+      novosErros.taxa_juros = "Informe uma taxa entre 0,01% e 100%.";
 
     setErros(novosErros);
     return Object.keys(novosErros).length === 0;
@@ -300,31 +315,29 @@ const Simulacoes = () => {
   const handleSalvar = async () => {
     if (!validar() || !resumo) return;
     if (!idEmpresaLogada) {
-      setErroSalvar('Nenhuma empresa selecionada. Cadastre ou selecione uma empresa primeiro.');
+      setErroSalvar(
+        "Nenhuma empresa selecionada. Cadastre ou selecione uma empresa primeiro.",
+      );
       return;
     }
 
     setSalvando(true);
-    setErroSalvar('');
-    setMensagemSalvo('');
+    setErroSalvar("");
+    setMensagemSalvo("");
 
     try {
       await salvarSimulacaoAPI({
-        valor_solicitado: parseFloat(form.valor_solicitado),
-        prazo_meses: parseInt(form.prazo_meses, 10),
+        valor_solicitado: form.valor_solicitado,
+        prazo_meses: form.prazo_meses,
         modalidade: form.modalidade,
-        taxa_juros: parseFloat(form.taxa_juros),
-        valor_parcela: resumo.valorParcela,
-        valor_total: resumo.valorTotal,
-        total_juros: resumo.totalJuros,
-        id_empresa: idEmpresaLogada,
+        taxa_juros: form.taxa_juros,
       });
 
-      setMensagemSalvo('Simulação salva com sucesso!');
+      setMensagemSalvo("Simulação salva com sucesso!");
       setForm(FORM_INICIAL);
       carregarSimulacoes();
     } catch (err) {
-      setErroSalvar(err.message);
+      setErroSalvar(err.response?.data?.erro || err.message);
     } finally {
       setSalvando(false);
     }
@@ -343,7 +356,7 @@ const Simulacoes = () => {
   const confirmarExclusao = async () => {
     if (!simulacaoParaExcluir) return;
     try {
-      await excluirSimulacaoAPI(simulacaoParaExcluir.id_simulacao);
+      await excluirSimulacaoAPI(simulacaoParaExcluir.simulation_id); // Corrigido de id_simulacao
       setConfirmacaoAberta(false);
       setSimulacaoParaExcluir(null);
       carregarSimulacoes();
@@ -360,7 +373,10 @@ const Simulacoes = () => {
       <div className="simulacoes-header">
         <div>
           <h2>Simulação de Crédito</h2>
-          <p>Simule empréstimos e entenda o impacto no fluxo de caixa antes de captar recursos</p>
+          <p>
+            Simule empréstimos e entenda o impacto no fluxo de caixa antes de
+            captar recursos
+          </p>
         </div>
       </div>
 
@@ -379,7 +395,7 @@ const Simulacoes = () => {
               step="0.01"
               value={form.valor_solicitado}
               onChange={handleChange}
-              className={erros.valor_solicitado ? 'input-erro' : ''}
+              className={erros.valor_solicitado ? "input-erro" : ""}
             />
             {erros.valor_solicitado && (
               <span className="msg-campo-erro">{erros.valor_solicitado}</span>
@@ -398,7 +414,7 @@ const Simulacoes = () => {
               step="1"
               value={form.prazo_meses}
               onChange={handleChange}
-              className={erros.prazo_meses ? 'input-erro' : ''}
+              className={erros.prazo_meses ? "input-erro" : ""}
             />
             {erros.prazo_meses && (
               <span className="msg-campo-erro">{erros.prazo_meses}</span>
@@ -430,7 +446,7 @@ const Simulacoes = () => {
               step="0.01"
               value={form.taxa_juros}
               onChange={handleChange}
-              className={erros.taxa_juros ? 'input-erro' : ''}
+              className={erros.taxa_juros ? "input-erro" : ""}
             />
             {erros.taxa_juros && (
               <span className="msg-campo-erro">{erros.taxa_juros}</span>
@@ -445,10 +461,12 @@ const Simulacoes = () => {
           <div className="simulacoes-resultado">
             <div className="resultado-card resultado-parcela">
               <span className="resultado-label">
-                {form.modalidade === 'SAC' ? '1ª Parcela' : 'Valor da Parcela'}
+                {form.modalidade === "SAC" ? "1ª Parcela" : "Valor da Parcela"}
               </span>
-              <span className="resultado-valor">{formatarMoeda(resumo.valorParcela)}</span>
-              {form.modalidade === 'SAC' && tabela && (
+              <span className="resultado-valor">
+                {formatarMoeda(resumo.valorParcela)}
+              </span>
+              {form.modalidade === "SAC" && tabela && (
                 <span className="resultado-sub">
                   Última: {formatarMoeda(tabela[tabela.length - 1].parcela)}
                 </span>
@@ -457,15 +475,23 @@ const Simulacoes = () => {
 
             <div className="resultado-card resultado-total">
               <span className="resultado-label">Total a Pagar</span>
-              <span className="resultado-valor">{formatarMoeda(resumo.valorTotal)}</span>
+              <span className="resultado-valor">
+                {formatarMoeda(resumo.valorTotal)}
+              </span>
             </div>
 
             <div className="resultado-card resultado-juros">
               <span className="resultado-label">Total de Juros</span>
-              <span className="resultado-valor juros-valor">{formatarMoeda(resumo.totalJuros)}</span>
+              <span className="resultado-valor juros-valor">
+                {formatarMoeda(resumo.totalJuros)}
+              </span>
               {form.valor_solicitado && (
                 <span className="resultado-sub">
-                  {((resumo.totalJuros / parseFloat(form.valor_solicitado)) * 100).toFixed(1)}% do valor solicitado
+                  {(
+                    (resumo.totalJuros / parseFloat(form.valor_solicitado)) *
+                    100
+                  ).toFixed(1)}
+                  % do valor solicitado
                 </span>
               )}
             </div>
@@ -475,12 +501,16 @@ const Simulacoes = () => {
           <div className="simulacoes-impacto-card">
             <h3 className="secao-titulo">Impacto no Fluxo de Caixa</h3>
             <p className="secao-descricao">
-              Comparativo entre a parcela simulada e o histórico financeiro da empresa (últimos 6 meses)
+              Comparativo entre a parcela simulada e o histórico financeiro da
+              empresa (últimos 6 meses)
             </p>
 
             {!idEmpresaLogada ? (
               <div className="impacto-sem-dados">
-                <p>Selecione uma empresa para visualizar o impacto no fluxo de caixa.</p>
+                <p>
+                  Selecione uma empresa para visualizar o impacto no fluxo de
+                  caixa.
+                </p>
               </div>
             ) : carregandoFluxo ? (
               <div className="impacto-sem-dados">
@@ -489,8 +519,8 @@ const Simulacoes = () => {
             ) : !fluxoCaixa || fluxoCaixa.semDados ? (
               <div className="impacto-sem-dados">
                 <p>
-                  Sem transações registradas nos últimos 6 meses. Registre transações para
-                  visualizar o impacto no fluxo de caixa.
+                  Sem transações registradas nos últimos 6 meses. Registre
+                  transações para visualizar o impacto no fluxo de caixa.
                 </p>
               </div>
             ) : (
@@ -509,10 +539,14 @@ const Simulacoes = () => {
                     </span>
                   </div>
                   <div className="impacto-card">
-                    <span className="impacto-label">Saldo Médio Disponível</span>
+                    <span className="impacto-label">
+                      Saldo Médio Disponível
+                    </span>
                     <span
                       className={`impacto-valor ${
-                        fluxoCaixa.mediaSaldo >= 0 ? 'impacto-positivo' : 'impacto-negativo'
+                        fluxoCaixa.mediaSaldo >= 0
+                          ? "impacto-positivo"
+                          : "impacto-negativo"
                       }`}
                     >
                       {formatarMoeda(fluxoCaixa.mediaSaldo)}
@@ -521,23 +555,36 @@ const Simulacoes = () => {
                 </div>
 
                 {(() => {
-                  const viab = calcularViabilidade(fluxoCaixa.mediaSaldo, resumo.valorParcela);
+                  const viab = calcularViabilidade(
+                    fluxoCaixa.mediaSaldo,
+                    resumo.valorParcela,
+                  );
                   return (
-                    <div className={`viabilidade-banner viabilidade-${viab.status}`}>
+                    <div
+                      className={`viabilidade-banner viabilidade-${viab.status}`}
+                    >
                       <div className="viabilidade-indicador" />
                       <div className="viabilidade-info">
-                        <strong className="viabilidade-label">{viab.label}</strong>
-                        <span className="viabilidade-descricao">{viab.descricao}</span>
+                        <strong className="viabilidade-label">
+                          {viab.label}
+                        </strong>
+                        <span className="viabilidade-descricao">
+                          {viab.descricao}
+                        </span>
                       </div>
                       <div className="viabilidade-numeros">
                         <div className="vn-item">
                           <span className="vn-label">Parcela simulada</span>
-                          <span className="vn-valor">{formatarMoeda(resumo.valorParcela)}</span>
+                          <span className="vn-valor">
+                            {formatarMoeda(resumo.valorParcela)}
+                          </span>
                         </div>
                         <span className="vn-vs">vs</span>
                         <div className="vn-item">
                           <span className="vn-label">Saldo médio</span>
-                          <span className="vn-valor">{formatarMoeda(fluxoCaixa.mediaSaldo)}</span>
+                          <span className="vn-valor">
+                            {formatarMoeda(fluxoCaixa.mediaSaldo)}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -546,7 +593,8 @@ const Simulacoes = () => {
 
                 <div className="impacto-grafico">
                   <p className="impacto-grafico-legenda">
-                    Histórico mensal de receitas, despesas e saldo — linha laranja indica a parcela simulada
+                    Histórico mensal de receitas, despesas e saldo — linha
+                    laranja indica a parcela simulada
                   </p>
                   <ResponsiveContainer width="100%" height={260}>
                     <ComposedChart
@@ -554,9 +602,12 @@ const Simulacoes = () => {
                       margin={{ top: 8, right: 24, left: 24, bottom: 8 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                      <XAxis dataKey="mes" tick={{ fontSize: 11, fill: '#718096' }} />
+                      <XAxis
+                        dataKey="mes"
+                        tick={{ fontSize: 11, fill: "#718096" }}
+                      />
                       <YAxis
-                        tick={{ fontSize: 11, fill: '#718096' }}
+                        tick={{ fontSize: 11, fill: "#718096" }}
                         tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`}
                         width={56}
                       />
@@ -582,7 +633,7 @@ const Simulacoes = () => {
                         name="Saldo"
                         stroke="#0F4C81"
                         strokeWidth={2.5}
-                        dot={{ r: 4, fill: '#0F4C81' }}
+                        dot={{ r: 4, fill: "#0F4C81" }}
                       />
                       <ReferenceLine
                         y={resumo.valorParcela}
@@ -591,9 +642,9 @@ const Simulacoes = () => {
                         strokeDasharray="8 4"
                         label={{
                           value: `Parcela: ${formatarMoeda(resumo.valorParcela)}`,
-                          fill: '#E07D10',
+                          fill: "#E07D10",
                           fontSize: 11,
-                          position: 'insideTopRight',
+                          position: "insideTopRight",
                         }}
                       />
                     </ComposedChart>
@@ -607,7 +658,8 @@ const Simulacoes = () => {
           <div className="simulacoes-grafico-card">
             <h3 className="secao-titulo">Evolução das Parcelas</h3>
             <p className="secao-descricao">
-              Distribuição de amortização e juros ao longo do prazo — {form.modalidade}
+              Distribuição de amortização e juros ao longo do prazo —{" "}
+              {form.modalidade}
             </p>
             <ResponsiveContainer width="100%" height={320}>
               <ComposedChart
@@ -617,17 +669,17 @@ const Simulacoes = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis
                   dataKey="mes"
-                  tick={{ fontSize: 12, fill: '#718096' }}
+                  tick={{ fontSize: 12, fill: "#718096" }}
                   label={{
-                    value: 'Mês',
-                    position: 'insideBottom',
+                    value: "Mês",
+                    position: "insideBottom",
                     offset: -2,
-                    fill: '#718096',
+                    fill: "#718096",
                     fontSize: 12,
                   }}
                 />
                 <YAxis
-                  tick={{ fontSize: 12, fill: '#718096' }}
+                  tick={{ fontSize: 12, fill: "#718096" }}
                   tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`}
                   width={56}
                 />
@@ -667,7 +719,7 @@ const Simulacoes = () => {
               onClick={handleSalvar}
               disabled={salvando}
             >
-              {salvando ? 'Salvando...' : 'Salvar Simulação'}
+              {salvando ? "Salvando..." : "Salvar Simulação"}
             </button>
           </div>
         </>
@@ -716,7 +768,7 @@ const Simulacoes = () => {
                 </thead>
                 <tbody>
                   {simulacoes.map((sim) => (
-                    <tr key={sim.id_simulacao}>
+                    <tr key={sim.simulation_id}>
                       <td>{formatarData(sim.data_simulacao)}</td>
                       <td>{formatarMoeda(sim.valor_solicitado)}</td>
                       <td>{sim.prazo_meses} meses</td>
@@ -730,7 +782,9 @@ const Simulacoes = () => {
                       <td>{parseFloat(sim.taxa_juros).toFixed(2)}%</td>
                       <td>{formatarMoeda(sim.valor_parcela)}</td>
                       <td>{formatarMoeda(sim.valor_total)}</td>
-                      <td className="valor-juros">{formatarMoeda(sim.total_juros)}</td>
+                      <td className="valor-juros">
+                        {formatarMoeda(sim.total_juros)}
+                      </td>
                       <td className="col-acoes">
                         <button
                           className="btn-acao btn-excluir"
