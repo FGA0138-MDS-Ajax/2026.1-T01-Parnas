@@ -4,7 +4,7 @@ import { listarContasCaixa } from "../services/contaCaixa.service";
 import { listarCategorias } from "../services/categoria.service";
 import { obterEmpresaAtiva } from "../services/empresa.service";
 
-// adaptando contas/caixa 
+//adaptando sem contas/caixa
 const getCaixaMappingKey = (empresaId) =>
   `credifab_trans_caixa_mapping_${empresaId || "default"}`;
 
@@ -25,7 +25,7 @@ const useTransacoes = () => {
   const [transacoes, setTransacoes] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [contasCaixa, setContasCaixa] = useState([]);
-  const contasCaixaRef = useRef([]); 
+  const contasCaixaRef = useRef([]);
 
   const [totais, setTotais] = useState({
     totalReceitas: 0,
@@ -119,7 +119,6 @@ const useTransacoes = () => {
           };
         });
 
-        // aplica o filtro de Conta/Caixa localmente (o backend não suporta)
         let transacoesFinais = transacoesMapeadas;
         if (filtrosAplicados.contaCaixaId) {
           transacoesFinais = transacoesMapeadas.filter(
@@ -178,43 +177,143 @@ const useTransacoes = () => {
 
   const salvarTransacao = async (dadosTransacao, id = null) => {
     if (!companyId) return;
-    const payload = {
-      description: dadosTransacao.descricao,
-      amount: parseFloat(dadosTransacao.valor),
-      date: dadosTransacao.data,
-      type: dadosTransacao.tipo,
-      category_id: parseInt(dadosTransacao.categoriaId),
-    };
 
     try {
-      let response;
-      if (id) {
-        response = await api.put(
-          `/api/companies/${companyId}/transactions/${id}`,
-          payload,
-        );
-      } else {
-        response = await api.post(
+      if (dadosTransacao.modo === "transferencia") {
+        let idCatSaida = categorias.find(
+          (c) => (c.nome || c.name) === "Transferência (Saída)",
+        )?.id;
+        if (!idCatSaida) {
+          try {
+            const resSaida = await api.post(
+              `/api/companies/${companyId}/categories/`,
+              { name: "Transferência (Saída)", type: "despesa" },
+            );
+            idCatSaida = resSaida.data?.category_id || resSaida.data?.id;
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        let idCatEntrada = categorias.find(
+          (c) => (c.nome || c.name) === "Transferência (Entrada)",
+        )?.id;
+        if (!idCatEntrada) {
+          try {
+            const resEntrada = await api.post(
+              `/api/companies/${companyId}/categories/`,
+              { name: "Transferência (Entrada)", type: "receita" },
+            );
+            idCatEntrada = resEntrada.data?.category_id || resEntrada.data?.id;
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        if (!idCatSaida) {
+          const fallback = categorias.find(
+            (c) => (c.tipo || c.type) === "despesa",
+          );
+          idCatSaida = fallback?.id || fallback?.category_id;
+        }
+        if (!idCatEntrada) {
+          const fallback = categorias.find(
+            (c) => (c.tipo || c.type) === "receita",
+          );
+          idCatEntrada = fallback?.id || fallback?.category_id;
+        }
+
+        if (!idCatSaida || !idCatEntrada) {
+          throw new Error(
+            "Cadastre pelo menos uma categoria de receita e uma de despesa para realizar transferências.",
+          );
+        }
+
+        const descBase = dadosTransacao.descricao || "Transferência";
+
+        // 2. CORREÇÃO: Removemos o company_id daqui para não gerar o "Unknown field"
+        const payloadSaida = {
+          description: `${descBase} (Saída)`,
+          amount: parseFloat(dadosTransacao.valor),
+          date: dadosTransacao.data,
+          type: "despesa",
+          category_id: parseInt(idCatSaida),
+        };
+        const responseSaida = await api.post(
           `/api/companies/${companyId}/transactions/`,
-          payload,
+          payloadSaida,
         );
+        const savedIdSaida =
+          responseSaida.data?.transaction_id ||
+          responseSaida.data?.transaction?.transaction_id;
+        if (savedIdSaida && dadosTransacao.contaOrigemId) {
+          saveCaixaMapping(
+            companyId,
+            savedIdSaida,
+            dadosTransacao.contaOrigemId,
+          );
+        }
+
+        const payloadEntrada = {
+          description: `${descBase} (Entrada)`,
+          amount: parseFloat(dadosTransacao.valor),
+          date: dadosTransacao.data,
+          type: "receita",
+          category_id: parseInt(idCatEntrada),
+        };
+        const responseEntrada = await api.post(
+          `/api/companies/${companyId}/transactions/`,
+          payloadEntrada,
+        );
+        const savedIdEntrada =
+          responseEntrada.data?.transaction_id ||
+          responseEntrada.data?.transaction?.transaction_id;
+        if (savedIdEntrada && dadosTransacao.contaDestinoId) {
+          saveCaixaMapping(
+            companyId,
+            savedIdEntrada,
+            dadosTransacao.contaDestinoId,
+          );
+        }
+      } else {
+        const payload = {
+          description: dadosTransacao.descricao,
+          amount: parseFloat(dadosTransacao.valor),
+          date: dadosTransacao.data,
+          type: dadosTransacao.tipo,
+          category_id: parseInt(dadosTransacao.categoriaId),
+        };
+
+        let response;
+        if (id) {
+          response = await api.put(
+            `/api/companies/${companyId}/transactions/${id}`,
+            payload,
+          );
+        } else {
+          response = await api.post(
+            `/api/companies/${companyId}/transactions/`,
+            payload,
+          );
+        }
+
+        const newId =
+          response.data?.transaction_id ||
+          response.data?.transaction?.transaction_id ||
+          id;
+        if (newId && dadosTransacao.contaCaixaId) {
+          saveCaixaMapping(companyId, newId, dadosTransacao.contaCaixaId);
+        }
       }
 
-      const newId =
-        response.data?.transaction_id ||
-        response.data?.transaction?.transaction_id ||
-        id;
-      if (newId && dadosTransacao.contaCaixaId) {
-        saveCaixaMapping(companyId, newId, dadosTransacao.contaCaixaId);
-      }
-
+      await carregarAuxiliares();
       fetchTransacoes(filtros, paginaAtual);
     } catch (error) {
       const msgErro =
         error.response?.data?.erro ||
-        Object.values(error.response?.data?.erros_de_validacao || {}).join(
-          ", ",
-        ) ||
+        (error.response?.data?.erros_de_validacao &&
+          Object.values(error.response.data.erros_de_validacao).join(", ")) ||
+        error.message ||
         "Erro ao salvar transação.";
       alert(msgErro);
       throw error;
