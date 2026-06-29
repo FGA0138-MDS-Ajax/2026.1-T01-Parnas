@@ -55,9 +55,17 @@ class TransactionService:
     def create_transaction(user_id, company_id, data):
         category_id = data.get('category_id')
 
+        company = CompanyRepository.get_by_id(company_id)
+        if not company:
+            raise APIException("Empresa não encontrada.", 404)
+
+        access = CompanyRepository.check_user_access(company_id, user_id)
+        if not access:
+            raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
+
         category = CategoryRepository.get_by_id_and_company(category_id, company_id)
         if not category:
-            return {"erro": "A categoria informada não existe ou não pertence a esta empresa."}, 400
+            raise APIException("A categoria informada não existe ou não pertence a esta empresa.", 400)
 
         try:
             new_transaction = TransactionRepository.create(
@@ -76,7 +84,7 @@ class TransactionService:
         except ValueError as ve:
             return {"erro": str(ve)}, 400
         except Exception as e:
-            return {"erro": "Ocorreu um erro interno ao registrar transação."}, 500
+            return {"erro": f"Ocorreu um erro interno ao tentar registrar a transação: {str(e)}"}, 500
 
 
     @staticmethod
@@ -96,16 +104,23 @@ class TransactionService:
 
     @staticmethod
     def update_transaction(user_id, company_id, transaction_id, data):
+        company = CompanyRepository.get_by_id(company_id)
+        if not company:
+            raise APIException("Empresa não encontrada.", 404)
+        
+        access = CompanyRepository.check_user_access(company_id, user_id)
+        if not access:
+            raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
+        
         transaction = TransactionRepository.get_by_id_and_user(transaction_id, user_id)
         if not transaction:
-            return {"erro": "Transação não encontrada ou você não possui permissão para alterá-la."}, 404
+            raise APIException("Transação não encontrada", 404)
 
         if 'category_id' in data:
             category = CategoryRepository.get_by_id_and_company(data['category_id'], company_id)
             if not category:
-                return {"erro": "A categoria informada não pertence à empresa desta transação."}, 400
+                raise APIException("A categoria informada não pertence à empresa desta transação.", 400)
             transaction.category_id = data['category_id']
-
         if 'description' in data:
             transaction.description = data['description']
         if 'amount' in data:
@@ -122,7 +137,7 @@ class TransactionService:
                 "transaction": transaction
             }, 200
         except Exception as e:
-            return {"erro": "Ocorreu um erro interno ao atualizar a transação."}, 500
+            return {"erro": f"Ocorreu um erro interno ao tentar atualizar a transação: {str(e)}"}, 500
 
 
     @staticmethod
@@ -135,4 +150,4 @@ class TransactionService:
             TransactionRepository.delete_instance(transaction)
             return {"mensagem": "Transação excluída com sucesso."}, 200
         except Exception as e:
-            return {"erro": "Ocorreu um erro ao excluir a transação."}, 500
+            return {"erro": f"Ocorreu um erro interno ao tentar excluir a transação: {str(e)}"}, 500

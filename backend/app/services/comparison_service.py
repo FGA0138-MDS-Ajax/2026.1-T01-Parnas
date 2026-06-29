@@ -1,16 +1,12 @@
+from app.repositories.company_repository import CompanyRepository
 from app.models.comparison import Comparison, ComparisonModality
+from app.exceptions.api_exception import APIException
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 from app.config import db
 import io
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
-from flask_jwt_extended import get_jwt
-
-from app.exceptions.api_exception import APIException
-from app.repositories.company_repository import CompanyRepository # Nova importação necessária!
-
 
 class ComparisonService:
-
     @staticmethod
     def _calculate_price_table(loan_amount, rate_percent, term_months):
         """Calcula a matemática financeira da Tabela Price"""
@@ -41,13 +37,12 @@ class ComparisonService:
         if not access:
             raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
 
-
         """Apenas calcula e retorna os dados formatados (não salva no banco)"""
         loan_amount = data.get('loan_amount', 0)
         modalities = data.get('modalities', [])
 
         if not modalities or len(modalities) > 4:
-            return {"erro": "Forneça entre 1 e 4 modalidades para comparar."}, 400
+            raise APIException("Forneça entre 1 e 4 modalidades para comparar.", 400)
 
         results = []
         lowest_total = float('inf')
@@ -79,7 +74,7 @@ class ComparisonService:
         if best_modality_index != -1:
             results[best_modality_index]["is_best_option"] = True
 
-        return {"loan_amount": loan_amount, "comparisons": results}, 200
+        return {"loan_amount": loan_amount, "comparisons": results}
 
 
     @staticmethod
@@ -95,9 +90,10 @@ class ComparisonService:
             raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
         
         # Faz o cálculo reutilizando o método acima
-        simulacao_result, status = ComparisonService.calculate_simulation(user_id, company_id, data)
-        if status != 200:
-            return simulacao_result, status
+        try:
+            simulacao_result = ComparisonService.calculate_simulation(user_id, company_id, data)
+        except Exception as e:
+            raise APIException(f"Erro ao calcular simulação: {str(e)}", 500)
 
         # 1. Salva o cabeçalho da comparação
         nova_comparacao = Comparison(
@@ -168,9 +164,8 @@ class ComparisonService:
             raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
         
         comparacao = Comparison.query.filter_by(comparison_id=comparison_id, company_id=company_id).first()
-
         if not comparacao:
-            return {"erro": "Comparação não encontrada"}, 404
+            raise APIException("Comparação não encontrada.", 404)
 
         db.session.delete(comparacao)
         db.session.commit()

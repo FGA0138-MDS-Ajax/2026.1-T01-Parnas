@@ -1,7 +1,6 @@
 import calendar
 from datetime import date
 from app.repositories.transaction_repository import TransactionRepository
-from app.repositories.user_repository import UserRepository
 from app.exceptions.api_exception import APIException
 from app.repositories.company_repository import CompanyRepository
 
@@ -19,13 +18,16 @@ class ReportService:
             "saldo": receitas - despesas
         }
 
+
     @staticmethod
     def get_category_distribution(company_id, start_date, end_date):
         return TransactionRepository.get_category_distribution(company_id, start_date, end_date)
 
+
     @staticmethod
     def get_balance_evolution(company_id, start_date, end_date):
         return TransactionRepository.get_balance_evolution(company_id, start_date, end_date)
+
 
     @staticmethod
     def get_period_dates(data):
@@ -57,6 +59,7 @@ class ReportService:
             "ou informe 'start_date' e 'end_date'."
         )
 
+
     @staticmethod
     def generate_report(user_id,company_id, data):
         company = CompanyRepository.get_by_id(company_id)
@@ -66,7 +69,6 @@ class ReportService:
         access = CompanyRepository.check_user_access(company_id, user_id)
         if not access:
             raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
-
 
         try:
             start_date, end_date = ReportService.get_period_dates(data)
@@ -79,7 +81,7 @@ class ReportService:
             evolucao = ReportService.get_balance_evolution(company_id, start_date, end_date)
         except Exception as e:
             print(f"Erro ao gerar relatório financeiro: {str(e)}")
-            return {"erro": "Ocorreu um erro interno ao gerar o relatório."}, 500
+            return {"erro": f"Ocorreu um erro interno ao gerar o relatório: {str(e)}"}, 500
 
         return {
             "periodo": {
