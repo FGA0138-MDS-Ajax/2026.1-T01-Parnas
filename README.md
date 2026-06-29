@@ -42,7 +42,42 @@ O projeto é desacoplado — backend e frontend rodam em terminais separados.
 
 ### 1. Banco de Dados (PostgreSQL)
 
-Antes de tocar no backend, crie o banco localmente. Os comandos abaixo assumem um usuário `postgres` com senha `postgres` — ajuste conforme a configuração da sua máquina.
+Antes de criar o banco, garanta que o PostgreSQL está instalado e o serviço está rodando na sua máquina.
+
+**Linux (Arch/Manjaro):**
+```bash
+sudo pacman -S postgresql
+sudo -u postgres initdb -D /var/lib/postgres/data   # apenas na primeira instalação
+sudo systemctl enable --now postgresql
+```
+
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt install postgresql postgresql-contrib
+sudo systemctl enable --now postgresql
+```
+
+**macOS (Homebrew):**
+```bash
+brew install postgresql@16
+brew services start postgresql@16
+```
+
+**Windows:**
+Baixe o instalador em [postgresql.org/download](https://www.postgresql.org/download/windows/) e siga o assistente — ele já configura o serviço para iniciar automaticamente.
+
+Confirme que o serviço está ativo antes de continuar:
+```bash
+pg_isready
+# Deve retornar algo como: /tmp:5432 - accepting connections
+```
+
+Se o usuário `postgres` ainda não tiver senha definida (comum em instalações novas no Linux), defina uma:
+```bash
+sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"
+```
+
+Com o serviço rodando, crie o banco localmente. Os comandos abaixo assumem um usuário `postgres` com senha `postgres` — ajuste conforme a configuração da sua máquina.
 
 ```bash
 # Cria o banco (rode uma única vez)
