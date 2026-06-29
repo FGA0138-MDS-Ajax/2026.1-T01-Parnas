@@ -4,7 +4,11 @@
   display: grid;
   place-items: center;
   background:
-    radial-gradient(circle at top left, rgba(38, 166, 154, 0.18), transparent 34%),
+    radial-gradient(
+      circle at top left,
+      rgba(38, 166, 154, 0.18),
+      transparent 34%
+    ),
     var(--verde-suave);
 }
 
@@ -176,6 +180,30 @@
 .selecao-empresa-spinner {
   flex: 0 0 auto;
   animation: selecao-empresa-girar 0.8s linear infinite;
+}
+
+.selecao-empresa-acoes {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: center;
+}
+
+.selecao-empresa-btn-novo {
+  background: transparent;
+  color: var(--azul);
+  border: 1px solid var(--azul);
+  padding: 10px 20px;
+  border-radius: var(--arredondamento-input-botao);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.selecao-empresa-btn-novo:hover {
+  background: var(--azul);
+  color: var(--branco);
 }
 
 @keyframes selecao-empresa-girar {

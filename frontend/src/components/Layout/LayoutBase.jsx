@@ -7,17 +7,20 @@ import "./LayoutBase.css";
 
 const LayoutBase = () => {
   const navigate = useNavigate();
-  const {
-    empresas,
-    empresaAtiva,
-    selecionarEmpresa,
-    versaoEmpresa,
-  } = useEmpresa();
+  const { empresas, empresaAtiva, selecionarEmpresa, versaoEmpresa } =
+    useEmpresa();
   const [trocandoEmpresa, setTrocandoEmpresa] = useState(false);
   const [erroTroca, setErroTroca] = useState("");
 
   const handleTrocarEmpresa = async (event) => {
-    const companyId = Number(event.target.value);
+    const valor = event.target.value;
+
+    if (valor === "nova_empresa") {
+      navigate("/cadastro-empresa");
+      return;
+    }
+
+    const companyId = Number(valor);
     if (!companyId || companyId === Number(empresaAtiva?.company_id)) return;
 
     setTrocandoEmpresa(true);
@@ -49,42 +52,51 @@ const LayoutBase = () => {
         </Link>
 
         <nav className="layout-nav">
-
-          <Link to="/dashboard" className="nav-link">Dashboard</Link>
-          <Link to="/documentos" className="nav-link">Documentos</Link>
-          <Link to="/transacoes" className="nav-link">Transações</Link>
-          <Link to="/contas" className="nav-link">Contas</Link>
-          <Link to="/simulacoes" className="nav-link">Simulações</Link>
-          <Link to="/comparacoes" className="nav-link">Comparações</Link>
-          <Link to="/relatorios" className="nav-link">Relatórios</Link>
-           <Link to="/categorias" className="nav-link">Categorias</Link>
-        
-         </nav>
+          <Link to="/dashboard" className="nav-link">
+            Dashboard
+          </Link>
+          <Link to="/documentos" className="nav-link">
+            Documentos
+          </Link>
+          <Link to="/transacoes" className="nav-link">
+            Transações
+          </Link>
+          <Link to="/contas" className="nav-link">
+            Contas
+          </Link>
+          <Link to="/simulacoes" className="nav-link">
+            Simulações
+          </Link>
+          <Link to="/comparacoes" className="nav-link">
+            Comparações
+          </Link>
+          <Link to="/relatorios" className="nav-link">
+            Relatórios
+          </Link>
+          <Link to="/categorias" className="nav-link">
+            Categorias
+          </Link>
+        </nav>
 
         <div className="layout-actions">
           {empresaAtiva && (
             <div className="empresa-switcher">
               <Building2 size={17} aria-hidden="true" />
-              <label htmlFor="empresa-ativa">Empresa</label>
               <select
                 id="empresa-ativa"
-                aria-label="Empresa ativa"
                 value={empresaAtiva.company_id}
                 onChange={handleTrocarEmpresa}
                 disabled={trocandoEmpresa}
               >
                 {empresas.map((empresa) => (
-                  <option
-                    value={empresa.company_id}
-                    key={empresa.company_id}
-                  >
+                  <option key={empresa.company_id} value={empresa.company_id}>
                     {empresa.name}
                   </option>
                 ))}
+                <option value="nova_empresa"> + Cadastrar nova empresa </option>
               </select>
             </div>
           )}
-
           <button
             onClick={() => navigate("/configuracoes")}
             className="btn-settings"
