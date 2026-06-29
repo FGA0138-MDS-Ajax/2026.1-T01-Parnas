@@ -1,28 +1,53 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import PageHeader from "../../components/Finance/PageHeader";
+import {
+  listarDocumentos,
+  uploadDocumento,
+  excluirDocumentoApi,
+  downloadDocumentoApi,
+} from "../../services/documento.service";
 import "./Documentos.css";
-import { FolderOpen } from "lucide-react";
 
 function Documentos() {
   const [nome, setNome] = useState("");
-  const [tipo, setTipo] = useState("Contrato");
+  const [tipo, setTipo] = useState("fiscal");
   const [descricao, setDescricao] = useState("");
   const [arquivo, setArquivo] = useState(null);
 
   const [erro, setErro] = useState("");
+  const [sucesso, setSucesso] = useState("");
   const [progresso, setProgresso] = useState(0);
+  const [carregando, setCarregando] = useState(false);
 
   const [documentos, setDocumentos] = useState([]);
+
+  const carregarDocumentos = async () => {
+    try {
+      setCarregando(true);
+      const data = await listarDocumentos();
+      setDocumentos(data.documents || []);
+    } catch (error) {
+      setErro("Erro ao carregar documentos.");
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  useEffect(() => {
+    carregarDocumentos();
+  }, []);
+
+  const formatarData = (dataStr) => {
+    if (!dataStr) return "";
+    const [ano, mes, dia] = dataStr.split("-");
+    return `${dia}/${mes}/${ano}`;
+  };
 
   const validarArquivo = (file) => {
     if (!file) return;
 
-    const tiposPermitidos = [
-      "application/pdf",
-      "image/png",
-      "image/jpeg",
-    ];
-
-    const tamanhoMaximo = 5 * 1024 * 1024;
+    const tiposPermitidos = ["application/pdf", "image/png", "image/jpeg"];
+    const tamanhoMaximo = 5 * 1024 * 1024; // 5MB
 
     if (!tiposPermitidos.includes(file.type)) {
       setErro("Apenas arquivos PDF, PNG ou JPG são permitidos.");
@@ -40,170 +65,117 @@ function Documentos() {
 
   const handleDrop = (e) => {
     e.preventDefault();
-
     const file = e.dataTransfer.files[0];
-
     validarArquivo(file);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!arquivo) {
       setErro("Selecione um arquivo.");
       return;
     }
 
-    let valor = 0;
+    try {
+      setErro("");
+      setSucesso("");
+      await uploadDocumento(nome, tipo, descricao, arquivo, (porcentagem) => {
+        setProgresso(porcentagem);
+      });
 
-    const intervalo = setInterval(() => {
-      valor += 10;
+      setSucesso("Documento enviado com sucesso!");
+      setNome("");
+      setTipo("fiscal");
+      setDescricao("");
+      setArquivo(null);
 
-      setProgresso(valor);
-
-      if (valor >= 100) {
-        clearInterval(intervalo);
-
-        const novoDocumento = {
-          id: Date.now(),
-          nome,
-          tipo,
-          descricao,
-          arquivo,
-          data: new Date().toLocaleDateString("pt-BR"),
-          tamanho: (
-            arquivo.size /
-            1024 /
-            1024
-          ).toFixed(2),
-        };
-
-        setDocumentos([
-          ...documentos,
-          novoDocumento,
-        ]);
-
-        setNome("");
-        setTipo("Contrato");
-        setDescricao("");
-        setArquivo(null);
+      setTimeout(() => {
         setProgresso(0);
-      }
-    }, 120);
+        setSucesso("");
+      }, 3000);
+
+      carregarDocumentos();
+    } catch (error) {
+      setProgresso(0);
+      setErro(error.response?.data?.erro || "Erro ao enviar o documento.");
+    }
   };
 
-  const excluirDocumento = (id) => {
-    const confirmar = window.confirm(
-      "Deseja excluir este documento?"
-    );
+  const excluirDocumento = async (id) => {
+    if (!window.confirm("Deseja realmente excluir este documento?")) return;
 
-    if (!confirmar) return;
-
-    setDocumentos(
-      documentos.filter(
-        (doc) => doc.id !== id
-      )
-    );
+    try {
+      await excluirDocumentoApi(id);
+      carregarDocumentos();
+    } catch (error) {
+      alert("Erro ao excluir o documento.");
+    }
   };
 
-  const downloadDocumento = (arquivo) => {
-    const url =
-      URL.createObjectURL(arquivo);
-
-    const link =
-      document.createElement("a");
-
-    link.href = url;
-    link.download = arquivo.name;
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    document.body.removeChild(link);
-
-    URL.revokeObjectURL(url);
+  const downloadDocumento = async (id, nome) => {
+    try {
+      await downloadDocumentoApi(id, nome);
+    } catch (error) {
+      alert("Erro ao fazer o download.");
+    }
   };
 
   return (
     <div className="documentos-page">
-      <header className="documentos-header">
-        <div className="header-logo">
-        <div className="logo-icon">
-           <FolderOpen size={18} color="white" />
-        </div>
-        <div className="logo-text">
-          <h1>CREDIFAB</h1>
-          <p>Plataforma de Acesso a Crédito</p>
-        </div>
-        </div>
-      </header>
+      <PageHeader
+        className="documentos-header"
+        title="Documentos"
+        description="Gerencie e armazene arquivos físicos e jurídicos da sua empresa."
+      />
 
       <main className="documentos-content">
         <section className="documentos-card">
           <h2>Novo Documento</h2>
 
-          <form
-            className="documentos-form"
-            onSubmit={handleSubmit}
-          >
+          <form className="documentos-form" onSubmit={handleSubmit}>
             <input
               type="text"
-              placeholder="Nome do documento"
+              placeholder="Nome do documento (Ex: Contrato de Aluguel)"
               value={nome}
-              onChange={(e) =>
-                setNome(e.target.value)
-              }
+              onChange={(e) => setNome(e.target.value)}
               required
             />
 
-            <select
-              value={tipo}
-              onChange={(e) =>
-                setTipo(e.target.value)
-              }
-            >
-              <option>Contrato</option>
-              <option>Comprovante</option>
-              <option>Declaração</option>
-              <option>Relatório</option>
+            <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
+              <option value="fiscal">Fiscal (NF, Recibos)</option>
+              <option value="contabil">Contábil (Relatórios)</option>
+              <option value="juridico">Jurídico (Contratos)</option>
             </select>
 
             <textarea
               placeholder="Descrição do documento"
               value={descricao}
-              onChange={(e) =>
-                setDescricao(
-                  e.target.value
-                )
-              }
-              required
+              onChange={(e) => setDescricao(e.target.value)}
             />
 
             <div
               className="dropzone"
-              onDragOver={(e) =>
-                e.preventDefault()
-              }
+              onDragOver={(e) => e.preventDefault()}
               onDrop={handleDrop}
             >
               {arquivo
                 ? arquivo.name
-                : "Arraste o arquivo aqui"}
+                : "Arraste o arquivo aqui (PDF, PNG ou JPG até 5MB)"}
             </div>
 
             <input
               type="file"
-              onChange={(e) =>
-                validarArquivo(
-                  e.target.files[0]
-                )
-              }
+              accept=".pdf, .png, .jpg, .jpeg"
+              onChange={(e) => validarArquivo(e.target.files[0])}
             />
 
-            {erro && (
-              <p className="erro">
-                {erro}
+            {erro && <p className="erro">{erro}</p>}
+            {sucesso && (
+              <p
+                className="sucesso"
+                style={{ color: "green", fontWeight: 600 }}
+              >
+                {sucesso}
               </p>
             )}
 
@@ -211,23 +183,17 @@ function Documentos() {
               <div className="progress-bar">
                 <div
                   className="progress-fill"
-                  style={{
-                    width: `${progresso}%`,
-                  }}
+                  style={{ width: `${progresso}%` }}
                 ></div>
               </div>
             )}
 
-            <button type="submit">
-              Enviar Documento
-            </button>
+            <button type="submit">Enviar Documento</button>
           </form>
         </section>
 
         <section className="documentos-card">
-          <h2>
-            Documentos Cadastrados
-          </h2>
+          <h2>Documentos Cadastrados</h2>
 
           <table className="documentos-table">
             <thead>
@@ -241,52 +207,46 @@ function Documentos() {
             </thead>
 
             <tbody>
-              {documentos.map((doc) => (
-                <tr key={doc.id}>
-                  <td>{doc.nome}</td>
-                  <td>{doc.tipo}</td>
-                  <td>{doc.data}</td>
-                  <td>
-                    {doc.tamanho} MB
-                  </td>
-
-                  <td>
-                    <div className="acoes">
-                      <button
-                        className="btn-download"
-                        onClick={() =>
-                          downloadDocumento(
-                            doc.arquivo
-                          )
-                        }
-                      >
-                        Download
-                      </button>
-
-                      <button
-                        className="btn-excluir"
-                        onClick={() =>
-                          excluirDocumento(
-                            doc.id
-                          )
-                        }
-                      >
-                        Excluir
-                      </button>
-                    </div>
+              {carregando ? (
+                <tr>
+                  <td colSpan="5" className="sem-documentos">
+                    Carregando documentos...
                   </td>
                 </tr>
-              ))}
-
-              {documentos.length === 0 && (
+              ) : documentos.length === 0 ? (
                 <tr>
-                  <td
-                    colSpan="5"
-                    className="sem-documentos"
-                  >
+                  <td colSpan="5" className="sem-documentos">
                     Nenhum documento cadastrado.
                   </td>
                 </tr>
+              ) : (
+                documentos.map((doc) => (
+                  <tr key={doc.document_id}>
+                    <td>{doc.name}</td>
+                    <td style={{ textTransform: "capitalize" }}>{doc.type}</td>
+                    <td>{formatarData(doc.created_at)}</td>
+                    <td>{(doc.size / 1024 / 1024).toFixed(2)} MB</td>
+                    <td>
+                      <div className="acoes">
+                        <button
+                          className="btn-download"
+                          onClick={() =>
+                            downloadDocumento(doc.document_id, doc.name)
+                          }
+                        >
+                          Download
+                        </button>
+
+                        <button
+                          className="btn-excluir"
+                          onClick={() => excluirDocumento(doc.document_id)}
+                        >
+                          Excluir
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
               )}
             </tbody>
           </table>

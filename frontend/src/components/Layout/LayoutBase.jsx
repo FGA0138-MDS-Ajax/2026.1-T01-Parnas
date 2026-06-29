@@ -51,6 +51,7 @@ const LayoutBase = () => {
         <nav className="layout-nav">
 
           <Link to="/dashboard" className="nav-link">Dashboard</Link>
+          <Link to="/documentos" className="nav-link">Documentos</Link>
           <Link to="/transacoes" className="nav-link">Transações</Link>
           <Link to="/contas" className="nav-link">Contas</Link>
           <Link to="/simulacoes" className="nav-link">Simulações</Link>

@@ -6,10 +6,9 @@ from app.schemas.document_schema import DocumentUploadSchema, DocumentResponseSc
 
 document_bp = Blueprint('document_bp', __name__)
 
-
 @document_bp.route('/', methods=['POST'])
 @jwt_required()
-def upload_document():
+def upload_document(company_id):
     current_user_id = int(get_jwt_identity())
     if 'file' not in request.files:
         return jsonify({"erro": "Nenhum arquivo enviado. Use multipart/form-data com o campo 'file'"}), 400
@@ -25,11 +24,13 @@ def upload_document():
         validated = DocumentUploadSchema().load(raw_data)
     except ValidationError as err:
         return jsonify({"erros_de_validacao": err.messages}), 400
+        
+    #mudança de 'type' para 'tipo' para bater com a função de service
     document, error, status_code = DocumentService.save_document(
         file=file,
         user_id=current_user_id,
         name=validated['name'],
-        type=validated['type'],
+        tipo=validated['type'], 
         description=validated.get('description')
     )
     if error:
@@ -39,7 +40,7 @@ def upload_document():
 
 @document_bp.route('/', methods=['GET'])
 @jwt_required()
-def get_documents():
+def get_documents(company_id):
     current_user_id = int(get_jwt_identity())
     page     = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 20, type=int)
@@ -61,7 +62,7 @@ def get_documents():
 
 @document_bp.route('/<int:document_id>/download', methods=['GET'])
 @jwt_required()
-def download_document(document_id):
+def download_document(company_id, document_id):
     current_user_id = int(get_jwt_identity())
     file_path, download_name, error, status_code = DocumentService.get_document_for_download(
         document_id=document_id,
@@ -78,7 +79,7 @@ def download_document(document_id):
 
 @document_bp.route('/<int:document_id>', methods=['DELETE'])
 @jwt_required()
-def delete_document(document_id):
+def delete_document(company_id, document_id):
     current_user_id = int(get_jwt_identity())
     success, message, status_code = DocumentService.delete_document(
         document_id=document_id,
