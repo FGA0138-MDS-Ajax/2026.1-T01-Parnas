@@ -1,8 +1,9 @@
 import api from "./api";
-import { obterEmpresaAtiva } from "./empresa.service";
 
 export const fetchDashboard = async () => {
-  const empresa = obterEmpresaAtiva();
+  const deLocalStorage = localStorage.getItem("empresaAtiva");
+  const empresa = deLocalStorage ? JSON.parse(deLocalStorage) : null;
+
   if (!empresa?.company_id) {
     throw new Error("Selecione uma empresa para carregar o dashboard.");
   }
