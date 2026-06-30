@@ -73,7 +73,8 @@ def download_document(company_id, document_id):
     return send_file(
         file_path,
         as_attachment=True,
-        download_name=download_name
+        download_name=download_name,
+        mimetype='application/pdf'
     )
 
 

@@ -37,7 +37,7 @@ class TransactionRepository(BaseRepository):
         ).order_by(Transaction.date.desc()).all()
     
     @staticmethod
-    def create(description, amount, date, type, company_id, user_id, category_id):
+    def create(description, amount, date, type, company_id, user_id, category_id,bill_id=None):
         if amount <= 0:
             raise ValueError("O valor da transação deve ser positivo.")
         if date > dt_date.today():
@@ -50,7 +50,8 @@ class TransactionRepository(BaseRepository):
             type=type,
             company_id=company_id,
             user_id=user_id,
-            category_id=category_id
+            category_id=category_id,
+            bill_id=bill_id
         )
         return TransactionRepository._base.save(new_transaction)
     

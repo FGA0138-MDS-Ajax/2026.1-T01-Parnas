@@ -124,27 +124,16 @@ class BillService:
             BillRepository.save(conta)
 
             #anna: enviando os 7 dados de forma ESTRITAMENTE POSICIONAL (só assim o front consome corretamebre)
-            try:
-                TransactionRepository.create(
-                    f"Quitação: {conta.description}",
-                    conta.amount,
-                    conta.payment_date,
-                    'despesa' if conta.type == 'pagar' else 'receita',
-                    company_id,
-                    user_id,
-                    conta.category_id,
-                    conta.bill_id 
-                )
-            except TypeError:
-                TransactionRepository.create(
-                    f"Quitação: {conta.description}",
-                    conta.amount,
-                    conta.payment_date,
-                    'despesa' if conta.type == 'pagar' else 'receita',
-                    company_id,
-                    user_id,
-                    conta.category_id
-                )
+            TransactionRepository.create(
+                f"Quitação: {conta.description}",
+                conta.amount,
+                conta.payment_date,
+                'despesa' if conta.type == 'pagar' else 'receita',
+                company_id,
+                user_id,
+                conta.category_id,
+                conta.bill_id 
+            )
 
             return {"mensagem": "Conta quitada e transação gerada com sucesso!"}, 200
         except Exception as e:
