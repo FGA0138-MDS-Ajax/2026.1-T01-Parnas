@@ -1,13 +1,16 @@
-import axios from 'axios';
+import api from "./api";
+import { obterEmpresaAtiva } from "./empresa.service";
 
-const getHeaders = () => ({
-  Authorization: `Bearer ${localStorage.getItem('token')}`,
-});
+export const fetchDashboard = async () => {
+  const empresa = obterEmpresaAtiva();
+  if (!empresa?.company_id) {
+    throw new Error("Selecione uma empresa para carregar o dashboard.");
+  }
 
-export const fetchDashboard = async (companyId) => {
-  const { data } = await axios.get('/api/dashboard', {
-    headers: getHeaders(),
-    params: { company_id: companyId },
-  });
+  const { data } = await api.get(
+    `/api/companies/${empresa.company_id}/dashboard/`,
+  );
   return data;
 };
+
+export default fetchDashboard;

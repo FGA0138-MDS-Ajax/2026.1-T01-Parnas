@@ -11,14 +11,15 @@ class DashboardService:
     @staticmethod
     def get_consolidated_balance(company_id):
         summary = db.session.query(
-            func.sum(case((Transaction.type == 'ENTRADA', Transaction.amount), else_=0)).label('total_incomes'),
-            func.sum(case((Transaction.type == 'SAIDA', Transaction.amount), else_=0)).label('total_expenses')
+            func.sum(case((func.lower(Transaction.type).in_(['receita', 'entrada']), Transaction.amount), else_=0)).label('total_incomes'),
+            func.sum(case((func.lower(Transaction.type).in_(['despesa', 'saida']), Transaction.amount), else_=0)).label('total_expenses')
         ).filter(
             Transaction.company_id == company_id
         ).first()
 
-        incomes = float(summary.total_receitas or 0)
-        expenses = float(summary.total_despesas or 0)
+        # anna: correção para ler os labels idênticos aos definidos na query acima
+        incomes = float(summary.total_incomes or 0)
+        expenses = float(summary.total_expenses or 0)
 
         return round(incomes - expenses, 2)
 

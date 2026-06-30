@@ -6,9 +6,8 @@ from app.services.dashboard_service import DashboardService
 dashboard_bp = Blueprint("dashboard_bp", __name__)
 dashboard_schema = DashboardQuerySchema()
 
-@dashboard_bp.route("", methods=["GET"])
+@dashboard_bp.route("/", methods=["GET"])
 @jwt_required()
 def get_dashboard(company_id):
-
     answer, status_code = DashboardService.build_dashboard(company_id)
     return jsonify(answer), status_code

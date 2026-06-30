@@ -86,7 +86,7 @@ def create_app():
 
     # Registra o Blueprint do Dashboard Financeiro
     from app.routes.dashboard_routes import dashboard_bp
-    app.register_blueprint(dashboard_bp, url_prefix='/api/dashboard')
+    app.register_blueprint(dashboard_bp, url_prefix='/api/companies/<int:company_id>/dashboard')
     # Registra o Blueprint de sessões e empresas
     from app.routes.session_routes import session_bp
     app.register_blueprint(session_bp, url_prefix='/api')
