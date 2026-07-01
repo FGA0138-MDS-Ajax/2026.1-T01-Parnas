@@ -1,38 +1,13 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import api from "../services/api";
 import { listarContasCaixa } from "../services/contaCaixa.service";
 import { listarCategorias } from "../services/categoria.service";
-import {
-  listarTransacoes,
-  criarTransacao,
-  atualizarTransacao,
-  excluirTransacao as excluirTransacaoService,
-  criarCategoriaTransferencia,
-} from "../services/transacao.service";
-import { useEmpresa } from "../context/EmpresaContext";
-
-const getCaixaMappingKey = (empresaId) =>
-  `credifab_trans_caixa_mapping_${empresaId || "default"}`;
-
-const getCaixaMapping = (empresaId) => {
-  const map = localStorage.getItem(getCaixaMappingKey(empresaId));
-  return map ? JSON.parse(map) : {};
-};
-
-const salvarCaixaMapping = (empresaId, transactionId, caixaId) => {
-  if (!transactionId || !caixaId) return;
-  const key = getCaixaMappingKey(empresaId);
-  const map = getCaixaMapping(empresaId);
-  map[transactionId] = caixaId;
-  localStorage.setItem(key, JSON.stringify(map));
-};
+import { obterEmpresaAtiva } from "../services/empresa.service";
 
 const useTransacoes = () => {
-  const { idEmpresaLogada, versaoEmpresa } = useEmpresa();
-
-  const [transacoes, setTransacoes] = useState([]);
+  const [transacoesRaw, setTransacoesRaw] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [contasCaixa, setContasCaixa] = useState([]);
-  const contasCaixaRef = useRef([]);
 
   const [totais, setTotais] = useState({
     totalReceitas: 0,
@@ -53,8 +28,17 @@ const useTransacoes = () => {
     valorMax: "",
   });
 
+  const [companyId, setCompanyId] = useState(null);
+
+  useEffect(() => {
+    const carregarEmpresa = async () => {
+      const empresa = await obterEmpresaAtiva();
+      setCompanyId(empresa?.company_id || null);
+    };
+    carregarEmpresa();
+  }, []);
+
   const carregarAuxiliares = useCallback(async () => {
-    if (!idEmpresaLogada) return;
     try {
       const [categoriasApi, caixasApi] = await Promise.all([
         listarCategorias(),
@@ -62,15 +46,14 @@ const useTransacoes = () => {
       ]);
       setCategorias(categoriasApi || []);
       setContasCaixa(caixasApi || []);
-      contasCaixaRef.current = caixasApi || [];
     } catch (error) {
       console.error("Erro ao buscar dados auxiliares:", error);
     }
-  }, [idEmpresaLogada]);
+  }, []);
 
   const fetchTransacoes = useCallback(
     async (filtrosAplicados, pagina = 1) => {
-      if (!idEmpresaLogada) return;
+      if (!companyId) return;
       try {
         const params = {
           page: pagina,
@@ -93,35 +76,13 @@ const useTransacoes = () => {
           }),
         };
 
-        const data = await listarTransacoes(params);
-        const caixaMapping = getCaixaMapping(idEmpresaLogada);
+        const { data } = await api.get(
+          `/api/companies/${companyId}/transactions/`,
+          { params },
+        );
 
-        const transacoesMapeadas = (data.transacoes || []).map((t) => {
-          const caixaId = caixaMapping[t.transaction_id];
-          const caixaObj = contasCaixaRef.current.find(
-            (c) => String(c.id) === String(caixaId),
-          );
-          return {
-            id: t.transaction_id,
-            descricao: t.description,
-            tipo: t.type,
-            valor: t.amount,
-            data: t.date,
-            categoriaId: t.category_id,
-            contaCaixaId: caixaId || null,
-            contaCaixaNome: caixaObj ? caixaObj.nome : "N/A",
-          };
-        });
+        setTransacoesRaw(data.transacoes || []);
 
-        let transacoesFinais = transacoesMapeadas;
-        if (filtrosAplicados.contaCaixaId) {
-          transacoesFinais = transacoesMapeadas.filter(
-            (t) =>
-              String(t.contaCaixaId) === String(filtrosAplicados.contaCaixaId),
-          );
-        }
-
-        setTransacoes(transacoesFinais);
         setTotais({
           totalReceitas: data.resumo?.total_receitas || 0,
           totalDespesas: data.resumo?.total_despesas || 0,
@@ -134,14 +95,41 @@ const useTransacoes = () => {
         console.error("Erro ao buscar transações:", error);
       }
     },
-    [idEmpresaLogada],
+    [companyId],
   );
 
+  // CORREÇÃO: useMemo importado corretamente e chamado de forma direta
+  const transacoes = useMemo(() => {
+    const mapeadas = transacoesRaw.map((t) => {
+      const caixaId = t.payment_id;
+      const caixaObj = contasCaixa.find(
+        (c) => String(c.id) === String(caixaId),
+      );
+
+      return {
+        id: t.transaction_id,
+        descricao: t.description,
+        tipo: t.type,
+        valor: t.amount,
+        data: t.date,
+        categoriaId: t.category_id,
+        contaCaixaId: caixaId || null,
+        contaCaixaNome: caixaObj ? caixaObj.nome : "N/A",
+      };
+    });
+
+    if (filtros.contaCaixaId) {
+      return mapeadas.filter(
+        (t) => String(t.contaCaixaId) === String(filtros.contaCaixaId),
+      );
+    }
+    return mapeadas;
+  }, [transacoesRaw, contasCaixa, filtros.contaCaixaId]);
+
   useEffect(() => {
-    setPaginaAtual(1);
     carregarAuxiliares();
     fetchTransacoes(filtros, 1);
-  }, [versaoEmpresa]);
+  }, [carregarAuxiliares, fetchTransacoes]);
 
   const handleFiltroChange = (e) => {
     const { name, value } = e.target;
@@ -171,139 +159,39 @@ const useTransacoes = () => {
   };
 
   const salvarTransacao = async (dadosTransacao, id = null) => {
-    if (!idEmpresaLogada) return;
+    if (!companyId) return;
 
     try {
-      if (dadosTransacao.modo === "transferencia") {
-        let idCatSaida = categorias.find(
-          (c) => (c.nome || c.name) === "Transferência (Saída)",
-        )?.id;
-        if (!idCatSaida) {
-          try {
-            idCatSaida = await criarCategoriaTransferencia(
-              "Transferência (Saída)",
-              "despesa",
-            );
-          } catch (e) {
-            console.error(e);
-          }
-        }
+      const payload = {
+        description: dadosTransacao.descricao,
+        amount: parseFloat(dadosTransacao.valor),
+        date: dadosTransacao.data,
+        type: dadosTransacao.tipo,
+        category_id: parseInt(dadosTransacao.categoriaId),
+        payment_id: dadosTransacao.contaCaixaId
+          ? parseInt(dadosTransacao.contaCaixaId)
+          : null,
+      };
 
-        let idCatEntrada = categorias.find(
-          (c) => (c.nome || c.name) === "Transferência (Entrada)",
-        )?.id;
-        if (!idCatEntrada) {
-          try {
-            idCatEntrada = await criarCategoriaTransferencia(
-              "Transferência (Entrada)",
-              "receita",
-            );
-          } catch (e) {
-            console.error(e);
-          }
-        }
-
-        if (!idCatSaida) {
-          const fallback = categorias.find(
-            (c) => (c.tipo || c.type) === "despesa",
-          );
-          idCatSaida = fallback?.id || fallback?.category_id;
-        }
-        if (!idCatEntrada) {
-          const fallback = categorias.find(
-            (c) => (c.tipo || c.type) === "receita",
-          );
-          idCatEntrada = fallback?.id || fallback?.category_id;
-        }
-
-        if (!idCatSaida || !idCatEntrada) {
-          throw new Error(
-            "Cadastre pelo menos uma categoria de receita e uma de despesa para realizar transferências.",
-          );
-        }
-
-        const descBase = dadosTransacao.descricao || "Transferência";
-
-        const dataSaida = await criarTransacao({
-          description: `${descBase} (Saída)`,
-          amount: parseFloat(dadosTransacao.valor),
-          date: dadosTransacao.data,
-          type: "despesa",
-          category_id: parseInt(idCatSaida),
-        });
-        const savedIdSaida =
-          dataSaida?.transaction_id || dataSaida?.transaction?.transaction_id;
-        if (savedIdSaida && dadosTransacao.contaOrigemId) {
-          salvarCaixaMapping(
-            idEmpresaLogada,
-            savedIdSaida,
-            dadosTransacao.contaOrigemId,
-          );
-        }
-
-        const dataEntrada = await criarTransacao({
-          description: `${descBase} (Entrada)`,
-          amount: parseFloat(dadosTransacao.valor),
-          date: dadosTransacao.data,
-          type: "receita",
-          category_id: parseInt(idCatEntrada),
-        });
-        const savedIdEntrada =
-          dataEntrada?.transaction_id ||
-          dataEntrada?.transaction?.transaction_id;
-        if (savedIdEntrada && dadosTransacao.contaDestinoId) {
-          salvarCaixaMapping(
-            idEmpresaLogada,
-            savedIdEntrada,
-            dadosTransacao.contaDestinoId,
-          );
-        }
+      if (id) {
+        await api.put(
+          `/api/companies/${companyId}/transactions/${id}`,
+          payload,
+        );
       } else {
-        const payload = {
-          description: dadosTransacao.descricao,
-          amount: parseFloat(dadosTransacao.valor),
-          date: dadosTransacao.data,
-          type: dadosTransacao.tipo,
-          category_id: parseInt(dadosTransacao.categoriaId),
-        };
-
-        let responseData;
-        if (id) {
-          responseData = await atualizarTransacao(id, payload);
-        } else {
-          responseData = await criarTransacao(payload);
-        }
-
-        const newId =
-          responseData?.transaction_id ||
-          responseData?.transaction?.transaction_id ||
-          id;
-        if (newId && dadosTransacao.contaCaixaId) {
-          salvarCaixaMapping(
-            idEmpresaLogada,
-            newId,
-            dadosTransacao.contaCaixaId,
-          );
-        }
+        await api.post(`/api/companies/${companyId}/transactions/`, payload);
       }
 
       await carregarAuxiliares();
       fetchTransacoes(filtros, paginaAtual);
     } catch (error) {
-      const msgErro =
-        error.response?.data?.erro ||
-        (error.response?.data?.erros_de_validacao &&
-          Object.values(error.response.data.erros_de_validacao).join(", ")) ||
-        error.message ||
-        "Erro ao salvar transação.";
-      alert(msgErro);
-      throw error;
+      alert(error.response?.data?.erro || "Erro ao salvar transação.");
     }
   };
 
-  const handleExcluirTransacao = async (id) => {
+  const excluirTransacao = async (id) => {
     try {
-      await excluirTransacaoService(id);
+      await api.delete(`/api/companies/${companyId}/transactions/${id}`);
       fetchTransacoes(filtros, paginaAtual);
     } catch (error) {
       alert("Erro ao excluir transação.");
@@ -326,7 +214,7 @@ const useTransacoes = () => {
     limparFiltros,
     mudarPagina,
     salvarTransacao,
-    excluirTransacao: handleExcluirTransacao,
+    excluirTransacao,
   };
 };
 

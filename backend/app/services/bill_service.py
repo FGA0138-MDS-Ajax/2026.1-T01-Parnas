@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date
 from app.repositories.bill_repository import BillRepository
 from app.repositories.transaction_repository import TransactionRepository
 from app.repositories.company_repository import CompanyRepository
@@ -8,7 +8,7 @@ class BillService:
     @staticmethod
     def create_bill(user_id, company_id, data):
         if not company_id:
-            return{"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
         if not CompanyRepository.check_user_access(user_id, company_id):
             return {"erro": "Acesso negado a esta empresa."}, 403
@@ -22,6 +22,12 @@ class BillService:
                 due_date=data['due_date'],
                 category_id=data['category_id']
             )
+            
+            # anna - coreção: salva o payment_id diretamente no banco de dados se enviado
+            if 'payment_id' in data:
+                nova_conta.payment_id = data['payment_id']
+                BillRepository.save(nova_conta)
+
             return {"mensagem": "Conta criada com sucesso!", "id": nova_conta.bill_id}, 201
         except Exception as e:
             return {"erro": "Ocorreu um erro interno ao criar a conta."}, 500
@@ -44,7 +50,8 @@ class BillService:
             "status": c.status,
             "due_date": c.due_date.isoformat() if c.due_date else None,
             "payment_date": c.payment_date.isoformat() if c.payment_date else None,
-            "category_id": c.category_id # anna: adicionado o ID da Categoria para o frontend ler
+            "category_id": c.category_id,
+            "payment_id": getattr(c, 'payment_id', None) #anna - correção: retorna o ID para o front
         } for c in contas]
 
         return resultado, 200
@@ -58,7 +65,6 @@ class BillService:
             return {"erro": "Acesso negado a esta empresa."}, 403
 
         conta = BillRepository.get_by_id_and_company(bill_id, company_id)
-
         if not conta:
             return {"erro": "Conta não encontrada"}, 404
 
@@ -72,6 +78,8 @@ class BillService:
             conta.due_date = data['due_date']
         if 'category_id' in data:
             conta.category_id = data['category_id']
+        if 'payment_id' in data:
+            conta.payment_id = data['payment_id']
 
         try:
             BillRepository.save(conta)
@@ -88,7 +96,6 @@ class BillService:
             return {"erro": "Acesso negado a esta empresa."}, 403
 
         conta = BillRepository.get_by_id_and_company(bill_id, company_id)
-
         if not conta:
             return {"erro": "Conta não encontrada"}, 404
 
@@ -123,8 +130,7 @@ class BillService:
         try:
             BillRepository.save(conta)
 
-            #anna: enviando os 7 dados de forma ESTRITAMENTE POSICIONAL (só assim o front consome corretamebre)
-            TransactionRepository.create(
+            nova_transacao = TransactionRepository.create(
                 f"Quitação: {conta.description}",
                 conta.amount,
                 conta.payment_date,
@@ -132,10 +138,20 @@ class BillService:
                 company_id,
                 user_id,
                 conta.category_id,
-                conta.bill_id 
+                conta.bill_id
             )
 
-            return {"mensagem": "Conta quitada e transação gerada com sucesso!"}, 200
+            #anna correção: vincula o payment_id da conta diretamente na nova transação do banco
+            if hasattr(conta, 'payment_id') and conta.payment_id:
+                nova_transacao.payment_id = conta.payment_id
+                from app.config import db
+                db.session.add(nova_transacao)
+                db.session.commit()
+
+            return {
+                "mensagem": "Conta quitada e transação gerada com sucesso!",
+                "transaction_id": nova_transacao.transaction_id,
+            }, 200
         except Exception as e:
             print(f"Erro ao gerar transação de quitação: {e}")
             return {"erro": "Ocorreu um erro interno ao processar o pagamento."}, 500

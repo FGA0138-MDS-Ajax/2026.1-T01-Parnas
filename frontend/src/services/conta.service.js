@@ -2,28 +2,7 @@ import api from "./api";
 import { obterEmpresaAtiva as obterEmpresaAtivaService } from "./empresa.service";
 
 const obterEmpresaAtiva = async () => {
-  const empresa = await obterEmpresaAtivaService();
-  return empresa;
-};
-
-// fazendo com que a parte de contas caixa funcione independente do bd 
-const getCaixaMappingKey = async () => {
-  const empresa = await obterEmpresaAtiva();
-  return `credifab_bill_caixa_mapping_${empresa?.company_id || "default"}`;
-};
-
-const getCaixaMapping = async () => {
-  const key = await getCaixaMappingKey();
-  const map = localStorage.getItem(key);
-  return map ? JSON.parse(map) : {};
-};
-
-const saveCaixaMapping = async (billId, caixaId) => {
-  if (!billId || !caixaId) return;
-  const key = await getCaixaMappingKey();
-  const map = await getCaixaMapping();
-  map[billId] = caixaId;
-  localStorage.setItem(key, JSON.stringify(map));
+  return await obterEmpresaAtivaService();
 };
 
 export const listarContas = async (status = "") => {
@@ -42,10 +21,9 @@ export const listarContas = async (status = "") => {
 
   const contas = Array.isArray(data) ? data : data?.contas || [];
 
-  const caixaMapping = await getCaixaMapping();
   return contas.map((conta) => ({
     ...conta,
-    contaCaixaId: caixaMapping[conta.id || conta.bill_id] || null,
+    contaCaixaId: conta.payment_id || null,
   }));
 };
 
@@ -61,19 +39,10 @@ export const criarConta = async (dados) => {
     type: dados.tipo === "receita" ? "receber" : "pagar",
     due_date: dados.dataVencimento,
     category_id: Number(dados.categoria),
+    payment_id: dados.contaCaixaId ? Number(dados.contaCaixaId) : null, // Enviando pro BD
   };
 
-  const response = await api.post(
-    `/api/companies/${empresa.company_id}/bills/`,
-    payload,
-  );
-
-  const novoId = response.data?.id || response.data?.bill_id;
-  if (novoId && dados.contaCaixaId) {
-    await saveCaixaMapping(novoId, dados.contaCaixaId);
-  }
-
-  return response;
+  return await api.post(`/api/companies/${empresa.company_id}/bills/`, payload);
 };
 
 export const atualizarConta = async (id, dados) => {
@@ -88,18 +57,13 @@ export const atualizarConta = async (id, dados) => {
     type: dados.tipo === "receita" ? "receber" : "pagar",
     due_date: dados.dataVencimento,
     category_id: Number(dados.categoria),
+    payment_id: dados.contaCaixaId ? Number(dados.contaCaixaId) : null,
   };
 
-  const response = await api.put(
+  return await api.put(
     `/api/companies/${empresa.company_id}/bills/${id}`,
     payload,
   );
-
-  if (dados.contaCaixaId) {
-    await saveCaixaMapping(id, dados.contaCaixaId);
-  }
-
-  return response;
 };
 
 export const excluirConta = async (id) => {

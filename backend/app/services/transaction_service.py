@@ -33,7 +33,8 @@ class TransactionService:
             "category_id": t.category_id,
             "amount": float(t.amount),
             "date": t.date.strftime("%Y-%m-%d") if t.date else None,
-            "bill_id": t.bill_id
+            "bill_id": t.bill_id,
+            "payment_id": t.payment_id  # anna correção: enviando o ID do banco para o front
         } for t in paginacao.items]
 
         return {
@@ -49,7 +50,6 @@ class TransactionService:
             },
             "transacoes": transacoes_lista
         }, 200
-
 
     @staticmethod
     def create_transaction(user_id, company_id, data):
@@ -69,6 +69,17 @@ class TransactionService:
                 category_id=category_id,
                 user_id=user_id
             )
+
+            if 'payment_id' in data and data['payment_id']:
+                from app.config import db
+                from app.models.transaction import Transaction
+                
+                db.session.query(Transaction).filter(
+                    Transaction.transaction_id == new_transaction.transaction_id
+                ).update({"payment_id": int(data['payment_id'])})
+                
+                db.session.commit()
+
             return {
                 "mensagem": "Transação registrada com sucesso.",
                 "transaction_id": new_transaction.transaction_id
@@ -76,6 +87,7 @@ class TransactionService:
         except ValueError as ve:
             return {"erro": str(ve)}, 400
         except Exception as e:
+            print(f"Erro interno ao salvar transação: {e}")
             return {"erro": "Ocorreu um erro interno ao registrar transação."}, 500
 
 
@@ -114,6 +126,10 @@ class TransactionService:
             transaction.date = data['date']
         if 'type' in data:
             transaction.type = data['type']
+
+        # anna: atualiza a conta/caixa na edição também se enviado
+        if 'payment_id' in data:
+            transaction.payment_id = data['payment_id']
 
         try:
             TransactionRepository.save(transaction)

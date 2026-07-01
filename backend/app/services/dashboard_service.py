@@ -17,7 +17,6 @@ class DashboardService:
             Transaction.company_id == company_id
         ).first()
 
-        # anna: correção para ler os labels idênticos aos definidos na query acima
         incomes = float(summary.total_incomes or 0)
         expenses = float(summary.total_expenses or 0)
 
@@ -26,11 +25,22 @@ class DashboardService:
     @staticmethod
     def get_upcoming_bills(company_id):
         today = date.today()
+        #anna - correção: func.lower() para ignorar diferenças de caixa alta/baixa com o SQLite
         bills = db.session.query(Bill).filter(
             Bill.company_id == company_id,
-            Bill.status == 'Pendente',
+            func.lower(Bill.status) == 'pendente',
             Bill.due_date >= today
         ).order_by(Bill.due_date.asc()).limit(5).all()
+
+        def normalizar_tipo(tipo):
+            if not tipo:
+                return tipo
+            t = tipo.lower()
+            if t == 'pagar':
+                return 'Pagar'
+            if t == 'receber':
+                return 'Receber'
+            return tipo.capitalize()
 
         return [
             {
@@ -38,7 +48,7 @@ class DashboardService:
                 "descricao": b.description,
                 "valor": float(b.amount),
                 "data_vencimento": b.due_date.isoformat(),
-                "tipo": b.type  # Pagar ou Receber
+                "tipo": normalizar_tipo(b.type),
             } for b in bills
         ]
 
