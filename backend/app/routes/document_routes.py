@@ -25,10 +25,10 @@ def upload_document(company_id):
     except ValidationError as err:
         return jsonify({"erros_de_validacao": err.messages}), 400
         
-    #mudança de 'type' para 'tipo' para bater com a função de service
     document, error, status_code = DocumentService.save_document(
         file=file,
         user_id=current_user_id,
+        company_id=company_id, 
         name=validated['name'],
         tipo=validated['type'], 
         description=validated.get('description')
@@ -44,8 +44,10 @@ def get_documents(company_id):
     current_user_id = int(get_jwt_identity())
     page     = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 20, type=int)
+    
     pagination, error, status_code = DocumentService.get_documents_by_company(
         user_id=current_user_id,
+        company_id=company_id, 
         page=page,
         per_page=per_page
     )
@@ -66,7 +68,8 @@ def download_document(company_id, document_id):
     current_user_id = int(get_jwt_identity())
     file_path, download_name, error, status_code = DocumentService.get_document_for_download(
         document_id=document_id,
-        user_id=current_user_id
+        user_id=current_user_id,
+        company_id=company_id 
     )
     if error:
         return jsonify({"erro": error}), status_code
@@ -84,7 +87,8 @@ def delete_document(company_id, document_id):
     current_user_id = int(get_jwt_identity())
     success, message, status_code = DocumentService.delete_document(
         document_id=document_id,
-        user_id=current_user_id
+        user_id=current_user_id,
+        company_id=company_id 
     )
     key = "mensagem" if success else "erro"
     return jsonify({key: message}), status_code
