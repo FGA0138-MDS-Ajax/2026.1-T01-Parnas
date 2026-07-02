@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 from app.config import Config
 from app.repositories.document_repository import DocumentRepository
 from app.repositories.company_repository import CompanyRepository
+from app.exceptions.api_exception import APIException
 
 class DocumentService:
     ALLOWED_EXTENSIONS = Config.ALLOWED_EXTENSIONS
