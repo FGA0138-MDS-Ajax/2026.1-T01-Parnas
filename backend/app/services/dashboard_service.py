@@ -1,13 +1,14 @@
-from app.config import db
-from app.models.transaction import Transaction
-from app.models.bill import Bill
+from app.repositories.company_repository import CompanyRepository
 from app.services.report_service import ReportService
+from app.exceptions.api_exception import APIException
+from app.models.transaction import Transaction
 from sqlalchemy import func, case
+from app.models.bill import Bill
 from datetime import date
+from app.config import db
 import calendar
 
 class DashboardService:
-
     @staticmethod
     def get_consolidated_balance(company_id):
         summary = db.session.query(
@@ -21,6 +22,7 @@ class DashboardService:
         expenses = float(summary.total_expenses or 0)
 
         return round(incomes - expenses, 2)
+
 
     @staticmethod
     def get_upcoming_bills(company_id):
@@ -52,8 +54,17 @@ class DashboardService:
             } for b in bills
         ]
 
+
     @staticmethod
-    def build_dashboard(company_id):
+    def build_dashboard(user_id, company_id):
+        company = CompanyRepository.get_by_id(company_id)
+        if not company:
+            raise APIException("Empresa não encontrada.", 404)
+        
+        access = CompanyRepository.check_user_access(company_id, user_id)
+        if not access:
+            raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
+        
         today = date.today()
         last_day = calendar.monthrange(today.year, today.month)[1]
         start_date = date(today.year, today.month, 1)
@@ -66,7 +77,7 @@ class DashboardService:
             category_distribution = ReportService.get_category_distribution(company_id, start_date, end_date)
         except Exception as e:
             print(f"Erro ao acessar ReportService: {e}")
-            return {"erro": "Erro ao compilar dados matemáticos do mês atual."}, 500
+            return {"erro": f"Erro ao compilar dados matemáticos do mês atual: {str(e)}"}, 500
 
         pending_bills = DashboardService.get_upcoming_bills(company_id)
 
@@ -74,8 +85,8 @@ class DashboardService:
             "saldo_consolidado_atual": consolidated_balance,
             "mes_referencia": today.strftime("%m/%Y"),
             "totais_mes_atual": {
-                "receitas": monthly_summary["total_receitas"],
-                "despesas": monthly_summary["total_despesas"],
+                "receitas": monthly_summary["total_incomes"],
+                "despesas": monthly_summary["total_expenses"],
                 "balanco_mensal": monthly_summary["saldo"]
             },
             "grafico_categorias_mes": category_distribution,

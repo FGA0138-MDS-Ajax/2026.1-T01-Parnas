@@ -17,7 +17,7 @@ class SessionService:
                 "company_id": company.company_id,
                 "name": company.name,  # Ou o nome do campo que sua equipe usa para Razão Social/Fantasia
                 "cnpj": company.cnpj
-            })
+            } )
 
         return companies_data, 200
 

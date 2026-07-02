@@ -3,7 +3,6 @@ from app.repositories.company_repository import CompanyRepository
 from app.exceptions.api_exception import APIException
 
 class CategoryService:
-
     @staticmethod
     def add_category(user_id, company_id, data):
         company = CompanyRepository.get_by_id(company_id)
@@ -20,9 +19,10 @@ class CategoryService:
                 type=data.get("type"),
                 company_id=company_id
             )
-            return {"category": new_category}, 201
+            return {"mensagem": "Categoria criada com sucesso!", "category": new_category}, 201
         except Exception as e:
             return {"erro": f"Erro interno ao salvar a categoria: {str(e)}"}, 500
+
 
     @staticmethod
     def get_categories(user_id, company_id):
@@ -36,6 +36,7 @@ class CategoryService:
 
         categories = CategoryRepository.list_by_company(company_id)
         return {"categories": categories}, 200
+
 
     @staticmethod
     def update_category(user_id, company_id, category_id, data):
@@ -57,13 +58,13 @@ class CategoryService:
 
         try:
             updated = CategoryRepository.update(category_id, company_id, new_name, new_type)
-            return {"category": updated}, 200
+            return {"mensagem": "Categoria atualizada com sucesso!", "category": updated}, 200
         except Exception as e:
-            return {"erro": f"Erro interno ao atualizar: {str(e)}"}, 500
+            return {"erro": f"Erro interno ao atualizar categoria: {str(e)}"}, 500
+
 
     @staticmethod
     def delete_category(user_id, company_id, category_id):
-
         try:
             company = CompanyRepository.get_by_id(company_id)
             if not company:
@@ -77,9 +78,9 @@ class CategoryService:
             if not success:
                 raise APIException("Categoria não encontrada para esta empresa.", 404)
             
-            return {"msg": "Categoria deletada com sucesso!"}, 200
+            return {"mensagem": "Categoria deletada com sucesso!"}, 200
         
         except APIException as ve:
             raise ve
         except Exception as e:
-            return {"erro": f"Erro interno ao deletar: {str(e)}"}, 500
+            return {"erro": f"Erro interno ao deletar categoria: {str(e)}"}, 500

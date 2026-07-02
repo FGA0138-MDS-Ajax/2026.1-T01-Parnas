@@ -2,9 +2,11 @@ from datetime import date
 from app.repositories.bill_repository import BillRepository
 from app.repositories.transaction_repository import TransactionRepository
 from app.repositories.company_repository import CompanyRepository
+from app.repositories.bill_repository import BillRepository
+from app.exceptions.api_exception import APIException
+from datetime import date
 
 class BillService:
-
     @staticmethod
     def create_bill(user_id, company_id, data):
         if not company_id:
@@ -30,15 +32,18 @@ class BillService:
 
             return {"mensagem": "Conta criada com sucesso!", "id": nova_conta.bill_id}, 201
         except Exception as e:
-            return {"erro": "Ocorreu um erro interno ao criar a conta."}, 500
+            return {"erro": f"Ocorreu um erro interno ao criar a conta: {str(e)}"}, 500
+
 
     @staticmethod
     def get_bills(user_id, company_id, status=None):
-        if not company_id:
-            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
-
-        if not CompanyRepository.check_user_access(user_id, company_id):
-            return {"erro": "Acesso negado a esta empresa."}, 403
+        company = CompanyRepository.get_by_id(company_id)
+        if not company:
+            raise APIException("Empresa não encontrada.", 404)
+        
+        access = CompanyRepository.check_user_access(company_id, user_id)
+        if not access:
+            raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
 
         contas = BillRepository.list_by_company(company_id, status=status)
 
@@ -58,18 +63,20 @@ class BillService:
 
     @staticmethod
     def update_bill(user_id, company_id, bill_id, data):
-        if not company_id:
-            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+        company = CompanyRepository.get_by_id(company_id)
+        if not company:
+            raise APIException("Empresa não encontrada.", 404)
 
-        if not CompanyRepository.check_user_access(user_id, company_id):
-            return {"erro": "Acesso negado a esta empresa."}, 403
+        access = CompanyRepository.check_user_access(company_id, user_id)
+        if not access:
+            raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
 
         conta = BillRepository.get_by_id_and_company(bill_id, company_id)
         if not conta:
-            return {"erro": "Conta não encontrada"}, 404
+            raise APIException("Conta não encontrada.", 404)
 
         if conta.status == 'quitado':
-            return {"erro": "Não é possível editar uma conta que já foi quitada."}, 400
+            raise APIException("Não é possível editar uma conta que já foi quitada.", 400)
 
         conta.description = data.get('description', conta.description)
         conta.amount = data.get('amount', conta.amount)
@@ -85,44 +92,48 @@ class BillService:
             BillRepository.save(conta)
             return {"mensagem": "Conta atualizada com sucesso!"}, 200
         except Exception as e:
-            return {"erro": "Ocorreu um erro interno ao atualizar a conta."}, 500
+            return {"erro": f"Ocorreu um erro interno ao atualizar a conta: {str(e)}"}, 500
 
     @staticmethod
     def delete_bill(user_id, company_id, bill_id):
-        if not company_id:
-            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
-
-        if not CompanyRepository.check_user_access(user_id, company_id):
-            return {"erro": "Acesso negado a esta empresa."}, 403
+        company = CompanyRepository.get_by_id(company_id)
+        if not company:
+            raise APIException("Empresa não encontrada.", 404)
+        
+        access = CompanyRepository.check_user_access(company_id, user_id)
+        if not access:
+            raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
 
         conta = BillRepository.get_by_id_and_company(bill_id, company_id)
         if not conta:
-            return {"erro": "Conta não encontrada"}, 404
+            raise APIException("Conta não encontrada.", 404)
 
         if conta.status == 'quitado':
-            return {"erro": "Não é possível excluir uma conta que já foi quitada."}, 400
+            raise APIException("Não é possível excluir uma conta que já foi quitada.", 400)
 
         try:
             BillRepository.delete(conta)
             return {"mensagem": "Conta excluída com sucesso!"}, 200
         except Exception as e:
-            return {"erro": "Ocorreu um erro ao excluir a conta."}, 500
+            return {"erro": f"Ocorreu um erro ao excluir a conta: {str(e)}"}, 500
+
 
     @staticmethod
     def pay_bill(user_id, company_id, bill_id):
-        if not company_id:
-            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
-
-        if not CompanyRepository.check_user_access(user_id, company_id):
-            return {"erro": "Acesso negado a esta empresa."}, 403
+        company = CompanyRepository.get_by_id(company_id)
+        if not company:
+            raise APIException("Empresa não encontrada.", 404)
+        
+        access = CompanyRepository.check_user_access(company_id, user_id)
+        if not access:
+            raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
 
         conta = BillRepository.get_by_id_and_company(bill_id, company_id)
-
         if not conta:
-            return {"erro": "Conta não encontrada"}, 404
+            raise APIException("Conta não encontrada.", 404)
 
         if conta.status == 'quitado':
-            return {"erro": "Esta conta já está quitada."}, 400
+            raise APIException("Esta conta já está quitada.", 400)
 
         conta.status = 'quitado'
         conta.payment_date = date.today()

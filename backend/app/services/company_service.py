@@ -82,15 +82,19 @@ class CompanyService:
                 if existing and existing.company_id != company_id:
                     raise APIException("CNPJ já cadastrado.", 409)
                 company.cnpj = cnpj_clean
+
             if 'name' in data:
                 company.name = data['name']
+
             if 'email' in data:
                 existing = CompanyRepository.get_by_email(data['email'])
                 if existing and existing.company_id != company_id:
                     raise APIException("E-mail já cadastrado.", 409)
                 company.email = data['email']
+
             if 'phone' in data:
                 company.phone = data['phone']
+
             CompanyRepository.save(company)
 
             return {"mensagem": "Dados da empresa atualizados com sucesso.", "company": company}, 200

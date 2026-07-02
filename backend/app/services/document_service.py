@@ -24,6 +24,7 @@ class DocumentService:
 
         return True, None
 
+
     @staticmethod
     def validate_file_size(file):
         file.seek(0, os.SEEK_END)
@@ -35,6 +36,7 @@ class DocumentService:
             return False, f"Arquivo muito grande. Máximo: {max_mb:.0f}MB"
 
         return True, None
+
 
     @staticmethod
     def save_document(file, user_id, company_id, name, tipo, description=None):
@@ -84,6 +86,7 @@ class DocumentService:
         except Exception as e:
             return None, f"Erro ao salvar documento: {str(e)}", 500
 
+
     @staticmethod
     def get_documents_by_company(user_id, company_id, page=1, per_page=20):
         try:
@@ -97,7 +100,8 @@ class DocumentService:
             return query, None, 200
 
         except Exception as e:
-            return None, f"Erro ao listar documentos: {str(e)}", 500
+            return  {"erro": f"Erro ao listar documentos: {str(e)}"}, 500
+
 
     @staticmethod
     def delete_document(document_id, user_id, company_id):
@@ -119,7 +123,7 @@ class DocumentService:
             return True, "Documento deletado com sucesso", 200
 
         except Exception as e:
-            return False, f"Erro ao deletar documento: {str(e)}", 500
+            return {"erro": f"Erro ao deletar documento: {str(e)}"}, 500
 
     @staticmethod
     def get_document_for_download(document_id, user_id, company_id):
@@ -132,15 +136,17 @@ class DocumentService:
 
             document = DocumentRepository.get_by_id_and_company(document_id, company_id)
             if not document:
-                return None, None, "Documento não encontrado", 404
+                raise APIException("Documento não encontrado", 404)
 
-            if not os.path.exists(document.file_path):
-                return None, None, "Arquivo não encontrado no servidor", 404
+            document_path = os.path.exists(document.file_path)
+            if not document_path:
+                raise APIException("Arquivo não encontrado no servidor", 404)
 
             extension = os.path.splitext(document.file_path)[1]
             download_name = secure_filename(document.name) + extension
-
-            return document.file_path, download_name, None, 200
-
+            return {"file_path": document.file_path, "download_name": download_name}, 200
+        
+        except APIException as ve:
+            raise ve
         except Exception as e:
-            return None, None, f"Erro ao buscar documento para download: {str(e)}", 500
+            return {"erro": f"Erro ao buscar documento para download: {str(e)}"}, 500

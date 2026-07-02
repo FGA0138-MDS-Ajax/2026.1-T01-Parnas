@@ -118,11 +118,9 @@ class SimulationService:
                 "total_juros": round(total_interest, 2),
                 "primeira_parcela": round(base_installment, 2)
             },
-            "detalhamento_mensal": installments
+            "detalhamento_mensal": installments,
+            "projecao_fluxo_caixa": SimulationService.project_impact_cash_flow(company_id, base_installment)
         }
-
-        if company_id:
-            answer["projecao_fluxo_caixa"] = SimulationService.project_impact_cash_flow(company_id, base_installment)
 
         return answer
 
@@ -155,7 +153,7 @@ class SimulationService:
             return {"mensagem": "Simulação salva no histórico com sucesso.",
                     "simulation_id": new_simulation.simulation_id}, 201
         except Exception as e:
-            return {"erro": "Ocorreu um erro interno ao salvar a simulação."}, 500
+            return {"erro": f"Ocorreu um erro interno ao salvar a simulação: {str(e)}"}, 500
 
 
     @staticmethod
@@ -204,4 +202,4 @@ class SimulationService:
             SimulationRepository.delete(simulation)
             return {"mensagem": "Simulação excluída com sucesso."}, 200
         except Exception as e:
-            return {"erro": "Ocorreu um erro interno ao excluir a simulação."}, 500
+            return {"erro": f"Ocorreu um erro interno ao tentar excluir a simulação: {str(e)}"}, 500
