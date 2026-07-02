@@ -85,8 +85,8 @@ class DashboardService:
             "saldo_consolidado_atual": consolidated_balance,
             "mes_referencia": today.strftime("%m/%Y"),
             "totais_mes_atual": {
-                "receitas": monthly_summary["total_incomes"],
-                "despesas": monthly_summary["total_expenses"],
+                "receitas": monthly_summary["total_receitas"],
+                "despesas": monthly_summary["total_despesas"],
                 "balanco_mensal": monthly_summary["saldo"]
             },
             "grafico_categorias_mes": category_distribution,
