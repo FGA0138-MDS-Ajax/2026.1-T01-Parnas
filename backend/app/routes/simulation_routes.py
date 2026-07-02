@@ -17,7 +17,8 @@ def calculate(company_id):
         data = calc_schema.load(request.get_json())
     except ValidationError as err:
         return jsonify({"erros_de_validacao": err.messages}), 400
-    answer = SimulationService.calculate_simulation(user_id, company_id, data)
+    #corrige o nome da função no service que é process_simulation
+    answer = SimulationService.process_simulation(user_id, company_id, data)
     return jsonify(answer), 200
 
 
@@ -37,7 +38,8 @@ def create(company_id):
 @jwt_required()
 def get_all(company_id):
     current_user_id = int(get_jwt_identity())
-    answer, status_code = SimulationService.get_simulations(current_user_id, company_id)
+    #corrige para o nome da função no service que é get_simulation (singular)
+    answer, status_code = SimulationService.get_simulation(current_user_id, company_id)
     return jsonify(answer), status_code
 
 

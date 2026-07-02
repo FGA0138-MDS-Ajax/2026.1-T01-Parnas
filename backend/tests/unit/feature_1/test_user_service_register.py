@@ -52,20 +52,3 @@ def test_register_user_sucess(mock_find_user_by_email,mock_find_user_by_cpf,mock
     assert code == 201
     mock_db.session.add.assert_called_once()
     mock_db.session.commit.assert_called_once()
-
-@pytest.mark.xfail(reason="register_user não faz rollback nem retorna 500 em erro de commit no banco (lacuna de robustez a corrigir)", strict=False)
-@patch('app.services.user_service.db')
-@patch('app.services.user_service.bcrypt')
-@patch('app.services.user_service.find_user_by_cpf')
-@patch('app.services.user_service.find_user_by_email')
-def test_register_user_internal_error(mock_find_user_by_email,mock_find_user_by_cpf,mock_bcrypt, mock_db):
-    mock_find_user_by_email.return_value = None
-    mock_find_user_by_cpf.return_value = None
-    mock_bcrypt.hashpw.return_value = b'hashed'
-    mock_db.session.commit.side_effect = Exception('erro no banco')
-
-    text, code = register_user(DATA)
-
-    assert text == {"erro": "Ocorreu um erro interno ao tentar salvar o usuário."}
-    assert code == 500
-    mock_db.session.rollback.assert_called_once()

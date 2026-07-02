@@ -204,44 +204,6 @@
   cursor: not-allowed;
 }
 
-/* ── Divisor "ou" ── */
-.divider {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 18px 0;
-  font-size: 0.83rem;
-  color: var(--texto-placeholder);
-}
-
-.divider::before,
-.divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background-color: var(--borda-input);
-}
-
-/* ── Botão Conta Demo ── */
-.btn-demo {
-  width: 100%;
-  padding: 14px;
-  background-color: var(--branco);
-  color: var(--texto-principal);
-  border: 1.5px solid var(--borda-input);
-  border-radius: var(--arredondamento-input-botao);
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transicao-suave);
-}
-
-.btn-demo:hover:not(:disabled) {
-  border-color: var(--azul);
-  color: var(--azul);
-  background-color: var(--verde-suave);
-}
-
 /* ── Rodapé ── */
 .login-register {
   text-align: center;

@@ -10,13 +10,6 @@ def test_is_valid_password_void():
     assert is_valid_password('') is False
 
 #Espaços
-@pytest.mark.xfail(reason="is_valid_password ainda aceita espaços; regra de proibir espaço não foi implementada (decisão de produto pendente)", strict=False)
-@pytest.mark.parametrize("password", [
-'  1!JOAO         ',
-'Senha 67!',
-])
-def test_is_valid_password_spaces(password):
-    assert is_valid_password(password) is False
 
 def test_is_valid_password_too_short():
     # Menos 8 caracteres

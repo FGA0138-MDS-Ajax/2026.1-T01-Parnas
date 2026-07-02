@@ -8,8 +8,12 @@ import {
   useState,
 } from 'react';
 import useAuth from '../hooks/useAuth';
+import {
+  lerEmpresaAtivaPersistida,
+  salvarEmpresaAtiva,
+  limparEmpresaAtiva,
+} from '../services/empresa.service'; 
 
-const EMPRESA_ATIVA_KEY = 'empresaAtiva';
 const EMPRESA_DEMO = {
   company_id: 'demo',
   name: 'Empresa Demonstração',
@@ -17,15 +21,6 @@ const EMPRESA_DEMO = {
 };
 
 const EmpresaContext = createContext(null);
-
-const lerEmpresaPersistida = () => {
-  try {
-    return JSON.parse(localStorage.getItem(EMPRESA_ATIVA_KEY));
-  } catch {
-    localStorage.removeItem(EMPRESA_ATIVA_KEY);
-    return null;
-  }
-};
 
 const requisicaoAutenticada = async (url, options = {}) => {
   try {
@@ -74,7 +69,7 @@ const requisicaoAutenticada = async (url, options = {}) => {
 export const EmpresaProvider = ({ children }) => {
   const { token, login, logout, isAuthenticated } = useAuth();
   const [empresas, setEmpresas] = useState([]);
-  const [empresaAtiva, setEmpresaAtiva] = useState(lerEmpresaPersistida);
+  const [empresaAtiva, setEmpresaAtiva] = useState(lerEmpresaAtivaPersistida);
   const [carregandoEmpresas, setCarregandoEmpresas] = useState(Boolean(token));
   const [erroEmpresas, setErroEmpresas] = useState('');
   const [versaoEmpresa, setVersaoEmpresa] = useState(0);
@@ -89,14 +84,7 @@ export const EmpresaProvider = ({ children }) => {
       body: JSON.stringify({ company_id: empresa.company_id }),
     });
 
-    const empresaSelecionada = {
-      ...empresa,
-      company_id: Number(empresa.company_id),
-    };
-    localStorage.setItem(
-      EMPRESA_ATIVA_KEY,
-      JSON.stringify(empresaSelecionada),
-    );
+    const empresaSelecionada = salvarEmpresaAtiva(empresa);
     setEmpresaAtiva(empresaSelecionada);
     setVersaoEmpresa((versao) => versao + 1);
     ignorarProximaTrocaDeToken.current = true;
@@ -114,7 +102,7 @@ export const EmpresaProvider = ({ children }) => {
     }
 
     if (token?.startsWith('mock_demo_')) {
-      localStorage.setItem(EMPRESA_ATIVA_KEY, JSON.stringify(EMPRESA_DEMO));
+      salvarEmpresaAtiva(EMPRESA_DEMO);
       setEmpresas([EMPRESA_DEMO]);
       setEmpresaAtiva(EMPRESA_DEMO);
       setCarregandoEmpresas(false);
@@ -130,7 +118,7 @@ export const EmpresaProvider = ({ children }) => {
       const empresasNormalizadas = Array.isArray(lista) ? lista : [];
       setEmpresas(empresasNormalizadas);
 
-      const persistida = lerEmpresaPersistida();
+      const persistida = lerEmpresaAtivaPersistida();
       const empresaPersistidaValida = empresasNormalizadas.find(
         (empresa) =>
           Number(empresa.company_id) === Number(persistida?.company_id),
@@ -139,7 +127,7 @@ export const EmpresaProvider = ({ children }) => {
       if (empresaPersistidaValida) {
         setEmpresaAtiva(empresaPersistidaValida);
       } else {
-        localStorage.removeItem(EMPRESA_ATIVA_KEY);
+        limparEmpresaAtiva();
         setEmpresaAtiva(null);
 
         if (empresasNormalizadas.length === 1) {
@@ -176,7 +164,7 @@ export const EmpresaProvider = ({ children }) => {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      localStorage.removeItem(EMPRESA_ATIVA_KEY);
+      limparEmpresaAtiva();
       setEmpresaAtiva(null);
     }
   }, [isAuthenticated]);

@@ -1,118 +1,58 @@
-import api from "./api";
+const EMPRESA_ATIVA_KEY = "empresaAtiva";
 
-const STORAGE_KEY = "credifab_empresas_reais";
-const EMPRESA_ATIVA_KEY = "empresa_ativa";
-const EMPRESA_ID_KEY = "idEmpresaSimulado";
-const USER_EMAIL_KEY = "auth_user_email";
-
-const getUserKey = () => {
-  const email = (localStorage.getItem(USER_EMAIL_KEY) || "default")
-    .trim()
-    .toLowerCase();
-  return `credifab_empresas_${email}`;
+const normalizarCompanyId = (companyId) => {
+  const numero = Number(companyId);
+  return companyId !== "" && Number.isFinite(numero) ? numero : companyId;
 };
 
-const getEmpresaAtivaKey = () => {
-  const email = (localStorage.getItem(USER_EMAIL_KEY) || "default")
-    .trim()
-    .toLowerCase();
-  return `empresa_ativa_${email}`;
-};
-
-const getEmpresaIdKey = () => {
-  const email = (localStorage.getItem(USER_EMAIL_KEY) || "default")
-    .trim()
-    .toLowerCase();
-  return `idEmpresaSimulado_${email}`;
-};
-
-const normalizarEmpresa = (empresa) => ({
-  ...empresa,
-  company_id: empresa.company_id || empresa.id || empresa.companyId,
-  cnpj: empresa.cnpj || empresa.CNPJ || empresa.cnpjEmpresa || "",
-  name: empresa.name || empresa.nome || empresa.company_name || "",
-});
-
-export const lerEmpresasSalvas = () => {
+/**
+ * Fonte única de verdade para "qual empresa está ativa agora".
+ *
+ * Usa a MESMA chave de localStorage que o EmpresaContext.jsx. Isso é
+ * proposital: o que o usuário seleciona na interface através do
+ * EmpresaContext (selecionarEmpresa -> definirEmpresaAtiva) precisa ser
+ * exatamente o que os services de dados enxergam, ou a troca de empresa
+ * não tem efeito real nas chamadas à API.
+ */
+export const lerEmpresaAtivaPersistida = () => {
   try {
-    const valor =
-      localStorage.getItem(getUserKey()) || localStorage.getItem(STORAGE_KEY);
-    if (!valor) return [];
-    const empresas = JSON.parse(valor);
-    return Array.isArray(empresas) ? empresas.map(normalizarEmpresa) : [];
-  } catch (error) {
-    return [];
-  }
-};
-
-export const salvarEmpresaAtiva = (empresa) => {
-  const empresaNormalizada = normalizarEmpresa(empresa);
-  if (!empresaNormalizada.company_id && !empresaNormalizada.cnpj) return null;
-
-  localStorage.setItem(
-    getEmpresaAtivaKey(),
-    JSON.stringify(empresaNormalizada),
-  );
-  localStorage.setItem(
-    getEmpresaIdKey(),
-    String(empresaNormalizada.company_id || ""),
-  );
-  localStorage.setItem(EMPRESA_ATIVA_KEY, JSON.stringify(empresaNormalizada));
-  localStorage.setItem(
-    EMPRESA_ID_KEY,
-    String(empresaNormalizada.company_id || ""),
-  );
-
-  const empresasSalvas = lerEmpresasSalvas();
-  const jaExiste = empresasSalvas.some(
-    (item) =>
-      String(item.company_id || "") ===
-      String(empresaNormalizada.company_id || ""),
-  );
-
-  const listaAtualizada = jaExiste
-    ? empresasSalvas.map((item) =>
-        String(item.company_id || "") ===
-        String(empresaNormalizada.company_id || "")
-          ? empresaNormalizada
-          : item,
-      )
-    : [empresaNormalizada, ...empresasSalvas];
-
-  localStorage.setItem(getUserKey(), JSON.stringify(listaAtualizada));
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(listaAtualizada));
-  return empresaNormalizada;
-};
-
-export const obterEmpresaAtiva = async () => {
-  const empresasSalvas = lerEmpresasSalvas();
-  if (empresasSalvas.length > 0) {
-    const empresaSalva = empresasSalvas[0];
-    if (empresaSalva.company_id || empresaSalva.cnpj) {
-      salvarEmpresaAtiva(empresaSalva);
-      return empresaSalva;
-    }
-  }
-
-  const token =
-    localStorage.getItem("token") || localStorage.getItem("access_token");
-  if (!token) return null;
-
-  try {
-    const { data } = await api.get("/api/companies");
-    const empresas = Array.isArray(data?.companies) ? data.companies : [];
-    if (empresas.length === 0) return null;
-
-    const empresaAtiva = salvarEmpresaAtiva(empresas[0]);
-    return empresaAtiva;
-  } catch (error) {
+    const valor = localStorage.getItem(EMPRESA_ATIVA_KEY);
+    return valor ? JSON.parse(valor) : null;
+  } catch {
+    localStorage.removeItem(EMPRESA_ATIVA_KEY);
     return null;
   }
 };
 
+export const salvarEmpresaAtiva = (empresa) => {
+  if (!empresa?.company_id) return null;
+
+  const empresaNormalizada = {
+    ...empresa,
+    company_id: normalizarCompanyId(empresa.company_id),
+  };
+
+  localStorage.setItem(EMPRESA_ATIVA_KEY, JSON.stringify(empresaNormalizada));
+  return empresaNormalizada;
+};
+
 export const limparEmpresaAtiva = () => {
-  localStorage.removeItem(getEmpresaAtivaKey());
-  localStorage.removeItem(getEmpresaIdKey());
   localStorage.removeItem(EMPRESA_ATIVA_KEY);
-  localStorage.removeItem(EMPRESA_ID_KEY);
+};
+
+/**
+ * Usado por todos os services de dados (conta, categoria, documento,
+ * comparacao, simulacao, contaCaixa) para descobrir o company_id a usar
+ * nas chamadas à API.
+ *
+ * IMPORTANTE — mudança de comportamento intencional: esta função NÃO
+ * faz mais fallback de "pegar a primeira empresa salva" nem chama a API
+ * sozinha para escolher uma empresa por conta própria. Ela só reflete o
+ * que foi explicitamente selecionado pelo usuário via EmpresaContext.
+ * Se nada foi selecionado ainda, retorna null — e cada service lança o
+ * erro "Selecione uma empresa para..." (esse é o comportamento correto:
+ * força o usuário a escolher antes de ver dados de qualquer empresa).
+ */
+export const obterEmpresaAtiva = async () => {
+  return lerEmpresaAtivaPersistida();
 };

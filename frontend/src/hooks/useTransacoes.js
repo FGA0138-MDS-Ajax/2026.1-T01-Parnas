@@ -1,13 +1,14 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import api from "../services/api";
 import { listarContasCaixa } from "../services/contaCaixa.service";
 import { listarCategorias } from "../services/categoria.service";
 import { obterEmpresaAtiva } from "../services/empresa.service";
 
 const useTransacoes = () => {
-  const [transacoes, setTransacoes] = useState([]);
+  const [transacoesRaw, setTransacoesRaw] = useState([]);
   const [categorias, setCategorias] = useState([]);
-  const [contasCaixa, setContasCaixa] = useState([]); // Dinâmico!
+  const [contasCaixa, setContasCaixa] = useState([]);
+
   const [totais, setTotais] = useState({
     totalReceitas: 0,
     totalDespesas: 0,
@@ -55,7 +56,6 @@ const useTransacoes = () => {
       if (!companyId) return;
       try {
         const params = {
-          company_id: companyId,
           page: pagina,
           per_page: 20,
           ...(filtrosAplicados.dataInicio && {
@@ -76,19 +76,13 @@ const useTransacoes = () => {
           }),
         };
 
-        const { data } = await api.get("/api/transactions/", { params });
+        const { data } = await api.get(
+          `/api/companies/${companyId}/transactions/`,
+          { params },
+        );
 
-        const transacoesMapeadas = (data.transacoes || []).map((t) => ({
-          id: t.transaction_id,
-          descricao: t.description,
-          tipo: t.tipo,
-          valor: t.valor,
-          data: t.data,
-          categoriaId: t.categoria_id,
-          contaCaixaNome: "N/A",
-        }));
+        setTransacoesRaw(data.transacoes || []);
 
-        setTransacoes(transacoesMapeadas);
         setTotais({
           totalReceitas: data.resumo?.total_receitas || 0,
           totalDespesas: data.resumo?.total_despesas || 0,
@@ -103,6 +97,34 @@ const useTransacoes = () => {
     },
     [companyId],
   );
+
+  // CORREÇÃO: useMemo importado corretamente e chamado de forma direta
+  const transacoes = useMemo(() => {
+    const mapeadas = transacoesRaw.map((t) => {
+      const caixaId = t.payment_id;
+      const caixaObj = contasCaixa.find(
+        (c) => String(c.id) === String(caixaId),
+      );
+
+      return {
+        id: t.transaction_id,
+        descricao: t.description,
+        tipo: t.type,
+        valor: t.amount,
+        data: t.date,
+        categoriaId: t.category_id,
+        contaCaixaId: caixaId || null,
+        contaCaixaNome: caixaObj ? caixaObj.nome : "N/A",
+      };
+    });
+
+    if (filtros.contaCaixaId) {
+      return mapeadas.filter(
+        (t) => String(t.contaCaixaId) === String(filtros.contaCaixaId),
+      );
+    }
+    return mapeadas;
+  }, [transacoesRaw, contasCaixa, filtros.contaCaixaId]);
 
   useEffect(() => {
     carregarAuxiliares();
@@ -138,37 +160,38 @@ const useTransacoes = () => {
 
   const salvarTransacao = async (dadosTransacao, id = null) => {
     if (!companyId) return;
-    const payload = {
-      description: dadosTransacao.descricao,
-      amount: parseFloat(dadosTransacao.valor),
-      date: dadosTransacao.data,
-      type: dadosTransacao.tipo,
-      category_id: parseInt(dadosTransacao.categoriaId),
-      company_id: parseInt(companyId),
-    };
 
     try {
+      const payload = {
+        description: dadosTransacao.descricao,
+        amount: parseFloat(dadosTransacao.valor),
+        date: dadosTransacao.data,
+        type: dadosTransacao.tipo,
+        category_id: parseInt(dadosTransacao.categoriaId),
+        payment_id: dadosTransacao.contaCaixaId
+          ? parseInt(dadosTransacao.contaCaixaId)
+          : null,
+      };
+
       if (id) {
-        await api.put(`/api/transactions/${id}`, payload);
+        await api.put(
+          `/api/companies/${companyId}/transactions/${id}`,
+          payload,
+        );
       } else {
-        await api.post("/api/transactions/", payload);
+        await api.post(`/api/companies/${companyId}/transactions/`, payload);
       }
+
+      await carregarAuxiliares();
       fetchTransacoes(filtros, paginaAtual);
     } catch (error) {
-      const msgErro =
-        error.response?.data?.erro ||
-        Object.values(error.response?.data?.erros_de_validacao || {}).join(
-          ", ",
-        ) ||
-        "Erro ao salvar transação.";
-      alert(msgErro);
-      throw error;
+      alert(error.response?.data?.erro || "Erro ao salvar transação.");
     }
   };
 
   const excluirTransacao = async (id) => {
     try {
-      await api.delete(`/api/transactions/${id}?company_id=${companyId}`);
+      await api.delete(`/api/companies/${companyId}/transactions/${id}`);
       fetchTransacoes(filtros, paginaAtual);
     } catch (error) {
       alert("Erro ao excluir transação.");

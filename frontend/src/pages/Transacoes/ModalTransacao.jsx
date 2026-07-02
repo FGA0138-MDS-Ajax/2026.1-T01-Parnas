@@ -1,22 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Transacoes.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Transacoes.css";
 
-const hoje = () => new Date().toISOString().split('T')[0];
+const hoje = () => new Date().toISOString().split("T")[0];
 
 const ESTADO_INICIAL = {
-  modo: 'movimentacao',
-  descricao: '',
-  valor: '',
-  tipo: 'receita',
+  modo: "movimentacao",
+  descricao: "",
+  valor: "",
+  tipo: "receita",
   data: hoje(),
-  categoriaId: '',
-  contaCaixaId: '',
-  contaOrigemId: '',
-  contaDestinoId: '',
+  categoriaId: "",
+  contaCaixaId: "",
 };
 
-const ModalTransacao = ({ transacaoParaEditar, categorias, contasCaixa = [], onSalvar, onFechar }) => {
+const ModalTransacao = ({
+  transacaoParaEditar,
+  categorias,
+  contasCaixa = [],
+  onSalvar,
+  onFechar,
+}) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState(ESTADO_INICIAL);
   const [erros, setErros] = useState({});
@@ -27,15 +31,17 @@ const ModalTransacao = ({ transacaoParaEditar, categorias, contasCaixa = [], onS
   useEffect(() => {
     if (ehEdicao) {
       setFormData({
-        modo: 'movimentacao',
+        modo: "movimentacao",
         descricao: transacaoParaEditar.descricao,
         valor: String(transacaoParaEditar.valor),
         tipo: transacaoParaEditar.tipo,
         data: transacaoParaEditar.data,
-        categoriaId: transacaoParaEditar.categoriaId ? String(transacaoParaEditar.categoriaId) : '',
-        contaCaixaId: transacaoParaEditar.contaCaixaId ? String(transacaoParaEditar.contaCaixaId) : '',
-        contaOrigemId: '',
-        contaDestinoId: '',
+        categoriaId: transacaoParaEditar.categoriaId
+          ? String(transacaoParaEditar.categoriaId)
+          : "",
+        contaCaixaId: transacaoParaEditar.contaCaixaId
+          ? String(transacaoParaEditar.contaCaixaId)
+          : "",
       });
     } else {
       setFormData(ESTADO_INICIAL);
@@ -44,64 +50,47 @@ const ModalTransacao = ({ transacaoParaEditar, categorias, contasCaixa = [], onS
   }, [transacaoParaEditar, ehEdicao]);
 
   const categoriasFiltradas = categorias.filter(
-    (cat) => cat.tipo === formData.tipo || !cat.tipo
+    (cat) => cat.tipo === formData.tipo || !cat.tipo,
   );
-  const ehTransferencia = formData.modo === 'transferencia';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-      // Limpa categoria quando muda o tipo para evitar categoria inválida
-      ...(name === 'tipo' ? { categoriaId: '' } : {}),
-      ...(name === 'modo' ? { categoriaId: '', contaCaixaId: '', contaOrigemId: '', contaDestinoId: '' } : {}),
+      ...(name === "tipo" ? { categoriaId: "" } : {}),
     }));
     if (erros[name]) {
-      setErros((prev) => ({ ...prev, [name]: '' }));
+      setErros((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   const validar = () => {
     const novosErros = {};
 
-    if (!ehTransferencia && !formData.descricao.trim()) {
-      novosErros.descricao = 'A descrição é obrigatória.';
+    if (!formData.descricao.trim()) {
+      novosErros.descricao = "A descrição é obrigatória.";
     }
 
     const valorNum = parseFloat(formData.valor);
     if (!formData.valor || isNaN(valorNum)) {
-      novosErros.valor = 'Informe um valor válido.';
+      novosErros.valor = "Informe um valor válido.";
     } else if (valorNum <= 0) {
-      novosErros.valor = 'O valor deve ser positivo.';
+      novosErros.valor = "O valor deve ser positivo.";
     }
 
     if (!formData.data) {
-      novosErros.data = 'A data é obrigatória.';
+      novosErros.data = "A data é obrigatória.";
     } else if (formData.data > hoje()) {
-      novosErros.data = 'A data não pode ser futura.';
+      novosErros.data = "A data não pode ser futura.";
     }
 
-    if (ehTransferencia) {
-      if (!formData.contaOrigemId) {
-        novosErros.contaOrigemId = 'Selecione a Conta/Caixa de origem.';
-      }
-      if (!formData.contaDestinoId) {
-        novosErros.contaDestinoId = 'Selecione a Conta/Caixa de destino.';
-      }
-      if (
-        formData.contaOrigemId
-        && formData.contaDestinoId
-        && formData.contaOrigemId === formData.contaDestinoId
-      ) {
-        novosErros.contaDestinoId = 'Origem e destino devem ser diferentes.';
-      }
-    } else if (!formData.categoriaId) {
-      novosErros.categoriaId = 'Selecione uma categoria.';
+    if (!formData.categoriaId) {
+      novosErros.categoriaId = "Selecione uma categoria.";
     }
 
-    if (!ehTransferencia && !formData.contaCaixaId) {
-      novosErros.contaCaixaId = 'Selecione uma Conta/Caixa.';
+    if (!formData.contaCaixaId) {
+      novosErros.contaCaixaId = "Selecione uma Conta/Caixa.";
     }
 
     setErros(novosErros);
@@ -129,134 +118,67 @@ const ModalTransacao = ({ transacaoParaEditar, categorias, contasCaixa = [], onS
   };
 
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick} role="dialog" aria-modal="true">
+    <div
+      className="modal-overlay"
+      onClick={handleOverlayClick}
+      role="dialog"
+      aria-modal="true"
+    >
       <div className="modal-container">
         <div className="modal-cabecalho">
           <h3 className="modal-titulo">
-            {ehEdicao ? 'Editar Transação' : 'Nova Transação'}
+            {ehEdicao ? "Editar Transação" : "Nova Transação"}
           </h3>
-          <button className="modal-fechar" onClick={onFechar} aria-label="Fechar modal">
+          <button
+            className="modal-fechar"
+            onClick={onFechar}
+            aria-label="Fechar modal"
+          >
             ✕
           </button>
         </div>
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="modal-corpo">
-            {!ehEdicao && (
-              <div className="input-group">
-                <label>Modo</label>
-                <div className="tipo-toggle">
-                  <button
-                    type="button"
-                    className={`tipo-btn ${formData.modo === 'movimentacao' ? 'ativo' : ''}`}
-                    onClick={() => handleChange({ target: { name: 'modo', value: 'movimentacao' } })}
-                  >
-                    Movimentação
-                  </button>
-                  <button
-                    type="button"
-                    className={`tipo-btn ${formData.modo === 'transferencia' ? 'ativo' : ''}`}
-                    onClick={() => handleChange({ target: { name: 'modo', value: 'transferencia' } })}
-                  >
-                    Transferência
-                  </button>
-                </div>
+            <div className="input-group">
+              <label>Tipo de transação</label>
+              <div className="tipo-toggle">
+                <button
+                  type="button"
+                  className={`tipo-btn tipo-btn--receita ${formData.tipo === "receita" ? "ativo" : ""}`}
+                  onClick={() =>
+                    handleChange({ target: { name: "tipo", value: "receita" } })
+                  }
+                >
+                  ↑ Receita
+                </button>
+                <button
+                  type="button"
+                  className={`tipo-btn tipo-btn--despesa ${formData.tipo === "despesa" ? "ativo" : ""}`}
+                  onClick={() =>
+                    handleChange({ target: { name: "tipo", value: "despesa" } })
+                  }
+                >
+                  ↓ Despesa
+                </button>
               </div>
-            )}
+            </div>
 
-            {!ehTransferencia && (
-              <div className="input-group">
-                <label>Tipo de transação</label>
-                <div className="tipo-toggle">
-                  <button
-                    type="button"
-                    className={`tipo-btn tipo-btn--receita ${formData.tipo === 'receita' ? 'ativo' : ''}`}
-                    onClick={() => handleChange({ target: { name: 'tipo', value: 'receita' } })}
-                  >
-                    ↑ Receita
-                  </button>
-                  <button
-                    type="button"
-                    className={`tipo-btn tipo-btn--despesa ${formData.tipo === 'despesa' ? 'ativo' : ''}`}
-                    onClick={() => handleChange({ target: { name: 'tipo', value: 'despesa' } })}
-                  >
-                    ↓ Despesa
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {ehTransferencia && (
-              <div className="form-row">
-                <div className="input-group">
-                  <label htmlFor="modal-conta-origem">Conta/Caixa de origem</label>
-                  <select
-                    id="modal-conta-origem"
-                    name="contaOrigemId"
-                    value={formData.contaOrigemId}
-                    onChange={handleChange}
-                    className={erros.contaOrigemId ? 'input-erro' : ''}
-                  >
-                    <option value="">Selecione...</option>
-                    {contasCaixa.map((contaCaixa) => (
-                      <option key={contaCaixa.id} value={contaCaixa.id}>
-                        {contaCaixa.nome}
-                      </option>
-                    ))}
-                  </select>
-                  {erros.contaOrigemId && <span className="msg-campo-erro">{erros.contaOrigemId}</span>}
-                </div>
-
-                <div className="input-group">
-                  <label htmlFor="modal-conta-destino">Conta/Caixa de destino</label>
-                  <select
-                    id="modal-conta-destino"
-                    name="contaDestinoId"
-                    value={formData.contaDestinoId}
-                    onChange={handleChange}
-                    className={erros.contaDestinoId ? 'input-erro' : ''}
-                  >
-                    <option value="">Selecione...</option>
-                    {contasCaixa.map((contaCaixa) => (
-                      <option key={contaCaixa.id} value={contaCaixa.id}>
-                        {contaCaixa.nome}
-                      </option>
-                    ))}
-                  </select>
-                  {erros.contaDestinoId && <span className="msg-campo-erro">{erros.contaDestinoId}</span>}
-                </div>
-              </div>
-            )}
-
-            {!ehTransferencia && (
-              <div className="input-group">
-                <label htmlFor="modal-descricao">Descrição</label>
-                <input
-                  id="modal-descricao"
-                  type="text"
-                  name="descricao"
-                  placeholder="Ex.: Venda de produtos - Lote #001"
-                  value={formData.descricao}
-                  onChange={handleChange}
-                  className={erros.descricao ? 'input-erro' : ''}
-                />
-                {erros.descricao && <span className="msg-campo-erro">{erros.descricao}</span>}
-              </div>
-            )}
-
-            {ehTransferencia && (
-              <div className="input-group">
-                <label htmlFor="modal-descricao-transferencia">Descrição da transferência</label>
-                <input
-                  id="modal-descricao-transferencia"
-                  type="text"
-                  name="descricao"
-                  placeholder="Ex.: Transferência para reserva"
-                  value={formData.descricao}
-                  onChange={handleChange}
-                />
-              </div>
-            )}
+            <div className="input-group">
+              <label htmlFor="modal-descricao">Descrição</label>
+              <input
+                id="modal-descricao"
+                type="text"
+                name="descricao"
+                placeholder="Ex.: Venda de produtos - Lote #001"
+                value={formData.descricao}
+                onChange={handleChange}
+                className={erros.descricao ? "input-erro" : ""}
+              />
+              {erros.descricao && (
+                <span className="msg-campo-erro">{erros.descricao}</span>
+              )}
+            </div>
 
             <div className="form-row">
               <div className="input-group">
@@ -270,9 +192,11 @@ const ModalTransacao = ({ transacaoParaEditar, categorias, contasCaixa = [], onS
                   step="0.01"
                   value={formData.valor}
                   onChange={handleChange}
-                  className={erros.valor ? 'input-erro' : ''}
+                  className={erros.valor ? "input-erro" : ""}
                 />
-                {erros.valor && <span className="msg-campo-erro">{erros.valor}</span>}
+                {erros.valor && (
+                  <span className="msg-campo-erro">{erros.valor}</span>
+                )}
               </div>
 
               <div className="input-group">
@@ -284,51 +208,51 @@ const ModalTransacao = ({ transacaoParaEditar, categorias, contasCaixa = [], onS
                   max={hoje()}
                   value={formData.data}
                   onChange={handleChange}
-                  className={erros.data ? 'input-erro' : ''}
+                  className={erros.data ? "input-erro" : ""}
                 />
-                {erros.data && <span className="msg-campo-erro">{erros.data}</span>}
+                {erros.data && (
+                  <span className="msg-campo-erro">{erros.data}</span>
+                )}
               </div>
             </div>
 
-            {/* Categoria */}
-            {!ehTransferencia && (
-              <div className="input-group">
-                <div className="campo-label-acoes">
-                  <label htmlFor="modal-conta-caixa">Conta/Caixa</label>
-                  <button
-                    type="button"
-                    className="btn-link-categoria"
-                    onClick={() => navigate('/contas-caixa')}
-                  >
-                    Cadastrar
-                  </button>
-                </div>
-                <select
-                  id="modal-conta-caixa"
-                  name="contaCaixaId"
-                  value={formData.contaCaixaId}
-                  onChange={handleChange}
-                  className={erros.contaCaixaId ? 'input-erro' : ''}
+            <div className="input-group">
+              <div className="campo-label-acoes">
+                <label htmlFor="modal-conta-caixa">Conta/Caixa</label>
+                <button
+                  type="button"
+                  className="btn-link-categoria"
+                  onClick={() => navigate("/contas-caixa")}
                 >
-                  <option value="">Selecione uma Conta/Caixa...</option>
-                  {contasCaixa.map((contaCaixa) => (
-                    <option key={contaCaixa.id} value={contaCaixa.id}>
-                      {contaCaixa.nome}
-                    </option>
-                  ))}
-                </select>
-                {erros.contaCaixaId && <span className="msg-campo-erro">{erros.contaCaixaId}</span>}
+                  Cadastrar
+                </button>
               </div>
-            )}
+              <select
+                id="modal-conta-caixa"
+                name="contaCaixaId"
+                value={formData.contaCaixaId}
+                onChange={handleChange}
+                className={erros.contaCaixaId ? "input-erro" : ""}
+              >
+                <option value="">Selecione uma Conta/Caixa...</option>
+                {contasCaixa.map((contaCaixa) => (
+                  <option key={contaCaixa.id} value={contaCaixa.id}>
+                    {contaCaixa.nome}
+                  </option>
+                ))}
+              </select>
+              {erros.contaCaixaId && (
+                <span className="msg-campo-erro">{erros.contaCaixaId}</span>
+              )}
+            </div>
 
-            {!ehTransferencia && (
-              <div className="input-group">
+            <div className="input-group">
               <div className="campo-label-acoes">
                 <label htmlFor="modal-categoria">Categoria</label>
                 <button
                   type="button"
                   className="btn-link-categoria"
-                  onClick={() => navigate('/categorias')}
+                  onClick={() => navigate("/categorias")}
                 >
                   Cadastrar
                 </button>
@@ -338,7 +262,7 @@ const ModalTransacao = ({ transacaoParaEditar, categorias, contasCaixa = [], onS
                 name="categoriaId"
                 value={formData.categoriaId}
                 onChange={handleChange}
-                className={erros.categoriaId ? 'input-erro' : ''}
+                className={erros.categoriaId ? "input-erro" : ""}
               >
                 <option value="">Selecione uma categoria...</option>
                 {categoriasFiltradas.map((cat) => (
@@ -355,16 +279,24 @@ const ModalTransacao = ({ transacaoParaEditar, categorias, contasCaixa = [], onS
                   Nenhuma categoria cadastrada para este tipo.
                 </span>
               )}
-              </div>
-            )}
+            </div>
           </div>
 
           <div className="modal-rodape">
-            <button type="button" className="btn-cancelar" onClick={onFechar} disabled={salvando}>
+            <button
+              type="button"
+              className="btn-cancelar"
+              onClick={onFechar}
+              disabled={salvando}
+            >
               Cancelar
             </button>
             <button type="submit" className="btn-submit" disabled={salvando}>
-              {salvando ? 'Salvando...' : ehEdicao ? 'Salvar Alterações' : ehTransferencia ? 'Registrar Transferência' : 'Registrar Transação'}
+              {salvando
+                ? "Salvando..."
+                : ehEdicao
+                  ? "Salvar Alterações"
+                  : "Registrar Transação"}
             </button>
           </div>
         </form>

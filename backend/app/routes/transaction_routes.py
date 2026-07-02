@@ -18,7 +18,11 @@ def get_transactions(company_id):
     current_user_id = int(get_jwt_identity())
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 20, type=int)
+    
+    # adicionado user_id e company_id aos filtros para o repositório conseguir encontrar os dados
     filtros = {
+        'user_id': current_user_id,
+        'company_id': company_id,
         'data_inicio': request.args.get('data_inicio'),
         'data_fim': request.args.get('data_fim'),
         'tipo': request.args.get('tipo'),
@@ -29,46 +33,50 @@ def get_transactions(company_id):
     resultado, status_code = TransactionService.get_history_filtered(current_user_id, company_id, page, per_page, filtros)
     return jsonify(resultado), status_code
 
-@transaction_bp.route("/", methods=["POST"])
+@transaction_bp.route('/', methods=['POST'])
 @jwt_required()
-def create(company_id):
-    try:
-        data = transaction_schema.load(request.get_json())
-    except ValidationError as err:
-        return jsonify({"erros_de_validacao": err.messages}), 400
-
-    current_user_id = get_jwt_identity()
-    answer, status_code = TransactionService.create_transaction(current_user_id, company_id, data)
+def create_transaction_route(company_id):
+    user_id = int(get_jwt_identity())
+    json_data = request.get_json()
     
-    if status_code == 201 and "transaction" in answer:
-        answer["transaction"] = transaction_output_schema.dump(answer["transaction"])
-        
+    # Captura o id da conta/caixa antes do validador descartar
+    payment_id = json_data.get('payment_id')
+
+    try:
+        # CORREÇÃO: 'exclude' em minúsculo para ignorar campos fora do Schema
+        data = transaction_schema.load(json_data, unknown='exclude')
+    except ValidationError as err:
+        return jsonify({"erros": err.messages}), 400
+
+    # Injeta o payment_id de volta no dicionário de dados limpos
+    if payment_id is not None:
+        data['payment_id'] = payment_id
+
+    answer, status_code = TransactionService.create_transaction(user_id, company_id, data)
     return jsonify(answer), status_code
+
 
 @transaction_bp.route('/<int:transaction_id>', methods=['PUT'])
 @jwt_required()
-def update(company_id, transaction_id):
-    raw_data = request.get_json()
+def update_transaction_route(company_id, transaction_id):
+    user_id = int(get_jwt_identity())
+    json_data = request.get_json()
+    payment_id = json_data.get('payment_id')
 
     try:
-        validated_data = transaction_schema.load(raw_data, partial=True)
+        data = transaction_schema.load(json_data, partial=True, unknown='exclude')
     except ValidationError as err:
-        return jsonify({"erros_de_validacao": err.messages}), 400
+        return jsonify({"erros": err.messages}), 400
 
-    # daniel: o service espera (transaction_id, user_id, data); estava passando o dict
-    # de dados como user_id e o company_id como data, o que quebrava a edicao.
-    # o identity do JWT vem como string, entao converto pra int (igual as demais rotas).
-    current_user_id = int(get_jwt_identity())
-    answer, status_code = TransactionService.update_transaction(current_user_id, company_id, transaction_id, validated_data)
-    
-    if status_code == 200 and "transaction" in answer:
-        answer["transaction"] = transaction_output_schema.dump(answer["transaction"])
-        
+    if payment_id is not None:
+        data['payment_id'] = payment_id
+
+    answer, status_code = TransactionService.update_transaction(user_id, company_id, transaction_id, data)
     return jsonify(answer), status_code
 
 @transaction_bp.route('/<int:transaction_id>', methods=['DELETE'])
 @jwt_required()
-def delete(transaction_id):
+def delete(company_id, transaction_id): # adicionado o company_id para evitar o TypeError (Erro 500)
 
     # daniel: o service espera (transaction_id, user_id); estava passando o company_id
     # no lugar do user_id, escopando a exclusao pelo id errado.

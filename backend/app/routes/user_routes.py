@@ -64,3 +64,27 @@ def delete_user_route():
 
     answer, status_code = UserService.delete_user(user_id)
     return jsonify(answer), status_code
+
+
+# daniel: rota preservada da task/integracao (feature de edicao de perfil), usada pela
+# tela EditarPerfil para carregar os dados atuais do usuario logado.
+@user_bp.route("/profile", methods=["GET"])
+@jwt_required()
+def get_user_profile():
+    """Retorna os dados do usuário logado baseado no token JWT"""
+    user_id = int(get_jwt_identity())
+
+    from app.models.user import User
+    from app.config import db
+    user = db.session.query(User).filter(User.user_id == user_id).first()
+
+    if not user:
+        return jsonify({"erro": "Usuário não encontrado."}), 404
+
+    return jsonify({
+        "name": user.name,
+        "email": user.email,
+        "cpf": user.cpf,
+        "birth_date": user.birth_date.strftime('%Y-%m-%d') if user.birth_date else ""
+    }), 200
+    

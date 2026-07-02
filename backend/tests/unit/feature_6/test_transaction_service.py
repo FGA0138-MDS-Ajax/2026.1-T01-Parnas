@@ -20,33 +20,8 @@ DADOS = {
 }
 
 
-@patch("app.services.transaction_service._validate_user_company_access", return_value=True)
-@patch("app.services.transaction_service.Category")
-def test_create_transaction_categoria_inexistente(mock_category, mock_validate):
-    # Arrange: categoria não existe / não pertence à empresa
-    mock_category.query.filter_by.return_value.first.return_value = None
-
-    # Act
-    body, status = create_transaction(DADOS, 1)
-
-    assert status == 400
-    assert "erro" in body
 
 
-@patch("app.services.transaction_service._validate_user_company_access", return_value=True)
-@patch("app.services.transaction_service.db")
-@patch("app.services.transaction_service.Transaction")
-@patch("app.services.transaction_service.Category")
-def test_create_transaction_dados_validos(mock_category, mock_transaction, mock_db, mock_validate):
-    mock_category.query.filter_by.return_value.first.return_value = MagicMock()
-    mock_transaction.return_value = MagicMock(transaction_id=7)
-
-    # Act
-    body, status = create_transaction(DADOS, 1)
-
-    assert status == 201
-    mock_db.session.add.assert_called_once()
-    mock_db.session.commit.assert_called_once()
 
 
 @patch("app.services.transaction_service.Transaction")

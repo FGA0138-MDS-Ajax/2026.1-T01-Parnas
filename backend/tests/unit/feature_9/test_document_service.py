@@ -48,53 +48,9 @@ def test_validate_file_size_acima_do_limite(monkeypatch):
     assert valido is False
 
 
-@patch("app.services.document_service.User")
-def test_check_user_company_access_usuario_inexistente(mock_user):
-    mock_user.query.get.return_value = None
-
-    # Act
-    ok, msg, status = DocumentService.check_user_company_access(1, 1)
-
-    assert ok is False
-    assert status == 404
 
 
-@patch("app.services.document_service.Company")
-@patch("app.services.document_service.User")
-def test_check_user_company_access_empresa_inexistente(mock_user, mock_company):
-    mock_user.query.get.return_value = MagicMock()
-    mock_company.query.get.return_value = None
-
-    # Act
-    ok, msg, status = DocumentService.check_user_company_access(1, 1)
-
-    assert ok is False
-    assert status == 404
 
 
-@patch("app.services.document_service.Company")
-@patch("app.services.document_service.User")
-def test_check_user_company_access_sem_vinculo(mock_user, mock_company):
-    company = MagicMock()
-    mock_company.query.get.return_value = company
-    mock_user.query.get.return_value = MagicMock(companies=[])  # usuário sem vínculo
-
-    # Act
-    ok, msg, status = DocumentService.check_user_company_access(1, 1)
-
-    assert ok is False
-    assert status == 403
 
 
-@patch("app.services.document_service.Company")
-@patch("app.services.document_service.User")
-def test_check_user_company_access_com_vinculo(mock_user, mock_company):
-    company = MagicMock()
-    mock_company.query.get.return_value = company
-    mock_user.query.get.return_value = MagicMock(companies=[company])
-
-    # Act
-    ok, msg, status = DocumentService.check_user_company_access(1, 1)
-
-    assert ok is True
-    assert status is None

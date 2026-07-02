@@ -3,10 +3,7 @@ from datetime import datetime, date
 from werkzeug.utils import secure_filename
 from app.config import Config
 from app.repositories.document_repository import DocumentRepository
-from app.repositories.user_repository import UserRepository
-from app.exceptions.api_exception import APIException
 from app.repositories.company_repository import CompanyRepository
-
 
 class DocumentService:
     ALLOWED_EXTENSIONS = Config.ALLOWED_EXTENSIONS
@@ -42,17 +39,14 @@ class DocumentService:
 
 
     @staticmethod
-    def get_active_company(user_id):
-        user = UserRepository.get_by_id(user_id)
-        company_id = user.active_company_id if user else None
-        if not company_id:
-            return None, "Nenhuma empresa ativa selecionada na sessão", 400
-        return company_id, None, None
-
-
-    @staticmethod
-    def save_document(file, user_id, name, tipo, description=None):
+    def save_document(file, user_id, company_id, name, tipo, description=None):
         try:
+            if not company_id:
+                return None, "Nenhuma empresa selecionada.", 400
+            
+            if not CompanyRepository.check_user_access(company_id, user_id):
+                return None, "Acesso negado a esta empresa corporativa.", 403
+
             if not file or file.filename == '':
                 return None, "Arquivo não selecionado", 400
 
@@ -63,10 +57,6 @@ class DocumentService:
             valid, msg = DocumentService.validate_file_size(file)
             if not valid:
                 return None, msg, 400
-
-            company_id, error_msg, status_code = DocumentService.get_active_company(user_id)
-            if not company_id:
-                return None, error_msg, status_code
 
             company_folder = os.path.join(DocumentService.UPLOAD_FOLDER, str(company_id))
             os.makedirs(company_folder, exist_ok=True)
@@ -98,11 +88,13 @@ class DocumentService:
 
 
     @staticmethod
-    def get_documents_by_company(user_id, page=1, per_page=20):
+    def get_documents_by_company(user_id, company_id, page=1, per_page=20):
         try:
-            company_id, error_msg, status_code = DocumentService.get_active_company(user_id)
             if not company_id:
-                return None, error_msg, status_code
+                return None, "Nenhuma empresa selecionada.", 400
+
+            if not CompanyRepository.check_user_access(company_id, user_id):
+                return None, "Acesso negado a esta empresa corporativa.", 403
 
             query = DocumentRepository.get_by_company(company_id, page, per_page)
             return query, None, 200
@@ -112,11 +104,13 @@ class DocumentService:
 
 
     @staticmethod
-    def delete_document(document_id, user_id):
+    def delete_document(document_id, user_id, company_id):
         try:
-            company_id, error_msg, status_code = DocumentService.get_active_company(user_id)
             if not company_id:
-                return False, error_msg, status_code
+                return False, "Nenhuma empresa selecionada.", 400
+
+            if not CompanyRepository.check_user_access(company_id, user_id):
+                return False, "Acesso negado a esta empresa corporativa.", 403
 
             document = DocumentRepository.get_by_id_and_company(document_id, company_id)
             if not document:
@@ -132,15 +126,13 @@ class DocumentService:
             return {"erro": f"Erro ao deletar documento: {str(e)}"}, 500
 
     @staticmethod
-    def get_document_for_download(user_id, company_id, document_id):
+    def get_document_for_download(document_id, user_id, company_id):
         try:
-            company = CompanyRepository.get_by_id(company_id)
-            if not company:
-                raise APIException("Empresa não encontrada.", 404)
-            
-            access = CompanyRepository.check_user_access(company_id, user_id)
-            if not access:
-                raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
+            if not company_id:
+                return None, None, "Nenhuma empresa selecionada.", 400
+
+            if not CompanyRepository.check_user_access(company_id, user_id):
+                return None, None, "Acesso negado a esta empresa corporativa.", 403
 
             document = DocumentRepository.get_by_id_and_company(document_id, company_id)
             if not document:

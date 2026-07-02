@@ -1,40 +1,58 @@
+import api from "./api";
 import { obterEmpresaAtiva } from "./empresa.service";
 
-export const CONTAS_CAIXA_MOCK = [{ id: 1, nome: "Dinheiro em Espécie" }];
-
-const getStorageKey = async () => {
-  const empresa = await obterEmpresaAtiva();
-  const empresaId = empresa?.company_id || "default";
-  return `credifab_contas_caixa_${empresaId}`;
-};
+const normalizarPagamento = (pagamento) => ({
+  id: pagamento.payment_id ?? pagamento.id,
+  nome: pagamento.name ?? pagamento.nome,
+});
 
 export const listarContasCaixa = async () => {
-  const key = await getStorageKey();
-  const salvas = localStorage.getItem(key);
-
-  if (salvas) {
-    return JSON.parse(salvas);
+  const empresa = await obterEmpresaAtiva();
+  if (!empresa?.company_id) {
+    throw new Error("Selecione uma empresa para carregar as contas caixa.");
   }
 
-  //se for o primeiro acesso, salva o mock inicial
-  localStorage.setItem(key, JSON.stringify(CONTAS_CAIXA_MOCK));
-  return CONTAS_CAIXA_MOCK;
+  const { data } = await api.get(
+    `/api/companies/${empresa.company_id}/payments/`,
+  );
+
+  const pagamentos = Array.isArray(data?.payments) ? data.payments : [];
+  return pagamentos.map(normalizarPagamento);
 };
 
 export const criarContaCaixa = async (nome) => {
-  const key = await getStorageKey();
-  const lista = await listarContasCaixa();
-  const novaConta = { id: Date.now(), nome: nome.trim() };
+  const empresa = await obterEmpresaAtiva();
+  if (!empresa?.company_id) {
+    throw new Error("Selecione uma empresa para criar a conta caixa.");
+  }
 
-  const novaLista = [...lista, novaConta];
-  localStorage.setItem(key, JSON.stringify(novaLista));
-  return novaConta;
+  const { data } = await api.post(
+    `/api/companies/${empresa.company_id}/payments/`,
+    { name: nome.trim() },
+  );
+
+  return normalizarPagamento(data?.payment || {});
+};
+
+export const atualizarContaCaixa = async (id, nome) => {
+  const empresa = await obterEmpresaAtiva();
+  if (!empresa?.company_id) {
+    throw new Error("Selecione uma empresa para atualizar a conta caixa.");
+  }
+
+  const { data } = await api.put(
+    `/api/companies/${empresa.company_id}/payments/${id}`,
+    { name: nome.trim() },
+  );
+
+  return normalizarPagamento(data?.payment || {});
 };
 
 export const excluirContaCaixa = async (id) => {
-  const key = await getStorageKey();
-  const lista = await listarContasCaixa();
+  const empresa = await obterEmpresaAtiva();
+  if (!empresa?.company_id) {
+    throw new Error("Selecione uma empresa para excluir a conta caixa.");
+  }
 
-  const novaLista = lista.filter((c) => c.id !== id);
-  localStorage.setItem(key, JSON.stringify(novaLista));
+  return api.delete(`/api/companies/${empresa.company_id}/payments/${id}`);
 };

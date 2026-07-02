@@ -75,11 +75,6 @@ const Login = () => {
     }
   };
 
-  const handleDemoAccess = () => {
-    login(`mock_demo_${Date.now()}`);
-    navigate("/selecao-empresa");
-  };
-
   return (
     <div className="login-card">
       <div className="login-header">
@@ -177,19 +172,6 @@ const Login = () => {
             {loading ? "Entrando..." : "Entrar"}
           </button>
         </form>
-
-        <div className="divider">
-          <span>ou</span>
-        </div>
-
-        <button
-          type="button"
-          className="btn-demo"
-          onClick={handleDemoAccess}
-          disabled={loading}
-        >
-          Acessar Conta Demo
-        </button>
 
         <p className="login-register">
           Não tem uma conta?{" "}

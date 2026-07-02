@@ -1,216 +1,326 @@
-import { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import PageHeader from "../../components/Finance/PageHeader";
+import api from "../../services/api";
+import { obterEmpresaAtiva } from "../../services/empresa.service";
 import "./Relatorios.css";
-import { BarChart3 } from "lucide-react";
+import {
+  PieChart,
+  Pie,
+  Tooltip,
+  Cell,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  BarChart,
+  Bar,
+  Legend,
+} from "recharts";
 
-import {PieChart, Pie, Tooltip, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, BarChart, Bar, Legend,} from "recharts";
+const formatCurrency = (valor) =>
+  new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
+    valor || 0,
+  );
 
 function Relatorios() {
   const [tipoPeriodo, setTipoPeriodo] = useState("mensal");
+  const [mesAno, setMesAno] = useState(new Date().toISOString().slice(0, 7));
+  const [ano, setAno] = useState(new Date().getFullYear());
+  const [dataInicio, setDataInicio] = useState("");
+  const [dataFim, setDataFim] = useState("");
 
-  const distribuicaoCategoria = [
-    { name: "Alimentação", value: 2500 },
-    { name: "Transporte", value: 1200 },
-    { name: "Moradia", value: 3500 },
-    { name: "Lazer", value: 800 },
-  ];
+  const [carregando, setCarregando] = useState(false);
+  const [erro, setErro] = useState("");
 
-  const evolucaoSaldo = [
-    { mes: "Jan", saldo: 3000 },
-    { mes: "Fev", saldo: 4200 },
-    { mes: "Mar", saldo: 3900 },
-    { mes: "Abr", saldo: 5100 },
-    { mes: "Mai", saldo: 6200 },
-  ];
-
-  const comparativoMensal = [
-    { mes: "Jan", receitas: 5000, despesas: 2000 },
-    { mes: "Fev", receitas: 6000, despesas: 1800 },
-    { mes: "Mar", receitas: 5500, despesas: 1600 },
-    { mes: "Abr", receitas: 7000, despesas: 1900 },
-    { mes: "Mai", receitas: 7500, despesas: 1300 },
-  ];
+  const [dados, setDados] = useState({
+    totais: { total_receitas: 0, total_despesas: 0, saldo: 0 },
+    distribuicao: [],
+    evolucao: [],
+    comparativo: [],
+  });
 
   const cores = [
     "#0f4c81",
     "#2a9d8f",
     "#f4a261",
     "#e76f51",
+    "#8e44ad",
+    "#34495e",
   ];
 
+  const carregarRelatorio = useCallback(async () => {
+    try {
+      setCarregando(true);
+      setErro("");
+      const empresa = await obterEmpresaAtiva();
+      if (!empresa?.company_id) {
+        setErro("Selecione uma empresa ativa.");
+        return;
+      }
+
+      const params = {};
+
+      if (tipoPeriodo === "mensal") {
+        params.period = "mensal";
+        params.year = parseInt(mesAno.split("-")[0]);
+        params.month = parseInt(mesAno.split("-")[1]);
+      } else if (tipoPeriodo === "anual") {
+        params.period = "anual";
+        params.year = ano;
+      } else {
+        if (!dataInicio || !dataFim) {
+          setCarregando(false);
+          return;
+        }
+        params.start_date = dataInicio;
+        params.end_date = dataFim;
+      }
+
+      const { data } = await api.get(
+        `/api/companies/${empresa.company_id}/reports/`,
+        { params },
+      );
+
+      const dist = (data.distribuicao_categorias || []).map((d) => ({
+        name: d.categoria,
+        value: d.total,
+      }));
+
+      let saldoAcumulado = 0;
+      const evol = (data.evolucao || []).map((e) => {
+        saldoAcumulado += e.valor;
+        const dataCurta = e.data.split("-").reverse().slice(0, 2).join("/");
+        return { data: dataCurta, saldo: saldoAcumulado };
+      });
+
+      const comp = [
+        {
+          mes: tipoPeriodo === "mensal" ? mesAno : "Período",
+          receitas: data.totais.total_receitas,
+          despesas: data.totais.total_despesas,
+        },
+      ];
+
+      setDados({
+        totais: data.totais,
+        distribuicao: dist,
+        evolucao: evol,
+        comparativo: comp,
+      });
+    } catch (err) {
+      setErro(err.response?.data?.erro || "Erro ao carregar relatório.");
+    } finally {
+      setCarregando(false);
+    }
+  }, [tipoPeriodo, mesAno, ano, dataInicio, dataFim]);
+
+  useEffect(() => {
+    carregarRelatorio();
+  }, [carregarRelatorio]);
+
   return (
-    <div className="relatorios-page">
-      <header className="relatorios-header">
-        <div className="header-logo">
-          <div className="logo-icon">
-            <BarChart3 size={18} color="white" />
-          </div>
+    <div className="relatorios-container">
+      <PageHeader
+        title="Relatórios Financeiros"
+        description="Analise o desempenho financeiro da sua empresa com gráficos dinâmicos."
+      />
 
-          <div className="logo-text">
-            <h1>CREDIFAB</h1>
-            <p>Plataforma de Acesso a Crédito</p>
-          </div>
-        </div>
-      </header>
-
-      <main className="relatorios-content">
-        <section className="relatorios-card">
-          <h2>Filtros</h2>
-
-          <div className="filtros">
+      <div className="relatorios-filtros">
+        <div className="filtros-grid">
+          <div className="filtro-group">
+            <label>Período</label>
             <select
               value={tipoPeriodo}
-              onChange={(e) =>
-                setTipoPeriodo(e.target.value)
-              }
+              onChange={(e) => setTipoPeriodo(e.target.value)}
             >
-              <option value="mensal">
-                Mensal
-              </option>
-
-              <option value="anual">
-                Anual
-              </option>
-
-              <option value="personalizado">
-                Personalizado
-              </option>
+              <option value="mensal">Mensal</option>
+              <option value="anual">Anual</option>
+              <option value="personalizado">Personalizado</option>
             </select>
-
-            {tipoPeriodo === "mensal" && (
-              <input type="month" />
-            )}
-
-            {tipoPeriodo === "anual" && (
-              <input type="number" placeholder="Ano" />
-            )}
-
-            {tipoPeriodo === "personalizado" && (
-              <>
-                <input type="date" />
-
-                <input type="date" />
-              </>
-            )}
-          </div>
-        </section>
-
-        <section className="cards-resumo">
-          <div className="resumo-card receita">
-            <h3>Receitas</h3>
-            <span>R$ 15.000</span>
           </div>
 
-          <div className="resumo-card despesa">
-            <h3>Despesas</h3>
-            <span>R$ 8.500</span>
-          </div>
-
-          <div className="resumo-card saldo">
-            <h3>Saldo</h3>
-            <span>R$ 6.500</span>
-          </div>
-        </section>
-
-        <section className="relatorios-card">
-          <h2>
-            Distribuição por Categoria
-          </h2>
-
-          <ResponsiveContainer
-            width="100%"
-            height={350}
-          >
-            <PieChart>
-              <Pie
-                data={distribuicaoCategoria}
-                dataKey="value"
-                nameKey="name"
-                outerRadius={120}
-              >
-                {distribuicaoCategoria.map(
-                  (_, index) => (
-                    <Cell
-                      key={index}
-                      fill={
-                        cores[
-                          index % cores.length
-                        ]
-                      }
-                    />
-                  )
-                )}
-              </Pie>
-
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </section>
-
-        <section className="relatorios-card">
-          <h2>Evolução do Saldo</h2>
-
-          <ResponsiveContainer
-            width="100%"
-            height={350}
-          >
-            <LineChart data={evolucaoSaldo}>
-              <CartesianGrid
-                strokeDasharray="3 3"
+          {tipoPeriodo === "mensal" && (
+            <div className="filtro-group">
+              <label>Mês e Ano</label>
+              <input
+                type="month"
+                value={mesAno}
+                onChange={(e) => setMesAno(e.target.value)}
               />
+            </div>
+          )}
 
-              <XAxis dataKey="mes" />
-
-              <YAxis />
-
-              <Tooltip />
-
-              <Line
-                type="monotone"
-                dataKey="saldo"
-                stroke="#0f4c81"
-                strokeWidth={3}
+          {tipoPeriodo === "anual" && (
+            <div className="filtro-group">
+              <label>Ano</label>
+              <input
+                type="number"
+                placeholder="Ex: 2026"
+                value={ano}
+                onChange={(e) => setAno(e.target.value)}
               />
-            </LineChart>
-          </ResponsiveContainer>
-        </section>
+            </div>
+          )}
 
-        <section className="relatorios-card">
-          <h2>
-            Receitas x Despesas
-          </h2>
+          {tipoPeriodo === "personalizado" && (
+            <>
+              <div className="filtro-group">
+                <label>Data Inicial</label>
+                <input
+                  type="date"
+                  value={dataInicio}
+                  onChange={(e) => setDataInicio(e.target.value)}
+                />
+              </div>
+              <div className="filtro-group">
+                <label>Data Final</label>
+                <input
+                  type="date"
+                  value={dataFim}
+                  onChange={(e) => setDataFim(e.target.value)}
+                />
+              </div>
+            </>
+          )}
+        </div>
+        {erro && <p className="msg-erro">{erro}</p>}
+      </div>
 
-          <ResponsiveContainer
-            width="100%"
-            height={350}
-          >
-            <BarChart
-              data={comparativoMensal}
+      {carregando ? (
+        <div className="msg-carregando">Gerando relatórios...</div>
+      ) : (
+        <>
+          <div className="relatorios-totais">
+            <div className="total-card total-receita">
+              <span className="total-label">Total de Receitas</span>
+              <span className="total-valor">
+                {formatCurrency(dados.totais.total_receitas)}
+              </span>
+            </div>
+            <div className="total-card total-despesa">
+              <span className="total-label">Total de Despesas</span>
+              <span className="total-valor">
+                {formatCurrency(dados.totais.total_despesas)}
+              </span>
+            </div>
+            <div
+              className={`total-card ${dados.totais.saldo < 0 ? "saldo-negativo" : "saldo-positivo"}`}
             >
-              <CartesianGrid
-                strokeDasharray="3 3"
-              />
+              <span className="total-label">Saldo do Período</span>
+              <span className="total-valor">
+                {formatCurrency(dados.totais.saldo)}
+              </span>
+            </div>
+          </div>
 
-              <XAxis dataKey="mes" />
+          <div className="relatorios-graficos-grid">
+            <div className="relatorios-grafico-card">
+              <h2>Distribuição por Categoria (Despesas)</h2>
+              {dados.distribuicao.length === 0 ? (
+                <div className="msg-vazio">
+                  Sem despesas cadastradas neste período.
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height={320}>
+                  <PieChart>
+                    <Pie
+                      data={dados.distribuicao}
+                      dataKey="value"
+                      nameKey="name"
+                      outerRadius={100}
+                      label
+                    >
+                      {dados.distribuicao.map((_, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={cores[index % cores.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value) => formatCurrency(value)} />
+                    <Legend wrapperStyle={{ fontSize: 13, paddingTop: 16 }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              )}
+            </div>
 
-              <YAxis />
+            <div className="relatorios-grafico-card">
+              <h2>Evolução do Saldo Acumulado</h2>
+              {dados.evolucao.length === 0 ? (
+                <div className="msg-vazio">
+                  Nenhuma transação neste período.
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height={320}>
+                  <LineChart
+                    data={dados.evolucao}
+                    margin={{ top: 8, right: 24, left: 24, bottom: 8 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                    <XAxis
+                      dataKey="data"
+                      tick={{ fontSize: 12, fill: "#718096" }}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 12, fill: "#718096" }}
+                      tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`}
+                      width={56}
+                    />
+                    <Tooltip formatter={(value) => formatCurrency(value)} />
+                    <Line
+                      type="monotone"
+                      dataKey="saldo"
+                      stroke="var(--azul)"
+                      strokeWidth={3}
+                      dot={{ r: 4 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              )}
+            </div>
 
-              <Tooltip />
-
-              <Legend />
-
-              <Bar
-                dataKey="receitas"
-                fill="#2a9d8f"
-              />
-
-              <Bar
-                dataKey="despesas"
-                fill="#e76f51"
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </section>
-      </main>
+            <div className="relatorios-grafico-card">
+              <h2>Receitas x Despesas</h2>
+              <ResponsiveContainer width="100%" height={320}>
+                <BarChart
+                  data={dados.comparativo}
+                  margin={{ top: 8, right: 24, left: 24, bottom: 8 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                  <XAxis
+                    dataKey="mes"
+                    tick={{ fontSize: 12, fill: "#718096" }}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 12, fill: "#718096" }}
+                    tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`}
+                    width={56}
+                  />
+                  <Tooltip
+                    formatter={(value) => formatCurrency(value)}
+                    cursor={{ fill: "#f8fafc" }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 13, paddingTop: 16 }} />
+                  <Bar
+                    dataKey="receitas"
+                    name="Receitas"
+                    fill="var(--verde)"
+                    radius={[4, 4, 0, 0]}
+                  />
+                  <Bar
+                    dataKey="despesas"
+                    name="Despesas"
+                    fill="var(--erro)"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
