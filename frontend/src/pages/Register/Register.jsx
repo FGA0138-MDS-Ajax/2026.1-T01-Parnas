@@ -291,7 +291,7 @@ const Register = () => {
               className="register-button"
               disabled={loading}
             >
-              {loading ? "Cadastrando..." : "Finalizar registro"}
+              {loading ? "Cadastrando..." : "Cadastrar"}
             </button>
           </form>
         </div>
