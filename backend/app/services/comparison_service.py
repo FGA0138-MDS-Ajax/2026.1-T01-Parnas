@@ -1,20 +1,12 @@
+from app.repositories.company_repository import CompanyRepository
 from app.models.comparison import Comparison, ComparisonModality
+from app.exceptions.api_exception import APIException
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 from app.config import db
 import io
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
-from flask_jwt_extended import get_jwt # Nova importação necessária!
-
 
 class ComparisonService:
-
-    @staticmethod
-    def _get_company_id():
-        """Busca o ID da empresa ativa que está injetado dentro do Token JWT"""
-        claims = get_jwt()
-        active_company_id = claims.get("active_company_id")
-        return active_company_id
-
     @staticmethod
     def _calculate_price_table(loan_amount, rate_percent, term_months):
         """Calcula a matemática financeira da Tabela Price"""
@@ -33,14 +25,24 @@ class ComparisonService:
         interest = total - amount
         return round(pmt, 2), round(total, 2), round(interest, 2)
 
+
     @staticmethod
-    def calculate_simulation(data):
+    def calculate_simulation(user_id, company_id, data):
+
+        company = CompanyRepository.get_by_id(company_id)
+        if not company:
+            raise APIException("Empresa não encontrada.", 404)
+
+        access = CompanyRepository.check_user_access(company_id, user_id)
+        if not access:
+            raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
+
         """Apenas calcula e retorna os dados formatados (não salva no banco)"""
         loan_amount = data.get('loan_amount', 0)
         modalities = data.get('modalities', [])
 
         if not modalities or len(modalities) > 4:
-            return {"erro": "Forneça entre 1 e 4 modalidades para comparar."}, 400
+            raise APIException("Forneça entre 1 e 4 modalidades para comparar.", 400)
 
         results = []
         lowest_total = float('inf')
@@ -72,20 +74,26 @@ class ComparisonService:
         if best_modality_index != -1:
             results[best_modality_index]["is_best_option"] = True
 
-        return {"loan_amount": loan_amount, "comparisons": results}, 200
+        return {"loan_amount": loan_amount, "comparisons": results}
+
 
     @staticmethod
-    def save_comparison(data):
+    def save_comparison(user_id, company_id, data):
         """Calcula e salva as métricas no banco de dados"""
-        company_id = ComparisonService._get_company_id()
 
-        if not company_id:
-            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+        company = CompanyRepository.get_by_id(company_id)
+        if not company:
+            raise APIException("Empresa não encontrada.", 404)
 
+        access = CompanyRepository.check_user_access(company_id, user_id)
+        if not access:
+            raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
+        
         # Faz o cálculo reutilizando o método acima
-        simulacao_result, status = ComparisonService.calculate_simulation(data)
-        if status != 200:
-            return simulacao_result, status
+        try:
+            simulacao_result = ComparisonService.calculate_simulation(user_id, company_id, data)
+        except Exception as e:
+            raise APIException(f"Erro ao calcular simulação: {str(e)}", 500)
 
         # 1. Salva o cabeçalho da comparação
         nova_comparacao = Comparison(
@@ -113,12 +121,18 @@ class ComparisonService:
         db.session.commit()
         return {"mensagem": "Comparação salva com sucesso!", "id": nova_comparacao.comparison_id}, 201
 
-    @staticmethod
-    def get_comparisons():
-        company_id = ComparisonService._get_company_id()
 
-        if not company_id:
-            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+    @staticmethod
+    def get_comparisons(user_id, company_id):
+
+        company = CompanyRepository.get_by_id(company_id)
+        if not company:
+            raise APIException("Empresa não encontrada.", 404)
+
+        access = CompanyRepository.check_user_access(company_id, user_id)
+        if not access:
+            raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
+
         comparacoes = Comparison.query.filter_by(company_id=company_id).order_by(Comparison.created_at.desc()).all()
 
         resultado = []
@@ -137,28 +151,38 @@ class ComparisonService:
 
         return resultado, 200
 
+
     @staticmethod
-    def delete_comparison(comparison_id):
-        company_id = ComparisonService._get_company_id()
+    def delete_comparison(user_id, company_id, comparison_id):
 
-        if not company_id:
-            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+        company = CompanyRepository.get_by_id(company_id)
+        if not company:
+            raise APIException("Empresa não encontrada.", 404)
+
+        access = CompanyRepository.check_user_access(company_id, user_id)
+        if not access:
+            raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
+        
         comparacao = Comparison.query.filter_by(comparison_id=comparison_id, company_id=company_id).first()
-
         if not comparacao:
-            return {"erro": "Comparação não encontrada"}, 404
+            raise APIException("Comparação não encontrada.", 404)
 
         db.session.delete(comparacao)
         db.session.commit()
         return {"mensagem": "Comparação excluída com sucesso"}, 200
 
-    @staticmethod
-    def generate_pdf_report(comparison_id):
-        """Gera um PDF em memória com os dados da comparação"""
-        company_id = ComparisonService._get_company_id()
 
-        if not company_id:
-            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+    @staticmethod
+    def generate_pdf_report(user_id, company_id, comparison_id):
+        """Gera um PDF em memória com os dados da comparação"""
+        company = CompanyRepository.get_by_id(company_id)
+        if not company:
+            raise APIException("Empresa não encontrada.", 404)
+
+        access = CompanyRepository.check_user_access(company_id, user_id)
+        if not access:
+            raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
+        
         comparacao = Comparison.query.filter_by(comparison_id=comparison_id, company_id=company_id).first()
 
         if not comparacao:

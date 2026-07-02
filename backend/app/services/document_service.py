@@ -4,6 +4,8 @@ from werkzeug.utils import secure_filename
 from app.config import Config
 from app.repositories.document_repository import DocumentRepository
 from app.repositories.user_repository import UserRepository
+from app.exceptions.api_exception import APIException
+from app.repositories.company_repository import CompanyRepository
 
 
 class DocumentService:
@@ -25,6 +27,7 @@ class DocumentService:
 
         return True, None
 
+
     @staticmethod
     def validate_file_size(file):
         file.seek(0, os.SEEK_END)
@@ -37,6 +40,7 @@ class DocumentService:
 
         return True, None
 
+
     @staticmethod
     def get_active_company(user_id):
         user = UserRepository.get_by_id(user_id)
@@ -44,6 +48,7 @@ class DocumentService:
         if not company_id:
             return None, "Nenhuma empresa ativa selecionada na sessão", 400
         return company_id, None, None
+
 
     @staticmethod
     def save_document(file, user_id, name, tipo, description=None):
@@ -91,6 +96,7 @@ class DocumentService:
         except Exception as e:
             return None, f"Erro ao salvar documento: {str(e)}", 500
 
+
     @staticmethod
     def get_documents_by_company(user_id, page=1, per_page=20):
         try:
@@ -102,7 +108,8 @@ class DocumentService:
             return query, None, 200
 
         except Exception as e:
-            return None, f"Erro ao listar documentos: {str(e)}", 500
+            return  {"erro": f"Erro ao listar documentos: {str(e)}"}, 500
+
 
     @staticmethod
     def delete_document(document_id, user_id):
@@ -122,26 +129,32 @@ class DocumentService:
             return True, "Documento deletado com sucesso", 200
 
         except Exception as e:
-            return False, f"Erro ao deletar documento: {str(e)}", 500
+            return {"erro": f"Erro ao deletar documento: {str(e)}"}, 500
 
     @staticmethod
-    def get_document_for_download(document_id, user_id):
+    def get_document_for_download(user_id, company_id, document_id):
         try:
-            company_id, error_msg, status_code = DocumentService.get_active_company(user_id)
-            if not company_id:
-                return None, None, error_msg, status_code
+            company = CompanyRepository.get_by_id(company_id)
+            if not company:
+                raise APIException("Empresa não encontrada.", 404)
+            
+            access = CompanyRepository.check_user_access(company_id, user_id)
+            if not access:
+                raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
 
             document = DocumentRepository.get_by_id_and_company(document_id, company_id)
             if not document:
-                return None, None, "Documento não encontrado", 404
+                raise APIException("Documento não encontrado", 404)
 
-            if not os.path.exists(document.file_path):
-                return None, None, "Arquivo não encontrado no servidor", 404
+            document_path = os.path.exists(document.file_path)
+            if not document_path:
+                raise APIException("Arquivo não encontrado no servidor", 404)
 
             extension = os.path.splitext(document.file_path)[1]
             download_name = secure_filename(document.name) + extension
-
-            return document.file_path, download_name, None, 200
-
+            return {"file_path": document.file_path, "download_name": download_name}, 200
+        
+        except APIException as ve:
+            raise ve
         except Exception as e:
-            return None, None, f"Erro ao buscar documento para download: {str(e)}", 500
+            return {"erro": f"Erro ao buscar documento para download: {str(e)}"}, 500
