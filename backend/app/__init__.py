@@ -2,11 +2,12 @@ from flask import Flask
 from app.config import Config, db
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
+from flask_mail import Mail
 from app.exceptions.api_exception import APIException
 
 migrate = Migrate()
 jwt = JWTManager()
-
+mail = Mail()
 
 def create_app():
     app = Flask(__name__)
@@ -14,6 +15,7 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
+    mail.init_app(app)
 
     # --- NOVO BLOCO: Middleware para checar se o usuário está ativo ---
     @jwt.token_in_blocklist_loader
