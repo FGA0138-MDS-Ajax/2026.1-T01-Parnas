@@ -74,13 +74,12 @@ class ComparisonService:
         if best_modality_index != -1:
             results[best_modality_index]["is_best_option"] = True
 
-        return {"loan_amount": loan_amount, "comparisons": results}
+        return {"loan_amount": loan_amount, "comparisons": results}, 200 
 
 
     @staticmethod
     def save_comparison(user_id, company_id, data):
         """Calcula e salva as métricas no banco de dados"""
-
         company = CompanyRepository.get_by_id(company_id)
         if not company:
             raise APIException("Empresa não encontrada.", 404)
@@ -88,10 +87,12 @@ class ComparisonService:
         access = CompanyRepository.check_user_access(company_id, user_id)
         if not access:
             raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
-        
+
         # Faz o cálculo reutilizando o método acima
         try:
-            simulacao_result = ComparisonService.calculate_simulation(user_id, company_id, data)
+            simulacao_result, status = ComparisonService.calculate_simulation(user_id, company_id, data)
+            if status != 200:
+                return simulacao_result, status
         except Exception as e:
             raise APIException(f"Erro ao calcular simulação: {str(e)}", 500)
 
