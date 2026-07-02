@@ -138,15 +138,33 @@ class ComparisonService:
 
         resultado = []
         for comp in comparacoes:
+            # Lógica para encontrar a melhor modalidade (menor custo total)
+            best_modality = None
+            lowest_total = float('inf')
+            
+            for m in comp.modalities:
+                if m.total_amount < lowest_total:
+                    lowest_total = m.total_amount
+                    best_modality = m
+            
+            if not best_modality and comp.modalities:
+                best_modality = comp.modalities[0]
+
             resultado.append({
                 "id": comp.comparison_id,
                 "created_at": comp.created_at.isoformat(),
                 "loan_amount": float(comp.loan_amount),
+                "best_option_name": best_modality.name if best_modality else None,
+                "term_months": best_modality.term_months if best_modality else None,
+                "interest_rate": best_modality.interest_rate if best_modality else None,
+
                 "modalities": [{
                     "name": m.name,
                     "monthly_payment": float(m.monthly_payment),
                     "total_amount": float(m.total_amount),
-                    "type": m.type
+                    "type": m.type,
+                    "term_months": m.term_months,       
+                    "interest_rate": m.interest_rate    
                 } for m in comp.modalities]
             })
 

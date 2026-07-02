@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
 } from 'recharts';
@@ -6,8 +6,11 @@ import {
   calcularComparacao,
   salvarComparacao,
   exportarPDF,
+  listarComparacoes, 
+  deletarComparacao,
 } from '../../services/comparacao.service';
 import './Comparacoes.css';
+import ConfirmacaoExclusaoComparacao from './ConfirmacaoExclusaoComparacao';
 
 const MODALIDADE_VAZIA = { name: '', interest_rate: '', term_months: '', type: 'PJ' };
 
@@ -16,15 +19,42 @@ const formatarMoeda = (valor) =>
 
 const CORES = ['#0F4C81', '#03906C', '#e67e22', '#8e44ad'];
 
+const formatarData = (dataStr) => {
+  if (!dataStr) return "";
+  return new Date(dataStr).toLocaleDateString("pt-BR");
+};
+
 const Comparacoes = () => {
   const [valorEmprestimo, setValorEmprestimo] = useState('');
   const [modalidades, setModalidades] = useState([{ ...MODALIDADE_VAZIA }]);
   const [resultado, setResultado] = useState(null);
-  const [savedId, setSavedId] = useState(null);
   const [carregando, setCarregando] = useState(false);
   const [salvando, setSalvando] = useState(false);
   const [exportando, setExportando] = useState(false);
+  const [savedId, setSavedId] = useState(null);
   const [feedback, setFeedback] = useState(null);
+  const [comparacoesSalvas, setComparacoesSalvas] = useState([]);
+  const [carregandoLista, setCarregandoLista] = useState(false);
+  const [erroLista, setErroLista] = useState("");
+  const [confirmacaoAberta, setConfirmacaoAberta] = useState(false);
+  const [comparacaoParaExcluir, setComparacaoParaExcluir] = useState(null);
+
+  const carregarComparacoesSalvas = useCallback(async () => {
+    setCarregandoLista(true);
+    setErroLista("");
+    try {
+      const dados = await listarComparacoes();
+      setComparacoesSalvas(Array.isArray(dados) ? dados : dados.comparisons || []);
+    } catch (err) {
+      setErroLista(err.message);
+    } finally {
+      setCarregandoLista(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    carregarComparacoesSalvas();
+  }, [carregarComparacoesSalvas]);
 
   const mostrarFeedback = (mensagem, tipo = 'sucesso') => {
     setFeedback({ mensagem, tipo });
@@ -87,7 +117,6 @@ const Comparacoes = () => {
   const handleCalcular = async () => {
     if (!validar()) return;
     setCarregando(true);
-    setSavedId(null);
     try {
       const dados = await calcularComparacao(montarPayload());
       setResultado(dados);
@@ -105,10 +134,41 @@ const Comparacoes = () => {
       const dados = await salvarComparacao(montarPayload());
       setSavedId(dados.id);
       mostrarFeedback('Comparação salva com sucesso!');
+      carregarComparacoesSalvas();
     } catch {
       mostrarFeedback('Erro ao salvar a comparação.', 'erro');
     } finally {
       setSalvando(false);
+    }
+  };
+
+  const abrirConfirmacao = (comp) => {
+    const dadosParaModal = {
+      modalidade: comp.modalities && comp.modalities.length > 0 ? comp.modalities[0].name : `${comp.modalities_count || 0} modalidade(s)`,
+      prazo_meses: comp.term_months || '—',
+      valor_solicitado: comp.loan_amount,
+      taxa_juros: comp.interest_rate ? `${comp.interest_rate}%` : '—',
+      id_original: comp.comparison_id || comp.id 
+    };
+    setComparacaoParaExcluir(dadosParaModal);
+    setConfirmacaoAberta(true);
+  };
+  
+  const cancelarExclusao = () => {
+    setConfirmacaoAberta(false);
+    setComparacaoParaExcluir(null);
+  };
+
+  const confirmarExclusao = async () => {
+    if (!comparacaoParaExcluir) return;
+    try {
+      await deletarComparacao(comparacaoParaExcluir.id_original);     
+      setConfirmacaoAberta(false);
+      setComparacaoParaExcluir(null);
+      carregarComparacoesSalvas(); 
+    } catch (err) {
+      setErroLista(err.message);
+      setConfirmacaoAberta(false);
     }
   };
 
@@ -162,7 +222,7 @@ const Comparacoes = () => {
               min="1"
               placeholder="Ex: 50000"
               value={valorEmprestimo}
-              onChange={(e) => { setValorEmprestimo(e.target.value); setResultado(null); setSavedId(null); }}
+              onChange={(e) => { setValorEmprestimo(e.target.value); setResultado(null); }}
             />
           </div>
         </div>
@@ -292,7 +352,7 @@ const Comparacoes = () => {
                 <button
                   className="btn-salvar"
                   onClick={handleSalvar}
-                  disabled={salvando || !!savedId}
+                  disabled={salvando}
                 >
                   {savedId ? '✓ Salvo' : salvando ? 'Salvando...' : 'Salvar Comparação'}
                 </button>
@@ -406,6 +466,78 @@ const Comparacoes = () => {
             </div>
           </div>
         </>
+      )}
+
+      {/* === HISTÓRICO DE COMPARAÇÕES === */}
+      <div className="simulacoes-historico" style={{ marginTop: '40px' }}>
+        <div className="historico-header">
+          <h3 className="secao-titulo">Comparações Salvas</h3>
+        </div>
+        
+        {erroLista && <p className="msg-error">{erroLista}</p>}
+
+        <div className="historico-tabela-wrapper">
+          {carregandoLista ? (
+            <div className="simulacoes-vazio"><p>Carregando comparações...</p></div>
+          ) : comparacoesSalvas.length === 0 ? (
+            <div className="simulacoes-vazio"><p>Nenhuma comparação salva ainda.</p></div>
+          ) : (
+            <table className="historico-tabela">
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Valor</th>
+                  <th>Melhor Opção</th>
+                  <th>Prazo (mês)</th>
+                  <th>Taxa (a.m.)</th>
+                  <th>Modalidades</th>
+                  <th className="col-acoes">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {comparacoesSalvas.map((comp) => {
+                  // AQUI É A CORREÇÃO: 
+                  // Agora pegamos o nome direto do JSON que o Backend retornou
+                  const nomeMelhorOpcao = comp.best_option_name;
+                  
+                  return (
+                    <tr key={comp.comparison_id || comp.id}>
+                      <td>{formatarData(comp.created_at)}</td>
+                      <td>{formatarMoeda(comp.loan_amount)}</td>
+                      <td>
+                        {nomeMelhorOpcao ? (
+                          <strong style={{ color: '#03906C' }}>
+                            {/* Adiciona a primeira letra maiúscula e o resto minúsculo */}
+                            {nomeMelhorOpcao.charAt(0).toUpperCase() + nomeMelhorOpcao.slice(1).toLowerCase()}
+                          </strong>
+                        ) : (
+                          <span style={{ color: '#718096' }}>—</span>
+                        )}
+                      </td>
+                      <td>{comp.term_months || '—'}</td>
+                      <td>{comp.interest_rate ? `${comp.interest_rate}%` : '—'}</td>
+                      <td>{comp.modalities_count || comp.modalities?.length || 0} comparadas</td>
+                      <td className="col-acoes">
+                        <button className="btn-acao btn-excluir" onClick={() => abrirConfirmacao(comp)}>✕</button>
+                        <button className="btn-acao btn-pdf" onClick={() => exportarPDF(comp.comparison_id || comp.id)}>📄</button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+
+        </div>
+      </div>
+
+      {/* Modal de confirmação para exclusão */}
+      {confirmacaoAberta && (
+        <ConfirmacaoExclusaoComparacao
+          comparacao={comparacaoParaExcluir}
+          onConfirmar={confirmarExclusao}
+          onCancelar={cancelarExclusao}
+        />
       )}
     </div>
   );
