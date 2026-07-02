@@ -76,46 +76,192 @@
   gap: 12px;
 }
 
-.empresa-switcher {
-  min-width: 190px;
-  padding: 7px 10px;
-  display: grid;
-  grid-template-columns: auto 1fr;
+/* ── Empresa switcher customizado ── */
+
+.empresa-switcher-wrapper {
+  position: relative;
+}
+
+.empresa-switcher-btn {
+  display: flex;
   align-items: center;
-  column-gap: 7px;
-  border: 1px solid rgba(255, 255, 255, 0.34);
-  border-radius: var(--arredondamento-input-botao);
+  gap: 8px;
+  padding: 7px 12px;
   background: rgba(255, 255, 255, 0.08);
-}
-
-.empresa-switcher label {
-  font-size: 10px;
-  line-height: 1;
-  opacity: 0.72;
-}
-
-.empresa-switcher select {
-  min-width: 0;
-  grid-column: 2;
-  border: 0;
-  outline: 0;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--arredondamento-input-botao);
   color: var(--branco);
-  background: transparent;
-  font: inherit;
+  cursor: pointer;
+  font-family: var(--fonte-poppins);
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+  min-width: 190px;
+  text-align: left;
+}
+
+.empresa-switcher-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.empresa-switcher-btn.aberto {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.empresa-switcher-btn:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.empresa-icon {
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.empresa-btn-texto {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.empresa-label {
+  font-size: 10px;
+  opacity: 0.7;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.empresa-nome {
   font-size: 13px;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.empresa-chevron {
+  flex-shrink: 0;
+  opacity: 0.75;
+  transition: transform 0.2s ease;
+}
+
+.empresa-chevron.rotacionado {
+  transform: rotate(180deg);
+}
+
+/* ── Dropdown panel ── */
+
+.empresa-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 220px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow:
+    0 8px 24px rgba(11, 68, 62, 0.14),
+    0 2px 6px rgba(0, 0, 0, 0.06);
+  z-index: 200;
+  overflow: hidden;
+  animation: dropdown-aparecer 0.12s ease;
+}
+
+@keyframes dropdown-aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.empresa-dropdown-label {
+  margin: 0;
+  padding: 10px 14px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #8a9ba8;
+}
+
+.empresa-lista {
+  list-style: none;
+  margin: 0;
+  padding: 2px 6px;
+}
+
+.empresa-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 10px;
+  background: none;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
+  font-family: var(--fonte-poppins);
+  font-size: 13px;
+  font-weight: 500;
+  color: #1e3a37;
+  text-align: left;
+  transition: background 0.12s;
 }
 
-.empresa-switcher select option {
-  color: #263936;
-  background: var(--branco);
+.empresa-item:hover {
+  background: #f0f7f5;
 }
 
-.empresa-switcher select:disabled {
-  cursor: wait;
-  opacity: 0.65;
+.empresa-item--ativa {
+  background: #e6f4f1;
+  color: var(--azul, #177f74);
 }
+
+.empresa-item--ativa:hover {
+  background: #d8eeea;
+}
+
+.empresa-item-nome {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.empresa-check {
+  flex-shrink: 0;
+  color: var(--azul, #177f74);
+}
+
+.empresa-dropdown-divider {
+  height: 1px;
+  background: #e8f0ee;
+  margin: 4px 0;
+}
+
+.empresa-item--cadastrar {
+  color: #177f74;
+  gap: 6px;
+  justify-content: flex-start;
+  margin: 2px 6px 6px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.empresa-item--cadastrar:hover {
+  background: #e6f4f1;
+}
+
+/* ── Resto do layout ── */
 
 .nav-link {
   color: var(--branco);
@@ -198,6 +344,11 @@
   .layout-nav::-webkit-scrollbar {
     display: none;
   }
+
+  .empresa-dropdown {
+    right: auto;
+    left: 0;
+  }
 }
 
 @media (max-width: 680px) {
@@ -210,7 +361,7 @@
     justify-content: flex-end;
   }
 
-  .empresa-switcher {
+  .empresa-switcher-btn {
     min-width: 150px;
   }
 
