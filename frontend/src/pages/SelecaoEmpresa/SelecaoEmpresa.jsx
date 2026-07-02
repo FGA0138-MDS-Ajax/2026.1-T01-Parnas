@@ -123,6 +123,7 @@ const SelecaoEmpresa = () => {
                 );
               })}
             </div>
+            {empresas.length > 0 && (
             <div className="selecao-empresa-acoes">
               <button
                 type="button"
@@ -132,6 +133,7 @@ const SelecaoEmpresa = () => {
                 + Cadastrar nova empresa
               </button>
             </div>
+            )}
           </>
         )}
       </section>
