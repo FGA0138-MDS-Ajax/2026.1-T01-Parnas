@@ -499,6 +499,50 @@
   width: 100%;
 }
 
+/* tabela salva*/
+/* 1. Coluna de Ações: Alinha os botões lado a lado no centro */
+.col-acoes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Espaço entre o lápis e a lixeira */
+  white-space: nowrap;
+}
+
+/* 2. Estilo base dos botões de ação (Remove o fundo feio padrão) */
+.btn-acao {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 3. Hover dos botões */
+.btn-acao:hover {
+  background-color: #f1f5f9; /* Um cinza bem clarinho no hover */
+}
+
+/* Cores específicas de cada botão */
+.btn-acao.btn-excluir {
+  color: #dc2626; /* Vermelho para exclusão */
+}
+.btn-acao.btn-excluir:hover {
+  background-color: #fef2f2; /* Fundo vermelho clarinho no hover */
+}
+
+.btn-acao.btn-pdf {
+  color: #2563eb; /* Azul para PDF */
+}
+.btn-acao.btn-pdf:hover {
+  background-color: #eff6ff; /* Fundo azul clarinho no hover */
+}
+
 /* responsividade */
 
 @media (max-width: 768px) {
