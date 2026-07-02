@@ -1,4 +1,14 @@
-/* ── Card principal ── */
+.login-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* ── Card principal ── (o restante do arquivo original continua igual abaixo) */
 .login-card {
   width: 400px;
   max-width: calc(100vw - 40px);
