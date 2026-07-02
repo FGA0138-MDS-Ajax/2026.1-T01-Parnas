@@ -12,7 +12,7 @@ class BillService:
         if not company_id:
             return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
 
-        if not CompanyRepository.check_user_access(user_id, company_id):
+        if not CompanyRepository.check_user_access(company_id, user_id):
             return {"erro": "Acesso negado a esta empresa."}, 403
 
         try:
