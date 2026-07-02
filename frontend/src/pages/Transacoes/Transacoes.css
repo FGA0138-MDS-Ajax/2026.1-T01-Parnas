@@ -257,7 +257,8 @@
   background-color: var(--branco);
   border: 2px solid var(--borda-input);
   border-radius: var(--arredondamento-card);
-  overflow: hidden;
+  overflow-x: auto;
+  width: 100%;
 }
 
 .tabela-info {
@@ -269,6 +270,7 @@
 
 .transacoes-tabela {
   width: 100%;
+  min-width: 720px;
   border-collapse: collapse;
   font-size: 0.9rem;
 }
@@ -278,6 +280,12 @@
   border-bottom: 2px solid var(--borda-input);
 }
 
+.transacoes-tabela th,
+.transacoes-tabela td {
+  white-space: normal;
+  word-break: break-word;
+  vertical-align: middle;
+}
 .transacoes-tabela th {
   padding: 13px 16px;
   text-align: left;
@@ -306,6 +314,21 @@
   padding: 14px 16px;
   color: var(--texto-principal);
   vertical-align: middle;
+}
+
+.transacoes-tabela td.col-acoes {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  padding: 10px 12px !important;
+  min-width: 130px;
+  max-width: 180px;
+}
+
+.transacoes-tabela td.col-acoes .btn-acao {
+  padding: 6px 8px;
 }
 
 /* badges e cores de valores */
@@ -367,9 +390,18 @@
   margin-left: 8px;
 }
 
-.transacoes-tabela .btn-editar:hover {
-  background-color: var(--azul) !important;
+.transacoes-tabela .btn-editar,
+.btn-editar {
+  background-color: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+.transacoes-tabela .btn-editar:hover,
+.btn-editar:hover {
+  background-color: #475569 !important;
   color: var(--branco) !important;
+  box-shadow: 0 4px 10px rgba(71, 85, 105, 0.15);
 }
 
 .transacoes-tabela .btn-excluir:hover {
@@ -793,6 +825,16 @@
     grid-template-columns: 1fr;
   }
 
+  .transacoes-tabela-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .transacoes-tabela {
+    width: 100%;
+    min-width: 100%;
+  }
+
   .transacoes-tabela thead {
     display: none;
   }
@@ -806,26 +848,71 @@
   }
 
   .transacoes-tabela tr {
-    padding: 12px 16px;
+    padding: 16px 14px;
     border-bottom: 1px solid var(--borda-input);
-    position: relative;
   }
 
   .transacoes-tabela td {
-    padding: 4px 0;
+    padding: 10px 0;
     border: none;
+    position: relative;
+    padding-left: 42%;
   }
 
-  .col-acoes {
+  .transacoes-tabela td.col-acoes {
+    padding-left: 0;
+    justify-content: flex-start;
+  }
+
+  .transacoes-tabela td.col-acoes .btn-acao {
+    padding: 6px 10px;
+  }
+
+  .transacoes-tabela td::before {
     position: absolute;
-    top: 12px;
-    right: 16px;
-    text-align: right;
+    left: 0;
+    top: 10px;
+    width: 40%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--texto-placeholder);
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .transacoes-tabela td:nth-of-type(1)::before {
+    content: "Data";
+  }
+  .transacoes-tabela td:nth-of-type(2)::before {
+    content: "Descrição";
+  }
+  .transacoes-tabela td:nth-of-type(3)::before {
+    content: "Categoria";
+  }
+  .transacoes-tabela td:nth-of-type(4)::before {
+    content: "Conta/Caixa";
+  }
+  .transacoes-tabela td:nth-of-type(5)::before {
+    content: "Tipo";
+  }
+  .transacoes-tabela td:nth-of-type(6)::before {
+    content: "Valor";
+  }
+  .transacoes-tabela td:nth-of-type(7)::before {
+    content: "Ações";
+  }
+
+  .transacoes-tabela td.col-acoes {
+    position: static;
+    margin-top: 10px;
+    justify-content: flex-start;
   }
 
   .valor-receita,
   .valor-despesa {
-    text-align: left;
+    text-align: right;
   }
 
   .form-row {

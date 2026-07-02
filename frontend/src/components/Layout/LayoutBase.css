@@ -303,7 +303,12 @@
   padding: 40px;
   width: 100%;
   box-sizing: border-box;
-  max-width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.layout-main > div {
+  width: 100%;
 }
 
 .layout-company-error {
@@ -312,6 +317,8 @@
   background: #fff0f0;
   text-align: right;
   font-size: 13px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .app-loading {
@@ -322,7 +329,7 @@
   font-weight: 600;
 }
 
-@media (max-width: 1240px) {
+@media (max-width: 1400px) {
   .layout-header {
     flex-wrap: wrap;
     padding: 16px 24px;
@@ -334,15 +341,8 @@
     width: 100%;
     margin-right: 0;
     margin-top: 8px;
-    overflow-x: auto;
     justify-content: flex-start;
-    padding-bottom: 4px;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .layout-nav::-webkit-scrollbar {
-    display: none;
+    padding-bottom: 6px;
   }
 
   .empresa-dropdown {
