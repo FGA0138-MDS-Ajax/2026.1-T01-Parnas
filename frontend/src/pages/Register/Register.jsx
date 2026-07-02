@@ -293,6 +293,9 @@ const Register = () => {
             >
               {loading ? "Cadastrando..." : "Cadastrar"}
             </button>
+            <div className="register-login-ref">
+              Já possui uma conta? <a href="/">Faça login</a>
+            </div>
           </form>
         </div>
       </div>

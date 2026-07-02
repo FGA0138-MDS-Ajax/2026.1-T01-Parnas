@@ -217,3 +217,24 @@
     padding: 30px;
   }
 }
+
+.register-login-ref {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--texto-placeholder);
+}
+
+.register-login-ref a {
+  color: var(--azul);
+  text-decoration: none;
+  font-weight: 700;
+  margin-left: 4px;
+  transition: var(--transicao-suave);
+}
+
+.register-login-ref a:hover {
+  color: var(--verde-claro);
+  text-decoration: underline;
+}
