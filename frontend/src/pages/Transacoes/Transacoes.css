@@ -282,10 +282,29 @@
 
 .transacoes-tabela th,
 .transacoes-tabela td {
-  white-space: normal;
-  word-break: break-word;
   vertical-align: middle;
 }
+
+/* colunas centralizadas e sem quebra */
+.transacoes-tabela th:nth-child(1),
+.transacoes-tabela th:nth-child(5),
+.transacoes-tabela th:nth-child(6),
+.transacoes-tabela th:nth-child(7),
+.transacoes-tabela td:nth-child(1),
+.transacoes-tabela td:nth-child(5),
+.transacoes-tabela td:nth-child(6),
+.transacoes-tabela td:nth-child(7) {
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* evita quebra em badges e valores */
+.badge,
+.valor-receita,
+.valor-despesa {
+  white-space: nowrap;
+}
+
 .transacoes-tabela th {
   padding: 13px 16px;
   text-align: left;
