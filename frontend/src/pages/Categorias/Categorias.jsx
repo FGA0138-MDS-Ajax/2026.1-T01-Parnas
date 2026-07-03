@@ -6,6 +6,7 @@ import {
   excluirCategoria as excluirCategoriaApi,
 } from "../../services/categoria.service";
 import "./Categorias.css";
+import ConfirmacaoExclusaoCategoria from './ConfirmacaoExclusaoCategoria';
 
 function Categorias() {
   const [nome, setNome] = useState("");
@@ -19,6 +20,9 @@ function Categorias() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
   const [feedback, setFeedback] = useState("");
+
+  const [confirmacaoAberta, setConfirmacaoAberta] = useState(false);
+  const [categoriaParaExcluir, setCategoriaParaExcluir] = useState(null);
 
   const carregarCategorias = async () => {
     try {
@@ -90,17 +94,24 @@ function Categorias() {
     setEditandoId(null);
   };
 
-  const excluirCategoria = async (id) => {
-    const confirmar = window.confirm(
-      "Deseja realmente excluir esta categoria?",
-    );
+  const abrirConfirmacao = (categoria) => {
+    setCategoriaParaExcluir(categoria);
+    setConfirmacaoAberta(true);
+  };
 
-    if (!confirmar) return;
+  const cancelarExclusao = () => {
+    setConfirmacaoAberta(false);
+    setCategoriaParaExcluir(null);
+  };
 
+  const confirmarExclusao = async () => {
+    if (!categoriaParaExcluir) return;
     try {
       setErro("");
-      await excluirCategoriaApi(id);
+      await excluirCategoriaApi(categoriaParaExcluir.id);
       setFeedback("Categoria excluída com sucesso!");
+      setConfirmacaoAberta(false);
+      setCategoriaParaExcluir(null);
       await carregarCategorias();
     } catch (error) {
       setErro(
@@ -108,6 +119,7 @@ function Categorias() {
           error.message ||
           "Erro ao excluir categoria.",
       );
+      setConfirmacaoAberta(false);
     }
   };
 
@@ -224,7 +236,7 @@ function Categorias() {
 
                             <button
                               className="btn-excluir"
-                              onClick={() => excluirCategoria(categoria.id)}
+                              onClick={() => abrirConfirmacao(categoria)}
                             >
                               Excluir
                             </button>
@@ -239,6 +251,14 @@ function Categorias() {
           )}
         </section>
       </main>
+      {/* Modal de confirmação para exclusão */}
+      {confirmacaoAberta && (
+        <ConfirmacaoExclusaoCategoria
+          categoria={categoriaParaExcluir}
+          onConfirmar={confirmarExclusao}
+          onCancelar={cancelarExclusao}
+        />
+      )}
     </div>
   );
 }
