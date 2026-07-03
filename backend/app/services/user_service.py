@@ -22,26 +22,45 @@ class UserService:
         else:
             birth_date = birth_date_raw
 
-        if UserRepository.get_by_email(email):
+        existing_by_email = UserRepository.get_by_email(email)
+        if existing_by_email and existing_by_email.is_active:
             raise APIException("Este e-mail já está cadastrado.", 409)
-        
-        if UserRepository.get_by_cpf(cpf):
+
+        existing_by_cpf = UserRepository.get_by_cpf(cpf)
+        if existing_by_cpf and existing_by_cpf.is_active:
             raise APIException("Este CPF já está cadastrado.", 409)
-        
+
+        # E-mail e CPF pertencem à mesma conta desativada: reativa em vez de criar uma nova.
+        if existing_by_email and existing_by_cpf and existing_by_email.user_id != existing_by_cpf.user_id:
+            raise APIException("Este CPF já está cadastrado.", 409)
+
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         try:
-            new_user = UserRepository.create(
-                name=name,
-                email=email,
-                cpf=cpf,
-                password_hash=hashed_password,
-                birth_date=birth_date
-            )
-            token = create_access_token(identity=str(new_user.user_id))
+            inactive_user = existing_by_email or existing_by_cpf
+            if inactive_user:
+                inactive_user.name = name
+                inactive_user.email = email
+                inactive_user.cpf = cpf
+                inactive_user.password_hash = hashed_password
+                inactive_user.birth_date = birth_date
+                inactive_user.is_active = True
+                user = UserRepository.save(inactive_user)
+                mensagem = "Conta reativada com sucesso."
+            else:
+                user = UserRepository.create(
+                    name=name,
+                    email=email,
+                    cpf=cpf,
+                    password_hash=hashed_password,
+                    birth_date=birth_date
+                )
+                mensagem = "Conta criada com sucesso."
+
+            token = create_access_token(identity=str(user.user_id))
             return {
-                "mensagem": "Conta criada com sucesso.",
+                "mensagem": mensagem,
                 "token": token,
-                "user": new_user
+                "user": user
             }, 201
         except Exception as e:
             return {"erro": f"Ocorreu um erro interno ao tentar salvar o usuário: {str(e)}"}, 500
