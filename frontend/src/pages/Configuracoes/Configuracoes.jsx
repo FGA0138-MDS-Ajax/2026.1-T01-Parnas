@@ -57,7 +57,7 @@ const Configuracoes = () => {
 
         navigate("/dashboard");
       } else if (modalType === "user") {
-        await api.delete("/api/usuarios/profile");
+        await api.delete("/api/profile");
 
         handleCloseModal();
         localStorage.removeItem("token");
