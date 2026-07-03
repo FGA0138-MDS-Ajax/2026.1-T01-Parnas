@@ -1,187 +1,282 @@
-.documentos-header {
-  text-align: center;
+.documentos-page {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  font-family: var(--fonte-poppins);
 }
 
 .documentos-header {
-  color: var(--primary-color, #028a73);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 28px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.documentos-header h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--azul);
+  margin: 0 0 4px;
+}
+
+.documentos-header p {
+  font-size: 0.9rem;
+  color: var(--texto-placeholder);
+  margin: 0;
 }
 
 .documentos-content {
-  width: 90%;
-  max-width: 75rem;
-  margin: 0 auto;
-  padding-top: 5rem;
-  padding-bottom: 2rem;
+  width: 100%;
+  margin: 0;
 }
 
 .documentos-card {
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background-color: var(--branco);
+  border: 1.5px solid var(--borda-input);
+  border-radius: var(--arredondamento-card);
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(6, 38, 35, 0.04);
 }
 
 .documentos-card h2 {
-  margin-bottom: 1.25rem;
+  margin: 0 0 18px;
   font-size: 1rem;
-  font-weight: 600;
-  color: #111827;
+  font-weight: 700;
+  color: var(--texto-principal);
 }
 
 .documentos-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
 }
 
 .documentos-form input,
 .documentos-form select,
 .documentos-form textarea {
   width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  border: 1px solid var(--borda-input);
+  border-radius: var(--arredondamento-input-botao);
   font-size: 0.9rem;
+  font-family: var(--fonte-poppins);
+  color: var(--texto-principal);
+  background-color: var(--branco);
   outline: none;
-  transition: 0.2s;
+  transition: var(--transicao-suave);
 }
 
 .documentos-form input:focus,
 .documentos-form select:focus,
 .documentos-form textarea:focus {
-  border-color: #0f4c81;
+  border-color: var(--azul);
+  box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1);
+}
+
+.documentos-form textarea,
+.documentos-page .dropzone,
+.documentos-form input[type="file"],
+.documentos-page .erro,
+.documentos-page .sucesso,
+.documentos-page .progress-bar {
+  grid-column: 1 / -1;
 }
 
 .documentos-form textarea {
+  min-height: 112px;
   resize: vertical;
-  min-height: 7rem;
 }
 
-.dropzone {
-  border: 2px dashed #0f4c81;
-  border-radius: 0.75rem;
-  padding: 2rem;
+.documentos-page .dropzone {
+  border: 2px dashed var(--azul);
+  border-radius: var(--arredondamento-card);
+  padding: 28px 24px;
   text-align: center;
-  color: #6b7280;
+  color: var(--texto-placeholder);
   font-size: 0.9rem;
+  font-weight: 500;
+  background-color: #f8fafc;
   cursor: pointer;
-  transition: 0.2s;
+  transition: var(--transicao-suave);
 }
 
-.dropzone:hover {
-  background: #f8fafc;
+.documentos-page .dropzone:hover {
+  background-color: #eef2f6;
+  border-color: var(--verde-claro, #239b8f);
+}
+
+.documentos-form input[type="file"] {
+  padding: 9px 12px;
+  font-size: 0.85rem;
 }
 
 .documentos-form button[type="submit"] {
-  width: fit-content;
-  background: #0f4c81;
-  color: white;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  background-color: var(--azul);
+  color: var(--branco);
   border: none;
-  border-radius: 0.5rem;
-  padding: 0.8rem 1.2rem;
+  border-radius: var(--arredondamento-input-botao);
   font-size: 0.9rem;
   font-weight: 600;
+  font-family: var(--fonte-poppins);
   cursor: pointer;
-  transition: 0.2s;
+  transition: var(--transicao-suave);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .documentos-form button[type="submit"]:hover {
-  background: #0c3d68;
+  background-color: var(--verde-escuro);
+  transform: translateY(-1px);
 }
 
-.progress-bar {
+.documentos-form button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+.documentos-page .progress-bar {
   width: 100%;
-  height: 0.7rem;
-  background: #e5e7eb;
+  height: 10px;
+  background-color: #e5e7eb;
   border-radius: 999px;
   overflow: hidden;
 }
 
-.progress-fill {
+.documentos-page .progress-fill {
   height: 100%;
-  background: #0f4c81;
+  background-color: var(--azul);
   transition: width 0.3s ease;
 }
 
-.erro {
-  color: #dc2626;
+.documentos-page .erro,
+.documentos-page .sucesso {
+  margin: 0;
   font-size: 0.85rem;
   font-weight: 600;
+}
+
+.documentos-page .erro {
+  color: var(--erro);
+}
+
+.documentos-page .sucesso {
+  color: var(--verde);
 }
 
 .documentos-table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.documentos-table thead tr {
+  background-color: #f5f7fa;
+  border-bottom: 2px solid var(--borda-input);
 }
 
 .documentos-table th {
-  background: #f7f9fc;
+  padding: 13px 16px;
   text-align: left;
-  font-size: 0.83rem;
-  font-weight: 600;
-  color: #111827;
-  padding: 1rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--texto-placeholder);
+  white-space: nowrap;
+}
+
+.documentos-table tbody tr {
+  border-bottom: 1px solid var(--borda-input);
+  transition: background-color 0.15s ease;
+}
+
+.documentos-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.documentos-table tbody tr:hover {
+  background-color: #f8fafc;
 }
 
 .documentos-table td {
-  padding: 1rem;
-  border-bottom: 1px solid #e5e7eb;
-  font-size: 0.9rem;
+  padding: 14px 16px;
+  color: var(--texto-principal);
+  vertical-align: middle;
 }
 
 .sem-documentos {
   text-align: center;
-  color: #6b7280;
-  padding: 2rem;
+  color: var(--texto-placeholder);
+  padding: 60px 24px;
+  font-size: 0.95rem;
 }
 
-.acoes {
+.documentos-page .acoes {
   display: flex;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
 }
 
-.btn-download {
-  background: #0f4c81;
-  color: white;
+.documentos-page .btn-download,
+.documentos-page .btn-excluir {
   border: none;
-  border-radius: 0.5rem;
-  padding: 0.5rem 0.9rem;
+  border-radius: var(--arredondamento-input-botao);
+  padding: 8px 12px;
   font-size: 0.85rem;
   font-weight: 600;
+  font-family: var(--fonte-poppins);
   cursor: pointer;
+  transition: var(--transicao-suave);
 }
 
-.btn-download:hover {
-  background: #0c3d68;
+.documentos-page .btn-download {
+  background-color: var(--azul);
+  color: var(--branco);
 }
 
-.btn-excluir {
-  background: #dc2626;
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.5rem 0.9rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
+.documentos-page .btn-download:hover {
+  background-color: var(--verde-escuro);
 }
 
-.btn-excluir:hover {
-  background: #b91c1c;
+.documentos-page .btn-excluir {
+  background-color: #fdecea;
+  color: var(--erro);
+}
+
+.documentos-page .btn-excluir:hover {
+  background-color: var(--erro);
+  color: var(--branco);
 }
 
 @media (max-width: 768px) {
-  .documentos-content {
-    width: 95%;
+  .documentos-page {
+    padding: 20px 16px;
   }
+
+  .documentos-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .documentos-form {
+    grid-template-columns: 1fr;
+  }
+
+  .documentos-card {
+    padding: 16px;
+  }
+
   .documentos-table {
     display: block;
-
     overflow-x: auto;
-  }
-  .acoes {
-    flex-direction: column;
   }
 }
