@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
-import { Building2 } from "lucide-react";
+import { Building2, ChevronDown, Plus, Check } from "lucide-react";
 import logoImg from "../../assets/CredifabLogo.png";
 import { useEmpresa } from "../../context/EmpresaContext";
 import "./LayoutBase.css";
@@ -11,17 +11,22 @@ const LayoutBase = () => {
     useEmpresa();
   const [trocandoEmpresa, setTrocandoEmpresa] = useState(false);
   const [erroTroca, setErroTroca] = useState("");
+  const [dropdownAberto, setDropdownAberto] = useState(false);
+  const dropdownRef = useRef(null);
 
-  const handleTrocarEmpresa = async (event) => {
-    const valor = event.target.value;
+  useEffect(() => {
+    const fecharFora = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownAberto(false);
+      }
+    };
+    document.addEventListener("mousedown", fecharFora);
+    return () => document.removeEventListener("mousedown", fecharFora);
+  }, []);
 
-    if (valor === "nova_empresa") {
-      navigate("/cadastro-empresa");
-      return;
-    }
-
-    const companyId = Number(valor);
-    if (!companyId || companyId === Number(empresaAtiva?.company_id)) return;
+  const handleSelecionarEmpresa = async (companyId) => {
+    setDropdownAberto(false);
+    if (companyId === empresaAtiva?.company_id) return;
 
     setTrocandoEmpresa(true);
     setErroTroca("");
@@ -32,6 +37,11 @@ const LayoutBase = () => {
     } finally {
       setTrocandoEmpresa(false);
     }
+  };
+
+  const handleCadastrarEmpresa = () => {
+    setDropdownAberto(false);
+    navigate("/cadastro-empresa");
   };
 
   return (
@@ -80,23 +90,82 @@ const LayoutBase = () => {
 
         <div className="layout-actions">
           {empresaAtiva && (
-            <div className="empresa-switcher">
-              <Building2 size={17} aria-hidden="true" />
-              <select
-                id="empresa-ativa"
-                value={empresaAtiva.company_id}
-                onChange={handleTrocarEmpresa}
+            <div className="empresa-switcher-wrapper" ref={dropdownRef}>
+              <button
+                className={`empresa-switcher-btn ${dropdownAberto ? "aberto" : ""} ${trocandoEmpresa ? "carregando" : ""}`}
+                onClick={() => !trocandoEmpresa && setDropdownAberto((v) => !v)}
+                aria-haspopup="listbox"
+                aria-expanded={dropdownAberto}
                 disabled={trocandoEmpresa}
               >
-                {empresas.map((empresa) => (
-                  <option key={empresa.company_id} value={empresa.company_id}>
-                    {empresa.name}
-                  </option>
-                ))}
-                <option value="nova_empresa"> + Cadastrar nova empresa </option>
-              </select>
+                <Building2
+                  size={15}
+                  aria-hidden="true"
+                  className="empresa-icon"
+                />
+                <div className="empresa-btn-texto">
+                  <span className="empresa-label">Empresa ativa</span>
+                  <span className="empresa-nome">
+                    {trocandoEmpresa ? "Alternando..." : empresaAtiva.name}
+                  </span>
+                </div>
+                <ChevronDown
+                  size={14}
+                  aria-hidden="true"
+                  className={`empresa-chevron ${dropdownAberto ? "rotacionado" : ""}`}
+                />
+              </button>
+
+              {dropdownAberto && (
+                <div className="empresa-dropdown" role="listbox">
+                  {empresas.length > 0 && (
+                    <>
+                      <p className="empresa-dropdown-label">Suas empresas</p>
+                      <ul className="empresa-lista">
+                        {empresas.map((empresa) => {
+                          const ativa =
+                            Number(empresa.company_id) ===
+                            Number(empresaAtiva.company_id);
+                          return (
+                            <li key={empresa.company_id}>
+                              <button
+                                role="option"
+                                aria-selected={ativa}
+                                className={`empresa-item ${ativa ? "empresa-item--ativa" : ""}`}
+                                onClick={() =>
+                                  handleSelecionarEmpresa(empresa.company_id)
+                                }
+                              >
+                                <span className="empresa-item-nome">
+                                  {empresa.name}
+                                </span>
+                                {ativa && (
+                                  <Check
+                                    size={14}
+                                    aria-hidden="true"
+                                    className="empresa-check"
+                                  />
+                                )}
+                              </button>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                      <div className="empresa-dropdown-divider" />
+                    </>
+                  )}
+                  <button
+                    className="empresa-item empresa-item--cadastrar"
+                    onClick={handleCadastrarEmpresa}
+                  >
+                    <Plus size={14} aria-hidden="true" />
+                    Cadastrar nova empresa
+                  </button>
+                </div>
+              )}
             </div>
           )}
+
           <button
             onClick={() => navigate("/configuracoes")}
             className="btn-settings"

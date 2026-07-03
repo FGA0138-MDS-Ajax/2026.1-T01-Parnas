@@ -8,11 +8,15 @@ const Register = () => {
     email: "",
     cpf: "",
     senha: "",
+    confirmarSenha: "",
     dataNascimento: "",
   });
 
   const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [verSenha, setVerSenha] = useState(false);
+  const [verConfirmarSenha, setVerConfirmarSenha] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -25,7 +29,7 @@ const Register = () => {
     setLoading(true);
 
     const hoje = new Date();
-    const nascimento = new Date(formData.dataNascimento);
+    const nacimiento = new Date(formData.dataNascimento);
 
     if (nascimento > hoje) {
       setErro("Data de nascimento inválida");
@@ -33,9 +37,9 @@ const Register = () => {
       return;
     }
 
-    let idade = hoje.getFullYear() - nascimento.getFullYear();
-    const mes = hoje.getMonth() - nascimento.getMonth();
-    if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+    let idade = hoje.getFullYear() - nacimiento.getFullYear();
+    const mes = hoje.getMonth() - nacimiento.getMonth();
+    if (mes < 0 || (mes === 0 && hoje.getDate() < nacimiento.getDate())) {
       idade--;
     }
 
@@ -47,6 +51,14 @@ const Register = () => {
 
     if (formData.senha.length < 8) {
       setErro("Sua senha deve ter no mínimo 8 caracteres.");
+      setLoading(false);
+      return;
+    }
+
+    if (formData.senha !== formData.confirmarSenha) {
+      setErro(
+        "As senhas informadas não coincidem. Verifique e tente novamente.",
+      );
       setLoading(false);
       return;
     }
@@ -107,8 +119,7 @@ const Register = () => {
 
         <div className="register-form-content">
           <div className="register-header">
-            <span className="icon-user">👤</span>
-            <h2>Registre-se</h2>
+            <h2>Cadastre-se</h2>
           </div>
 
           <form className="register-form" onSubmit={handleSubmit}>
@@ -165,15 +176,112 @@ const Register = () => {
 
             <div className="register-input-group">
               <label>Senha</label>
-              <input
-                type="password"
-                name="senha"
-                placeholder="No mínimo 8 caracteres"
-                value={formData.senha}
-                onChange={handleChange}
-                disabled={loading}
-                required
-              />
+              <div className="password-input-wrapper">
+                <input
+                  type={verSenha ? "text" : "password"}
+                  name="senha"
+                  placeholder="No mínimo 8 caracteres"
+                  value={formData.senha}
+                  onChange={handleChange}
+                  disabled={loading}
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle-button"
+                  onClick={() => setVerSenha(!verSenha)}
+                  title={verSenha ? "Ocultar senha" : "Exibir senha"}
+                >
+                  {verSenha ? (
+                    /* icone de Olho Fechado */
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-10-7-10-7a19.08 19.08 0 0 1 2.18-3M12 5c7 0 10 7 10 7a19.08 19.08 0 0 1-2.18 3M1 1l22 22" />
+                      <path d="M12 9a3 3 0 0 0-3 3" />
+                    </svg>
+                  ) : (
+                    /* icone de Olho Aberto */
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div className="register-input-group">
+              <label>Confirmar Senha</label>
+              <div className="password-input-wrapper">
+                <input
+                  type={verConfirmarSenha ? "text" : "password"}
+                  name="confirmarSenha"
+                  placeholder="Digite a senha novamente"
+                  value={formData.confirmarSenha}
+                  onChange={handleChange}
+                  disabled={loading}
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle-button"
+                  onClick={() => setVerConfirmarSenha(!verConfirmarSenha)}
+                  title={verConfirmarSenha ? "Ocultar senha" : "Exibir senha"}
+                >
+                  {verConfirmarSenha ? (
+                    /* icone de Olho Fechado */
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-10-7-10-7a19.08 19.08 0 0 1 2.18-3M12 5c7 0 10 7 10 7a19.08 19.08 0 0 1-2.18 3M1 1l22 22" />
+                      <path d="M12 9a3 3 0 0 0-3 3" />
+                    </svg>
+                  ) : (
+                    /* icone de Olho Aberto */
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  )}
+                </button>
+              </div>
             </div>
 
             {erro && <p className="register-error">{erro}</p>}
@@ -183,8 +291,11 @@ const Register = () => {
               className="register-button"
               disabled={loading}
             >
-              {loading ? "Cadastrando..." : "Finalizar registro"}
+              {loading ? "Cadastrando..." : "Cadastrar"}
             </button>
+            <div className="register-login-ref">
+              Já possui uma conta? <a href="/">Faça login</a>
+            </div>
           </form>
         </div>
       </div>
