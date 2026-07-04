@@ -1,24 +1,4 @@
-"""
-test_company_registration_flow.py - Testes End-to-End (E2E) da Feature de Cadastro
-
-Testes E2E simulam fluxos completos como um usuário real faria:
-  1. Usuário cria conta → recebe token
-  2. Usuário faz login → recebe token
-  3. Usuário cadastra empresa → empresa é criada
-  4. Usuário tenta CNPJ duplicado → recebe erro
-  5. Usuário consulta dados → vê a empresa criada
-
-O que torna um teste "E2E":
-  - Múltiplos endpoints / operações em sequência
-  - Testa dados que "atravessam" a aplicação
-  - Simula comportamento real do usuário
-  - Pode validar efeitos colaterais (BD, histórico, etc.)
-
-Diferença dos testes anteriores:
-  - Testes unitários: Testam uma função isolada
-  - Testes de integração (routes): Testam um endpoint isolado
-  - Testes E2E: Testam fluxo completo (vários endpoints juntos)
-"""
+"""E2E do cadastro de empresa: login -> cadastro -> CNPJ duplicado -> consulta."""
 
 import pytest
 from app.models.company import Company

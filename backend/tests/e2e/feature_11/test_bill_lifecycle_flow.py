@@ -1,10 +1,4 @@
-"""
-test_bill_lifecycle_flow.py - E2E do ciclo de vida de uma conta a pagar.
-
-Fluxo do usuário gerenciando contas: cadastro -> empresa -> categoria ->
-cria conta pendente -> lista pendentes -> edita -> exclui. Valida que cada
-operação reflete no estado retornado pela listagem.
-"""
+"""E2E do ciclo de vida de conta: cria -> lista -> edita -> exclui."""
 
 from tests.e2e.helpers import registrar_e_logar, criar_empresa, criar_categoria
 
@@ -34,7 +28,6 @@ def test_ciclo_de_vida_da_conta(client, clean_db):
 
     bill_id = _criar_conta(client, headers, company_id, category_id)
 
-    # A conta aparece entre as pendentes.
     pendentes = client.get(
         f"/api/companies/{company_id}/bills/",
         query_string={"status": "pendente"},
@@ -45,7 +38,6 @@ def test_ciclo_de_vida_da_conta(client, clean_db):
     assert [c["id"] for c in contas] == [bill_id]
     assert contas[0]["status"] == "pendente"
 
-    # Edita o valor da conta pendente.
     edicao = client.put(
         f"/api/companies/{company_id}/bills/{bill_id}",
         json={"company_id": company_id, "amount": 1600.0},
@@ -53,7 +45,6 @@ def test_ciclo_de_vida_da_conta(client, clean_db):
     )
     assert edicao.status_code == 200
 
-    # Exclui a conta e a listagem esvazia.
     exclusao = client.delete(
         f"/api/companies/{company_id}/bills/{bill_id}",
         query_string={"company_id": company_id},
@@ -66,13 +57,11 @@ def test_ciclo_de_vida_da_conta(client, clean_db):
 
 
 def test_conta_de_empresa_alheia_nao_e_listada(client, clean_db):
-    # Usuário A cria uma conta na empresa dele.
     headers_a = registrar_e_logar(client, email="dono_a@empresa.com")
     company_a = criar_empresa(client, headers_a, "Empresa A")
     cat_a = criar_categoria(client, headers_a, company_a, "Despesas", "despesa")
     _criar_conta(client, headers_a, company_a, cat_a)
 
-    # Usuário B, sem vínculo, não consegue listar as contas da empresa A.
     headers_b = registrar_e_logar(client, email="dono_b@empresa.com")
     resp = client.get(f"/api/companies/{company_a}/bills/", headers=headers_b)
     assert resp.status_code == 403
