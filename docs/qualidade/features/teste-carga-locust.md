@@ -30,9 +30,9 @@ e taxa de erro dentro dos limites acordados (SLO - *Service Level Objective*):
 
 | Critério                                   | Limite            | Ligado a                         |
 |--------------------------------------------|-------------------|----------------------------------|
-| Tempo de resposta no percentil 95 (p95)    | **< 1000 ms**     | P4 - Desempenho percebido        |
+| Tempo de resposta no percentil 95 (p95)    | **< 1000 ms**     | Desempenho (métricas de produto) |
 | Taxa de erro (respostas não-2xx)           | **< 1%**          | Estabilidade sob carga           |
-| Usuários simultâneos sustentados           | **50 usuários**   | Carga esperada de pico do piloto |
+| Usuários simultâneos sustentados           | **50 usuários**   | Carga esperada de pico          |
 
 ---
 ## 3. Cenário de carga
@@ -153,7 +153,7 @@ mas ocorre só na entrada de cada usuário.
 - **Sem falhas:** as 2.898 requisições retornaram 2xx (0% de erro), bem abaixo do limite de 1%.
 - **Muito dentro do prazo:** o p95 do endpoint alvo (20 ms) ficou a duas ordens de
   grandeza do teto de 1s, e mesmo o pior caso (39 ms) não chegou perto - **100% das
-  simulações abaixo de 1s**, sustentando com folga a métrica de produto **P4**.
+  simulações abaixo de 1s**, sustentando com folga a métrica de produto de **desempenho**.
 - **Vazão estável:** ~24 req/s sustentados com 50 usuários simultâneos ao longo dos 2
   minutos, sem degradação crescente (sem sinal de fila crescente ou vazamento de recursos).
 - O cálculo de Price/SAC é leve em CPU; o único ponto caro do fluxo é o `bcrypt` do login,

@@ -12,7 +12,7 @@ qualidade produzida pela dupla de Qualidade (**Daniel Filipe** e
 | [Roteiro de Testes](roteiro-testes.md)            | Casos planejados TS-01 a TS-27 e rastreabilidade com os requisitos |
 | [Modelo GQM](gqm.md)                              | Metas, perguntas e métricas (M1-M4) que medem a qualidade          |
 | [Resumo de Métricas](resumo-metricas.md)          | Visão executiva de todas as métricas de qualidade coletadas        |
-| [Métricas de Produto](metricas-produto.md)        | Métricas de negócio e de experiência do usuário                    |
+| [Métricas de Produto](metricas-produto.md)        | Indicadores de produto: desempenho, confiabilidade e facilidade de uso |
 | [Documentação por Feature](features/index.md)     | Um relatório de teste para cada feature testada                    |
 | [Documentação por Tarefa Técnica](tasks/index.md) | Relatórios de QA das tarefas de integração/refatoração             |
 | [Documentação por Correção (fix)](fix/index.md)   | Relatórios de QA das correções de defeitos                         |
