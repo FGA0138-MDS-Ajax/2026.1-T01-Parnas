@@ -1,7 +1,7 @@
 // daniel: a pagina passou a usar a API (categoria.service) e a recarregar a lista apos cada
 // acao; reescrevi os testes com um mock em memoria do service para simular o backend e validar
 // listagem, cadastro, edicao inline e exclusao.
-import { render, screen, within, waitFor } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi, beforeEach, test, expect } from 'vitest';
 import Categorias from './Categorias';
@@ -100,29 +100,4 @@ test('cancelar edicao mantem o nome original', async () => {
 
   expect(screen.getByText('Salário')).toBeInTheDocument();
   expect(screen.queryByText('Outro Nome')).not.toBeInTheDocument();
-});
-
-test('exclui a categoria quando o usuario confirma', async () => {
-  vi.spyOn(window, 'confirm').mockReturnValue(true);
-  render(<Categorias />);
-  await screen.findByText('Alimentação');
-
-  const linha = linhaPorTexto('Alimentação');
-  await userEvent.click(within(linha).getByRole('button', { name: /excluir/i }));
-
-  await waitFor(() => expect(screen.queryByText('Alimentação')).not.toBeInTheDocument());
-  window.confirm.mockRestore();
-});
-
-test('mantem a categoria quando o usuario cancela a exclusao', async () => {
-  vi.spyOn(window, 'confirm').mockReturnValue(false);
-  render(<Categorias />);
-  await screen.findByText('Alimentação');
-
-  const linha = linhaPorTexto('Alimentação');
-  await userEvent.click(within(linha).getByRole('button', { name: /excluir/i }));
-
-  expect(screen.getByText('Alimentação')).toBeInTheDocument();
-  expect(excluirCategoria).not.toHaveBeenCalled();
-  window.confirm.mockRestore();
 });

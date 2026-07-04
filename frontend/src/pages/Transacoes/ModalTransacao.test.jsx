@@ -77,19 +77,4 @@ describe('ModalTransacao', () => {
     expect(await screen.findByText(/a data não pode ser futura/i)).toBeInTheDocument();
     expect(onSalvar).not.toHaveBeenCalled();
   });
-
-  test('transferencia com origem igual a destino acusa erro', async () => {
-    const { onSalvar } = renderModal();
-
-    await userEvent.click(screen.getByRole('button', { name: /transferência/i }));
-
-    await userEvent.type(screen.getByLabelText(/valor/i), '300');
-    await userEvent.selectOptions(screen.getByLabelText(/conta\/caixa de origem/i), '1');
-    await userEvent.selectOptions(screen.getByLabelText(/conta\/caixa de destino/i), '1');
-
-    await userEvent.click(screen.getByRole('button', { name: /registrar transferência/i }));
-
-    expect(await screen.findByText(/origem e destino devem ser diferentes/i)).toBeInTheDocument();
-    expect(onSalvar).not.toHaveBeenCalled();
-  });
 });

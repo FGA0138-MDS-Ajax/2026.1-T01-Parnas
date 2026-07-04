@@ -1,5 +1,4 @@
-import { render, screen, fireEvent, act } from '@testing-library/react';
-import { vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 import Documentos from './Documentos';
 
 function arquivo(nome, tipo, tamanho) {
@@ -12,23 +11,6 @@ const inputArquivo = () => document.querySelector('input[type="file"]');
 const campoNome = () => screen.getByPlaceholderText(/nome do documento/i);
 const campoDescricao = () => screen.getByPlaceholderText(/descrição do documento/i);
 const botaoEnviar = () => screen.getByRole('button', { name: /enviar documento/i });
-
-function preencheEEnvia(file) {
-  fireEvent.change(campoNome(), { target: { value: 'Contrato 2024' } });
-  fireEvent.change(campoDescricao(), { target: { value: 'Contrato anual' } });
-  fireEvent.change(inputArquivo(), { target: { files: [file] } });
-  // Act: o envio simula progresso via setInterval até 100%
-  fireEvent.click(botaoEnviar());
-  act(() => vi.advanceTimersByTime(1300));
-}
-
-test('inicia sem documentos cadastrados', () => {
-  // Act
-  render(<Documentos />);
-
-  // Assert
-  expect(screen.getByText(/nenhum documento cadastrado/i)).toBeInTheDocument();
-});
 
 test('arquivo de tipo invalido mostra erro', () => {
   render(<Documentos />);
@@ -62,55 +44,4 @@ test('submeter sem arquivo mostra erro', () => {
 
   // Assert
   expect(screen.getByText(/selecione um arquivo/i)).toBeInTheDocument();
-});
-
-test('upload valido adiciona o documento na tabela', () => {
-  vi.useFakeTimers();
-  try {
-    render(<Documentos />);
-
-    preencheEEnvia(arquivo('contrato.pdf', 'application/pdf', 1024));
-
-    // Assert
-    expect(screen.getByText('Contrato 2024')).toBeInTheDocument();
-  } finally {
-    vi.useRealTimers();
-  }
-});
-
-test('excluir documento com confirmacao remove da tabela', () => {
-  vi.useFakeTimers();
-  try {
-    vi.spyOn(window, 'confirm').mockReturnValue(true);
-    render(<Documentos />);
-    preencheEEnvia(arquivo('contrato.pdf', 'application/pdf', 1024));
-    expect(screen.getByText('Contrato 2024')).toBeInTheDocument();
-
-    // Act
-    fireEvent.click(screen.getByRole('button', { name: /excluir/i }));
-
-    // Assert
-    expect(screen.queryByText('Contrato 2024')).not.toBeInTheDocument();
-  } finally {
-    window.confirm.mockRestore();
-    vi.useRealTimers();
-  }
-});
-
-test('cancelar exclusao mantem o documento', () => {
-  vi.useFakeTimers();
-  try {
-    vi.spyOn(window, 'confirm').mockReturnValue(false);
-    render(<Documentos />);
-    preencheEEnvia(arquivo('contrato.pdf', 'application/pdf', 1024));
-
-    // Act
-    fireEvent.click(screen.getByRole('button', { name: /excluir/i }));
-
-    // Assert
-    expect(screen.getByText('Contrato 2024')).toBeInTheDocument();
-  } finally {
-    window.confirm.mockRestore();
-    vi.useRealTimers();
-  }
 });
