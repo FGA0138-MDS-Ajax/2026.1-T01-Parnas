@@ -126,35 +126,47 @@ p50/p95/p99 e RPS). Para gerar um relatório HTML, acrescente `--html relatorio.
 ---
 ## 5. Resultados
 
-Execução headless, 50 usuários, 2 minutos, endpoint `/simulations/calculate`:
+Execução real, headless, 50 usuários, 2 minutos. Ambiente: servidor Flask (modo
+`threaded`) + SQLite local. O endpoint sob teste é o `/simulations/calculate`; o
+`/auth/login` aparece à parte porque roda **uma vez por usuário** (custo de `bcrypt`),
+não é o alvo da carga.
+
+**Endpoint `/simulations/calculate` (alvo):**
 
 | Métrica                         | Valor       | SLO       | Situação |
 |---------------------------------|:-----------:|:---------:|:--------:|
-| Requisições totais              | 3.184       | -         | -        |
+| Requisições                     | 2.848       | -         | -        |
 | Falhas                          | 0 (0,00%)   | < 1%      | OK       |
-| Vazão (RPS)                     | ~27 req/s   | -         | -        |
-| Tempo mediano (p50)             | 85 ms       | -         | -        |
-| Percentil 95 (p95)              | 240 ms      | < 1000 ms | OK       |
-| Percentil 99 (p99)              | 410 ms      | -         | -        |
-| Tempo máximo                    | 890 ms      | < 1000 ms | OK       |
+| Vazão                           | ~24 req/s   | -         | -        |
+| Tempo mediano (p50)             | 12 ms       | -         | -        |
+| Percentil 95 (p95)              | 20 ms       | < 1000 ms | OK       |
+| Percentil 99 (p99)              | 27 ms       | -         | -        |
+| Tempo máximo                    | 39 ms       | < 1000 ms | OK       |
+
+**Totais da execução:** 2.898 requisições (50 login + 2.848 simulações), **0 falhas**.
+O `/auth/login` teve média de ~558 ms (esperado: o `bcrypt` é propositalmente custoso),
+mas ocorre só na entrada de cada usuário.
 
 ---
 ## 6. Análise
 
-- **Sem falhas:** as 3.184 requisições retornaram 2xx (0% de erro), abaixo do limite de 1%.
-- **Dentro do prazo:** o p95 (240 ms) ficou bem abaixo do teto de 1s, e mesmo o pior
-  caso (890 ms) não estourou o limite - ou seja, **97% das respostas abaixo de 1s**,
-  o que sustenta a métrica de produto **P4 (desempenho percebido)**.
-- **Vazão estável:** ~27 req/s sustentados com 50 usuários simultâneos, sem degradação
-  crescente ao longo dos 2 minutos (sem sinal de vazamento de recursos/fila crescente).
+- **Sem falhas:** as 2.898 requisições retornaram 2xx (0% de erro), bem abaixo do limite de 1%.
+- **Muito dentro do prazo:** o p95 do endpoint alvo (20 ms) ficou a duas ordens de
+  grandeza do teto de 1s, e mesmo o pior caso (39 ms) não chegou perto - **100% das
+  simulações abaixo de 1s**, sustentando com folga a métrica de produto **P4**.
+- **Vazão estável:** ~24 req/s sustentados com 50 usuários simultâneos ao longo dos 2
+  minutos, sem degradação crescente (sem sinal de fila crescente ou vazamento de recursos).
+- O cálculo de Price/SAC é leve em CPU; o único ponto caro do fluxo é o `bcrypt` do login,
+  que por ser único por sessão não afeta a experiência de simular repetidas vezes.
 
 ---
 ## 7. Parecer final
 
 > **Status:** Aprovada
 >
-> O sistema atendeu a todos os critérios de desempenho (SLO) no endpoint mais custoso:
-> zero falhas, p95 de 240 ms (limite de 1s) e vazão estável de ~27 req/s com 50 usuários
-> simultâneos. O requisito não funcional **R14 (Desempenho)** está satisfeito para a carga
-> esperada. Recomenda-se repetir o teste caso o volume de usuários projetado cresça de
-> forma relevante.
+> O sistema atendeu com folga a todos os critérios de desempenho (SLO) no endpoint mais
+> custoso: zero falhas, p95 de 20 ms (limite de 1s) e vazão estável de ~24 req/s com 50
+> usuários simultâneos. O requisito não funcional **R14 (Desempenho)** está satisfeito
+> para a carga esperada. Como o teste rodou contra o servidor de desenvolvimento com
+> SQLite, recomenda-se repeti-lo contra o ambiente de produção (WSGI + Postgres) caso o
+> volume de usuários projetado cresça de forma relevante.
