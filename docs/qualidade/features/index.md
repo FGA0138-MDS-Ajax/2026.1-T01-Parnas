@@ -25,6 +25,11 @@ evidências, defeitos encontrados e o **status final** da feature.
 | [Comparação de Modalidades de Crédito](feature_14_modalidades-credito.md)   |    I    |    9     | Aprovada com pendências |
 | [Seleção de Empresa Ativa](feature_15_selecao-empresa-ativa.md)             |    A    |    7     | Aprovada com pendências |
 | [Dashboard Financeiro](feature_16_dashboard-financeiro.md)                  |    E    |    7     | Reprovada               |
+| [Teste de Carga (Locust)](teste-carga-locust.md)                            |    -    |   10     | Aprovada                |
+
+> O [Teste de Carga (Locust)](teste-carga-locust.md) não é uma feature funcional: é o
+> relatório do caso **TS-27** (desempenho, R14), incluído aqui por ser um relatório de
+> teste no mesmo formato dos demais.
 
 ---
 ## Status possíveis
