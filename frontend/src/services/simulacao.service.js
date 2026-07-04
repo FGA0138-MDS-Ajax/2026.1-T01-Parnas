@@ -1,38 +1,43 @@
-const getToken = () => localStorage.getItem('token');
+import api from "./api";
+import { obterEmpresaAtiva } from "./empresa.service";
 
-export const listarSimulacoes = async (empresaId) => {
-  const response = await fetch(`/api/simulations?company_id=${empresaId}`, {
-    headers: { Authorization: `Bearer ${getToken()}` },
-  });
-  const text = await response.text();
-  const data = text ? JSON.parse(text) : [];
-  if (!response.ok) throw new Error((data && data.erro) || 'Erro ao listar simulações.');
+export const listarSimulacoes = async () => {
+  const empresa = await obterEmpresaAtiva();
+  if (!empresa?.company_id)
+    throw new Error("Selecione uma empresa para listar as simulações.");
+
+  const { data } = await api.get(
+    `/api/companies/${empresa.company_id}/simulations/`,
+  );
   return data;
 };
 
 export const salvarSimulacao = async (payload) => {
-  const response = await fetch('/api/simulations', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${getToken()}`,
-    },
-    body: JSON.stringify(payload),
-  });
-  const text = await response.text();
-  const data = text ? JSON.parse(text) : {};
-  if (!response.ok) throw new Error((data && data.erro) || 'Erro ao salvar simulação.');
+  const empresa = await obterEmpresaAtiva();
+  if (!empresa?.company_id)
+    throw new Error("Selecione uma empresa para salvar a simulação.");
+
+  //traduz os campos do front (PT) para o DTO do backend (EN)
+  const dadosFormatados = {
+    requested_amount: Number(payload.valor_solicitado),
+    deadline_month: Number(payload.prazo_meses),
+    interest_rate: Number(payload.taxa_juros),
+    modality: payload.modalidade,
+  };
+
+  const { data } = await api.post(
+    `/api/companies/${empresa.company_id}/simulations/`,
+    dadosFormatados,
+  );
   return data;
 };
 
 export const excluirSimulacao = async (id) => {
-  const response = await fetch(`/api/simulations/${id}`, {
-    method: 'DELETE',
-    headers: { Authorization: `Bearer ${getToken()}` },
-  });
-  if (!response.ok) {
-    const text = await response.text();
-    const data = text ? JSON.parse(text) : {};
-    throw new Error((data && data.erro) || 'Erro ao excluir simulação.');
-  }
+  const empresa = await obterEmpresaAtiva();
+  if (!empresa?.company_id) throw new Error("Selecione uma empresa.");
+
+  const { data } = await api.delete(
+    `/api/companies/${empresa.company_id}/simulations/${id}`,
+  );
+  return data;
 };

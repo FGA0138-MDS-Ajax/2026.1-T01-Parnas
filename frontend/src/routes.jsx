@@ -20,6 +20,7 @@ import Transacoes from './pages/Transacoes/Transacoes';
 import Contas from './pages/Contas/Contas';
 import ContasCaixa from './pages/ContasCaixa/ContasCaixa';
 import Configuracoes from './pages/Configuracoes/Configuracoes';
+import EditarPerfil from './pages/EditarPerfil/EditarPerfil';
 import Documentos from "./pages/Documentos/Documentos";
 import Simulacoes from './pages/Simulacoes/Simulacoes';
 import Comparacoes from './pages/Comparacoes/Comparacoes';
@@ -80,6 +81,7 @@ export const AppRoutes = () => {
             <Route path="/comparacoes" element={<Comparacoes />} />
             <Route path="/relatorios" element={<Relatorios />} />
             <Route path="/configuracoes" element={<Configuracoes />} />
+            <Route path="/editar-perfil" element={<EditarPerfil />} />
             <Route path="/documentos" element={<Documentos />} />
           </Route>
         </Route>

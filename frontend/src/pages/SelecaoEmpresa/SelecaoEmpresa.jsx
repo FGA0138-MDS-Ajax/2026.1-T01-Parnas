@@ -1,16 +1,16 @@
-import { Building2, ChevronRight, LoaderCircle } from 'lucide-react';
-import { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
-import logoImg from '../../assets/LogoFundoBranco.png';
-import { useEmpresa } from '../../context/EmpresaContext';
-import './SelecaoEmpresa.css';
+import { Building2, ChevronRight, LoaderCircle } from "lucide-react";
+import { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
+import logoImg from "../../assets/LogoFundoBranco.png";
+import { useEmpresa } from "../../context/EmpresaContext";
+import "./SelecaoEmpresa.css";
 
-const formatarCnpj = (cnpj = '') => {
-  const numeros = cnpj.replace(/\D/g, '');
+const formatarCnpj = (cnpj = "") => {
+  const numeros = cnpj.replace(/\D/g, "");
   if (numeros.length !== 14) return cnpj;
   return numeros.replace(
     /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
-    '$1.$2.$3/$4-$5',
+    "$1.$2.$3/$4-$5",
   );
 };
 
@@ -24,7 +24,7 @@ const SelecaoEmpresa = () => {
     recarregarEmpresas,
   } = useEmpresa();
   const [selecionandoId, setSelecionandoId] = useState(null);
-  const [erroSelecao, setErroSelecao] = useState('');
+  const [erroSelecao, setErroSelecao] = useState("");
   const navigate = useNavigate();
 
   if (empresaAtiva && !carregandoEmpresas) {
@@ -33,11 +33,11 @@ const SelecaoEmpresa = () => {
 
   const handleSelecionar = async (empresa) => {
     setSelecionandoId(empresa.company_id);
-    setErroSelecao('');
+    setErroSelecao("");
 
     try {
       await selecionarEmpresa(empresa);
-      navigate('/dashboard', { replace: true });
+      navigate("/dashboard", { replace: true });
     } catch (error) {
       setErroSelecao(error.message);
       setSelecionandoId(null);
@@ -87,7 +87,7 @@ const SelecaoEmpresa = () => {
                 <p>Cadastre sua primeira empresa para continuar.</p>
                 <button
                   type="button"
-                  onClick={() => navigate('/cadastro-empresa')}
+                  onClick={() => navigate("/cadastro-empresa")}
                 >
                   Cadastrar empresa
                 </button>
@@ -108,7 +108,7 @@ const SelecaoEmpresa = () => {
                     disabled={selecionandoId !== null}
                   >
                     <span className="selecao-empresa-avatar">
-                      {empresa.name?.charAt(0).toUpperCase() || 'E'}
+                      {empresa.name?.charAt(0).toUpperCase() || "E"}
                     </span>
                     <span className="selecao-empresa-dados">
                       <strong>{empresa.name}</strong>
@@ -123,6 +123,17 @@ const SelecaoEmpresa = () => {
                 );
               })}
             </div>
+            {empresas.length > 0 && (
+            <div className="selecao-empresa-acoes">
+              <button
+                type="button"
+                className="selecao-empresa-btn-novo"
+                onClick={() => navigate("/cadastro-empresa")}
+              >
+                + Cadastrar nova empresa
+              </button>
+            </div>
+            )}
           </>
         )}
       </section>

@@ -26,7 +26,7 @@ const ConfirmacaoQuitar = ({ conta, onConfirmar, onCancelar }) => {
             {formatCurrency(conta?.valor)} com vencimento em {formatDate(conta?.dataVencimento)}.
           </p>
           <p className="confirmacao-aviso">
-            Uma transação será gerada automaticamente quando o backend estiver integrado.
+            Uma transação será gerada automaticamente quando confirmada a quitação.
           </p>
         </div>
 

@@ -14,6 +14,7 @@ class Company(db.Model):
     
     users = db.relationship('User', secondary=user_company, back_populates='companies')
     categories = db.relationship('Category', back_populates='company', lazy=True, cascade="all, delete-orphan")
+    payments = db.relationship('Payment', back_populates='company', lazy=True, cascade="all, delete-orphan")
     transactions = db.relationship('Transaction', back_populates='company', cascade="all, delete-orphan")
     bills = db.relationship('Bill', back_populates='company', cascade="all, delete-orphan")
     documents = db.relationship('Document', back_populates='company', cascade="all, delete-orphan")

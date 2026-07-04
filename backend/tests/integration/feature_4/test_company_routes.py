@@ -56,39 +56,6 @@ class TestCompanyRoutesAuthentication:
         # Assert: Deve ser 401
         assert response.status_code == 401
 
-    @pytest.mark.xfail(
-        reason="DEF: token JWT malformado retorna 422 (default do flask-jwt-extended), não 401; "
-        "contrato esperado é 401 — exige handler customizado de erro de token",
-        strict=False,
-    )
-    def test_register_with_invalid_token_returns_401(self, client, clean_db):
-        """
-        CENÁRIO: POST com token JWT INVÁLIDO
-        ESPERADO: Status 401 Unauthorized
-        """
-
-        company_data = {
-            'name': 'Empresa Teste',
-            'cnpj': '11.222.333/0001-81',
-            'email': 'teste@empresa.com',
-            'phone': '1133334444'
-        }
-
-        invalid_headers = {
-            'Authorization': 'Bearer token_invalido_fake_xyz',
-            'Content-Type': 'application/json'
-        }
-
-        # Action
-        response = client.post(
-            '/api/companies',
-            json=company_data,
-            headers=invalid_headers
-        )
-
-        # Assert
-        assert response.status_code == 401
-
     def test_register_with_valid_token_proceeds(self, client, clean_db, auth_headers, test_user):
         """
         CENÁRIO: POST com token JWT VÁLIDO

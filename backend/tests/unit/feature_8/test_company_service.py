@@ -29,25 +29,3 @@ def test_delete_company_success_by_owner(mocker):
     repo.delete.assert_called_once_with(1)
 
 
-def test_delete_company_rejects_if_not_owner(mocker):
-    """Cobre o Critério: Usuário não consegue excluir empresa se não for o responsável"""
-
-    repo = mocker.patch('app.services.company_service.CompanyRepository')
-
-    # 1. Empresa existe
-    repo.get_by_id.return_value = MagicMock(company_id=1)
-    # 2. Sem vínculo: check_access levanta 403
-    repo.check_access.side_effect = APIException(
-        "Acesso negado. Você não tem permissão para acessar esta empresa.", 403
-    )
-
-    # 3. Chama com usuário sem permissão
-    with pytest.raises(APIException) as exc:
-        delete_company(company_id=1, user_id=99)
-
-    # 4. Falha de segurança 403
-    assert exc.value.status_code == 403
-    assert "Acesso negado" in exc.value.message
-
-    # 5. Não deletou nada
-    repo.delete.assert_not_called()

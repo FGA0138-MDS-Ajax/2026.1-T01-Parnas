@@ -112,8 +112,14 @@
 }
 
 @keyframes fadeIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .modal-header h3 {
@@ -177,4 +183,19 @@ button.btn-modal-confirm {
 
 button.btn-modal-confirm:hover {
   background: #fff5f5;
+}
+
+.btn-action-primary {
+  background: transparent;
+  border: 1px solid var(--azul);
+  color: var(--azul);
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s;
+  white-space: nowrap;
+  min-width: 140px;
+  text-align: center;
 }

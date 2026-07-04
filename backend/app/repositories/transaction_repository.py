@@ -2,7 +2,6 @@ from datetime import date as dt_date
 from app.config import db
 from app.models.transaction import Transaction
 from app.models.category import Category
-from sqlalchemy import func
 from app.repositories.base_repository import BaseRepository
 from sqlalchemy import func, case
 
@@ -24,7 +23,7 @@ class TransactionRepository(BaseRepository):
     def get_by_company(company_id, type=None, category_id=None):
         query = Transaction.query.filter_by(company_id=company_id)
         if type:
-            query = query.filter_by(type=type)
+            query = query.filter(func.lower(Transaction.type) == type.lower())
         if category_id:
             query = query.filter_by(category_id=category_id)
         return query.order_by(Transaction.date.desc()).all()
@@ -38,7 +37,7 @@ class TransactionRepository(BaseRepository):
         ).order_by(Transaction.date.desc()).all()
     
     @staticmethod
-    def create(description, amount, date, type, company_id, user_id, category_id):
+    def create(description, amount, date, type, company_id, user_id, category_id,bill_id=None):
         if amount <= 0:
             raise ValueError("O valor da transação deve ser positivo.")
         if date > dt_date.today():
@@ -51,7 +50,8 @@ class TransactionRepository(BaseRepository):
             type=type,
             company_id=company_id,
             user_id=user_id,
-            category_id=category_id
+            category_id=category_id,
+            bill_id=bill_id
         )
         return TransactionRepository._base.save(new_transaction)
     
@@ -67,7 +67,7 @@ class TransactionRepository(BaseRepository):
         if filtros.get('data_fim'):
             query_base = query_base.filter(Transaction.date <= filtros['data_fim'])
         if filtros.get('tipo'):
-            query_base = query_base.filter_by(type=filtros['tipo'])
+            query_base = query_base.filter(func.lower(Transaction.type) == filtros['tipo'].lower())
         if filtros.get('valor_min') is not None:
             query_base = query_base.filter(Transaction.amount >= filtros['valor_min'])
         if filtros.get('valor_max') is not None:
@@ -84,7 +84,7 @@ class TransactionRepository(BaseRepository):
         if filtros.get('data_fim'):
             totais = totais.filter(Transaction.date <= filtros['data_fim'])
         if filtros.get('tipo'):
-            totais = totais.filter_by(type=filtros['tipo'])
+            totais = totais.filter(func.lower(Transaction.type) == filtros['tipo'].lower())
         if filtros.get('valor_min') is not None:
             totais = totais.filter(Transaction.amount >= filtros['valor_min'])
         if filtros.get('valor_max') is not None:
@@ -102,22 +102,22 @@ class TransactionRepository(BaseRepository):
     @staticmethod
     def get_category_distribution(company_id, start_date, end_date):
         results = db.session.query(
-            Category.name, 
-            func.sum(Transaction.amount).label('total')
-        ).join(Transaction).filter(
+            func.coalesce(Category.name, 'Sem Categoria'), 
+            func.sum(Transaction.amount)
+        ).outerjoin(Category).filter(
             Transaction.company_id == company_id,
-            Transaction.type == 'SAIDA',
+            func.lower(Transaction.type).in_(['despesa', 'saida']),
             Transaction.date.between(start_date, end_date)
-        ).group_by(Category.name).all()
+        ).group_by(func.coalesce(Category.name, 'Sem Categoria')).all()
         
-        return [{"categoria": name, "total": float(total)} for name, total in results]
+        return [{"categoria": row[0], "total": float(row[1])} for row in results]
     
     @staticmethod
     def get_balance_evolution(company_id, start_date, end_date):
         results = db.session.query(
             Transaction.date,
             func.sum(case(
-                (Transaction.type == 'ENTRADA', Transaction.amount),
+                (func.lower(Transaction.type).in_(['receita', 'entrada']), Transaction.amount),
                 else_=-Transaction.amount
             )).label('fluxo_diario')
         ).filter(

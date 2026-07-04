@@ -132,6 +132,41 @@
   box-shadow: 0 0 0 3px rgba(35, 155, 143, 0.15);
 }
 
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+
+.password-input-wrapper input {
+  width: 100%;
+  padding-right: 42px;
+}
+
+.password-toggle-button {
+  color: var(--texto-principal);
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  opacity: 0.55;
+  transition: var(--transicao-suave);
+  user-select: none;
+}
+
+.password-toggle-button:hover {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
+
 .register-button {
   margin-top: 12px;
   height: 48px;
@@ -161,11 +196,9 @@
   font-size: 0.85rem;
   font-weight: 600;
   text-align: left;
-
 }
 
 @media (max-width: 768px) {
-
   .register-card {
     flex-direction: column;
     min-height: auto;
@@ -183,4 +216,25 @@
   .register-sidebar {
     padding: 30px;
   }
+}
+
+.register-login-ref {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--texto-placeholder);
+}
+
+.register-login-ref a {
+  color: var(--azul);
+  text-decoration: none;
+  font-weight: 700;
+  margin-left: 4px;
+  transition: var(--transicao-suave);
+}
+
+.register-login-ref a:hover {
+  color: var(--verde-claro);
+  text-decoration: underline;
 }

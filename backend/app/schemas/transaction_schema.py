@@ -28,4 +28,6 @@ class TransactionRequirements(Schema):
     type = fields.Str(dump_only=True)
     category_id = fields.Int(dump_only=True)
     company_id = fields.Int(dump_only=True)
-    id_conta = fields.Int(attribute="id_conta", allow_none=True, dump_only=True)
+    
+    # anna correção: Mudado de id_conta para payment_id para conversar perfeitamente com o frontend e o banco
+    payment_id = fields.Int(attribute="payment_id", allow_none=True, dump_only=True)

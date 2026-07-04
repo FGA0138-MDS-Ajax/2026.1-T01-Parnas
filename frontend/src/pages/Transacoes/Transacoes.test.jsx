@@ -1,14 +1,48 @@
+// daniel: a pagina passou a depender do hook useTransacoes (orientado a API). Mocko o hook
+// com dados controlados e valido a renderizacao (cartoes, contagem) e os handlers de filtro.
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import { vi, beforeEach, test, expect } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import Transacoes from './Transacoes';
+import useTransacoes from '../../hooks/useTransacoes';
 
-// a pagina usa useNavigate; espiona sem perder o resto do react-router
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', async (importOriginal) => {
   const actual = await importOriginal();
   return { ...actual, useNavigate: () => mockNavigate };
+});
+
+vi.mock('../../hooks/useTransacoes', () => ({ default: vi.fn() }));
+
+const aplicarFiltros = vi.fn();
+const limparFiltros = vi.fn();
+
+function hookState(over = {}) {
+  return {
+    filtros: { dataInicio: '', dataFim: '', tipo: '', categoria: '', contaCaixaId: '', valorMin: '', valorMax: '' },
+    transacoes: [],
+    totais: { totalReceitas: 15800, totalDespesas: 10100, saldo: 5700 },
+    saldoContaSelecionada: null,
+    contaCaixaSelecionada: null,
+    paginaAtual: 1,
+    totalPaginas: 3,
+    totalTransacoes: 12,
+    categorias: [],
+    contasCaixa: [],
+    handleFiltroChange: vi.fn(),
+    aplicarFiltros,
+    limparFiltros,
+    mudarPagina: vi.fn(),
+    salvarTransacao: vi.fn(),
+    excluirTransacao: vi.fn(),
+    ...over,
+  };
+}
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  useTransacoes.mockReturnValue(hookState());
 });
 
 function renderPagina() {
@@ -19,51 +53,26 @@ function renderPagina() {
   );
 }
 
-const seletorTipo = () => screen.getAllByRole('combobox')[0];
-const botaoAplicar = () => screen.getByRole('button', { name: /aplicar filtros/i });
-const botaoLimpar = () => screen.getByRole('button', { name: /limpar filtros/i });
-
 test('exibe os cartoes de totais no topo', () => {
-  // Act
   renderPagina();
 
-  // Assert
   expect(screen.getByText(/total de receitas/i)).toBeInTheDocument();
   expect(screen.getByText(/total de despesas/i)).toBeInTheDocument();
   expect(screen.getByText('Saldo')).toBeInTheDocument();
 });
 
-test('lista a primeira pagina com no maximo o tamanho de pagina', () => {
-  // Act
+test('mostra a contagem de transacoes vinda do hook', () => {
   renderPagina();
 
-  // Assert: 12 transacoes no mock, paginadas (1 cabecalho + 5 linhas de dados)
   expect(screen.getByText(/12 transação\(ões\) encontrada/i)).toBeInTheDocument();
-  expect(screen.getAllByRole('row')).toHaveLength(6);
 });
 
-test('aplicar filtro de tipo atualiza a listagem', async () => {
-  // Arrange
+test('aplicar e limpar filtros chamam os handlers do hook', async () => {
   renderPagina();
 
-  // Act
-  await userEvent.selectOptions(seletorTipo(), 'receita');
-  await userEvent.click(botaoAplicar());
+  await userEvent.click(screen.getByRole('button', { name: /aplicar filtros/i }));
+  expect(aplicarFiltros).toHaveBeenCalled();
 
-  // Assert
-  expect(screen.getByText(/5 transação\(ões\) encontrada/i)).toBeInTheDocument();
-});
-
-test('limpar filtros restaura a listagem completa', async () => {
-  // Arrange: aplica um filtro que reduz a lista
-  renderPagina();
-  await userEvent.selectOptions(seletorTipo(), 'receita');
-  await userEvent.click(botaoAplicar());
-  expect(screen.getByText(/5 transação\(ões\) encontrada/i)).toBeInTheDocument();
-
-  // Act
-  await userEvent.click(botaoLimpar());
-
-  // Assert
-  expect(screen.getByText(/12 transação\(ões\) encontrada/i)).toBeInTheDocument();
+  await userEvent.click(screen.getByRole('button', { name: /limpar filtros/i }));
+  expect(limparFiltros).toHaveBeenCalled();
 });

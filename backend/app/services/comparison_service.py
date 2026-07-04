@@ -1,20 +1,20 @@
+from app.repositories.company_repository import CompanyRepository
 from app.models.comparison import Comparison, ComparisonModality
-from app.config import db
-import io
-from reportlab.pdfgen import canvas
+from app.exceptions.api_exception import APIException
 from reportlab.lib.pagesizes import letter
-from flask_jwt_extended import get_jwt # Nova importação necessária!
+from reportlab.lib import colors
+from reportlab.pdfgen import canvas
+from app.config import db
+from datetime import datetime
+import io
 
+
+def _fmt_currency(value):
+    texto = f"{float(value):,.2f}"
+    texto = texto.replace(",", "X").replace(".", ",").replace("X", ".")
+    return f"R$ {texto}"
 
 class ComparisonService:
-
-    @staticmethod
-    def _get_company_id():
-        """Busca o ID da empresa ativa que está injetado dentro do Token JWT"""
-        claims = get_jwt()
-        active_company_id = claims.get("active_company_id")
-        return active_company_id
-
     @staticmethod
     def _calculate_price_table(loan_amount, rate_percent, term_months):
         """Calcula a matemática financeira da Tabela Price"""
@@ -33,14 +33,24 @@ class ComparisonService:
         interest = total - amount
         return round(pmt, 2), round(total, 2), round(interest, 2)
 
+
     @staticmethod
-    def calculate_simulation(data):
+    def calculate_simulation(user_id, company_id, data):
+
+        company = CompanyRepository.get_by_id(company_id)
+        if not company:
+            raise APIException("Empresa não encontrada.", 404)
+
+        access = CompanyRepository.check_user_access(company_id, user_id)
+        if not access:
+            raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
+
         """Apenas calcula e retorna os dados formatados (não salva no banco)"""
         loan_amount = data.get('loan_amount', 0)
         modalities = data.get('modalities', [])
 
         if not modalities or len(modalities) > 4:
-            return {"erro": "Forneça entre 1 e 4 modalidades para comparar."}, 400
+            raise APIException("Forneça entre 1 e 4 modalidades para comparar.", 400)
 
         results = []
         lowest_total = float('inf')
@@ -72,20 +82,27 @@ class ComparisonService:
         if best_modality_index != -1:
             results[best_modality_index]["is_best_option"] = True
 
-        return {"loan_amount": loan_amount, "comparisons": results}, 200
+        return {"loan_amount": loan_amount, "comparisons": results}, 200 
+
 
     @staticmethod
-    def save_comparison(data):
+    def save_comparison(user_id, company_id, data):
         """Calcula e salva as métricas no banco de dados"""
-        company_id = ComparisonService._get_company_id()
+        company = CompanyRepository.get_by_id(company_id)
+        if not company:
+            raise APIException("Empresa não encontrada.", 404)
 
-        if not company_id:
-            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+        access = CompanyRepository.check_user_access(company_id, user_id)
+        if not access:
+            raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
 
         # Faz o cálculo reutilizando o método acima
-        simulacao_result, status = ComparisonService.calculate_simulation(data)
-        if status != 200:
-            return simulacao_result, status
+        try:
+            simulacao_result, status = ComparisonService.calculate_simulation(user_id, company_id, data)
+            if status != 200:
+                return simulacao_result, status
+        except Exception as e:
+            raise APIException(f"Erro ao calcular simulação: {str(e)}", 500)
 
         # 1. Salva o cabeçalho da comparação
         nova_comparacao = Comparison(
@@ -113,82 +130,218 @@ class ComparisonService:
         db.session.commit()
         return {"mensagem": "Comparação salva com sucesso!", "id": nova_comparacao.comparison_id}, 201
 
-    @staticmethod
-    def get_comparisons():
-        company_id = ComparisonService._get_company_id()
 
-        if not company_id:
-            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+    @staticmethod
+    def get_comparisons(user_id, company_id):
+
+        company = CompanyRepository.get_by_id(company_id)
+        if not company:
+            raise APIException("Empresa não encontrada.", 404)
+
+        access = CompanyRepository.check_user_access(company_id, user_id)
+        if not access:
+            raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
+
         comparacoes = Comparison.query.filter_by(company_id=company_id).order_by(Comparison.created_at.desc()).all()
 
         resultado = []
         for comp in comparacoes:
+            # Lógica para encontrar a melhor modalidade (menor custo total)
+            best_modality = None
+            lowest_total = float('inf')
+            
+            for m in comp.modalities:
+                if m.total_amount < lowest_total:
+                    lowest_total = m.total_amount
+                    best_modality = m
+            
+            if not best_modality and comp.modalities:
+                best_modality = comp.modalities[0]
+
             resultado.append({
                 "id": comp.comparison_id,
                 "created_at": comp.created_at.isoformat(),
                 "loan_amount": float(comp.loan_amount),
+                "best_option_name": best_modality.name if best_modality else None,
+                "term_months": best_modality.term_months if best_modality else None,
+                "interest_rate": best_modality.interest_rate if best_modality else None,
+
                 "modalities": [{
                     "name": m.name,
                     "monthly_payment": float(m.monthly_payment),
                     "total_amount": float(m.total_amount),
-                    "type": m.type
+                    "type": m.type,
+                    "term_months": m.term_months,       
+                    "interest_rate": m.interest_rate    
                 } for m in comp.modalities]
             })
 
         return resultado, 200
 
+
     @staticmethod
-    def delete_comparison(comparison_id):
-        company_id = ComparisonService._get_company_id()
+    def delete_comparison(user_id, company_id, comparison_id):
 
-        if not company_id:
-            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+        company = CompanyRepository.get_by_id(company_id)
+        if not company:
+            raise APIException("Empresa não encontrada.", 404)
+
+        access = CompanyRepository.check_user_access(company_id, user_id)
+        if not access:
+            raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
+        
         comparacao = Comparison.query.filter_by(comparison_id=comparison_id, company_id=company_id).first()
-
         if not comparacao:
-            return {"erro": "Comparação não encontrada"}, 404
+            raise APIException("Comparação não encontrada.", 404)
 
         db.session.delete(comparacao)
         db.session.commit()
         return {"mensagem": "Comparação excluída com sucesso"}, 200
 
-    @staticmethod
-    def generate_pdf_report(comparison_id):
-        """Gera um PDF em memória com os dados da comparação"""
-        company_id = ComparisonService._get_company_id()
 
-        if not company_id:
-            return {"erro": "Nenhuma empresa ativa selecionada na sessão."}, 400
+    @staticmethod
+    def generate_pdf_report(user_id, company_id, comparison_id):
+        """Gera um PDF em memória com os dados da comparação"""
+        company = CompanyRepository.get_by_id(company_id)
+        if not company:
+            raise APIException("Empresa não encontrada.", 404)
+
+        access = CompanyRepository.check_user_access(company_id, user_id)
+        if not access:
+            raise APIException("Acesso negado. Você não tem permissão para acessar esta empresa.", 403)
+        
         comparacao = Comparison.query.filter_by(comparison_id=comparison_id, company_id=company_id).first()
 
         if not comparacao:
             return None, 404
 
+        # Identifica a modalidade mais vantajosa (menor custo total) para destacar no PDF
+        melhor_modalidade = None
+        menor_total = float('inf')
+        for m in comparacao.modalities:
+            if float(m.total_amount) < menor_total:
+                menor_total = float(m.total_amount)
+                melhor_modalidade = m
+
+        PAGE_WIDTH, PAGE_HEIGHT = letter
+        MARGIN = 50
+        BRAND_COLOR = colors.HexColor('#145c52')
+        HIGHLIGHT_COLOR = colors.HexColor('#e8f5e9')
+        HIGHLIGHT_BORDER = colors.HexColor('#2e7d32')
+        BORDER_COLOR = colors.HexColor('#cccccc')
+        TEXT_MUTED = colors.HexColor('#555555')
+
         buffer = io.BytesIO()
         c = canvas.Canvas(buffer, pagesize=letter)
         c.setTitle(f"Relatório de Crédito #{comparison_id}")
 
-        # Título
-        c.setFont("Helvetica-Bold", 16)
-        c.drawString(50, 750, f"Comparativo de Modalidades de Crédito")
+        # Cabeçalho
+        header_height = 80
+        c.setFillColor(BRAND_COLOR)
+        c.rect(0, PAGE_HEIGHT - header_height, PAGE_WIDTH, header_height, stroke=0, fill=1)
+
+        c.setFillColor(colors.white)
+        c.setFont("Helvetica-Bold", 18)
+        c.drawString(MARGIN, PAGE_HEIGHT - 35, "Comparativo de Modalidades de Crédito")
+        c.setFont("Helvetica", 10)
+        c.drawString(MARGIN, PAGE_HEIGHT - 55, f"CrediFab - Plataforma de Acesso a Crédito | Comparação #{comparison_id}")
+
+        y_position = PAGE_HEIGHT - header_height - 30
+
+        # Bloco de informações gerais
+        c.setFillColor(colors.black)
+        c.setFont("Helvetica-Bold", 11)
+        c.drawString(MARGIN, y_position, "Informações da Simulação")
+        y_position -= 18
 
         c.setFont("Helvetica", 10)
-        c.drawString(50, 730, f"Data da Simulação: {comparacao.created_at.strftime('%d/%m/%Y')}")
+        c.setFillColor(TEXT_MUTED)
+        empresa_nome = comparacao.company.name if comparacao.company else "N/A"
+        usuario_nome = comparacao.user.name if comparacao.user else "N/A"
 
-        y_position = 680
+        info_rows = [
+            ("Empresa:", empresa_nome, "Data da Simulação:", comparacao.created_at.strftime('%d/%m/%Y')),
+            ("Solicitado por:", usuario_nome, "Valor Solicitado:", _fmt_currency(comparacao.loan_amount)),
+        ]
+        for esq_label, esq_valor, dir_label, dir_valor in info_rows:
+            c.setFont("Helvetica-Bold", 9)
+            c.drawString(MARGIN, y_position, esq_label)
+            c.setFont("Helvetica", 9)
+            c.drawString(MARGIN + 90, y_position, str(esq_valor))
+
+            c.setFont("Helvetica-Bold", 9)
+            c.drawString(320, y_position, dir_label)
+            c.setFont("Helvetica", 9)
+            c.drawString(320 + 100, y_position, str(dir_valor))
+            y_position -= 16
+
+        y_position -= 10
+        c.setStrokeColor(BORDER_COLOR)
+        c.line(MARGIN, y_position, PAGE_WIDTH - MARGIN, y_position)
+        y_position -= 25
+
+        c.setFillColor(colors.black)
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(MARGIN, y_position, "Modalidades Comparadas")
+        y_position -= 20
+
+        box_width = PAGE_WIDTH - 2 * MARGIN
+        box_height = 95
+        box_gap = 15
+
         for m in comparacao.modalities:
+            is_best = melhor_modalidade is not None and m.modality_id == melhor_modalidade.modality_id
+            box_top = y_position
+            box_bottom = box_top - box_height
+
+            if is_best:
+                c.setFillColor(HIGHLIGHT_COLOR)
+                c.setStrokeColor(HIGHLIGHT_BORDER)
+            else:
+                c.setFillColor(colors.white)
+                c.setStrokeColor(BORDER_COLOR)
+            c.roundRect(MARGIN, box_bottom, box_width, box_height, 6, stroke=1, fill=1)
+
+            inner_y = box_top - 20
+            c.setFillColor(colors.black)
             c.setFont("Helvetica-Bold", 12)
-            c.drawString(50, y_position, f"Modalidade: {m.name} ({m.type.upper()})")
+            c.drawString(MARGIN + 15, inner_y, f"{m.name} ({m.type.upper()})")
 
+            if is_best:
+                c.setFillColor(HIGHLIGHT_BORDER)
+                c.setFont("Helvetica-Bold", 9)
+                c.drawRightString(PAGE_WIDTH - MARGIN - 15, inner_y, "MELHOR OPÇÃO")
+
+            if m.type.upper() == 'PF':
+                inner_y -= 15
+                c.setFillColor(colors.HexColor('#b26a00'))
+                c.setFont("Helvetica-Oblique", 8)
+                c.drawString(MARGIN + 15, inner_y, "Atenção: modalidade de crédito para Pessoa Física")
+
+            c.setFillColor(colors.black)
             c.setFont("Helvetica", 10)
-            y_position -= 20
-            c.drawString(70, y_position, f"Taxa de Juros: {m.interest_rate}% a.m. | Prazo: {m.term_months} meses")
-            y_position -= 20
-            c.drawString(70, y_position, f"Valor da Parcela: R$ {m.monthly_payment:,.2f}")
-            y_position -= 20
-            c.drawString(70, y_position, f"Custo Total: R$ {m.total_amount:,.2f} (Juros: R$ {m.total_interest:,.2f})")
+            inner_y -= 20
+            c.drawString(MARGIN + 15, inner_y, f"Taxa de Juros: {m.interest_rate}% a.m.")
+            c.drawString(MARGIN + 250, inner_y, f"Prazo: {m.term_months} meses")
 
-            y_position -= 40  # Espaço para o próximo bloco
+            inner_y -= 18
+            c.drawString(MARGIN + 15, inner_y, f"Valor da Parcela: {_fmt_currency(m.monthly_payment)}")
+
+            inner_y -= 18
+            c.drawString(
+                MARGIN + 15, inner_y,
+                f"Custo Total: {_fmt_currency(m.total_amount)}  (Juros: {_fmt_currency(m.total_interest)})"
+            )
+
+            y_position = box_bottom - box_gap
+
+        # Rodapé
+        c.setStrokeColor(BORDER_COLOR)
+        c.line(MARGIN, 40, PAGE_WIDTH - MARGIN, 40)
+        c.setFillColor(TEXT_MUTED)
+        c.setFont("Helvetica", 8)
+        c.drawString(MARGIN, 28, f"Gerado em {datetime.now().strftime('%d/%m/%Y %H:%M')}")
+        c.drawRightString(PAGE_WIDTH - MARGIN, 28, "CrediFab - Contribuindo para o ODS 9.3")
 
         c.save()
         buffer.seek(0)

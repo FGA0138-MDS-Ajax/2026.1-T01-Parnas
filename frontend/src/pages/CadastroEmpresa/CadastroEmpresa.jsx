@@ -5,10 +5,10 @@ import './CadastroEmpresa.css';
 
 const CadastroEmpresa = () => {
   const [formData, setFormData] = useState({
-    nome: '',
-    cnpj: '',
-    email: '',
-    telefone: ''
+    nome: "",
+    cnpj: "",
+    email: "",
+    telefone: "",
   });
 
   const [error, setError] = useState('');
@@ -27,28 +27,28 @@ const CadastroEmpresa = () => {
     setError('');
     setLoading(true);
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      setError('Sessão expirada. Por favor, faça login novamente.');
+      setError("Sessão expirada. Por favor, faça login novamente.");
       setLoading(false);
       return;
     }
 
-    const cnpjApenasNumeros = formData.cnpj.replace(/\D/g, '');
+    const cnpjApenasNumeros = formData.cnpj.replace(/\D/g, "");
 
     try {
       const response = await fetch('/api/companies/', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           name: formData.nome,
           cnpj: cnpjApenasNumeros,
           email: formData.email,
-          phone: formData.telefone
-        })
+          phone: formData.telefone,
+        }),
       });
 
       const responseText = await response.text();
@@ -64,7 +64,9 @@ const CadastroEmpresa = () => {
           throw new Error(data.erro || 'Dado já cadastrado. Verifique o CNPJ e o e-mail informados.');
         }
         if (data.erros_de_validacao) {
-          const mensagensDeErro = Object.values(data.erros_de_validacao).flat().join(' ');
+          const mensagensDeErro = Object.values(data.erros_de_validacao)
+            .flat()
+            .join(" ");
           throw new Error(mensagensDeErro);
         }
         throw new Error(data.erro || data.msg || 'Erro ao cadastrar empresa.');
@@ -82,8 +84,9 @@ const CadastroEmpresa = () => {
 
       setFormData({ nome: '', cnpj: '', email: '', telefone: '' });
 
+      setFormData({ nome: "", cnpj: "", email: "", telefone: "" });
     } catch (err) {
-      setError(err.message || 'Ocorreu um erro ao tentar cadastrar a empresa.');
+      setError(err.message || "Ocorreu um erro ao tentar cadastrar a empresa.");
     } finally {
       setLoading(false);
     }
@@ -153,7 +156,7 @@ const CadastroEmpresa = () => {
             </div>
 
             <button type="submit" className="btn-submit" disabled={loading}>
-              {loading ? 'Cadastrando...' : 'Cadastrar Empresa'}
+              {loading ? "Cadastrando..." : "Cadastrar Empresa"}
             </button>
           </form>
         </div>
