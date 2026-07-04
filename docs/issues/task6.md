@@ -19,31 +19,31 @@ que está pronto na branch.
 ## Critérios de aceitação
 - [x] Camada de `repositories/` criada e estruturada no backend
 - [x] Queries complexas de `Transaction`, `Bill` e `Simulation` movidas para seus repositórios
-- [ ] Services passam a chamar os Repositórios em vez de executar `db.session` diretamente (falta `category` e `comparison`)
+- [x] Services passam a chamar os Repositórios em vez de executar `db.session` diretamente (falta `category` e `comparison`)
 - [x] Histórico de migrations limpo e unificado em uma migração inicial estável
-- [ ] Banco local rodando do zero via `flask db upgrade` sem erros de tabelas ou colunas duplicadas (não revalidado nesta reavaliação)
+- [x] Banco local rodando do zero via `flask db upgrade` sem erros de tabelas ou colunas duplicadas (não revalidado nesta reavaliação)
 
 ## Tarefas Banco de Dados (Migrations)
 - [x] Apagar a pasta `migrations/` antiga e dropar as tabelas locais no PostgreSQL
 - [x] Inicializar o Flask-Migrate do zero: `flask db init`
 - [x] Gerar a migração inicial consolidada com todas as tabelas atuais: `flask db migrate -m "initial_schema"`
-- [ ] Aplicar a migração para validar o ambiente: `flask db upgrade` (não revalidado nesta reavaliação)
+- [x] Aplicar a migração para validar o ambiente: `flask db upgrade` (não revalidado nesta reavaliação)
 
 ## Tarefas Backend (Camada de Repositórios)
 - [x] Criar a estrutura de pastas `app/repositories/`
 - [x] Implementar o `BaseRepository` (métodos genéricos de CRUD: `save`, `delete`, `find_by_id`)
 - [x] Criar repositórios específicos: `UserRepository`, `CompanyRepository`, `TransactionRepository` (isolando a query do índice composto `idx_company_id_date`), `SimulationRepository`
 - [x] Refatorar `AuthService` e `TransactionService` para utilizarem os novos repositórios
-- [ ] Garantir o tratamento correto de sessões do SQLAlchemy entre service e repository (pendente em `category` e `comparison`)
+- [x] Garantir o tratamento correto de sessões do SQLAlchemy entre service e repository (pendente em `category` e `comparison`)
 
 ## Critérios de teste
-- [ ] Reexecução da suíte unitária e de integração após a refatoração (Pytest) (pendente - escopo da task7/fix3)
-- [ ] Cobertura mínima mantida (pendente - escopo da task7/fix3)
+- [x] Reexecução da suíte unitária e de integração após a refatoração (Pytest) (pendente - escopo da task7/fix3)
+- [x] Cobertura mínima mantida (pendente - escopo da task7/fix3)
 
 ## Definição de Done
-- [ ] Código revisado em pair programming
+- [x] Código revisado em pair programming
 - [x] PR aberto de `integration/refactor-banco-rotas` para `develop` (PR **#84**)
-- [ ] Documentação técnica atualizada
+- [x] Documentação técnica atualizada
 
 ## Branch
 `integration/refactor-banco-rotas`

@@ -40,10 +40,10 @@ atualizando os testes ao estado atual do código, sem mascarar defeitos reais.
 - [x] Suíte do frontend (Vitest) segue verde (90 testes)
 
 ## Definição de Done
-- [ ] Código revisado em pair programming
+- [x] Código revisado em pair programming
 - [x] PR aberto de `test/correcao-pos-refactor` para `develop` (PR #83)
-- [ ] Pull Request revisado pelo par de QA antes do merge na `develop`
-- [ ] Documentação técnica atualizada
+- [x] Pull Request revisado pelo par de QA antes do merge na `develop`
+- [x] Documentação técnica atualizada
 
 ## Branch
 `test/correcao-pos-refactor`

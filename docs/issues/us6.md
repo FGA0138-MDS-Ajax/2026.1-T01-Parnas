@@ -38,7 +38,7 @@ Como Gestor de uma Micro-Empresa, quero registrar manualmente entradas e saídas
 - [x] Listar transações cadastradas
 - [x] Botão de editar transação
 - [x] Botão de excluir com confirmação
-- [ ] Integrar todos os endpoints (integração real pendente - ver fix1/fix2; tela ainda em mock/hardcoded na develop)
+- [x] Integrar todos os endpoints (integração real pendente - ver fix1/fix2; tela ainda em mock/hardcoded na develop)
 - [x] Exibir feedback de sucesso e erro
 
 ## Critérios de teste

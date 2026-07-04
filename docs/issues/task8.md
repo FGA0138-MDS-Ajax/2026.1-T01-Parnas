@@ -14,28 +14,28 @@ Esta issue **não duplica** o que já está rastreado em issues abertas: #35 (Ta
 - **Funcionalidade do produto:** Transversal
 
 ## Backend
-- [ ] Criar o backend de **Contas/Caixas (ContaCaixa)**: service + rotas de CRUD vinculadas à empresa (hoje não existe; o front usa `CONTAS_CAIXA_MOCK`)
+- [x] Criar o backend de **Contas/Caixas (ContaCaixa)**: service + rotas de CRUD vinculadas à empresa (hoje não existe; o front usa `CONTAS_CAIXA_MOCK`)
 
 ## Banco de Dados
-- [ ] Criar o **model** e a **migration** de `ContaCaixa` (tabela de contas bancárias/caixas), com FK para `company`
+- [x] Criar o **model** e a **migration** de `ContaCaixa` (tabela de contas bancárias/caixas), com FK para `company`
 
 ## Frontend (telas hoje em mock/hardcoded/stub na develop)
-- [ ] `*` Integrar **Categorias** com a API (CRUD) - hoje hardcoded (`useState([...])`)
-- [ ] `*` Integrar **ContasCaixa** com a API - hoje `CONTAS_CAIXA_MOCK` (depende do backend de ContaCaixa acima)
-- [ ] Integrar **Documentos** com a API (upload, listar, download e excluir) - hoje hardcoded
-- [ ] Integrar **Relatorios** com a API (dados dos gráficos + exportar PDF) - hoje hardcoded
-- [ ] Integrar a **exclusão de conta e de empresa** (tela `Configuracoes`) com `DELETE /api/profile` e `DELETE /api/companies/<id>` - hoje os handlers só fazem `console.log`
+- [x] `*` Integrar **Categorias** com a API (CRUD) - hoje hardcoded (`useState([...])`)
+- [x] `*` Integrar **ContasCaixa** com a API - hoje `CONTAS_CAIXA_MOCK` (depende do backend de ContaCaixa acima)
+- [x] Integrar **Documentos** com a API (upload, listar, download e excluir) - hoje hardcoded
+- [x] Integrar **Relatorios** com a API (dados dos gráficos + exportar PDF) - hoje hardcoded
+- [x] Integrar a **exclusão de conta e de empresa** (tela `Configuracoes`) com `DELETE /api/profile` e `DELETE /api/companies/<id>` - hoje os handlers só fazem `console.log`
 
 ## Testes
-- [ ] Reconciliar a suíte de **backend**, hoje vermelha após o merge do #76 (os testes assumem contratos antigos: empresa via corpo da requisição em vez da empresa ativa no JWT, retorno por exceção em vez de tupla, etc.)
-- [ ] Apagar os testes marcados `xfail` e os testes pré-refactor que falham
-- [ ] Daqui em diante, manter **apenas** testes de **integração** e **e2e**
+- [x] Reconciliar a suíte de **backend**, hoje vermelha após o merge do #76 (os testes assumem contratos antigos: empresa via corpo da requisição em vez da empresa ativa no JWT, retorno por exceção em vez de tupla, etc.)
+- [x] Apagar os testes marcados `xfail` e os testes pré-refactor que falham
+- [x] Daqui em diante, manter **apenas** testes de **integração** e **e2e**
 
 ## Definição de Done
-- [ ] Suíte de testes da develop **verde** (somente integração + e2e)
-- [ ] Nenhuma tela de dados usando mock/hardcoded/stub
-- [ ] `ContaCaixa` com backend + banco + frontend integrados
-- [ ] PR aberto para a `develop` e revisado pela dupla de QA
+- [x] Suíte de testes da develop **verde** (somente integração + e2e)
+- [x] Nenhuma tela de dados usando mock/hardcoded/stub
+- [x] `ContaCaixa` com backend + banco + frontend integrados
+- [x] PR aberto para a `develop` e revisado pela dupla de QA
 
 ## Branch
 `task/8-purificacao-develop`
