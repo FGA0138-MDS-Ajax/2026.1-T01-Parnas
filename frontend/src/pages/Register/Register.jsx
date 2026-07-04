@@ -31,7 +31,7 @@ const Register = () => {
     const hoje = new Date();
     const nacimiento = new Date(formData.dataNascimento);
 
-    if (nascimento > hoje) {
+    if (nacimiento > hoje) {
       setErro("Data de nascimento inválida");
       setLoading(false);
       return;

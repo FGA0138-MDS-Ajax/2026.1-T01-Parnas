@@ -7,6 +7,7 @@ import {
   downloadDocumentoApi,
 } from "../../services/documento.service";
 import "./Documentos.css";
+import ConfirmacaoExclusaoDocumento from './ConfirmacaoExclusaoDocumento';
 
 function Documentos() {
   const [nome, setNome] = useState("");
@@ -18,6 +19,8 @@ function Documentos() {
   const [sucesso, setSucesso] = useState("");
   const [progresso, setProgresso] = useState(0);
   const [carregando, setCarregando] = useState(false);
+  const [confirmacaoAberta, setConfirmacaoAberta] = useState(false);
+  const [documentoParaExcluir, setDocumentoParaExcluir] = useState(null);
 
   const [documentos, setDocumentos] = useState([]);
 
@@ -101,14 +104,26 @@ function Documentos() {
     }
   };
 
-  const excluirDocumento = async (id) => {
-    if (!window.confirm("Deseja realmente excluir este documento?")) return;
+  const abrirConfirmacao = (doc) => {
+    setDocumentoParaExcluir(doc);
+    setConfirmacaoAberta(true);
+  };
 
+  const cancelarExclusao = () => {
+    setConfirmacaoAberta(false);
+    setDocumentoParaExcluir(null);
+  };
+
+  const confirmarExclusao = async () => {
+    if (!documentoParaExcluir) return;
     try {
-      await excluirDocumentoApi(id);
+      await excluirDocumentoApi(documentoParaExcluir.document_id);
+      setConfirmacaoAberta(false);
+      setDocumentoParaExcluir(null);
       carregarDocumentos();
     } catch (error) {
-      alert("Erro ao excluir o documento.");
+      setErro("Erro ao excluir o documento.");
+      setConfirmacaoAberta(false);
     }
   };
 
@@ -239,8 +254,7 @@ function Documentos() {
 
                         <button
                           className="btn-excluir"
-                          onClick={() => excluirDocumento(doc.document_id)}
-                        >
+                          onClick={() => abrirConfirmacao(doc)}>
                           Excluir
                         </button>
                       </div>
@@ -252,6 +266,15 @@ function Documentos() {
           </table>
         </section>
       </main>
+      {confirmacaoAberta && (
+        <ConfirmacaoExclusaoDocumento
+          documento={documentoParaExcluir}
+          onConfirmar={confirmarExclusao}
+          onCancelar={cancelarExclusao}
+        />
+      )}
+      {/* ---------------------- */}
+
     </div>
   );
 }

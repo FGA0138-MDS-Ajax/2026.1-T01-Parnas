@@ -2,9 +2,17 @@ from app.repositories.company_repository import CompanyRepository
 from app.models.comparison import Comparison, ComparisonModality
 from app.exceptions.api_exception import APIException
 from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
 from reportlab.pdfgen import canvas
 from app.config import db
+from datetime import datetime
 import io
+
+
+def _fmt_currency(value):
+    texto = f"{float(value):,.2f}"
+    texto = texto.replace(",", "X").replace(".", ",").replace("X", ".")
+    return f"R$ {texto}"
 
 class ComparisonService:
     @staticmethod
@@ -207,31 +215,133 @@ class ComparisonService:
         if not comparacao:
             return None, 404
 
+        # Identifica a modalidade mais vantajosa (menor custo total) para destacar no PDF
+        melhor_modalidade = None
+        menor_total = float('inf')
+        for m in comparacao.modalities:
+            if float(m.total_amount) < menor_total:
+                menor_total = float(m.total_amount)
+                melhor_modalidade = m
+
+        PAGE_WIDTH, PAGE_HEIGHT = letter
+        MARGIN = 50
+        BRAND_COLOR = colors.HexColor('#145c52')
+        HIGHLIGHT_COLOR = colors.HexColor('#e8f5e9')
+        HIGHLIGHT_BORDER = colors.HexColor('#2e7d32')
+        BORDER_COLOR = colors.HexColor('#cccccc')
+        TEXT_MUTED = colors.HexColor('#555555')
+
         buffer = io.BytesIO()
         c = canvas.Canvas(buffer, pagesize=letter)
         c.setTitle(f"Relatório de Crédito #{comparison_id}")
 
-        # Título
-        c.setFont("Helvetica-Bold", 16)
-        c.drawString(50, 750, f"Comparativo de Modalidades de Crédito")
+        # Cabeçalho
+        header_height = 80
+        c.setFillColor(BRAND_COLOR)
+        c.rect(0, PAGE_HEIGHT - header_height, PAGE_WIDTH, header_height, stroke=0, fill=1)
+
+        c.setFillColor(colors.white)
+        c.setFont("Helvetica-Bold", 18)
+        c.drawString(MARGIN, PAGE_HEIGHT - 35, "Comparativo de Modalidades de Crédito")
+        c.setFont("Helvetica", 10)
+        c.drawString(MARGIN, PAGE_HEIGHT - 55, f"CrediFab - Plataforma de Acesso a Crédito | Comparação #{comparison_id}")
+
+        y_position = PAGE_HEIGHT - header_height - 30
+
+        # Bloco de informações gerais
+        c.setFillColor(colors.black)
+        c.setFont("Helvetica-Bold", 11)
+        c.drawString(MARGIN, y_position, "Informações da Simulação")
+        y_position -= 18
 
         c.setFont("Helvetica", 10)
-        c.drawString(50, 730, f"Data da Simulação: {comparacao.created_at.strftime('%d/%m/%Y')}")
+        c.setFillColor(TEXT_MUTED)
+        empresa_nome = comparacao.company.name if comparacao.company else "N/A"
+        usuario_nome = comparacao.user.name if comparacao.user else "N/A"
 
-        y_position = 680
+        info_rows = [
+            ("Empresa:", empresa_nome, "Data da Simulação:", comparacao.created_at.strftime('%d/%m/%Y')),
+            ("Solicitado por:", usuario_nome, "Valor Solicitado:", _fmt_currency(comparacao.loan_amount)),
+        ]
+        for esq_label, esq_valor, dir_label, dir_valor in info_rows:
+            c.setFont("Helvetica-Bold", 9)
+            c.drawString(MARGIN, y_position, esq_label)
+            c.setFont("Helvetica", 9)
+            c.drawString(MARGIN + 90, y_position, str(esq_valor))
+
+            c.setFont("Helvetica-Bold", 9)
+            c.drawString(320, y_position, dir_label)
+            c.setFont("Helvetica", 9)
+            c.drawString(320 + 100, y_position, str(dir_valor))
+            y_position -= 16
+
+        y_position -= 10
+        c.setStrokeColor(BORDER_COLOR)
+        c.line(MARGIN, y_position, PAGE_WIDTH - MARGIN, y_position)
+        y_position -= 25
+
+        c.setFillColor(colors.black)
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(MARGIN, y_position, "Modalidades Comparadas")
+        y_position -= 20
+
+        box_width = PAGE_WIDTH - 2 * MARGIN
+        box_height = 95
+        box_gap = 15
+
         for m in comparacao.modalities:
+            is_best = melhor_modalidade is not None and m.modality_id == melhor_modalidade.modality_id
+            box_top = y_position
+            box_bottom = box_top - box_height
+
+            if is_best:
+                c.setFillColor(HIGHLIGHT_COLOR)
+                c.setStrokeColor(HIGHLIGHT_BORDER)
+            else:
+                c.setFillColor(colors.white)
+                c.setStrokeColor(BORDER_COLOR)
+            c.roundRect(MARGIN, box_bottom, box_width, box_height, 6, stroke=1, fill=1)
+
+            inner_y = box_top - 20
+            c.setFillColor(colors.black)
             c.setFont("Helvetica-Bold", 12)
-            c.drawString(50, y_position, f"Modalidade: {m.name} ({m.type.upper()})")
+            c.drawString(MARGIN + 15, inner_y, f"{m.name} ({m.type.upper()})")
 
+            if is_best:
+                c.setFillColor(HIGHLIGHT_BORDER)
+                c.setFont("Helvetica-Bold", 9)
+                c.drawRightString(PAGE_WIDTH - MARGIN - 15, inner_y, "MELHOR OPÇÃO")
+
+            if m.type.upper() == 'PF':
+                inner_y -= 15
+                c.setFillColor(colors.HexColor('#b26a00'))
+                c.setFont("Helvetica-Oblique", 8)
+                c.drawString(MARGIN + 15, inner_y, "Atenção: modalidade de crédito para Pessoa Física")
+
+            c.setFillColor(colors.black)
             c.setFont("Helvetica", 10)
-            y_position -= 20
-            c.drawString(70, y_position, f"Taxa de Juros: {m.interest_rate}% a.m. | Prazo: {m.term_months} meses")
-            y_position -= 20
-            c.drawString(70, y_position, f"Valor da Parcela: R$ {m.monthly_payment:,.2f}")
-            y_position -= 20
-            c.drawString(70, y_position, f"Custo Total: R$ {m.total_amount:,.2f} (Juros: R$ {m.total_interest:,.2f})")
+            inner_y -= 20
+            c.drawString(MARGIN + 15, inner_y, f"Taxa de Juros: {m.interest_rate}% a.m.")
+            c.drawString(MARGIN + 250, inner_y, f"Prazo: {m.term_months} meses")
 
-            y_position -= 40  # Espaço para o próximo bloco
+            inner_y -= 18
+            c.drawString(MARGIN + 15, inner_y, f"Valor da Parcela: {_fmt_currency(m.monthly_payment)}")
+
+            inner_y -= 18
+            c.drawString(
+                MARGIN + 15, inner_y,
+                f"Custo Total: {_fmt_currency(m.total_amount)}  (Juros: {_fmt_currency(m.total_interest)})"
+            )
+
+            y_position = box_bottom - box_gap
+
+        # Rodapé
+        c.setStrokeColor(BORDER_COLOR)
+        c.line(MARGIN, 40, PAGE_WIDTH - MARGIN, 40)
+        c.setFillColor(TEXT_MUTED)
+        c.setFont("Helvetica", 8)
+        c.drawString(MARGIN, 28, f"Gerado em {datetime.now().strftime('%d/%m/%Y %H:%M')}")
+        c.drawRightString(PAGE_WIDTH - MARGIN, 28, "CrediFab - Contribuindo para o ODS 9.3")
 
         c.save()
         buffer.seek(0)
