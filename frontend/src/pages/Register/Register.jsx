@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import logoImg from "../../assets/LogoFundoBranco.png";
+import { API_BASE_URL } from "../../services/api";
 import "./Register.css";
 
 const Register = () => {
@@ -74,7 +75,7 @@ const Register = () => {
     };
 
     try {
-      const response = await fetch("/api/register", {
+      const response = await fetch(`${API_BASE_URL}/api/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

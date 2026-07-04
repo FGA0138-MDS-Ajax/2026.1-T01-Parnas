@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEmpresa } from '../../context/EmpresaContext';
+import { API_BASE_URL } from '../../services/api';
 import './CadastroEmpresa.css';
 
 const CadastroEmpresa = () => {
@@ -37,7 +38,7 @@ const CadastroEmpresa = () => {
     const cnpjApenasNumeros = formData.cnpj.replace(/\D/g, "");
 
     try {
-      const response = await fetch('/api/companies/', {
+      const response = await fetch(`${API_BASE_URL}/api/companies/`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",
