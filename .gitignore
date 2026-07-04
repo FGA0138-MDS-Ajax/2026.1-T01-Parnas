@@ -6,9 +6,6 @@ venv/
 *.egg-info/
 *.db
 
-# Migrations (opcional, alguns times sobem)
-# migrations/versions/
-
 # Node
 node_modules/
 dist/
