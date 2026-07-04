@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 import logoImg from "../../assets/CredifabLogo.png";
+import { API_BASE_URL } from "../../services/api";
 import "./EsqueciSenha.css";
 
 export function EsqueciSenha() {
@@ -34,7 +35,7 @@ export function EsqueciSenha() {
     }
 
     try {
-      const response = await fetch("/auth/forgot-password", {
+      const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -88,7 +89,7 @@ export function EsqueciSenha() {
     }
 
     try {
-      const response = await fetch("/auth/reset-password", {
+      const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

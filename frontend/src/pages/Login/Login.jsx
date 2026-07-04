@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import logoImg from "../../assets/LogoFundoBranco.png";
+import { API_BASE_URL } from "../../services/api";
 import "./Login.css";
 
 const Login = () => {
@@ -42,7 +43,7 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch("/auth/login", {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

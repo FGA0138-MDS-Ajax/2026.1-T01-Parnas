@@ -8,11 +8,12 @@ import {
   useState,
 } from 'react';
 import useAuth from '../hooks/useAuth';
+import { API_BASE_URL } from '../services/api';
 import {
   lerEmpresaAtivaPersistida,
   salvarEmpresaAtiva,
   limparEmpresaAtiva,
-} from '../services/empresa.service'; 
+} from '../services/empresa.service';
 
 const EMPRESA_DEMO = {
   company_id: 'demo',
@@ -24,7 +25,7 @@ const EmpresaContext = createContext(null);
 
 const requisicaoAutenticada = async (url, options = {}) => {
   try {
-    const response = await fetch(url, {
+    const response = await fetch(`${API_BASE_URL}${url}`, {
       ...options,
       headers: {
         ...(options.body ? { 'Content-Type': 'application/json' } : {}),
