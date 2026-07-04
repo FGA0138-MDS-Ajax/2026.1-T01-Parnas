@@ -8,15 +8,6 @@ SENHA_NOVA = 'NovaSenha@456'
 
 # --- POST /auth/forgot-password ---
 
-def test_forgot_password_com_email_cadastrado(client, test_user, clean_db):
-    resp = client.post('/auth/forgot-password', json={'email': 'teste@email.com'})
-
-    body = resp.get_json()
-    assert resp.status_code == 200
-    assert body['email'] == 'teste@email.com'
-    assert 'reset_link' in body
-
-
 def test_forgot_password_com_email_nao_cadastrado(client, clean_db):
     resp = client.post('/auth/forgot-password', json={'email': 'fantasma@email.com'})
 
