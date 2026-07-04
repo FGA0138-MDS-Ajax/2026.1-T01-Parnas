@@ -18,10 +18,10 @@ página, os dois artefatos agregados:
 |    7     |   07-13/jun   | Dashboard e contas - Func. E e J (CEN-01)                 | [Sprint 7](sprint-07.md)              |
 |    8     |   14-20/jun   | Documentos e relatórios - Func. G e F (CEN-02/03)         | [Sprint 8](sprint-08.md)              |
 |    9     |   21-27/jun   | Diagnóstico e simulação de crédito - Func. H e I (CEN-04) | [Sprint 9](sprint-09.md)              |
-|    10    | 28/jun-04/jul | Estabilização, refatoração e entrega final                | [Sprint 10](sprint-10.md) (projetada) |
+|    10    | 28/jun-04/jul | Estabilização, refatoração e entrega final                | [Sprint 10](sprint-10.md)             |
 
-> A Sprint 10 (estabilização) está com o consolidado **projetado / a preencher**,
-> conforme o andamento atual do projeto; concentra o fechamento dos defeitos mapeados
-> e os testes E2E e de carga.
+> A Sprint 10 (estabilização) **encerrou** a entrega: fechou os defeitos mapeados nas
+> Sprints anteriores e executou os testes E2E de sistema e o de carga. Todos os casos
+> planejados foram executados e aprovados.
 
 ---

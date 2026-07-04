@@ -38,7 +38,7 @@ no Documento de Visão, seção 6.2); esta página é a versão navegável.
 | TS-23 | Endpoints de comparação de modalidades                             | Integração | Funcional     |      R13      |
 | TS-24 | Fluxo E2E de cadastro, login e registro de transação               | Sistema    | Funcional     | R01, R03, R07 |
 | TS-25 | Fluxo E2E de consulta ao histórico financeiro com filtros          | Sistema    | Funcional     |      R08      |
-| TS-26 | Fluxo E2E de simulação de crédito e visualização do impacto        | Sistema    | Funcional     |      R12      |
+| TS-26 | Fluxo E2E de contas a pagar e quitação gerando transação           | Sistema    | Funcional     |   R15, R07    |
 | TS-27 | Teste de carga no endpoint de simulação de crédito (Locust)        | Carga      | Não funcional |      R14      |
 
 ---
@@ -52,15 +52,15 @@ no Documento de Visão, seção 6.2); esta página é a versão navegável.
 | R04 - Modelagem Usuário-Empresa / isolamento de dados | TS-18                             |
 |              R05 - Recuperação de senha               | TS-13                             |
 |       R06 - Categorias por empresa (unicidade)        | TS-15                             |
-|                   R07 - Transações                    | TS-05, TS-16, TS-24               |
+|                   R07 - Transações                    | TS-05, TS-16, TS-24, TS-26        |
 |              R08 - Histórico com filtros              | TS-11, TS-17, TS-25               |
 |              R09 - Dashboard financeiro               | TS-17                             |
 |            R10 - Centralização documental             | TS-19                             |
 |          R11 - Relatórios financeiros (PDF)           | TS-21                             |
-|        R12 - Simulação de crédito (Price/SAC)         | TS-06, TS-07, TS-08, TS-22, TS-26 |
+|        R12 - Simulação de crédito (Price/SAC)         | TS-06, TS-07, TS-08, TS-22        |
 |            R13 - Comparação de modalidades            | TS-09, TS-10, TS-23               |
 |                   R14 - Desempenho                    | TS-27                             |
-|               R15 - Cadastro de contas                | TS-20                             |
+|               R15 - Cadastro de contas                | TS-20, TS-26                      |
 
 ---
 ## Distribuição por nível

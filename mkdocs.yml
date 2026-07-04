@@ -71,6 +71,8 @@ nav:
     - qualidade/index.md
     - Roteiro de Testes: qualidade/roteiro-testes.md
     - Modelo GQM: qualidade/gqm.md
+    - Resumo de Métricas: qualidade/resumo-metricas.md
+    - Métricas de Produto: qualidade/metricas-produto.md
     - Documentação por Feature:
       - qualidade/features/index.md
       - Feature 1 — Cadastro de Usuário: qualidade/features/feature_1_cadastro-usuario.md

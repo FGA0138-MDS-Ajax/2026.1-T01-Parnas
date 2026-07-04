@@ -9,8 +9,10 @@ qualidade produzida pela dupla de Qualidade (**Daniel Filipe** e
 
 | Página                                            | Conteúdo                                                           |
 |---------------------------------------------------|--------------------------------------------------------------------|
-| [Roteiro de Testes](roteiro-testes.md)            | Casos planejados TS-01 a TS-14 e rastreabilidade com os requisitos |
+| [Roteiro de Testes](roteiro-testes.md)            | Casos planejados TS-01 a TS-27 e rastreabilidade com os requisitos |
 | [Modelo GQM](gqm.md)                              | Metas, perguntas e métricas (M1-M4) que medem a qualidade          |
+| [Resumo de Métricas](resumo-metricas.md)          | Visão executiva de todas as métricas de qualidade coletadas        |
+| [Métricas de Produto](metricas-produto.md)        | Métricas de negócio e de experiência do usuário                    |
 | [Documentação por Feature](features/index.md)     | Um relatório de teste para cada feature testada                    |
 | [Documentação por Tarefa Técnica](tasks/index.md) | Relatórios de QA das tarefas de integração/refatoração             |
 | [Documentação por Correção (fix)](fix/index.md)   | Relatórios de QA das correções de defeitos                         |
@@ -20,12 +22,12 @@ qualidade produzida pela dupla de Qualidade (**Daniel Filipe** e
 ## Estratégia em resumo
 
 A estratégia segue a ideia de **pirâmide de testes**: muitos testes unitários,
-menos de integração, menos ainda E2E, e testes de carga sob demanda.
+menos de integração, menos ainda E2E, e testes de carga no topo.
 
 ```
-                      ▲   Carga (sob demanda - Locust)
+                      ▲   Carga (Locust)
                     ╱  ╲
-                 ╱ E2E ╲       Fluxos completos (Playwright)
+                 ╱ E2E ╲       Fluxos completos (client Flask)
               ╱───────╲
            ╱  Integração ╲    Endpoints contra SQLite em memória
        ╱──────────────╲
@@ -41,9 +43,8 @@ menos de integração, menos ainda E2E, e testes de carga sob demanda.
 | Unitário        | **Pytest + pytest-mock**                            | Lógica de service isolada com mocks; schemas marshmallow |
 | Integração      | **Pytest + client Flask**                           | Endpoints contra **SQLite em memória**                   |
 | E2E (API)       | **Pytest + client Flask**                           | Fluxos multi-endpoint encadeados                         |
-| E2E (navegador) | **Playwright** *(a configurar)*                     | CEN-01 a CEN-04, caminhos felizes                        |
-| Front-end       | **Vitest + React Testing Library** *(a configurar)* | Componentes e telas                                      |
-| Carga           | **Locust** *(sob demanda)*                          | Endpoint de simulação de crédito (futuro)                |
+| Front-end       | **Vitest + React Testing Library**                  | Componentes e telas                                      |
+| Carga           | **Locust**                                          | Endpoint de simulação de crédito                         |
 
 
 ---
@@ -54,7 +55,7 @@ backend/tests/
   conftest.py                 # fixtures globais (app, client, clean_db, auth…)
   unit/                       # test_company_service.py, test_company_schema.py
   integration/                # test_company_routes.py, test_company_service_db.py
-  e2e/                        # test_company_registration_flow.py
+  e2e/                        # onboarding, financeiro, contas e cadastro de empresa
 ```
 
 Fixtures globais em `conftest.py`: `app` 
@@ -69,7 +70,7 @@ Fixtures globais em `conftest.py`: `app`
 4. **Bug encontrado:** abrir issue com label `bug` + escrever teste que o
    reproduz **antes** do fix; correção em `fix/<nome>`; o ciclo recomeça.
 5. **Todos passam:** apaga-se `test/`, abre-se PR da feature para `develop`
-   (a CI deve passar - quando existir).
+   (a CI de testes precisa passar).
 
 ---
 ## Documentos de Qualidade Produzidos

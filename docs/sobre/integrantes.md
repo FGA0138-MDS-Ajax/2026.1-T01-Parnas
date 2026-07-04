@@ -47,10 +47,6 @@ referentes ao Grupo Parnas.
 
 ## Equipe em fotos
 
-> As fotos ficam em `docs/assets/images/integrantes/`. Hoje estão com imagens
-> temporárias; basta substituir cada arquivo pelo retrato real, mantendo o mesmo nome
-> (ex.: `alan-semil.png`). Cada foto leva ao GitHub pessoal do integrante.
-
 ### Desenvolvimento - Back-end
 
 <div class="team-grid" markdown>

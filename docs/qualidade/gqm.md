@@ -70,7 +70,7 @@ M4 = PRs aprovados no 1º run / total de PRs
 ```
 
 - **Meta:** ≥ **70%** a partir da Sprint 5.
-- Depende da existência da pipeline de CI de testes (pendência atual).
+- A pipeline de CI de testes está ativa (workflows `ci` e `tests` no GitHub Actions).
 
 ## Tabela-resumo
 
@@ -95,14 +95,14 @@ entre a cobertura de back-end (pytest-cov) e a de front-end (Vitest).
 |    7     |      7      |         0,29         |    77%     |    79%     |     78%     |           79%           |
 |    8     |      6      |         0,33         |    80%     |    80%     |     80%     |           83%           |
 |    9     |      6      |         0,17         |    80%     |    80%     |     80%     |           85%           |
-|    10    |  projetada  |      projetada       | 82% (proj) | 82% (proj) | 82% (proj)  |        projetada        |
+|    10    |      6      |         0,00         |    82%     |    82%     |     82%     |           88%           |
 
 Leitura geral: throughput (M1) estável entre 5 e 7 issues por Sprint; densidade de
-defeitos (M2) em queda (0,40 -> 0,17); pipeline (M4) acima de 70% a partir da Sprint 6.
-O M3 médio (back + front) cresceu de 63% para 80% e ficou **acima do mínimo em todas as
-Sprints** (60% nas S1-5, 75% nas S6-10), com a cobertura de front-end acompanhando a de
-back-end. A Sprint 10
-(estabilização) consolida os fixes em aberto e os testes E2E e de carga.
+defeitos (M2) em queda contínua (0,40 -> 0,00); pipeline (M4) acima de 70% a partir da
+Sprint 6, chegando a 88% no fechamento. O M3 médio (back + front) cresceu de 63% para 82%
+e ficou **acima do mínimo em todas as Sprints** (60% nas S1-5, 75% nas S6-10), com a
+cobertura de front-end acompanhando a de back-end. A Sprint 10 (estabilização) fechou os
+fixes herdados e executou os testes E2E de sistema e o de carga, encerrando a entrega.
 
 A coleta e o parecer de cada Sprint ficam em
 [Consolidados por Sprint](sprints/index.md).

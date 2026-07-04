@@ -29,7 +29,7 @@
 | #   | Descrição                                                      | Branch                      |  Status         |
 |:---:|----------------------------------------------------------------|-----------------------------|-----------------|
 |  1  | Testes de Cadastro de Empresa com mocks/asserts desatualizados | `fix/testes-empresa`        | Corrigido       |
-|  2  | Exclusão de conta não invalida a sessão ativa                  | `fix/exclusao-conta-sessao` | Em aberto (S10) |
+|  2  | Exclusão de conta não invalida a sessão ativa                  | `fix/exclusao-conta-sessao` | Corrigido (S10) |
 
 ## 4. Números gerais
 

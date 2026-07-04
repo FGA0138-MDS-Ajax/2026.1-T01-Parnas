@@ -28,7 +28,7 @@
 
 | #   | Descrição                                                         | Branch                                |  Status         |
 |:---:|-------------------------------------------------------------------|---------------------------------------|-----------------|
-|  1  | Ambiguidade entre as telas de Contas e Transações                 | `fix/diferenciacao-contas-transacoes` | Em aberto (S10) |
+|  1  | Ambiguidade entre as telas de Contas e Transações                 | `fix/diferenciacao-contas-transacoes` | Corrigido (S10) |
 |  2  | Conta quitada não gerava a transação vinculada em todos os fluxos | `fix/quitar-conta`                    | Corrigido       |
 
 ## 4. Números gerais

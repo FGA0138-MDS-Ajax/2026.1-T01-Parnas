@@ -32,7 +32,7 @@
 
 | # | Descrição | Branch | Status |
 | :--: | --- | --- | --- |
-| 1 | Divergência de contrato entre front e back na simulação/comparação (campos e nomes de payload) | `fix/contrato-credito` | Em aberto (S10) |
+| 1 | Divergência de contrato entre front e back na simulação/comparação (campos e nomes de payload) | `fix/contrato-credito` | Corrigido (S10) |
 
 ## 4. Números gerais
 
@@ -70,5 +70,5 @@ pytest --cov=app tests/
 > aprovadas com pendências: a lógica de cálculo passou em unidade e os endpoints em
 > integração, mas há divergência de contrato entre front e back, registrada como
 > `fix/contrato-credito` para a estabilização. A densidade de defeitos caiu para 0,17
-> e o M3 médio (back 80% / front 80%) ficou em 80%, acima do mínimo de 75%. O E2E de
-> crédito (TS-26) ficou planejado para a Sprint 10.
+> e o M3 médio (back 80% / front 80%) ficou em 80%, acima do mínimo de 75%. Os fluxos
+> E2E de sistema ficaram planejados para a Sprint 10.

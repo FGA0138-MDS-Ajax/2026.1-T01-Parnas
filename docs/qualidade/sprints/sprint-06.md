@@ -30,7 +30,7 @@
 | #   | Descrição                                                      | Branch                      | Status          |
 |:---:|----------------------------------------------------------------|-----------------------------|-----------------|
 |  1  | Cálculo de totais do histórico com mistura `Decimal`/`float`   | `fix/totais-historico`      | Corrigido       |
-|  2  | Aba de Transações exibindo dados mock em vez de consumir a API | `fix/integracao-transacoes` | Em aberto (S10) |
+|  2  | Aba de Transações exibindo dados mock em vez de consumir a API | `fix/integracao-transacoes` | Corrigido (S10) |
 
 ## 4. Números gerais
 
