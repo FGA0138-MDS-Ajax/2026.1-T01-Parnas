@@ -17,7 +17,9 @@ class Bill(db.Model):
     # Foreign Keys com CASCADE e RESTRICT seguindo a lógica de negócio
     company_id = db.Column(db.Integer, db.ForeignKey('company.company_id', ondelete='CASCADE'), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('category.category_id', ondelete='RESTRICT'), nullable=False)
-    payment_id = db.Column(db.Integer, db.ForeignKey('payment.payment_id', ondelete='RESTRICT'), nullable=False)
+    # alinhado com a migration 7cec6b9d2f43 (payment_id foi criado nullable=True);
+    # o service preenche o payment_id apos o insert quando a conta/caixa e informada.
+    payment_id = db.Column(db.Integer, db.ForeignKey('payment.payment_id', ondelete='RESTRICT'), nullable=True)
     
     #relacionamentos
     company = db.relationship('Company', back_populates='bills')

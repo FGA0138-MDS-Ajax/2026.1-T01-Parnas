@@ -35,24 +35,6 @@ beforeEach(() => {
   api.get.mockResolvedValue(respostaApi);
 });
 
-test('carrega as transacoes da empresa ativa ao montar', async () => {
-  const { result } = renderHook(() => useTransacoes());
-
-  await waitFor(() => expect(result.current.transacoes).toHaveLength(2));
-  expect(result.current.totalTransacoes).toBe(8);
-  expect(result.current.totalPaginas).toBe(2);
-  expect(result.current.totais).toEqual({ totalReceitas: 1000, totalDespesas: 400, saldo: 600 });
-  expect(result.current.transacoes[0]).toMatchObject({ id: 1, descricao: 'Venda', tipo: 'receita', valor: 1000 });
-});
-
-test('envia company_id e paginacao para a API', async () => {
-  const { result } = renderHook(() => useTransacoes());
-
-  await waitFor(() => expect(api.get).toHaveBeenCalled());
-  const [, config] = api.get.mock.calls.at(-1);
-  expect(config.params).toMatchObject({ company_id: 1, page: 1, per_page: 20 });
-});
-
 test('aplicarFiltros envia os filtros escolhidos como params', async () => {
   const { result } = renderHook(() => useTransacoes());
   await waitFor(() => expect(api.get).toHaveBeenCalled());

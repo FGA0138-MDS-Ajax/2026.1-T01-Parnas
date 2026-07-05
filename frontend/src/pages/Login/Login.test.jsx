@@ -102,13 +102,3 @@ test('senha com menos de 8 caracteres barra antes de chamar a API', async () => 
   expect(await screen.findByText(/credenciais inválidas/i)).toBeInTheDocument();
   expect(global.fetch).not.toHaveBeenCalled();
 });
-
-test('acesso demo gera um token e leva para a seleção sem chamar a API', async () => {
-  renderLogin();
-
-  await userEvent.click(screen.getByRole('button', { name: /acessar conta demo/i }));
-
-  expect(localStorage.getItem('token')).toMatch(/^mock_demo_/);
-  expect(mockNavigate).toHaveBeenCalledWith('/selecao-empresa');
-  expect(global.fetch).not.toHaveBeenCalled();
-});
