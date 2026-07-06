@@ -143,6 +143,28 @@
   opacity: .75;
 }
 
+/* Foto do grupo reunido (pagina Integrantes) */
+.team-group {
+  margin: 1.2rem auto 2rem;
+  max-width: 640px;
+  text-align: center;
+}
+.team-group img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 3px solid var(--md-primary-fg-color);
+  display: block;
+}
+.team-group figcaption {
+  margin-top: .6rem;
+  font-size: .82rem;
+  line-height: 1.3;
+}
+.team-group figcaption small {
+  opacity: .75;
+}
+
 /* diagrama Mermaid (produto)*/
 .md-typeset .mermaid {
   margin: 1.5rem auto;

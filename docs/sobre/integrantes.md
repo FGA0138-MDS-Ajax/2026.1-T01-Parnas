@@ -151,4 +151,14 @@ referentes ao Grupo Parnas.
 </figure>
 </div>
 
+### Grupo Parnas
+
+<figure class="team-group" markdown>
+![Grupo Parnas reunido](../assets/images/integrantes/grupo-parnas.png)
+<figcaption markdown>
+**Grupo Parnas**<br>
+<small>Equipe completa</small>
+</figcaption>
+</figure>
+
 ---
