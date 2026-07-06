@@ -95,7 +95,7 @@ sudo -u postgres psql -c "CREATE DATABASE parnas_db;"
 cd backend
 
 # Criar e ativar ambiente virtual — sempre dentro de backend/, nunca na raiz do projeto
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate         # Linux/macOS
 venv\Scripts\activate            # Windows
 
@@ -149,6 +149,7 @@ Depois, abra o `.env` e ajuste os valores reais. O `.env.example` traz esta estr
 ```env
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/parnas_db
 FRONTEND_URL=http://localhost:5173/
+FLASK_APP=run.py
 MAIL_SERVER=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USE_TLS=true
@@ -164,21 +165,11 @@ Detalhes por variável:
 |---|---|---|
 | `DATABASE_URL` | Sim | Precisa apontar para o banco PostgreSQL que você criou no passo anterior. Usuário/senha/porta devem bater com sua instalação local. |
 | `FRONTEND_URL` | Sim | Mantenha `http://localhost:5173/` se não alterou a porta padrão do Vite. |
+| `FLASK_APP` | Sim | Sem essa variável, `flask run` e `flask db upgrade` falham com "Could not locate a Flask application" — o Flask não descobre `run.py` sozinho. |
 | `MAIL_*` | Não, para uso geral | Só é necessário se for testar o fluxo de recuperação de senha (envio de e-mail real). Pode deixar os valores de exemplo se não for testar isso — o restante do sistema funciona normalmente sem credenciais de e-mail válidas. Se for testar, `MAIL_PASSWORD` precisa ser uma **App Password** do Gmail (não a senha normal da conta), exigindo 2FA habilitado. |
 
 Não comite o `.env` real — apenas o `.env.example` deve ir para o repositório.
- 
-## Variáveis de Ambiente
- 
-Copie o arquivo `.env.example` para `.env` na pasta `backend/` e preencha:
- 
-```env
-DATABASE_URL=postgresql://usuario:senha@localhost/credfab
-JWT_SECRET_KEY=sua_chave_secreta
-FLASK_ENV=development
-FLASK_APP=run.py
-```
- 
+
 ---
  
 ## Estrutura do Projeto
