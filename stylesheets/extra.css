@@ -1,0 +1,191 @@
+:root { font-size: 145%; }
+.md-grid {
+  max-width: 1440px;
+}
+
+/*Cores gerais*/
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #2c3e50;
+  --md-primary-fg-color--light: #34495e;
+  --md-primary-fg-color--dark: #1a252f;
+  --md-accent-fg-color: #e74c3c;
+  --md-typeset-a-color: #e74c3c;     
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #1a252f;         
+  --md-primary-fg-color--light: #2c3e50;
+  --md-primary-fg-color--dark: #0f161c;
+  --md-accent-fg-color: #f39c12;            
+  --md-typeset-a-color: #f39c12;        
+}
+
+
+/* Hero da home - SVG por cima e gradiente animado por baixo. */
+.cf-hero {
+  color: #fff;
+  padding: 9rem 0 8rem;
+  background-image:
+    url("../assets/images/hero-cidade.svg"),
+    linear-gradient(-45deg, #1a252f, #2c3e50, #34495e, #e74c3c);
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, 400% 400%;
+  background-position: center, 0% 50%;
+  animation: cf-gradient 18s ease infinite;
+}
+
+@keyframes cf-gradient {
+  0%   { background-position: center, 0% 50%; }
+  50%  { background-position: center, 100% 50%; }
+  100% { background-position: center, 0% 50%; }
+}
+
+.cf-hero__content {
+  max-width: 42rem;
+}
+
+.cf-hero h1 {
+  margin: 0 0 .6rem;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #fff;
+}
+
+.cf-hero p {
+  margin: 0 0 1.6rem;
+  font-size: 1.2rem;
+  opacity: .92;
+}
+
+.cf-hero__actions .md-button + .md-button {
+  margin-left: .6rem;
+}
+
+/* botão primário do hero usa o accent do tema */
+.cf-hero .md-button--primary {
+  background-color: var(--md-accent-fg-color);
+  border-color: var(--md-accent-fg-color);
+  color: #fff;
+}
+
+/* botão secundário contorno branco, fica visível
+   sobre o hero escuro; ao passar o mouse, inverte para fundo branco. */
+.cf-hero .md-button:not(.md-button--primary) {
+  color: #fff;
+  border-color: #fff;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.cf-hero .md-button:not(.md-button--primary):hover,
+.cf-hero .md-button:not(.md-button--primary):focus {
+  color: var(--md-primary-fg-color--dark);
+  background-color: #fff;
+  border-color: #fff;
+}
+
+/* telas menores: hero mais compacto e botões empilhados */
+@media screen and (max-width: 600px) {
+  .cf-hero { padding: 3.5rem 0 2.5rem; }
+  .cf-hero h1 { font-size: 2.2rem; }
+  .cf-hero__actions .md-button { display: block; margin: .5rem 0 0; }
+  .cf-hero__actions .md-button + .md-button { margin-left: 0; }
+}
+
+/* acessibilidade: respeita quem prefere menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  .cf-hero { animation: none; }
+}
+
+/* botão para baixar PDF */
+.md-typeset .md-button.cf-btn-sm {
+  background-color: #045461;
+  padding: 0.35em 0.85em;
+  font-size: 0.62rem;
+}
+
+/* Grade de fotos da equipe (pagina Integrantes) */
+.team-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.6rem;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 1.2rem 0 2rem;
+}
+.team-card {
+  width: 150px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.team-card p {
+  margin: 0;
+}
+.team-card img {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--md-primary-fg-color);
+  background: var(--md-default-fg-color--lightest);
+  display: block;
+}
+.team-card figcaption {
+  margin-top: .55rem;
+  font-size: .78rem;
+  line-height: 1.3;
+  min-height: 2.6em;
+}
+.team-card figcaption small {
+  opacity: .75;
+}
+
+/* Foto do grupo reunido (pagina Integrantes) */
+.team-group {
+  margin: 1.2rem auto 2rem;
+  max-width: 640px;
+  text-align: center;
+}
+.team-group img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 3px solid var(--md-primary-fg-color);
+  display: block;
+}
+.team-group figcaption {
+  margin-top: .6rem;
+  font-size: .82rem;
+  line-height: 1.3;
+}
+.team-group figcaption small {
+  opacity: .75;
+}
+
+/* diagrama Mermaid (produto)*/
+.md-typeset .mermaid {
+  margin: 1.5rem auto;
+  text-align: center;
+  overflow-x: auto;   /* rola na horizontal em telas estreitas, sem estourar layout */
+}
+
+/* Texto branco nos nós em AMBOS os temas.*/
+[data-md-color-scheme="default"],
+[data-md-color-scheme="slate"] {
+  --md-mermaid-label-fg-color: #ffffff;
+  --md-mermaid-node-fg-color: #ffffff;
+}
+
+/* HTML labels e texto SVG */
+.md-typeset .mermaid .nodeLabel,
+.md-typeset .mermaid .nodeLabel p,
+.md-typeset .mermaid .node .label,
+.md-typeset .mermaid .node text,
+.md-typeset .mermaid .node tspan {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+

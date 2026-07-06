@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Skyline de pequenas empresas em crescimento com sol nascente">
+  <defs>
+    <pattern id="grid2" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#ffffff" stroke-opacity="0.05" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="bldg" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.18"/>
+    </linearGradient>
+  </defs>
+
+  <!-- grade de fundo -->
+  <rect width="1200" height="600" fill="url(#grid2)"/>
+
+  <!-- sol nascente / oportunidade (arcos concêntricos no canto superior direito) -->
+  <g fill="none" stroke="#f39c12">
+    <circle cx="1000" cy="170" r="60"  stroke-opacity="0.45"/>
+    <circle cx="1000" cy="170" r="110" stroke-opacity="0.30"/>
+    <circle cx="1000" cy="170" r="165" stroke-opacity="0.18"/>
+    <circle cx="1000" cy="170" r="225" stroke-opacity="0.10"/>
+  </g>
+
+  <!-- skyline de "pequenas empresas" (prédios de alturas crescentes) -->
+  <g fill="url(#bldg)" stroke="#ffffff" stroke-opacity="0.12">
+    <rect x="60"   y="470" width="90"  height="130"/>
+    <rect x="170"  y="420" width="90"  height="180"/>
+    <rect x="280"  y="450" width="90"  height="150"/>
+    <rect x="390"  y="450" width="90"  height="150"/>
+    <rect x="500"  y="410" width="90"  height="190"/>
+    <rect x="610"  y="330" width="90"  height="270"/>
+    <rect x="720"  y="390" width="90"  height="210"/>
+    <rect x="830"  y="300" width="90"  height="300"/>
+    <rect x="940"  y="360" width="90"  height="240"/>
+    <rect x="1050" y="280" width="90"  height="320"/>
+  </g>
+
+  <!-- janelinhas (pontos) em alguns prédios -->
+  <g fill="#ffffff" fill-opacity="0.16">
+    <rect x="855" y="330" width="12" height="12"/>
+    <rect x="885" y="330" width="12" height="12"/>
+    <rect x="855" y="365" width="12" height="12"/>
+    <rect x="885" y="365" width="12" height="12"/>
+    <rect x="1075" y="310" width="12" height="12"/>
+    <rect x="1105" y="310" width="12" height="12"/>
+    <rect x="1075" y="345" width="12" height="12"/>
+    <rect x="1105" y="345" width="12" height="12"/>
+    <rect x="635" y="360" width="12" height="12"/>
+    <rect x="665" y="360" width="12" height="12"/>
+  </g>
+
+</svg>
